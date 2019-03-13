@@ -1,0 +1,46 @@
+import AWS from "aws-sdk";
+import * as dynamoDbLib from "./libs/dynamodb-lib";
+import { success, failure } from "./libs/response-lib";
+
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
+
+function slugify(text) {
+  return text.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
+}
+
+export function main(event, context, callback) {
+  // Request body is passed in as a JSON encoded string in 'event.body'
+  const data = JSON.parse(event.body);
+
+  const params = {
+    TableName: "NaadanChords",
+    // 'Item' contains the attributes of the item to be created
+    // - 'userId': user identities are federated through the
+    //             Cognito Identity Pool, we will use the identity id
+    //             as the user id of the authenticated user
+    // - 'songId': a unique slug for the song
+    // - 'content': parsed from request body
+    // - 'status': post status
+    // - 'createdAt': current Unix timestamp
+    Item: {
+      userId: event.requestContext.identity.cognitoIdentityId,
+      songId: slugify(data.title),
+      title: data.title,
+      content: data.content,
+      status: 'LIVE',
+      createdAt: Date.now()
+    }
+  };
+
+  try {
+    await dynamoDbLib.call("put", params);
+    return success(params.Item);
+  } catch (e) {
+    return failure({ status: false });
+  }
+}

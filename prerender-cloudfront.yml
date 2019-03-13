@@ -1,0 +1,170 @@
+Parameters:
+  PrerenderToken:
+    Type: String
+  S3BucketName:
+    Type: String
+Resources:
+  WebBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName:
+        Ref: S3BucketName
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+  WebBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket:
+        Ref: S3BucketName
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - "s3:GetObject"
+            Effect: "Allow"
+            Principal: "*"
+            Resource: 
+              Fn::Join: 
+                - ""
+                - 
+                  - "arn:aws:s3:::"
+                  - 
+                    Ref: S3BucketName
+                  - "/*"
+  LambdaEdgeExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+            - edgelambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+        - PolicyName: logging
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+  SetPrerenderHeader:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: "index.handler"
+      Role:
+        Fn::GetAtt:
+          - "LambdaEdgeExecutionRole"
+          - "Arn"
+      Code:
+        ZipFile:
+          !Sub |
+            'use strict';
+            /* change the version number below whenever this code is modified */
+            exports.handler = (event, context, callback) => {
+                const request = event.Records[0].cf.request;
+                const headers = request.headers;
+                const user_agent = headers['user-agent'];
+                const host = headers['host'];
+                if (user_agent && host) {
+                  var prerender = /googlebot|bingbot|yandex|baiduspider|Facebot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/i.test(user_agent[0].value);
+                  prerender = prerender || /_escaped_fragment_/.test(request.querystring);
+                  prerender = prerender && ! /\.(js|css|xml|less|png|jpg|jpeg|gif|pdf|doc|txt|ico|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent|ttf|woff|svg|eot)$/i.test(request.uri);
+                  if (prerender) {
+                    headers['x-prerender-token'] = [{ key: 'X-Prerender-Token', value: '${PrerenderToken}'}];
+                    headers['x-prerender-host'] = [{ key: 'X-Prerender-Host', value: host[0].value}];
+                    headers['x-prerender-cachebuster'] = [{ key: 'X-Prerender-Cachebuster', value: Date.now().toString()}];
+                  }
+                }
+                callback(null, request);
+            };
+      Runtime: "nodejs6.10"
+  SetPrerenderHeaderVersion3:
+    Type: "AWS::Lambda::Version"
+    Properties:
+      FunctionName:
+        Ref: "SetPrerenderHeader"
+      Description: "SetPrerenderHeader"
+  RedirectToPrerender:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: "index.handler"
+      Role:
+        Fn::GetAtt:
+          - "LambdaEdgeExecutionRole"
+          - "Arn"
+      Code:
+        ZipFile: |
+          'use strict';
+          /* change the version number below whenever this code is modified */
+          exports.handler = (event, context, callback) => {
+               const request = event.Records[0].cf.request;
+               if (request.headers['x-prerender-token'] && request.headers['x-prerender-host']) {
+                 request.origin = {
+                     custom: {
+                         domainName: 'service.prerender.io',
+                         port: 443,
+                         protocol: 'https',
+                         readTimeout: 20,
+                         keepaliveTimeout: 5,
+                         customHeaders: {},
+                         sslProtocols: ['TLSv1', 'TLSv1.1'],
+                         path: '/https%3A%2F%2F' + request.headers['x-prerender-host'][0].value
+                     }
+                 };
+              }
+              callback(null, request);
+          };
+      Runtime: "nodejs6.10"
+  RedirectToPrerenderVersion1:
+    Type: "AWS::Lambda::Version"
+    Properties:
+      FunctionName:
+        Ref: "RedirectToPrerender"
+      Description: "RedirectToPrerender"
+  CloudFront:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          Compress: true
+          # NOTE: we let cloudfront cache heavily the resurces of the SPA. Your deploy
+          #       step will need to include an invalidation of the cloudfromt cache.
+          #       The requests to prerender.io are NOT cached thanks to the X-Prerender-Cachebuster
+          #       header.
+          MinTTL: 31536000
+          DefaultTTL: 31536000
+          ForwardedValues:
+            QueryString: false
+            Headers:
+              - "X-Prerender-Token"
+              - "X-Prerender-Host"
+              - "X-Prerender-Cachebuster"
+          TargetOriginId: origin
+          ViewerProtocolPolicy : allow-all
+          LambdaFunctionAssociations:
+            - EventType: viewer-request
+              LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetPrerenderHeader, Arn], !GetAtt [SetPrerenderHeaderVersion3, Version] ] ]
+            - EventType: origin-request
+              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToPrerender, Arn], !GetAtt [RedirectToPrerenderVersion1, Version] ] ]
+        Enabled: true
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+        HttpVersion: http2
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+            DomainName: !Select [2, !Split [ '/', !GetAtt [WebBucket, WebsiteURL]]]
+            Id: origin
+        PriceClass: PriceClass_All
