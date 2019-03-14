@@ -13,7 +13,7 @@ function slugify(text) {
     .replace(/-+$/, '');            // Trim - from end of text
 }
 
-export function main(event, context, callback) {
+export async function main(event, context, callback) {
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
 
@@ -29,10 +29,10 @@ export function main(event, context, callback) {
     // - 'createdAt': current Unix timestamp
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      songId: slugify(data.title),
+      postId: slugify(data.title),
       title: data.title,
       content: data.content,
-      status: 'LIVE',
+      postType: data.type || "POST",
       createdAt: Date.now()
     }
   };

@@ -1,0 +1,11 @@
+{
+  "body": "{\"content\":\"new world\",\"title\":\"Cherathukal - Kumbalangi Nights\",\"postType\":\"POST\"}",
+  "pathParameters": {
+    "id": "cherathukal-kumbalangi-nights"
+  },
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}
