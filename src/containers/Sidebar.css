@@ -1,0 +1,11 @@
+.Sidebar {
+  position: fixed;
+  z-index: 2;
+  height: calc(100vh - 61px);
+  top: 61px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-right: -999px;
+  padding-right: 999px;
+  transition: all 0.25s;
+}

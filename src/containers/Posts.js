@@ -3,6 +3,7 @@ import { API } from "aws-amplify";
 import Skeleton from "react-loading-skeleton";
 import { Container, Row, Col } from "react-bootstrap";
 import Moment from "react-moment";
+import Sidebar from "./Sidebar";
 import "./Posts.css";
 
 export default class Posts extends Component {
@@ -77,7 +78,7 @@ export default class Posts extends Component {
               { this.renderPosts() }
             </Col>
             <Col sm={4}>
-
+              <Sidebar />
             </Col>
           </Row>
         </Container>
