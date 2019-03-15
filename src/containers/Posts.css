@@ -1,8 +1,29 @@
-.Posts .lander {
-  padding: 160px 0;
-  text-align: center;
+.Posts {
+  margin-top: 30px;
 }
 
-.Posts .lander p {
-  color: #999;
+.Posts .postList h6 {
+  color: #999999;
+  margin-bottom: -5px;
+}
+
+.Posts .postList .post {
+  margin-top: 25px;
+  padding-left: 10px;
+}
+
+.Posts .postList .post h4 {
+  margin-bottom: 0;
+}
+
+.Posts .postList .post small {
+  color: #999999;
+}
+
+.Posts .postList .post small a, .Posts .postList .post span {
+  color: #555555;
+}
+
+.Posts .postList .post span {
+  margin: 0 2.5px;
 }

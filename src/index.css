@@ -8,6 +8,7 @@ body {
 
 a {
   transition: 0.5s all;
+  color: #555555;
 }
 
 code {
