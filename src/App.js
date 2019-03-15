@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav } from "react-bootstrap";
 import Routes from "./Routes";
-
+import logo from './logo.svg';
 import "./App.css";
 
 class App extends Component {
@@ -34,7 +34,7 @@ class App extends Component {
           <div className="container">
             <Navbar.Brand>
               <Link to="/">
-                <img src="/logo.svg" alt="logo" />
+                <img src={logo} alt="logo" />
                 <p>NAADAN<span>CHORDS</span></p>
               </Link>
             </Navbar.Brand>
