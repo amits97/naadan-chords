@@ -1,7 +1,74 @@
-.App {
-  margin-top: 15px;
+.App .navbar {
+  background: #093579;
+  color: #dddddd;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.App .navbar-brand {
+.App .navbar a {
+  color: #dddddd;
+}
+
+.App .navbar .navbar-brand {
+  padding-right: 10px;
+}
+
+.App .navbar .navbar-brand a {
+  color: #ffffff;
+  font-family: "DINNextLTPro-Heavy", sans-serif;
+}
+
+.App .navbar .navbar-brand a p {
+  padding-top: 13px;
+  display: inline-block;
+  margin-bottom: 0;
+  letter-spacing: -0.5px;
+  margin-left: 5px;
+}
+
+.App .navbar .navbar-brand a span {
+  font-family: "DINNextLTPro-Regular", sans-serif;
+  margin-left: 2px;
+}
+
+.App .navbar .navbar-brand a img {
+  height: 55px;
+  margin-top: -10px;
+}
+
+.App .navbar .navbar-nav {
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+.App .navbar .navbar-nav .nav-link {
+  color: #ffffff;
+  padding-bottom: 14px;
+  margin-bottom: -4px;
+}
+
+.App .navbar .navbar-nav a:hover {
+  color: #ff9700;
+}
+
+.App .navbar .navbar-nav .nav-link.active {
   font-weight: bold;
+  color: #ffffff;
+}
+
+.App .navbar .navbar-nav .nav-link.active:hover {
+  color: #ff9700;
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .App .navbar .navbar-nav {
+    padding-bottom: 0;
+  }
+
+  .App .navbar .navbar-nav a.active {
+    border-bottom: 4px solid #ff9700;
+    padding-bottom: 14px;
+    margin-bottom: -8px;
+  }
 }
