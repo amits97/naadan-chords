@@ -4,6 +4,7 @@
 
 .Posts .postList h6 {
   color: #999999;
+  margin-top: 0;
 }
 
 .Posts .postList .post {
@@ -20,6 +21,7 @@
 
 .Posts .postList .post h4 {
   margin-bottom: 0;
+  margin-top: 0;
 }
 
 .Posts .postList .post small {

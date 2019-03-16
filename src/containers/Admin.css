@@ -1,0 +1,109 @@
+.Admin .header {
+  overflow: auto;
+  margin-bottom: 30px;
+}
+
+.Admin .header h3 {
+  margin-top: 30px;
+}
+
+.Admin .header .btn {
+  margin-top: 30px;
+  padding-top: 8px;
+}
+
+.Admin .header .btn span {
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.Admin .nav-pills {
+  text-transform: uppercase;
+  margin-left: 5px;
+}
+
+.Admin .nav-pills .nav-link.active {
+  background-color: inherit;
+  color: inherit;
+  font-weight: bold;
+  border-left: 4px solid #ff9700;
+  border-radius: 0;
+  margin-left: -5px;
+}
+
+.Admin .list-group-item {
+  padding: 10px 5px;
+  border: 0;
+}
+
+.Admin .list-group-item a:hover {
+  text-decoration: underline;
+}
+
+.Admin .list-group-item-light {
+  color: #333;
+}
+
+.Admin .new-post-button {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  padding-top: 12px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1020;
+  display: none;
+  font-size: 24px;
+}
+
+.Admin .delete-container {
+  margin-bottom: 10px;
+  padding-bottom: 15px;
+}
+
+.Admin .delete-container .btn {
+  height: 30px;
+  padding-top: 4px;
+}
+
+.Admin .checkbox {
+  float: left;
+  margin-right: 10px;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+  .Admin .new-post-button {
+    display: block;
+  }
+
+  .Admin .header .btn {
+    display: none;
+  }
+
+  .Admin .col-sm-2 {
+    margin-top: -15px;
+  }
+
+  .Admin .nav-pills {
+    display: inline;
+  }
+
+  .Admin .nav-item {
+    float: left;
+  }
+
+  .Admin .nav-pills .nav-link.active {
+    border-left: 0;
+    border-bottom: 4px solid #ff9700;
+  }
+
+  .Admin .delete-container {
+    margin-top: 20px;
+  }
+
+  .Admin .tab-content {
+    margin-top: 10px;
+  }
+}

@@ -1,11 +1,62 @@
-.Sidebar {
+.Sidebar .sidebar {
   position: fixed;
   z-index: 2;
-  height: calc(100vh - 61px);
-  top: 61px;
+  height: calc(100vh - 56px);
+  top: 56px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   margin-right: -999px;
   padding-right: 999px;
   transition: all 0.25s;
+}
+
+.Sidebar .sidebar-content {
+  min-width: 200px;
+}
+
+.Sidebar .sidebar-content h5 {
+  color: #17a2b8
+}
+
+.Sidebar .sidebar-content a {
+  display: block;
+  margin: 0.75rem 0;
+}
+
+.Sidebar .sidebar-content a.active {
+  border-left: 5px solid #17a2b8;
+  font-weight: bold;
+  margin-left: -20px;
+  padding-left: 15px;
+}
+
+.Sidebar .sidebar-button {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  padding-top: 12px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1020;
+  display: none;
+  font-size: 24px;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+  .Sidebar .sidebar-button {
+    display: block;
+  }
+
+  .Sidebar .sidebar {
+    height: 0;
+    left: 0;
+    top: 100vh;
+  }
+
+  .Sidebar .sidebar.opened {
+    top: 56px;
+    height: calc(100vh - 56px);
+  }
 }

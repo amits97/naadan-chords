@@ -1,3 +1,7 @@
+.App *:focus {
+  outline: none;
+}
+
 .App .navbar {
   background: #093579;
   color: #dddddd;
@@ -58,6 +62,14 @@
 
 .App .navbar .navbar-nav .nav-link.active:hover {
   color: #ff9700;
+}
+
+.App .contents {
+  min-height: calc(100vh - 356px);
+}
+
+.App .form-control {
+  line-height: 4;
 }
 
 /* Large devices (desktops, 992px and up) */
