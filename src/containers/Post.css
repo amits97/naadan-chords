@@ -1,0 +1,15 @@
+.Post {
+  margin-top: 30px;
+}
+
+.Post h4 {
+  margin-bottom: 0;
+}
+
+.Post small {
+  color: #999999;
+}
+
+.Post span {
+  margin: 0 2.5px;
+}

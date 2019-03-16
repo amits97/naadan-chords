@@ -4,12 +4,19 @@
 
 .Posts .postList h6 {
   color: #999999;
-  margin-bottom: -5px;
 }
 
 .Posts .postList .post {
-  margin-top: 25px;
-  padding-left: 10px;
+  transition: all 0.5s;
+  cursor: pointer;
+  padding: 15px 20px;
+  margin-bottom: 5px;
+  border-left: 4px solid #dee2e6;
+}
+
+.Posts .postList .post:hover {
+  background: #f8f9fa;
+  border-left: 4px solid #ff9700;
 }
 
 .Posts .postList .post h4 {
@@ -18,10 +25,6 @@
 
 .Posts .postList .post small {
   color: #999999;
-}
-
-.Posts .postList .post small a, .Posts .postList .post span {
-  color: #555555;
 }
 
 .Posts .postList .post span {

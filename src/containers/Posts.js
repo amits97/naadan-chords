@@ -4,6 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import { Container, Row, Col } from "react-bootstrap";
 import Moment from "react-moment";
 import Sidebar from "./Sidebar";
+import { LinkContainer } from "react-router-bootstrap";
 import "./Posts.css";
 
 export default class Posts extends Component {
@@ -53,10 +54,12 @@ export default class Posts extends Component {
             <h6>LATEST POSTS</h6>
             {
               this.state.posts.map((post, i) =>
-                <div key={i} className="post">
-                  <h4>{ post.title }</h4>
-                  <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">Amit S Namboothiry</a></small>
-                </div>
+                <LinkContainer key={i} exact to={`/${ post.postId }`}>
+                  <div className="post">
+                    <h4>{ post.title }</h4>
+                    <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">Amit S Namboothiry</a></small>
+                  </div>
+                </LinkContainer>
               )
             }
           </div>
