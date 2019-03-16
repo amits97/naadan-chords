@@ -11,11 +11,10 @@
   cursor: pointer;
   padding: 15px 20px;
   margin-bottom: 5px;
-  border-left: 4px solid #dee2e6;
 }
 
 .Posts .postList .post:hover {
-  background: #f8f9fa;
+  background: #eeeeee !important;
   border-left: 4px solid #ff9700;
 }
 
