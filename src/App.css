@@ -2,6 +2,10 @@
   outline: none;
 }
 
+.App .container-fluid {
+  max-width: 1264px;
+}
+
 .App .navbar {
   background: #093579;
   color: #dddddd;
