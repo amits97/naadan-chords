@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
-import Skeleton from "react-loading-skeleton";
 import "./Sidebar.css";
 
 export default class Sidebar extends Component {

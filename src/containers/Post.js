@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { API } from "aws-amplify";
 import Skeleton from "react-loading-skeleton";
 import Moment from "react-moment";
@@ -69,16 +69,14 @@ export default class Post extends Component {
   render() {
     return (
       <div className="Post">
-        <Container>
-          <Row>
-            <Col sm={8}>
-              { this.renderPost() }
-            </Col>
-            <Col sm={4}>
-              <Sidebar />
-            </Col>
-          </Row>
-        </Container>
+        <Row>
+          <Col sm={8}>
+            { this.renderPost() }
+          </Col>
+          <Col sm={4}>
+            <Sidebar />
+          </Col>
+        </Row>
       </div>
     );
   }

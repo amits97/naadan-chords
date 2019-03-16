@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
 import Skeleton from "react-loading-skeleton";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import Moment from "react-moment";
 import Sidebar from "./Sidebar";
 import { LinkContainer } from "react-router-bootstrap";
@@ -75,16 +75,14 @@ export default class Posts extends Component {
   render() {
     return (
       <div className="Posts">
-        <Container>
-          <Row>
-            <Col sm={8} className="postList">
-              { this.renderPosts() }
-            </Col>
-            <Col sm={4}>
-              <Sidebar />
-            </Col>
-          </Row>
-        </Container>
+        <Row>
+          <Col sm={8} className="postList">
+            { this.renderPosts() }
+          </Col>
+          <Col sm={4}>
+            <Sidebar />
+          </Col>
+        </Row>
       </div>
     );
   }
