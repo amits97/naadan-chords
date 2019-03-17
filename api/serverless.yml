@@ -39,6 +39,13 @@ functions:
   # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
   #     domain api call
   # - authorizer: authenticate using the AWS IAM role
+  options:
+    handler: options.main
+    events:
+      - http:
+          path: posts
+          method: options
+          cors: true
   create:
     handler: create.main
     events:
@@ -67,6 +74,10 @@ functions:
           path: posts
           method: get
           cors: true
+          integration: lambda
+          request:
+            template:
+              application/json: '{ "postType" : "$input.params(''postType'')" }'
   update:
     # Defines an HTTP API endpoint that calls the main function in update.js
     # - path: url path is /posts/{id}

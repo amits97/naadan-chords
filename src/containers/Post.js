@@ -3,6 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import { API } from "aws-amplify";
 import Skeleton from "react-loading-skeleton";
 import Moment from "react-moment";
+import ReactMarkdown from "react-markdown";
 import Sidebar from "./Sidebar";
 import "./Post.css";
 
@@ -42,6 +43,39 @@ export default class Post extends Component {
     }
   }
 
+  renderPostMeta = (post) => {
+    if(post.postType === "PAGE") {
+      return (
+        <div>
+          <h1>{ post.title }</h1>
+          <hr />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h1>{ post.title }</h1>
+          <small>{ this.formatDate( post.createdAt ) } <span>|</span> Posted by <a href="#/">Amit S Namboothiry</a></small>
+          <hr />
+        </div>
+      );
+    }
+  }
+
+  renderPostContent = (post) => {
+    if(post.postType === "PAGE") {
+      return (
+        <ReactMarkdown source={ post.content } />
+      );
+    } else {
+      return (
+        <div className="content">
+          { post.content }
+        </div>
+      );
+    }
+  }
+
   renderPost = () => {
     if(this.state.isLoading) {
       return (
@@ -52,10 +86,8 @@ export default class Post extends Component {
         let { post } = this.state;
         return (
           <div>
-            <h4>{ post.title }</h4>
-            <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">Amit S Namboothiry</a></small>
-            <hr />
-            <p>{ post.content }</p>         
+            { this.renderPostMeta(post) }
+            { this.renderPostContent(post) }
           </div>
         );
       } else {
