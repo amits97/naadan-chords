@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FacebookProvider, Page } from 'react-facebook';
 import "./Sidebar.css";
 
 export default class Sidebar extends Component {
@@ -38,7 +39,12 @@ export default class Sidebar extends Component {
     return (
       <div className="Sidebar">
         <div className={`sidebar bg-light border-left ${mobileSidebarOpened ? 'opened' : ''}`}>
-          <div className="sidebar-content p-5">
+          <div className="sidebar-content">
+            <h6>FOLLOW NAADAN CHORDS</h6>
+            <hr />
+            <FacebookProvider appId="178749152169432">
+              <Page href="https://www.facebook.com/naadanchords/" adaptContainerWidth hideCTA showFacepile="false" />
+            </FacebookProvider>
             {this.renderSidebarList()}
           </div>
         </div>

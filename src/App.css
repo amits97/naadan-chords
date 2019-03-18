@@ -2,6 +2,10 @@
   outline: none;
 }
 
+.App {
+  overflow: hidden;
+}
+
 .App .container-fluid {
   max-width: 1264px;
 }
@@ -32,6 +36,8 @@
   margin-bottom: 0;
   letter-spacing: -0.5px;
   margin-left: 5px;
+  color: #ffffff;
+  font-size: 1.25rem;
 }
 
 .App .navbar .navbar-brand a span {
@@ -60,7 +66,6 @@
 }
 
 .App .navbar .navbar-nav .nav-link.active {
-  font-weight: bold;
   color: #ffffff;
 }
 
@@ -78,13 +83,21 @@
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
+  .App .navbar .navbar-nav .nav-link {
+    padding-right: 0.8rem;
+    padding-left: 0.8rem;
+  }
+
   .App .navbar .navbar-nav {
     padding-bottom: 0;
   }
 
   .App .navbar .navbar-nav a.active {
-    border-bottom: 4px solid #ff9700;
-    padding-bottom: 14px;
-    margin-bottom: -8px;
+    border-bottom: 3px solid #ff9700;
+    padding-bottom: 10px;
+    margin-bottom: -7px;
+    margin-top: -10px;
+    background: #082c63;
+    padding-top: 18px;
   }
 }

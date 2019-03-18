@@ -45,6 +45,7 @@ export default class Posts extends Component {
 
   componentDidMount() {
     this.loadData();
+    window.scrollTo(0, 0);
   }
 
   componentDidUpdate(prevProps) {
@@ -55,6 +56,7 @@ export default class Posts extends Component {
       });
   
       this.loadData();
+      window.scrollTo(0, 0);
     }
   }
 

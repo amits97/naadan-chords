@@ -1,21 +1,22 @@
 .Sidebar .sidebar {
-  position: fixed;
   z-index: 2;
-  height: calc(100vh - 56px);
-  top: 56px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  margin-top: -30px;
   margin-right: -999px;
   padding-right: 999px;
   transition: all 0.25s;
+  min-height: 100vh;
 }
 
 .Sidebar .sidebar-content {
   min-width: 200px;
+  padding: 20px;
+  padding-top: 30px;
 }
 
-.Sidebar .sidebar-content h5 {
-  color: #17a2b8
+.Sidebar .sidebar-content h6 {
+  color: #777777;
+  margin-top: 0;
+  margin-bottom: -5px;
 }
 
 .Sidebar .sidebar-content a {
@@ -50,13 +51,14 @@
   }
 
   .Sidebar .sidebar {
+    position: fixed;
     height: 0;
     left: 0;
-    top: 100vh;
+    top: 130vh;
   }
 
   .Sidebar .sidebar.opened {
-    top: 56px;
+    top: 86px;
     height: calc(100vh - 56px);
   }
 }

@@ -26,7 +26,7 @@ export default class Content extends Component {
       if(posts.length > 0) {
         return (
           <div className="postList">
-            <h6>LATEST POSTS</h6>
+            <h6 className="border-bottom">LATEST POSTS</h6>
             {
               posts.map((post, i) =>
                 <LinkContainer key={i} exact to={`/${ post.postId }`}>
@@ -51,7 +51,7 @@ export default class Content extends Component {
     if(post.postType === "PAGE") {
       return (
         <div>
-          <h1>{ post.title }</h1>
+          <h1 className="page">{ post.title }</h1>
           <hr />
         </div>
       );

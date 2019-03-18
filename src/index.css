@@ -6,13 +6,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+p, ul li {
+  color: #333333;
+  line-height: 1.4;
+  font-size: 18px;
+  margin-bottom: 1.5rem;
+}
+
+ul {
+  margin-bottom: 2rem;
+}
+
+ul li {
+  margin-bottom: 0.2rem;
+}
+
 a {
   transition: 0.5s all;
-  color: #555555;
+  color: #093579;
 }
 
 a:hover {
-  color: #000000;
+  color: #082c63;
 }
 
 code {
@@ -37,4 +52,15 @@ input.form-control {
 }
 input[type=file] {
   width: 100%;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #093579;
+  border-color: #093579;
+}
+
+.btn-primary:hover {
+  background-color: #082c63;
+  border-color: #082c63;
 }

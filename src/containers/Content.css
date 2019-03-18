@@ -5,18 +5,18 @@
 .Content .postList h6 {
   color: #999999;
   margin-top: 0;
+  padding-bottom: 10px;
+  padding-left: 15px;
 }
 
 .Content .postList .post {
   transition: all 0.5s;
   cursor: pointer;
-  padding: 15px 20px;
-  margin-bottom: 5px;
+  padding: 12.5px 15px;
 }
 
 .Content .postList .post:hover {
-  background: #eeeeee !important;
-  border-left: 4px solid #ff9700;
+  background: #efefef !important;
 }
 
 .Content .postList .post h4 {
@@ -35,6 +35,10 @@
 .Content .post h1 {
   margin-bottom: 0;
   margin-top: 0;
+}
+
+.Content h1.page {
+  margin-bottom: -10px;
 }
 
 .Content .post small {
