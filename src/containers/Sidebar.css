@@ -1,10 +1,14 @@
+.Sidebar {
+  height: 105%;
+}
+
 .Sidebar .sidebar {
   z-index: 2;
   margin-top: -30px;
   margin-right: -999px;
   padding-right: 999px;
   transition: all 0.25s;
-  min-height: 100vh;
+  height: 100%;
 }
 
 .Sidebar .sidebar-content {
