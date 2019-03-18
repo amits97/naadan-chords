@@ -1,0 +1,53 @@
+.Content {
+  margin-top: 30px;
+}
+
+.Content .postList h6 {
+  color: #999999;
+  margin-top: 0;
+}
+
+.Content .postList .post {
+  transition: all 0.5s;
+  cursor: pointer;
+  padding: 15px 20px;
+  margin-bottom: 5px;
+}
+
+.Content .postList .post:hover {
+  background: #eeeeee !important;
+  border-left: 4px solid #ff9700;
+}
+
+.Content .postList .post h4 {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.Content .postList .post small {
+  color: #999999;
+}
+
+.Content .postList .post span {
+  margin: 0 2.5px;
+}
+
+.Content .post h1 {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.Content .post small {
+  color: #999999;
+}
+
+.Content .post span {
+  margin: 0 2.5px;
+}
+
+.Content .post .content {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 87.5%;
+  white-space: pre-wrap;
+  overflow-x: scroll !important;
+}

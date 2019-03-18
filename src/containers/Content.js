@@ -1,20 +1,13 @@
 import React, { Component } from "react";
 import { Row, Col } from "react-bootstrap";
-import { API } from "aws-amplify";
 import Skeleton from "react-loading-skeleton";
+import { LinkContainer } from "react-router-bootstrap";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import Sidebar from "./Sidebar";
-import "./Post.css";
+import "./Content.css";
 
-export default class Post extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      post: {},
-      isLoading: true
-    };
-  }
+export default class Content extends Component {
 
   formatDate(date) {
     return(
@@ -22,24 +15,35 @@ export default class Post extends Component {
     );
   }
 
-  post() {
-    if(this.props.match.params.id) {
-      return API.get("posts", `/posts/${this.props.match.params.id}`);
-    }
-  }
+  renderPosts = () => {
+    let { isLoading, posts } = this.props;
 
-  async componentDidMount() {
-    try {
-      const post = await this.post();
-      this.setState({
-        post: post,
-        isLoading: false
-      });
-    } catch(e) {
-      this.setState({
-        isLoading: false
-      });
-      console.log(e);
+    if(isLoading) {
+      return (
+        <Skeleton count={15} />
+      );
+    } else {
+      if(posts.length > 0) {
+        return (
+          <div className="postList">
+            <h6>LATEST POSTS</h6>
+            {
+              posts.map((post, i) =>
+                <LinkContainer key={i} exact to={`/${ post.postId }`}>
+                  <div className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
+                    <h4>{ post.title }</h4>
+                    <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">Amit S Namboothiry</a></small>
+                  </div>
+                </LinkContainer>
+              )
+            }
+          </div>
+        );
+      } else {
+        return (
+          <h4>No posts found!</h4>
+        );
+      }
     }
   }
 
@@ -77,15 +81,17 @@ export default class Post extends Component {
   }
 
   renderPost = () => {
-    if(this.state.isLoading) {
+    let { isLoading, posts } = this.props;
+    let post = posts;
+
+    if(isLoading) {
       return (
         <Skeleton count={15} />
       );
     } else {
-      if(this.state.post.postId) {
-        let { post } = this.state;
+      if(post.postId) {
         return (
-          <div>
+          <div className="post">
             { this.renderPostMeta(post) }
             { this.renderPostContent(post) }
           </div>
@@ -98,12 +104,24 @@ export default class Post extends Component {
     }
   }
 
+  renderContent = () => {
+    let { posts } = this.props;
+    
+    if(Array.isArray(posts)) {
+      //render all posts
+      return this.renderPosts();
+    } else {
+      //render single post
+      return this.renderPost();
+    }
+  }
+
   render() {
     return (
-      <div className="Post">
+      <div className="Content">
         <Row>
           <Col sm={8}>
-            { this.renderPost() }
+            { this.renderContent() }
           </Col>
           <Col sm={4}>
             <Sidebar />

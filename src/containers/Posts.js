@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
-import Skeleton from "react-loading-skeleton";
-import { Row, Col } from "react-bootstrap";
-import Moment from "react-moment";
-import Sidebar from "./Sidebar";
-import { LinkContainer } from "react-router-bootstrap";
-import "./Posts.css";
+import Content from "./Content";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -13,17 +8,28 @@ export default class Posts extends Component {
 
     this.state = {
       isLoading: true,
-      posts: []
+      posts: {}
     };
+  }
+
+  post(postId) {
+    return API.get("posts", `/posts/${postId}`);
   }
 
   posts() {
     return API.get("posts", "/posts");
   }
 
-  async componentDidMount() {
+  loadData = async () => {
     try {
-      const posts = await this.posts();
+      let posts = {}, postId = this.props.match.params.id;
+
+      if(postId) {
+        posts = await this.post(postId);
+      } else {
+        posts = await this.posts();
+      }
+
       this.setState({
         posts: posts,
         isLoading: false
@@ -32,58 +38,31 @@ export default class Posts extends Component {
       this.setState({
         isLoading: false
       });
+
       console.log(e);
     }
   }
 
-  formatDate(date) {
-    return(
-      <Moment format="MMMM D, YYYY">{ date }</Moment>
-    );
+  componentDidMount() {
+    this.loadData();
   }
 
-  renderPosts = () => {
-    if(this.state.isLoading) {
-      return (
-        <Skeleton count={15} />
-      );
-    } else {
-      if(this.state.posts.length > 0) {
-        return (
-          <div>
-            <h6>LATEST POSTS</h6>
-            {
-              this.state.posts.map((post, i) =>
-                <LinkContainer key={i} exact to={`/${ post.postId }`}>
-                  <div className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
-                    <h4>{ post.title }</h4>
-                    <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">Amit S Namboothiry</a></small>
-                  </div>
-                </LinkContainer>
-              )
-            }
-          </div>
-        );
-      } else {
-        return (
-          <h4>No posts found!</h4>
-        );
-      }
+  componentDidUpdate(prevProps) {
+    if(prevProps.pageKey !== this.props.pageKey) {
+      this.setState({
+        posts: {},
+        isLoading: true
+      });
+  
+      this.loadData();
     }
   }
 
   render() {
+    let { isLoading, posts } = this.state;
+
     return (
-      <div className="Posts">
-        <Row>
-          <Col sm={8} className="postList">
-            { this.renderPosts() }
-          </Col>
-          <Col sm={4}>
-            <Sidebar />
-          </Col>
-        </Row>
-      </div>
+      <Content isLoading={isLoading} posts={posts} />
     );
   }
 }
