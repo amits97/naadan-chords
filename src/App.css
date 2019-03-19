@@ -4,6 +4,7 @@
 
 .App {
   overflow: hidden;
+  padding-top: 60px;
 }
 
 .App .container-fluid {
@@ -15,6 +16,8 @@
   color: #dddddd;
   padding-top: 0;
   padding-bottom: 0;
+  position: fixed;
+  width: 100%;
 }
 
 .App .navbar a {

@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "predeploy": "npm run build",
+    "predeploy": "npm version patch --no-git-tag-version && npm run build",
     "deploy": "aws s3 sync build/ s3://naadanchords-client --delete",
     "postdeploy": "aws cloudfront create-invalidation --distribution-id E204SISB76JUZ1 --paths '/*'",
     "build": "react-scripts build",

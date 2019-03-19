@@ -120,7 +120,7 @@ export default class Content extends Component {
     return (
       <div className="Content">
         <Row className="contentRow">
-          <Col sm={8}>
+          <Col sm={8} className="contentColumn">
             { this.renderContent() }
           </Col>
           <Col sm={4}>

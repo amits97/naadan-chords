@@ -3,7 +3,11 @@
 }
 
 .Content .contentRow {
-  min-height: calc(100vh - 56px);
+  min-height: calc(90vh - 56px);
+}
+
+.Content .contentColumn {
+  padding-bottom: 100px;
 }
 
 .Content .postList h6 {

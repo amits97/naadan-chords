@@ -5,6 +5,7 @@ import { Auth } from "aws-amplify";
 import { Navbar, Nav } from "react-bootstrap";
 import Routes from "./Routes";
 import logo from './logo.svg';
+import Footer from "./containers/Footer";
 import "./App.css";
 
 class App extends Component {
@@ -103,6 +104,7 @@ class App extends Component {
         <div className="container contents">
           <Routes childProps={childProps} />
         </div>
+        <Footer />
       </div>
     );
   }  

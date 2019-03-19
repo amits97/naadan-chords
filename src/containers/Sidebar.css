@@ -1,5 +1,5 @@
 .Sidebar {
-  height: 105%;
+  height: 110%;
 }
 
 .Sidebar .sidebar {
@@ -58,6 +58,8 @@
     position: fixed;
     height: 0;
     left: 0;
+    right: 0;
+    z-index: 3;
     top: 130vh;
   }
 
