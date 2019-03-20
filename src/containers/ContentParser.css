@@ -1,0 +1,8 @@
+.ContentParser .tabs {
+  white-space: pre;
+}
+
+.ContentParser h4 {
+  margin-top: 1.25rem;
+  margin-bottom: -1.5rem;
+}

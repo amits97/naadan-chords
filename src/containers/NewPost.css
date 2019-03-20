@@ -1,5 +1,5 @@
 .NewPost {
-  margin: 20px auto;
+  margin: 20px auto 100px auto;
 }
 
 .NewPost h1 {
@@ -29,6 +29,10 @@
   font-size: 87.5%;
   white-space: pre;
   overflow-x: scroll !important;
+}
+
+.NewPost .preview {
+  white-space: pre-wrap;
 }
 
 .NewPost form textarea.form-control.page {

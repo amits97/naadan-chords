@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import Sidebar from "./Sidebar";
+import ContentParser from "./ContentParser";
 import "./Content.css";
 
 export default class Content extends Component {
@@ -74,7 +75,7 @@ export default class Content extends Component {
     } else {
       return (
         <div className="content">
-          { post.content }
+          <ContentParser content={ post.content } />
         </div>
       );
     }

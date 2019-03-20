@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea";
 import Skeleton from "react-loading-skeleton";
+import ContentParser from "./ContentParser";
 import "./NewPost.css";
 
 export default class NewPost extends Component {
@@ -119,7 +120,7 @@ export default class NewPost extends Component {
     } else {
       return (
         <div className="preview">
-          { this.state.content }
+          <ContentParser content = { this.state.content } />
         </div>
       );
     }

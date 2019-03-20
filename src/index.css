@@ -54,7 +54,7 @@ input[type=file] {
   width: 100%;
 }
 
-.btn-primary {
+/* .btn-primary {
   color: #fff;
   background-color: #093579;
   border-color: #093579;
@@ -63,4 +63,4 @@ input[type=file] {
 .btn-primary:hover {
   background-color: #082c63;
   border-color: #082c63;
-}
+} */
