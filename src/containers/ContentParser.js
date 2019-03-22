@@ -12,12 +12,20 @@ export default class ContentParser extends Component {
     const boldRegExp = /{start_bold}([\s\S]*?){end_bold}/gim;
     const italicRegExp = /{start_italic}([\s\S]*?){end_italic}/gim;
     const headingRegExp = /{start_heading}([\s\S]*?){end_heading}/gim;
+    const strummingRegExp = /{start_strumming}([\s\S]*?){end_strumming}/gim;
+    const chordsInStrumming = /\[([\s\S]*?)\]/gim;
+
+    //Chords regex
+    const notes = "[CDEFGAB]";
+    const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|5)?";
+    const sharp = "(#)?";
+    const chordsRegex = new RegExp("\\b" + notes + chords + "\\b" + sharp + chords, "g");
 
     let content = this.stripHtml(this.props.content);
 
     //replace tabs
     content = content.replace(tabRegExp, (match, p1) => {
-      return (`<div class="tabs">${p1}</div>`);
+      return (`<div class="tabs ignore-chords">${p1}</div>`);
     });
 
     //replace bold
@@ -33,6 +41,18 @@ export default class ContentParser extends Component {
     //replace heading
     content = content.replace(headingRegExp, (match, p1) => {
       return (`<h4>${p1}</h4>`);
+    });
+
+    //replace strumming
+    content = content.replace(strummingRegExp, (match, p1) => {
+      return (`<span class="ignore-chords">${p1.replace(chordsInStrumming, (match) => {
+        return (`<span class="override-chords">${match}</span>`);
+      })}</span>`);
+    });
+
+    //replace chords
+    content = content.replace(chordsRegex, (match) => {
+      return (`<span class="chord">${match}</span>`);
     });
 
     return {__html: content};
