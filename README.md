@@ -10,7 +10,7 @@ At a high level, this is how the project is split:
 
 ## Running Locally
 * Clone the repository using: `git clone https://github.com/amits97/naadan-chords.git`
-* Change into the cloned directory: `cd amitsn-blog`
+* Change into the cloned directory: `cd naadan-chords`
 * Install required dependencies: `npm install`
 * Start local server: `npm start`
 
