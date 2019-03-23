@@ -1,4 +1,4 @@
-## NAADAN CHORDS
+## Naadan Chords
 Source code for Naadan Chords - a platform for Guitarists : https://www.naadanchords.com
 
 > This project is a `create-react-app` application which communicates with a [serverless](https://serverless.com/) backend. Powered by AWS Services and Prerender.io for SEO benefits.
