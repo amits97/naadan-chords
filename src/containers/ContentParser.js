@@ -15,11 +15,9 @@ export default class ContentParser extends Component {
     return doc.body.textContent || "";
   }
 
-  renderSongMeta = () => {
+  renderSongMeta = (content) => {
     const songMetaRegExp = /{start_song_meta}\n([\s\S]*?)\n{end_song_meta}/gim;
     const boldRegExp = /{start_bold}([\s\S]*?){end_bold}/gim;
-
-    let content = this.stripHtml(this.props.content);
 
     //get meta details
     let song_meta_matches = songMetaRegExp.exec(content);
@@ -39,7 +37,7 @@ export default class ContentParser extends Component {
     return {__html: this.state.leadTabs};
   }
 
-  parseContent = () => {
+  parseContent = (content) => {
     const tabRegExp = /{start_tab}\n([\s\S]*?)\n{end_tab}/gim;
     const boldRegExp = /{start_bold}([\s\S]*?){end_bold}/gim;
     const italicRegExp = /{start_italic}([\s\S]*?){end_italic}/gim;
@@ -56,8 +54,6 @@ export default class ContentParser extends Component {
     const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|5)?";
     const sharp = "(#)?";
     const chordsRegex = new RegExp("\\b" + notes  + chords + "\\b" + sharp + chords + tabBeginning, "g");
-
-    let content = this.stripHtml(this.props.content);
 
     //remove song meta
     content = content.replace(songMetaRegExp, (match, p1) => {
@@ -114,14 +110,14 @@ export default class ContentParser extends Component {
     return {__html: content};
   }
 
-  renderTabs = () => {
+  renderTabs = (content) => {
     let { leadTabs } = this.state;
 
     if(leadTabs !== null) {
       return (
         <Tabs defaultActiveKey="chords">
           <Tab eventKey="chords" title="CHORDS">
-            <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent() } />
+            <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent(content) } />
           </Tab>
           <Tab eventKey="tabs" title="LEAD TABS">
             <div className="pl-3 pr-3 ignore-chords" dangerouslySetInnerHTML={ this.renderLeadTabs() } />
@@ -130,16 +126,18 @@ export default class ContentParser extends Component {
       );
     } else {
       return (
-        <div dangerouslySetInnerHTML={ this.parseContent() } />
+        <div dangerouslySetInnerHTML={ this.parseContent(content) } />
       )
     }
   }
 
   render() {
+    let content = this.stripHtml(this.props.content);
+
     return (
       <div className="ContentParser">
-        <div dangerouslySetInnerHTML={ this.renderSongMeta() } />
-        { this.renderTabs() }
+        <div dangerouslySetInnerHTML={ this.renderSongMeta(content) } />
+        { this.renderTabs(content) }
       </div>
     );
   }
