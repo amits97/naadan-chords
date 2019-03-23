@@ -1,5 +1,48 @@
+.ContentParser .meta {
+  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+}
+
+.ContentParser .meta p {
+  font-size: 17px;
+}
+
+.ContentParser nav {
+  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+.ContentParser nav a {
+  font-size: 14px;
+  transition: none;
+  padding-top: 10px;
+  color: #888888;
+}
+
+.ContentParser nav a:hover {
+  color: inherit;
+}
+
+.ContentParser nav .nav-link.active {
+  background-color: inherit;
+  color: inherit;
+  font-weight: bold;
+  border-radius: 0;
+  box-shadow: 0 -3px 0 0 #ff9700;
+  border-top: 0;
+}
+
+.ContentParser hr {
+  margin: 0;
+}
+
 .ContentParser .tabs {
   white-space: pre;
+  overflow-x: scroll;
+}
+
+.ContentParser h4:first-of-type {
+  margin-top: -35px;
 }
 
 .ContentParser h4 {

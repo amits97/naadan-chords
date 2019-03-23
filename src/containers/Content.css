@@ -53,10 +53,6 @@
   color: #999999;
 }
 
-.Content .post span {
-  margin: 0 2.5px;
-}
-
 .Content .post .content {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 87.5%;
