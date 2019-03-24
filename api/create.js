@@ -31,8 +31,12 @@ export async function main(event, context, callback) {
       userId: event.requestContext.identity.cognitoIdentityId,
       postId: slugify(data.title),
       title: data.title,
+      song: data.song || null,
+      album: data.album || null,
+      singers: data.singers || null,
+      music: data.music || null,
       content: data.content,
-      postType: data.type || "POST",
+      postType: data.postType || "POST",
       createdAt: Date.now()
     }
   };

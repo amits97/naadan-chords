@@ -75,7 +75,7 @@ export default class Content extends Component {
     } else {
       return (
         <div className="content">
-          <ContentParser content={ post.content } />
+          <ContentParser post={ post } />
         </div>
       );
     }

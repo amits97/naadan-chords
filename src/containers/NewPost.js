@@ -18,22 +18,49 @@ export default class NewPost extends Component {
 
     this.state = {
       isLoading: null,
-      title: "",
-      content: "",
+      title: null,
+      song: null,
+      album: null,
+      music: null,
+      content: null,
       postType: "POST",
       submitted: false
     };
   }
 
   validateForm() {
-    return this.state.title.length > 0
-          && this.state.content.length > 0;
+    if(this.state.postType === "POST") {
+      return this.state.title !== null
+          && this.state.content !== null
+          && this.state.song !== null
+          && this.state.album !== null
+          && this.state.music !== null;
+    } else {
+      return this.state.title !== null
+          && this.state.content !== null;
+    }
   }
 
   handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
     });
+
+    if(["song", "album"].indexOf(event.target.id) !== -1) {
+      let { song, album } = this.state;
+
+      if(event.target.id === "song") {
+        song = event.target.value;
+      } else {
+        album = event.target.value;
+      }
+
+      let title = song + (album === null ? "" : " - " + album);
+
+      this.setState({
+        title: title
+      });
+    }
   }
 
   handleSubmit = async event => {
@@ -45,6 +72,10 @@ export default class NewPost extends Component {
       if(this.props.isEditMode) {
         await this.updatePost({
           title: this.state.title,
+          song: this.state.song,
+          album: this.state.album,
+          singers: this.state.singers,
+          music: this.state.music,
           content: this.state.content,
           postType: this.state.postType
         });
@@ -52,6 +83,10 @@ export default class NewPost extends Component {
       } else {
         await this.createPost({
           title: this.state.title,
+          song: this.state.song,
+          album: this.state.album,
+          singers: this.state.singers,
+          music: this.state.music,
           content: this.state.content,
           postType: this.state.postType
         });
@@ -59,7 +94,7 @@ export default class NewPost extends Component {
         if(this.state.postType === "PAGE") {
           this.props.history.push("/admin");
         } else {
-          this.props.history.push("/blog");
+          this.props.history.push("/");
         }
       }
     } catch (e) {
@@ -98,6 +133,10 @@ export default class NewPost extends Component {
 
         this.setState({
           title: post.title,
+          song: post.song,
+          album: post.album,
+          singers: post.singers,
+          music: post.music,
           content: post.content,
           postType: post.postType,
           isLoading: false
@@ -120,7 +159,36 @@ export default class NewPost extends Component {
     } else {
       return (
         <div className="preview">
-          <ContentParser content = { this.state.content } />
+          <ContentParser post = { this.state }  />
+        </div>
+      );
+    }
+  }
+
+  renderTitleInputs = () => {
+    if(this.state.postType === "PAGE") {
+      return (
+        <div>
+          <Form.Group controlId="title">
+            <Form.Control type="text" placeholder="Title" onChange={this.handleChange} value={this.state.title} />
+          </Form.Group>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Form.Group controlId="song">
+            <Form.Control type="text" placeholder="Song" onChange={this.handleChange} value={this.state.song ? this.state.song : ""} />
+          </Form.Group>
+          <Form.Group controlId="album">
+            <Form.Control type="text" placeholder="Album" onChange={this.handleChange} value={this.state.album ? this.state.album : ""} />
+          </Form.Group>
+          <Form.Group controlId="singers">
+            <Form.Control type="text" placeholder="Singers" onChange={this.handleChange} value={this.state.singers ? this.state.singers : ""} />
+          </Form.Group>
+          <Form.Group controlId="music">
+            <Form.Control type="text" placeholder="Music Director" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
+          </Form.Group>
         </div>
       );
     }
@@ -138,20 +206,20 @@ export default class NewPost extends Component {
     }
   
     return (
-      <Row>
-        <Col xs={12} md={6}>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Group controlId="title">
-              <Form.Control type="text" placeholder="Song Name - Album" onChange={this.handleChange} value={this.state.title} className="titleInput" />
+      <Form onSubmit={this.handleSubmit}>
+        <Row>
+          <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Control as="select" id="postType" onChange={this.handleChange} value={this.state.postType ? this.state.postType : ""}>
+                <option value="POST">Post</option>
+                <option value="PAGE">Page</option>
+              </Form.Control>
             </Form.Group>
-    
-            <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content} id="content" className={`form-control ${ this.state.postType === "PAGE" ? "page" : "post"}`} style={{ minHeight: 250 }} />
-    
-            <Form.Control as="select" id="postType" onChange={this.handleChange} value={this.state.postType}>
-              <option value="POST">Post</option>
-              <option value="PAGE">Page</option>
-            </Form.Control>
-    
+
+            { this.renderTitleInputs() }
+
+            <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control ${ this.state.postType === "PAGE" ? "page" : "post"}`} style={{ minHeight: 250 }} />
+
             <LoaderButton
               variant="primary"
               disabled={!this.validateForm()}
@@ -160,16 +228,20 @@ export default class NewPost extends Component {
               text={isEditMode ? "Update" : "Create"}
               loadingText={isEditMode ? "Updating…" : "Creating…"}
             />
-          </Form>
-        </Col>
-        <Col xs={12} md={6}>
-          <div className="preview-pane">
-            <h2 className="title">{this.state.title}</h2>
-            {this.state.title ? <hr /> : ''}
-            {this.renderPreviewContent()}
-          </div>
-        </Col>
-      </Row>
+
+            <LinkContainer exact to="/admin">
+              <a href="#/" className="text-primary ml-3 pt-1">Cancel</a>
+            </LinkContainer>
+          </Col>
+          <Col xs={12} md={6}>
+            <div className="preview-pane">
+              <h2 className="title">{this.state.title}</h2>
+              {this.state.title ? <hr /> : ''}
+              {this.renderPreviewContent()}
+            </div>
+          </Col>
+        </Row>
+      </Form>
     );
   }
 

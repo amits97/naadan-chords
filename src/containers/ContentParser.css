@@ -9,7 +9,7 @@
 .ContentParser nav {
   font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
   margin-top: 25px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .ContentParser nav a {
@@ -39,10 +39,6 @@
 .ContentParser .tabs {
   white-space: pre;
   overflow-x: scroll;
-}
-
-.ContentParser h4:first-of-type {
-  margin-top: -35px;
 }
 
 .ContentParser h4 {

@@ -15,24 +15,6 @@ export default class ContentParser extends Component {
     return doc.body.textContent || "";
   }
 
-  renderSongMeta = (content) => {
-    const songMetaRegExp = /{start_song_meta}\n([\s\S]*?)\n{end_song_meta}/gim;
-    const boldRegExp = /{start_bold}([\s\S]*?){end_bold}/gim;
-
-    //get meta details
-    let song_meta_matches = songMetaRegExp.exec(content);
-    if(song_meta_matches && song_meta_matches.length > 1) {
-      let song_meta = "<div class='meta'><p>" + song_meta_matches[1] + "</p></div>";
-
-      //replace bold
-      song_meta = song_meta.replace(boldRegExp, (match, p1) => {
-        return (`<b>${p1}</b>`);
-      });
-
-      return {__html: song_meta};
-    }
-  }
-
   renderLeadTabs = () => {
     return {__html: this.state.leadTabs};
   }
@@ -45,7 +27,6 @@ export default class ContentParser extends Component {
     const strummingRegExp = /{start_strumming}([\s\S]*?){end_strumming}/gim;
     const chordsInStrummingRegExp = /\[([\s\S]*?)\]/gim;
     const leadTabsRegExp = /{start_lead_tabs}\n([\s\S]*?)\n{end_lead_tabs}/gim;
-    const songMetaRegExp = /{start_song_meta}\n([\s\S]*?)\n{end_song_meta}/gim;
     const separatorRegExp = /{separator}/gim;
 
     //Chords regex
@@ -54,11 +35,6 @@ export default class ContentParser extends Component {
     const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|5)?";
     const sharp = "(#)?";
     const chordsRegex = new RegExp("\\b" + notes  + chords + "\\b" + sharp + chords + tabBeginning, "g");
-
-    //remove song meta
-    content = content.replace(songMetaRegExp, (match, p1) => {
-      return "";
-    });
 
     //replace tabs
     content = content.replace(tabRegExp, (match, p1) => {
@@ -131,12 +107,29 @@ export default class ContentParser extends Component {
     }
   }
 
+  renderSongMeta = () => {
+    let { song, album, singers, music } = this.props.post;
+
+    if(song) {
+      return (
+        <div className="meta">
+          <p>
+            <b>Song: </b>{song}<br />
+            <b>Album: </b>{album}<br />
+            <b>Singers: </b>{singers}<br />
+            <b>Music: </b>{music}<br />
+          </p>
+        </div>
+      );
+    }
+  }
+
   render() {
-    let content = this.stripHtml(this.props.content);
+    let content = this.props.post.content !== null ? this.stripHtml(this.props.post.content) : "";
 
     return (
       <div className="ContentParser">
-        <div dangerouslySetInnerHTML={ this.renderSongMeta(content) } />
+        { this.renderSongMeta() }
         { this.renderTabs(content) }
       </div>
     );
