@@ -43,6 +43,32 @@
   margin-top: 15px;
 }
 
+.NewPost nav {
+  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+.NewPost nav a {
+  font-size: 14px;
+  transition: none;
+  padding-top: 10px;
+  color: #888888;
+}
+
+.NewPost nav a:hover {
+  color: inherit;
+}
+
+.NewPost nav .nav-link.active {
+  background-color: inherit;
+  color: inherit;
+  font-weight: bold;
+  border-radius: 0;
+  box-shadow: 0 -3px 0 0 #ff9700;
+  border-top: 0;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .NewPost .LoaderButton {

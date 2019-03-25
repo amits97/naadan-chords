@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../components/LoaderButton";
 import { API } from "aws-amplify";
@@ -23,6 +23,7 @@ export default class NewPost extends Component {
       album: null,
       music: null,
       content: null,
+      leadTabs: null,
       postType: "POST",
       submitted: false
     };
@@ -38,6 +39,14 @@ export default class NewPost extends Component {
     } else {
       return this.state.title !== null
           && this.state.content !== null;
+    }
+  }
+
+  getMergedContent = () => {
+    if(this.state.leadTabs !== null) {
+      return this.state.content + "\n{start_lead_tabs}\n" + this.state.leadTabs + "\n{end_lead_tabs}\n";
+    } else {
+      return this.state.content;
     }
   }
 
@@ -76,7 +85,7 @@ export default class NewPost extends Component {
           album: this.state.album,
           singers: this.state.singers,
           music: this.state.music,
-          content: this.state.content,
+          content: this.getMergedContent(),
           postType: this.state.postType
         });
         this.props.history.push(`/${this.props.match.params.id}`);
@@ -157,9 +166,10 @@ export default class NewPost extends Component {
         <ReactMarkdown source={ this.state.content } />
       );
     } else {
+      console.log({ ...this.state, content: this.getMergedContent() });
       return (
         <div className="preview">
-          <ContentParser post = { this.state }  />
+          <ContentParser post = {{ ...this.state, content: this.getMergedContent() }}  />
         </div>
       );
     }
@@ -194,6 +204,29 @@ export default class NewPost extends Component {
     }
   }
 
+  renderContentInputs = () => {
+    if(this.state.postType === "PAGE") {
+      return (
+        <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control page`} style={{ minHeight: 250 }} />
+      );
+    } else {
+      return (
+        <Tabs defaultActiveKey="chords">
+          <Tab eventKey="chords" title="CHORDS">
+            <div className="mt-3">
+              <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} />
+            </div>
+          </Tab>
+          <Tab eventKey="tabs" title="LEAD TABS">
+            <div className="mt-3">
+              <TextareaAutosize placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} />
+            </div>
+          </Tab>
+        </Tabs>
+      );
+    }
+  }
+
   renderEditor(isEditMode) {
     if(isEditMode && this.state.isLoading && !this.state.submitted) {
       return(
@@ -217,8 +250,7 @@ export default class NewPost extends Component {
             </Form.Group>
 
             { this.renderTitleInputs() }
-
-            <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control ${ this.state.postType === "PAGE" ? "page" : "post"}`} style={{ minHeight: 250 }} />
+            { this.renderContentInputs() }
 
             <LoaderButton
               variant="primary"
