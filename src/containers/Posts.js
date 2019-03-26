@@ -26,6 +26,9 @@ export default class Posts extends Component {
 
       if(postId) {
         posts = await this.post(postId);
+        if(posts.postId !== postId) {
+          this.props.history.push(`/${posts.postId}`);
+        }
       } else {
         posts = await this.posts();
       }
