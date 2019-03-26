@@ -59,6 +59,7 @@ export default class Content extends Component {
     } else {
       return (
         <div>
+          <LinkContainer exact to="/"><a href="#/" className="navigate-link"><small>← Go home</small></a></LinkContainer>
           <h1>{ post.title }</h1>
           <small>{ this.formatDate( post.createdAt ) } <span>|</span> Posted by <a href="#/">Amit S Namboothiry</a></small>
           <hr />

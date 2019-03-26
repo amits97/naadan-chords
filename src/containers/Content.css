@@ -40,6 +40,14 @@
   margin: 0 2.5px;
 }
 
+.Content .navigate-link:hover {
+  text-decoration: none;
+}
+
+.Content .navigate-link:hover small {
+  color: #666666;
+}
+
 .Content .post h1 {
   margin-bottom: 0;
   margin-top: 0;
