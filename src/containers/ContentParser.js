@@ -1,8 +1,17 @@
 import React, { Component } from "react";
 import { Tabs, Tab } from "react-bootstrap";
+import YouTubeEmbed from "../components/YouTubeEmbed";
 import "./ContentParser.css";
 
 export default class ContentParser extends Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      isVideoReady: false
+    }
+  }
+
   stripHtml = (html) => {
     var doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || "";
@@ -64,16 +73,41 @@ export default class ContentParser extends Component {
     return {__html: content};
   }
 
-  renderTabs = (content, leadTabs) => {
-    if(leadTabs) {
+  hideVideoTab = () => {
+    this.setState({
+      isVideoReady: true
+    });
+  }
+
+  renderTabs = (content, leadTabs, youtubeId) => {
+    if(leadTabs || youtubeId) {
+      const tabs = [
+        <Tab eventKey="chords" title="CHORDS">
+          <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent(content) } />
+        </Tab>
+      ];
+
+      if(leadTabs) {
+        tabs.push(
+          <Tab eventKey="tabs" title="LEAD TABS">
+            <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
+          </Tab>
+        );
+      }
+
+      if(youtubeId) {
+        tabs.push(
+          <Tab eventKey="video" title="VIDEO" className={`${this.state.isVideoReady ? '' : 'visible'}`}>
+            <div className="pl-3 pr-3">
+              <YouTubeEmbed youtubeId={youtubeId} onLoad={this.hideVideoTab} />
+            </div>
+          </Tab>
+        );
+      }
+
       return (
         <Tabs defaultActiveKey="chords">
-          <Tab eventKey="chords" title="CHORDS">
-            <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent(content) } />
-          </Tab>
-          <Tab eventKey="tabs" title="LEAD TABS">
-            <div className="pl-3 pr-3 ignore-chords" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
-          </Tab>
+          { tabs }
         </Tabs>
       );
     } else {
@@ -103,11 +137,12 @@ export default class ContentParser extends Component {
   render() {
     let content = this.props.post.content ? this.stripHtml(this.props.post.content) : "";
     let leadTabs = this.props.post.leadTabs ? this.stripHtml(this.props.post.leadTabs) : "";
+    let { youtubeId } = this.props.post;
 
     return (
       <div className="ContentParser">
         { this.renderSongMeta() }
-        { this.renderTabs(content, leadTabs) }
+        { this.renderTabs(content, leadTabs, youtubeId) }
       </div>
     );
   }

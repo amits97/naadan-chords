@@ -8,7 +8,7 @@ export async function main(event, context) {
     Key: {
       postId: event.pathParameters.id
     },
-    UpdateExpression: "SET title = :title, song = :song, album = :album, singers = :singers, music = :music, content = :content, leadTabs = :leadTabs, postType = :postType",
+    UpdateExpression: "SET title = :title, song = :song, album = :album, singers = :singers, music = :music, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType",
     ExpressionAttributeValues: {
       ":title": data.title || null,
       ":song": data.song || null,
@@ -17,6 +17,7 @@ export async function main(event, context) {
       ":music": data.music || null,
       ":content": data.content || null,
       ":leadTabs": data.leadTabs || null,
+      ":youtubeId": data.youtubeId || null,
       ":postType": data.postType || null
     },
     ReturnValues: "ALL_NEW"

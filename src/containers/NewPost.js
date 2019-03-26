@@ -24,6 +24,7 @@ export default class NewPost extends Component {
       music: null,
       content: null,
       leadTabs: null,
+      youtubeId: null,
       postType: "POST",
       submitted: false
     };
@@ -73,6 +74,7 @@ export default class NewPost extends Component {
       music: this.state.music,
       content: this.state.content,
       leadTabs: this.state.leadTabs,
+      youtubeId: this.state.youtubeId,
       postType: this.state.postType
     });
   }
@@ -137,6 +139,7 @@ export default class NewPost extends Component {
           music: post.music,
           content: post.content,
           leadTabs: post.leadTabs,
+          youtubeId: post.youtubeId,
           postType: post.postType,
           isLoading: false
         });
@@ -209,6 +212,11 @@ export default class NewPost extends Component {
           <Tab eventKey="tabs" title="LEAD TABS">
             <div className="mt-3">
               <TextareaAutosize placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} />
+            </div>
+          </Tab>
+          <Tab eventKey="video" title="VIDEO">
+            <div className="mt-3 mb-5">
+              <Form.Control type="text" id="youtubeId" placeholder="YouTube video ID  (Optional)" onChange={this.handleChange} value={this.state.youtubeId ? this.state.youtubeId : ""} />
             </div>
           </Tab>
         </Tabs>

@@ -50,10 +50,6 @@
   font-weight: bold;
 }
 
-.ContentParser .ignore-chords span.chord {
-  font-weight: normal;
-}
-
-.ContentParser .ignore-chords .override-chords span.chord {
-  font-weight: bold;
+.ContentParser .visible {
+  display: block !important;
 }
