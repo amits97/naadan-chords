@@ -36,6 +36,7 @@ export async function main(event, context, callback) {
       singers: data.singers || null,
       music: data.music || null,
       content: data.content,
+      leadTabs: data.leadTabs || null,
       postType: data.postType || "POST",
       createdAt: Date.now()
     }

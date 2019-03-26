@@ -42,14 +42,6 @@ export default class NewPost extends Component {
     }
   }
 
-  getMergedContent = () => {
-    if(this.state.leadTabs !== null) {
-      return this.state.content + "\n{start_lead_tabs}\n" + this.state.leadTabs + "\n{end_lead_tabs}\n";
-    } else {
-      return this.state.content;
-    }
-  }
-
   handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
@@ -72,6 +64,19 @@ export default class NewPost extends Component {
     }
   }
 
+  preparePostObject = () => {
+    return ({
+      title: this.state.title,
+      song: this.state.song,
+      album: this.state.album,
+      singers: this.state.singers,
+      music: this.state.music,
+      content: this.state.content,
+      leadTabs: this.state.leadTabs,
+      postType: this.state.postType
+    });
+  }
+
   handleSubmit = async event => {
     event.preventDefault();
   
@@ -79,26 +84,10 @@ export default class NewPost extends Component {
   
     try {
       if(this.props.isEditMode) {
-        await this.updatePost({
-          title: this.state.title,
-          song: this.state.song,
-          album: this.state.album,
-          singers: this.state.singers,
-          music: this.state.music,
-          content: this.getMergedContent(),
-          postType: this.state.postType
-        });
+        await this.updatePost(this.preparePostObject());
         this.props.history.push(`/${this.props.match.params.id}`);
       } else {
-        await this.createPost({
-          title: this.state.title,
-          song: this.state.song,
-          album: this.state.album,
-          singers: this.state.singers,
-          music: this.state.music,
-          content: this.state.content,
-          postType: this.state.postType
-        });
+        await this.createPost(this.preparePostObject());
         
         if(this.state.postType === "PAGE") {
           this.props.history.push("/admin");
@@ -147,6 +136,7 @@ export default class NewPost extends Component {
           singers: post.singers,
           music: post.music,
           content: post.content,
+          leadTabs: post.leadTabs,
           postType: post.postType,
           isLoading: false
         });
@@ -166,10 +156,9 @@ export default class NewPost extends Component {
         <ReactMarkdown source={ this.state.content } />
       );
     } else {
-      console.log({ ...this.state, content: this.getMergedContent() });
       return (
         <div className="preview">
-          <ContentParser post = {{ ...this.state, content: this.getMergedContent() }}  />
+          <ContentParser post={this.state}  />
         </div>
       );
     }

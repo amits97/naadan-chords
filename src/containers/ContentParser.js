@@ -3,20 +3,9 @@ import { Tabs, Tab } from "react-bootstrap";
 import "./ContentParser.css";
 
 export default class ContentParser extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      leadTabs: null
-    }
-  }
-
   stripHtml = (html) => {
     var doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || "";
-  }
-
-  renderLeadTabs = () => {
-    return {__html: this.state.leadTabs};
   }
 
   parseContent = (content) => {
@@ -26,7 +15,6 @@ export default class ContentParser extends Component {
     const headingRegExp = /{start_heading}([\s\S]*?){end_heading}/gim;
     const strummingRegExp = /{start_strumming}([\s\S]*?){end_strumming}/gim;
     const chordsInStrummingRegExp = /\[([\s\S]*?)\]/gim;
-    const leadTabsRegExp = /{start_lead_tabs}\n([\s\S]*?)\n{end_lead_tabs}/gim;
     const separatorRegExp = /{separator}/gim;
 
     //Chords regex
@@ -44,16 +32,6 @@ export default class ContentParser extends Component {
     //replace bold
     content = content.replace(boldRegExp, (match, p1) => {
       return (`<b>${p1}</b>`);
-    });
-
-    //remove lead tabs and save to lead tab state
-    content = content.replace(leadTabsRegExp, (match, p1) => {
-      if(this.state.leadTabs === null) {
-        this.setState({
-          leadTabs: p1
-        });
-      }
-      return("");
     });
 
     //replace italic
@@ -86,17 +64,15 @@ export default class ContentParser extends Component {
     return {__html: content};
   }
 
-  renderTabs = (content) => {
-    let { leadTabs } = this.state;
-
-    if(leadTabs !== null) {
+  renderTabs = (content, leadTabs) => {
+    if(leadTabs) {
       return (
         <Tabs defaultActiveKey="chords">
           <Tab eventKey="chords" title="CHORDS">
             <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent(content) } />
           </Tab>
           <Tab eventKey="tabs" title="LEAD TABS">
-            <div className="pl-3 pr-3 ignore-chords" dangerouslySetInnerHTML={ this.renderLeadTabs() } />
+            <div className="pl-3 pr-3 ignore-chords" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
           </Tab>
         </Tabs>
       );
@@ -125,12 +101,13 @@ export default class ContentParser extends Component {
   }
 
   render() {
-    let content = this.props.post.content !== null ? this.stripHtml(this.props.post.content) : "";
+    let content = this.props.post.content ? this.stripHtml(this.props.post.content) : "";
+    let leadTabs = this.props.post.leadTabs ? this.stripHtml(this.props.post.leadTabs) : "";
 
     return (
       <div className="ContentParser">
         { this.renderSongMeta() }
-        { this.renderTabs(content) }
+        { this.renderTabs(content, leadTabs) }
       </div>
     );
   }
