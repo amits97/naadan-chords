@@ -23,15 +23,19 @@ async function retryGet(postId) {
     }
   };
 
-  try {
-    const result = await dynamoDbLib.call("scan", params);
-    if(result.Items.length > 0) {
-      return success(result.Items[0]);
-    } else {
-      return retryLoop(postId);
+  if(postId.length > 2) {
+    try {
+      const result = await dynamoDbLib.call("scan", params);
+      if(result.Items.length > 0) {
+        return success(result.Items[0]);
+      } else {
+        return retryLoop(postId);
+      }
+    } catch (e) {
+      return failure({ status: false });
     }
-  } catch (e) {
-    return failure({ status: false, error: e });
+  } else {
+    return failure({ status: false, error: "Item not found." });
   }
 }
 
@@ -52,6 +56,6 @@ export async function main(event, context) {
       return retryLoop(event.pathParameters.id);
     }
   } catch (e) {
-    return failure({ status: false, error: e });
+    return failure({ status: false });
   }
 }
