@@ -4,10 +4,11 @@ import Skeleton from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
+import Disqus from "disqus-react";
 import Sidebar from "./Sidebar";
 import ContentParser from "./ContentParser";
-import "./Content.css";
 import LoaderButton from "../components/LoaderButton";
+import "./Content.css";
 
 export default class Content extends Component {
   formatDate(date) {
@@ -103,6 +104,26 @@ export default class Content extends Component {
     }
   }
 
+  renderDisqusComments = (post) => {
+    if(post.song) {
+      //Disqus comments
+      let disqusShortname = "naadantest";
+      let disqusConfig = {
+        url: `https://www.naadanchords.com/${post.postId}`,
+        identifier: post.postId,
+        title: post.title
+      };
+
+      return (
+        <div>
+          <br />
+          <hr />
+          <Disqus.DiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
+        </div>
+      );
+    }
+  }
+
   renderPost = () => {
     let { isLoading, posts } = this.props;
     let post = posts;
@@ -117,6 +138,7 @@ export default class Content extends Component {
           <div className="post">
             { this.renderPostMeta(post) }
             { this.renderPostContent(post) }
+            { this.renderDisqusComments(post) }
           </div>
         );
       } else {

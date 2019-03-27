@@ -1,12 +1,13 @@
 {
   "name": "naadan-chords",
-  "version": "0.2.9",
+  "version": "0.3.2",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "aws-amplify": "^1.1.22",
+    "disqus-react": "^1.0.5",
     "moment": "^2.24.0",
     "react": "^16.8.4",
     "react-autosize-textarea": "^6.0.0",
