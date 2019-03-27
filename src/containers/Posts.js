@@ -8,7 +8,9 @@ export default class Posts extends Component {
 
     this.state = {
       isLoading: true,
-      posts: {}
+      isPaginationLoading: false,
+      posts: {},
+      lastEvaluatedPost: {}
     };
   }
 
@@ -30,7 +32,14 @@ export default class Posts extends Component {
           this.props.history.push(`/${posts.postId}`);
         }
       } else {
-        posts = await this.posts();
+        let postsResult = await this.posts();
+        posts = postsResult.Items;
+
+        if(postsResult.hasOwnProperty("LastEvaluatedKey")) {
+          this.setState({
+            lastEvaluatedPost: postsResult.LastEvaluatedKey
+          });
+        }
       }
 
       this.setState({
@@ -42,6 +51,26 @@ export default class Posts extends Component {
         isLoading: false
       });
 
+      console.log(e);
+    }
+  }
+
+  loadMorePosts = async (exclusiveStartKey) => {
+    this.setState({
+      isPaginationLoading: true
+    });
+
+    try {
+      let postsResult = await API.get("posts", `/posts?exclusiveStartKey=${exclusiveStartKey}`);
+      this.setState({
+        posts: this.state.posts.concat(postsResult.Items),
+        lastEvaluatedPost: postsResult.LastEvaluatedKey,
+        isPaginationLoading: false
+      });
+    } catch(e) {
+      this.setState({
+        isPaginationLoading: false
+      });
       console.log(e);
     }
   }
@@ -64,10 +93,10 @@ export default class Posts extends Component {
   }
 
   render() {
-    let { isLoading, posts } = this.state;
+    let { isLoading, posts, lastEvaluatedPost, isPaginationLoading } = this.state;
 
     return (
-      <Content isLoading={isLoading} posts={posts} />
+      <Content isLoading={isLoading} posts={posts} lastEvaluatedPost={lastEvaluatedPost} loadPosts = {this.loadMorePosts} isPaginationLoading={isPaginationLoading} />
     );
   }
 }

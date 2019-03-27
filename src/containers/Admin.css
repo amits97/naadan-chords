@@ -76,6 +76,15 @@
   margin-right: 10px;
 }
 
+.Admin .load-posts {
+  cursor: pointer;
+  padding: 9px 30px 10px 30px;
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .Admin .new-post-button {

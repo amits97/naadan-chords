@@ -7,17 +7,37 @@ import ReactMarkdown from "react-markdown";
 import Sidebar from "./Sidebar";
 import ContentParser from "./ContentParser";
 import "./Content.css";
+import LoaderButton from "../components/LoaderButton";
 
 export default class Content extends Component {
-
   formatDate(date) {
     return(
       <Moment format="MMMM D, YYYY">{ date }</Moment>
     );
   }
 
+  prepareLastEvaluatedPostRequest = (lastEvaluatedPost) => {
+    return encodeURIComponent(JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"));
+  }
+
+  loadPagination = (lastEvaluatedPost) => {
+    if(lastEvaluatedPost && lastEvaluatedPost.hasOwnProperty("postId")) {
+      return (
+        <LoaderButton
+          isLoading={this.props.isPaginationLoading}
+          onClick={() => {
+            this.props.loadPosts(this.prepareLastEvaluatedPostRequest(lastEvaluatedPost));
+          }}
+          text="Load more"
+          loadingText="Loading"
+          className="load-posts btn-secondary"
+        />
+      );
+    }
+  }
+
   renderPosts = () => {
-    let { isLoading, posts } = this.props;
+    let { isLoading, posts, lastEvaluatedPost } = this.props;
 
     if(isLoading) {
       return (
@@ -38,6 +58,7 @@ export default class Content extends Component {
                 </LinkContainer>
               )
             }
+            { this.loadPagination(lastEvaluatedPost) }
           </div>
         );
       } else {

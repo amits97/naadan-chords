@@ -16,6 +16,7 @@ export default class Admin extends Component {
       posts: [],
       pages: [],
       isLoading: true,
+      isPaginationLoading: false,
       activeTab: "posts",
       postsToBeDeleted: []
     };
@@ -130,6 +131,46 @@ export default class Admin extends Component {
     });
   }
 
+  loadMorePosts = async (exclusiveStartKey) => {
+    this.setState({
+      isPaginationLoading: true
+    });
+
+    try {
+      let postsResult = await API.get("posts", `/posts?exclusiveStartKey=${exclusiveStartKey}`);
+      this.setState({
+        posts: { ...postsResult, Items: this.state.posts.Items.concat(postsResult.Items)},
+        lastEvaluatedPost: postsResult.LastEvaluatedKey,
+        isPaginationLoading: false
+      });
+    } catch(e) {
+      this.setState({
+        isPaginationLoading: false
+      });
+      console.log(e);
+    }
+  }
+
+  prepareLastEvaluatedPostRequest = (lastEvaluatedPost) => {
+    return encodeURIComponent(JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"));
+  }
+
+  loadPagination = (lastEvaluatedPost) => {
+    if(lastEvaluatedPost && lastEvaluatedPost.hasOwnProperty("postId")) {
+      return (
+        <LoaderButton
+          isLoading={this.state.isPaginationLoading}
+          onClick={() => {
+            this.loadMorePosts(this.prepareLastEvaluatedPostRequest(lastEvaluatedPost));
+          }}
+          text="Load more"
+          loadingText="Loading"
+          className="load-posts btn-secondary"
+        />
+      );
+    }
+  }
+
   renderPosts(posts) {
     let { isLoading } = this.state;
 
@@ -139,22 +180,25 @@ export default class Admin extends Component {
       );
     }
 
-    if(posts.length > 0) {
+    if(posts.Items.length > 0) {
       return (
-        <ListGroup variant="flush">
-          {
-            posts.map((post, i) => {
-              return (
-                <ListGroup.Item key={i}>
-                  <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
-                  <LinkContainer exact to={`/admin/edit-post/${post.postId}`}>
-                    <a href="#/">{ post.title }</a>
-                  </LinkContainer>
-                </ListGroup.Item>
-              );
-            })
-          }
-        </ListGroup>
+        <div>
+          <ListGroup variant="flush">
+            {
+              posts.Items.map((post, i) => {
+                return (
+                  <ListGroup.Item key={i}>
+                    <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
+                    <LinkContainer exact to={`/admin/edit-post/${post.postId}`}>
+                      <a href="#/">{ post.title }</a>
+                    </LinkContainer>
+                  </ListGroup.Item>
+                );
+              })
+            }
+          </ListGroup>
+          { this.loadPagination(posts.LastEvaluatedKey) }
+        </div>
       );
     } else {
       return (

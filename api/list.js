@@ -9,14 +9,20 @@ export async function main(event, context) {
       ":postType": event.postType || "POST",
     },
     ScanIndexForward: false,
-    ProjectionExpression: "postId, createdAt, postType, title"
+    ProjectionExpression: "postId, createdAt, postType, title",
+    Limit: 10
   };
+
+  if(event.exclusiveStartKey) {
+    //pagination
+    params.ExclusiveStartKey = JSON.parse(decodeURIComponent(event.exclusiveStartKey).replace(/'/g, '"'));
+  }
 
   try {
     const result = await dynamoDbLib.call("query", params);
     // Return the matching list of items in response body
-    return result.Items;
+    return result;
   } catch (e) {
-    return { status: false, error: e };
+    return { status: false };
   }
 }
