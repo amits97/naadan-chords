@@ -3,7 +3,7 @@
 }
 
 .Content .contentRow {
-  min-height: calc(90vh - 56px);
+  min-height: calc(60vh - 56px);
 }
 
 .Content .contentColumn {

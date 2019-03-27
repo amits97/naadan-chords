@@ -10,6 +10,8 @@ export default class Posts extends Component {
       isLoading: true,
       isPaginationLoading: false,
       posts: {},
+      homePosts: [],
+      scrollY: 0,
       lastEvaluatedPost: {}
     };
   }
@@ -80,15 +82,30 @@ export default class Posts extends Component {
     window.scrollTo(0, 0);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if(prevProps.pageKey !== this.props.pageKey) {
-      this.setState({
-        posts: {},
-        isLoading: true
-      });
-  
-      this.loadData();
-      window.scrollTo(0, 0);
+      //navigating away from home
+      if(prevProps.match.params.id === undefined) {
+        this.setState({
+          homePosts: prevState.posts,
+          scrollY: window.pageYOffset || document.documentElement.scrollTop
+        });
+      }
+
+      //coming back to home
+      if(this.props.match.params.id === undefined) {
+        this.setState({
+          posts: this.state.homePosts
+        });
+        window.scrollTo(0, this.state.scrollY);
+      } else {
+        this.setState({
+          posts: {},
+          isLoading: true
+        });
+        this.loadData();
+        window.scrollTo(0, 0);
+      }
     }
   }
 
