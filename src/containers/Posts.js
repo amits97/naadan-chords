@@ -94,18 +94,21 @@ export default class Posts extends Component {
 
       //coming back to home
       if(this.props.match.params.id === undefined) {
-        this.setState({
-          posts: this.state.homePosts
-        });
-        window.scrollTo(0, this.state.scrollY);
-      } else {
-        this.setState({
-          posts: {},
-          isLoading: true
-        });
-        this.loadData();
-        window.scrollTo(0, 0);
+        if(this.state.homePosts.length > 0) {
+          this.setState({
+            posts: this.state.homePosts
+          });
+          window.scrollTo(0, this.state.scrollY);
+          return;
+        }
       }
+
+      this.setState({
+        posts: {},
+        isLoading: true
+      });
+      this.loadData();
+      window.scrollTo(0, 0);
     }
   }
 

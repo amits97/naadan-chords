@@ -83,6 +83,7 @@
   font-weight: bold;
   text-align: center;
   width: 100%;
+  border-radius: 0;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

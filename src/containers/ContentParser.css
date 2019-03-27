@@ -32,6 +32,11 @@
   border-top: 0;
 }
 
+.ContentParser .tab-contents {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .ContentParser hr {
   margin: 0;
 }
@@ -56,4 +61,12 @@
 
 .ContentParser .visible {
   display: block !important;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+  .ContentParser .tab-contents {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

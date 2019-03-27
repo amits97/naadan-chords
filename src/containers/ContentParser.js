@@ -82,23 +82,23 @@ export default class ContentParser extends Component {
   renderTabs = (content, leadTabs, youtubeId) => {
     if(leadTabs || youtubeId) {
       const tabs = [
-        <Tab eventKey="chords" title="CHORDS">
-          <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent(content) } />
+        <Tab eventKey="chords" title="CHORDS" key="chords">
+          <div className="tab-contents" dangerouslySetInnerHTML={ this.parseContent(content) } />
         </Tab>
       ];
 
       if(leadTabs) {
         tabs.push(
-          <Tab eventKey="tabs" title="LEAD TABS">
-            <div className="pl-3 pr-3" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
+          <Tab eventKey="tabs" title="LEAD TABS" key="tabs">
+            <div className="tab-contents" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
           </Tab>
         );
       }
 
       if(youtubeId) {
         tabs.push(
-          <Tab eventKey="video" title="VIDEO" className={`${this.state.isVideoReady ? '' : 'visible'}`}>
-            <div className="pl-3 pr-3">
+          <Tab eventKey="video" title="VIDEO" key="video" className={`${this.state.isVideoReady ? '' : 'visible'}`}>
+            <div className="tab-contents">
               <YouTubeEmbed youtubeId={youtubeId} onLoad={this.hideVideoTab} />
             </div>
           </Tab>

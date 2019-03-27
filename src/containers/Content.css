@@ -50,13 +50,13 @@
 
 .Content .postList .load-posts {
   cursor: pointer;
-  padding: 12.5px 15px;
   margin-top: 30px;
   text-align: center;
-  font-weight: bold;
   display: block;
   width: 100%;
-  border-radius: 0;
+  padding: 12.5px 15px;
+  border-radius: 0px;
+  font-weight: bold;
 }
 
 .Content .post h1 {
