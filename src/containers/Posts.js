@@ -98,7 +98,7 @@ export default class Posts extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if(prevProps.pageKey !== this.props.pageKey) {
-      if(!this.props.isCategory) {
+      if(!this.props.isCategory && !prevProps.isCategory) {
         //navigating away from home
         if(prevProps.match.params.id === undefined) {
           this.setState({

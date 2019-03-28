@@ -83,8 +83,8 @@ export default class Admin extends Component {
     } else {
       let posts = this.state[this.state.activeTab];
       let postsToBeDeleted = [];
-      for(var i = 0; i < posts.length; i++) {
-        postsToBeDeleted.push(posts[i].postId);
+      for(var i = 0; i < posts.Items.length; i++) {
+        postsToBeDeleted.push(posts.Items[i].postId);
       }
       this.setState({
         postsToBeDeleted: postsToBeDeleted
