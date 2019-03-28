@@ -38,7 +38,7 @@ export default class Content extends Component {
   }
 
   renderPosts = () => {
-    let { isLoading, posts, lastEvaluatedPost } = this.props;
+    let { isLoading, posts, lastEvaluatedPost, title } = this.props;
 
     if(isLoading) {
       return (
@@ -48,7 +48,7 @@ export default class Content extends Component {
       if(posts.length > 0) {
         return (
           <div className="postList">
-            <h6 className="border-bottom">LATEST POSTS</h6>
+            <h6 className="border-bottom">{title ? title : "LATEST POSTS"}</h6>
             {
               posts.map((post, i) =>
                 <LinkContainer key={i} exact to={`/${ post.postId }`}>

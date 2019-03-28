@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import logo from '../logo.svg';
@@ -27,9 +28,21 @@ export default class Footer extends Component {
                 <Col>
                   <h6>CATEGORIES</h6>
                   <ul className="list-unstyled">
-                    <li><a href="/category/malayalam">Malayalam</a></li>
-                    <li><a href="/category/tamil">Tamil</a></li>
-                  </ul>
+                    <li>
+                      <LinkContainer exact to="/category/malayalam">
+                        <a href="#/">
+                          Malayalam
+                        </a>
+                      </LinkContainer>
+                    </li>
+                    <li>
+                      <LinkContainer exact to="/category/tamil">
+                        <a href="#/">
+                          Tamil
+                        </a>
+                      </LinkContainer>
+                    </li>
+                 </ul>
                 </Col>
                 <Col>
                   <h6>SOCIAL MEDIA</h6>

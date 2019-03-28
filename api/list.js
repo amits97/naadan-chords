@@ -18,11 +18,20 @@ export async function main(event, context) {
     params.ExclusiveStartKey = JSON.parse(decodeURIComponent(event.exclusiveStartKey).replace(/'/g, '"'));
   }
 
+  if(event.category) {
+    //filter by category
+    params.IndexName = "category-createdAt-index";
+    params.KeyConditionExpression = "category = :category";
+    params.ExpressionAttributeValues =  {
+      ":category": event.category
+    };
+  }
+
   try {
     const result = await dynamoDbLib.call("query", params);
     // Return the matching list of items in response body
     return result;
   } catch (e) {
-    return { status: false };
+    return { status: false, error: e };
   }
 }

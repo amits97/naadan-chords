@@ -22,6 +22,7 @@ export default class NewPost extends Component {
       song: null,
       album: null,
       music: null,
+      category: "MALAYALAM",
       content: null,
       leadTabs: null,
       youtubeId: null,
@@ -72,6 +73,7 @@ export default class NewPost extends Component {
       album: this.state.album,
       singers: this.state.singers,
       music: this.state.music,
+      category: this.state.category,
       content: this.state.content,
       leadTabs: this.state.leadTabs,
       youtubeId: this.state.youtubeId,
@@ -137,6 +139,7 @@ export default class NewPost extends Component {
           album: post.album,
           singers: post.singers,
           music: post.music,
+          category: post.category,
           content: post.content,
           leadTabs: post.leadTabs,
           youtubeId: post.youtubeId,
@@ -190,6 +193,12 @@ export default class NewPost extends Component {
           </Form.Group>
           <Form.Group controlId="music">
             <Form.Control type="text" placeholder="Music Director" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""}>
+                <option value="MALAYALAM">Malayalam</option>
+                <option value="TAMIL">Tamil</option>
+            </Form.Control>
           </Form.Group>
         </div>
       );

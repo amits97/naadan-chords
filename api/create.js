@@ -35,6 +35,7 @@ export async function main(event, context, callback) {
       album: data.album || null,
       singers: data.singers || null,
       music: data.music || null,
+      category: data.category || "MALAYALAM",
       content: data.content,
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
