@@ -34,6 +34,7 @@
 
 .Content .postList .post small {
   color: #999999;
+  font-size: 80%;
 }
 
 .Content .postList .post span {
@@ -42,6 +43,10 @@
 
 .Content .navigate-link:hover {
   text-decoration: none;
+}
+
+.Content .post .navigate-link small {
+  font-size: 80%;
 }
 
 .Content .navigate-link:hover small {
@@ -70,6 +75,7 @@
 
 .Content .post small {
   color: #999999;
+  font-size: 90%;
 }
 
 .Content .post .content {

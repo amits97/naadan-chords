@@ -22,12 +22,13 @@ ul li {
 }
 
 a {
-  transition: 0.5s all;
-  color: #093579;
+  color: #888888;
+  font-weight: bold;
+  letter-spacing: 0.01rem;
 }
 
 a:hover {
-  color: #082c63;
+  color: #555555;
 }
 
 code {

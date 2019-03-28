@@ -133,7 +133,7 @@ export default class Posts extends Component {
     let title = "";
     
     if(this.props.isCategory) {
-      title = `${this.props.match.params.category.toUpperCase()} SONG GUITAR CHORDS AND TABS`
+      title = `${this.props.match.params.category.toUpperCase()} - GUITAR CHORDS AND TABS`
     }
 
     return (
