@@ -128,7 +128,7 @@ export default class ContentParser extends Component {
       );
     } else {
       return (
-        <div dangerouslySetInnerHTML={ this.parseContent(content) } />
+        <div className="tab-contents" dangerouslySetInnerHTML={ this.parseContent(content) } />
       )
     }
   }
