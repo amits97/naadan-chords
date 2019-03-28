@@ -190,7 +190,7 @@ export default class Admin extends Component {
                   <ListGroup.Item key={i}>
                     <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
                     <LinkContainer exact to={`/admin/edit-post/${post.postId}`}>
-                      <a href="#/">{ post.title }</a>
+                      <a href="#/" className="text-primary">{ post.title }</a>
                     </LinkContainer>
                   </ListGroup.Item>
                 );
