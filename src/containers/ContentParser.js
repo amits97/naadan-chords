@@ -99,14 +99,14 @@ export default class ContentParser extends Component {
     if(leadTabs || youtubeId) {
       const tabs = [
         <Tab eventKey="chords" title="CHORDS" key="chords">
-          <div className="tab-contents" dangerouslySetInnerHTML={ this.parseContent(content) } />
+          <div className="tab-contents chord-sheet" dangerouslySetInnerHTML={ this.parseContent(content) } />
         </Tab>
       ];
 
       if(leadTabs) {
         tabs.push(
           <Tab eventKey="tabs" title="LEAD TABS" key="tabs">
-            <div className="tab-contents" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
+            <div className="tab-contents chord-sheet" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
           </Tab>
         );
       }
@@ -114,7 +114,7 @@ export default class ContentParser extends Component {
       if(youtubeId) {
         tabs.push(
           <Tab eventKey="video" title="VIDEO" key="video" className={`${this.state.isVideoReady ? '' : 'visible'}`}>
-            <div className="tab-contents">
+            <div className="tab-contents chord-sheet">
               <YouTubeEmbed youtubeId={youtubeId} onLoad={this.hideVideoTab} />
             </div>
           </Tab>
@@ -128,7 +128,7 @@ export default class ContentParser extends Component {
       );
     } else {
       return (
-        <div className="tab-contents" dangerouslySetInnerHTML={ this.parseContent(content) } />
+        <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent(content) } />
       )
     }
   }

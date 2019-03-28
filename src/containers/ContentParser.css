@@ -38,6 +38,10 @@
   font-size: 15px;
 }
 
+.ContentParser .chord-sheet {
+  font-size: 15px;
+}
+
 .ContentParser hr {
   margin: 0;
 }
