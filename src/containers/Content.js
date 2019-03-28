@@ -53,7 +53,7 @@ export default class Content extends Component {
               posts.map((post, i) =>
                 <LinkContainer key={i} exact to={`/${ post.postId }`}>
                   <div className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
-                    <h4>{ post.title }</h4>
+                    <h5>{ post.title }</h5>
                     <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">Amit S Namboothiry</a></small>
                   </div>
                 </LinkContainer>
