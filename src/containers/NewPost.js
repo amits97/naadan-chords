@@ -175,7 +175,7 @@ export default class NewPost extends Component {
       return (
         <div>
           <Form.Group controlId="title">
-            <Form.Control type="text" placeholder="Title" onChange={this.handleChange} value={this.state.title} />
+            <Form.Control autoComplete="off" type="text" placeholder="Title" onChange={this.handleChange} value={this.state.title} />
           </Form.Group>
         </div>
       );
@@ -183,16 +183,16 @@ export default class NewPost extends Component {
       return (
         <div>
           <Form.Group controlId="song">
-            <Form.Control type="text" placeholder="Song" onChange={this.handleChange} value={this.state.song ? this.state.song : ""} />
+            <Form.Control autoComplete="off" type="text" placeholder="Song" onChange={this.handleChange} value={this.state.song ? this.state.song : ""} />
           </Form.Group>
           <Form.Group controlId="album">
-            <Form.Control type="text" placeholder="Album" onChange={this.handleChange} value={this.state.album ? this.state.album : ""} />
+            <Form.Control autoComplete="off" type="text" placeholder="Album" onChange={this.handleChange} value={this.state.album ? this.state.album : ""} />
           </Form.Group>
           <Form.Group controlId="singers">
-            <Form.Control type="text" placeholder="Singers" onChange={this.handleChange} value={this.state.singers ? this.state.singers : ""} />
+            <Form.Control autoComplete="off" type="text" placeholder="Singers" onChange={this.handleChange} value={this.state.singers ? this.state.singers : ""} />
           </Form.Group>
           <Form.Group controlId="music">
-            <Form.Control type="text" placeholder="Music Director" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
+            <Form.Control autoComplete="off" type="text" placeholder="Music Director" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
           </Form.Group>
           <Form.Group>
             <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""}>
@@ -225,7 +225,7 @@ export default class NewPost extends Component {
           </Tab>
           <Tab eventKey="video" title="VIDEO">
             <div className="mt-3 mb-5">
-              <Form.Control type="text" id="youtubeId" placeholder="YouTube video ID  (Optional)" onChange={this.handleChange} value={this.state.youtubeId ? this.state.youtubeId : ""} />
+              <Form.Control autoComplete="off" type="text" id="youtubeId" placeholder="YouTube video ID  (Optional)" onChange={this.handleChange} value={this.state.youtubeId ? this.state.youtubeId : ""} />
             </div>
           </Tab>
         </Tabs>
