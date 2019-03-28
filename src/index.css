@@ -23,6 +23,9 @@ ul li {
 
 a {
   color: #888888;
+}
+
+small a {
   letter-spacing: 0.01rem;
 }
 
