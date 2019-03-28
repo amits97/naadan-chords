@@ -11,6 +11,7 @@ export default class Posts extends Component {
       isPaginationLoading: false,
       posts: {},
       homePosts: [],
+      lastEvaluatedHomePost: {},
       scrollY: 0,
       lastEvaluatedPost: {},
       isPostList: false
@@ -112,15 +113,17 @@ export default class Posts extends Component {
         if(prevProps.match.params.id === undefined) {
           this.setState({
             homePosts: prevState.posts,
+            lastEvaluatedHomePost: prevState.lastEvaluatedPost,
             scrollY: window.pageYOffset || document.documentElement.scrollTop
           });
         }
 
         //coming back to home
-        if(this.props.match.params.id === undefined) {
+        if(this.props.isHomePage) {
           if(this.state.homePosts.length > 0) {
             this.setState({
-              posts: this.state.homePosts
+              posts: this.state.homePosts,
+              lastEvaluatedPost: this.state.lastEvaluatedHomePost
             });
             window.scrollTo(0, this.state.scrollY);
             return;
