@@ -23,6 +23,7 @@ export default class ContentParser extends Component {
     const italicRegExp = /{start_italic}([\s\S]*?){end_italic}/gim;
     const headingRegExp = /{start_heading}([\s\S]*?){end_heading}/gim;
     const strummingRegExp = /{start_strumming}([\s\S]*?){end_strumming}/gim;
+    const imageRegExp = /{start_image}([\s\S]*?){end_image}/gim;
     const chordsInStrummingRegExp = /\[([\s\S]*?)\]/gim;
     const separatorRegExp = /{separator}/gim;
 
@@ -61,6 +62,11 @@ export default class ContentParser extends Component {
     //replace chords
     content = content.replace(chordsRegex, (match) => {
       return (`<span class="chord">${match}</span>`);
+    });
+
+    //replace image
+    content = content.replace(imageRegExp, (match, p1) => {
+      return (`<img src="${p1}" alt="image-${p1}" />`);
     });
 
     //replace strumming
