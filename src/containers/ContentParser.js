@@ -12,6 +12,16 @@ export default class ContentParser extends Component {
     }
   }
 
+  getFilename = (url) => {
+    if (url) {
+      var m = url.toString().match(/.*\/(.+?)\./);
+      if (m && m.length > 1) {
+         return m[1];
+      }
+    }
+    return "";
+  }
+
   stripHtml = (html) => {
     var doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || "";
@@ -66,7 +76,7 @@ export default class ContentParser extends Component {
 
     //replace image
     content = content.replace(imageRegExp, (match, p1) => {
-      return (`<img src="${p1}" alt="image-${p1}" />`);
+      return (`<img src="${p1}" alt="${this.getFilename(p1)}" />`);
     });
 
     //replace strumming
