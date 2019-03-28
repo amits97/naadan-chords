@@ -12,7 +12,8 @@ export default class Posts extends Component {
       posts: {},
       homePosts: [],
       scrollY: 0,
-      lastEvaluatedPost: {}
+      lastEvaluatedPost: {},
+      isPostList: false
     };
   }
 
@@ -35,11 +36,19 @@ export default class Posts extends Component {
       let category = this.props.match.params.category;
 
       if(postId) {
+        this.setState({
+          isPostList: false
+        });
+
         posts = await this.post(postId);
         if(posts.postId !== postId) {
           this.props.history.push(`/${posts.postId}`);
         }
       } else {
+        this.setState({
+          isPostList: true
+        });
+
         let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null);
         posts = postsResult.Items;
 
@@ -129,7 +138,7 @@ export default class Posts extends Component {
   }
 
   render() {
-    let { isLoading, posts, lastEvaluatedPost, isPaginationLoading } = this.state;
+    let { isLoading, posts, lastEvaluatedPost, isPaginationLoading, isPostList } = this.state;
     let title = "";
     
     if(this.props.isCategory) {
@@ -137,7 +146,7 @@ export default class Posts extends Component {
     }
 
     return (
-      <Content isLoading={isLoading} posts={posts} lastEvaluatedPost={lastEvaluatedPost} loadPosts = {this.loadMorePosts} isPaginationLoading={isPaginationLoading} title={title} />
+      <Content isLoading={isLoading} posts={posts} lastEvaluatedPost={lastEvaluatedPost} loadPosts = {this.loadMorePosts} isPaginationLoading={isPaginationLoading} title={title} isPostList = {isPostList} />
     );
   }
 }

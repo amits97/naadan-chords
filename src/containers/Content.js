@@ -41,8 +41,20 @@ export default class Content extends Component {
     let { isLoading, posts, lastEvaluatedPost, title } = this.props;
 
     if(isLoading) {
+      let skeleton = [];
+
+      for(var i=0; i<6; i++) {
+        skeleton.push(
+          <div className="post pt-1 pb-1 no-hover">
+            <h5><Skeleton /></h5>
+            <small><Skeleton /></small>
+          </div>
+        );
+      }
       return (
-        <Skeleton count={15} />
+        <div className="postList">
+          { skeleton }
+        </div>
       );
     } else {
       if(posts.length > 0) {
@@ -144,7 +156,11 @@ export default class Content extends Component {
 
     if(isLoading) {
       return (
-        <Skeleton count={15} />
+        <div className="post">
+          <h1><Skeleton /></h1>
+          <hr />
+          <Skeleton count={10} />
+        </div>
       );
     } else {
       if(post.postId) {
@@ -164,9 +180,9 @@ export default class Content extends Component {
   }
 
   renderContent = () => {
-    let { posts } = this.props;
+    let { posts, isPostList } = this.props;
     
-    if(Array.isArray(posts)) {
+    if(Array.isArray(posts) || isPostList) {
       //render all posts
       return this.renderPosts();
     } else {
