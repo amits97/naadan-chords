@@ -70,6 +70,10 @@ export default class Content extends Component {
     }
   }
 
+  capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
+
   renderPostMeta = (post) => {
     if(post.postType === "PAGE") {
       return (
@@ -83,7 +87,17 @@ export default class Content extends Component {
         <div>
           <LinkContainer exact to="/"><a href="#/" className="navigate-link"><small>← Go home</small></a></LinkContainer>
           <h1>{ post.title }</h1>
-          <small>{ this.formatDate( post.createdAt ) } <span>|</span> Posted by <a href="#/">Amit S Namboothiry</a></small>
+          <small>
+            { this.formatDate( post.createdAt ) }
+            <span className="ml-1 mr-1">|</span>
+            Posted by <a href="#/">Amit S Namboothiry</a>
+            <span className="ml-1 mr-1">in</span>
+              <LinkContainer exact to={`/category/${post.category.toLowerCase()}`}>
+                <a href="#/">
+                  { this.capitalizeFirstLetter(post.category) }
+                </a>
+              </LinkContainer>
+          </small>
           <hr />
         </div>
       );
