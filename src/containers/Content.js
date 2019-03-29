@@ -45,7 +45,7 @@ export default class Content extends Component {
 
       for(var i=0; i<6; i++) {
         skeleton.push(
-          <div className="post pt-1 pb-1 no-hover">
+          <div key={i} className="post pt-1 pb-1 no-hover">
             <h5><Skeleton /></h5>
             <small><Skeleton /></small>
           </div>
@@ -97,7 +97,9 @@ export default class Content extends Component {
     } else {
       return (
         <div>
-          <LinkContainer exact to="/"><a href="#/" className="navigate-link"><small>← Go home</small></a></LinkContainer>
+          <a href="#/" className="navigate-link" onClick={this.props.goBack}>
+            <small>← Go back</small>
+          </a>
           <h1>{ post.title }</h1>
           <small>
             { this.formatDate( post.createdAt ) }

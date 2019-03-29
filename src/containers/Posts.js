@@ -18,6 +18,11 @@ export default class Posts extends Component {
     };
   }
 
+  goBack = (e) => {
+    e.preventDefault();
+    this.props.history.goBack();
+  }
+
   post(postId) {
     return API.get("posts", `/posts/${postId}`);
   }
@@ -149,7 +154,7 @@ export default class Posts extends Component {
     }
 
     return (
-      <Content isLoading={isLoading} posts={posts} lastEvaluatedPost={lastEvaluatedPost} loadPosts = {this.loadMorePosts} isPaginationLoading={isPaginationLoading} title={title} isPostList = {isPostList} />
+      <Content isLoading={isLoading} posts={posts} lastEvaluatedPost={lastEvaluatedPost} loadPosts = {this.loadMorePosts} isPaginationLoading={isPaginationLoading} title={title} isPostList = {isPostList} goBack={this.goBack} />
     );
   }
 }
