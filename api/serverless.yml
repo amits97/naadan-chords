@@ -64,6 +64,16 @@ functions:
           path: posts/{id}
           method: get
           cors: true
+  random:
+    # Defines an HTTP API endpoint that calls the main function in random.js
+    # - path: url path is /random
+    # - method: GET request
+    handler: random.main
+    events:
+      - http:
+          path: posts/random
+          method: get
+          cors: true
   list:
     # Defines an HTTP API endpoint that calls the main function in list.js
     # - path: url path is /posts

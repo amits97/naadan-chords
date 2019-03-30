@@ -11,6 +11,7 @@ import AuthenticatedRoute from "./components/AuthenticatedRoute";
 export default ({ childProps }) =>
   <Switch>
     <AppliedRoute path="/" exact component={Posts} props={{pageKey: window.location.href, isHomePage: true, ...childProps}} />
+    <AppliedRoute path="/random/" exact component={Posts} props={{pageKey: window.location.href, isRandomPage: true, ...childProps}} />
     <AppliedRoute path="/category/:category" exact component={Posts} props={{pageKey: window.location.href, isCategory: true, ...childProps}} />
     <UnauthenticatedRoute path="/login" exact component={Login} props={childProps} />
     <AuthenticatedRoute path="/admin" exact component={Admin} props={childProps} />

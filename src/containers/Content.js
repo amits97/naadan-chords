@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import Disqus from "disqus-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRandom } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 import ContentParser from "./ContentParser";
 import LoaderButton from "../components/LoaderButton";
@@ -60,7 +62,14 @@ export default class Content extends Component {
       if(posts.length > 0) {
         return (
           <div className="postList">
-            <h6 className="border-bottom">{title ? title : "LATEST POSTS"}</h6>
+            <div className="title-container border-bottom mb-2">
+              <h6>{title ? title : "LATEST POSTS"}</h6>
+              <LinkContainer to="/random">
+                <a href="#/" className={`${title? "d-none":""} random-post text-primary`}>
+                  <FontAwesomeIcon className="mr-1" icon={ faRandom } /> Random
+                </a>
+              </LinkContainer>
+            </div>
             {
               posts.map((post, i) =>
                 <LinkContainer key={i} exact to={`/${ post.postId }`}>

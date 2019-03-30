@@ -14,11 +14,20 @@
   padding-bottom: 50px;
 }
 
+.Content .postList .title-container {
+  overflow: auto;
+}
+
 .Content .postList h6 {
   color: #999999;
   margin-top: 0;
-  padding-bottom: 10px;
   padding-left: 15px;
+  float: left;
+}
+
+.Content .postList a.random-post {
+  float: right;
+  font-weight: normal;
 }
 
 .Content .postList .post {

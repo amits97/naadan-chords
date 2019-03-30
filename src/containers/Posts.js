@@ -14,13 +14,23 @@ export default class Posts extends Component {
       lastEvaluatedHomePost: {},
       scrollY: 0,
       lastEvaluatedPost: {},
-      isPostList: false
+      isPostList: false,
+      isRandomPost: false
     };
   }
 
   goBack = (e) => {
     e.preventDefault();
-    this.props.history.goBack();
+
+    if(this.state.isRandomPost) {
+      this.props.history.push("/");
+    } else {
+      this.props.history.goBack();
+    }
+  }
+
+  randomPost() {
+    return API.get("posts", `/posts/random`);
   }
 
   post(postId) {
@@ -38,21 +48,32 @@ export default class Posts extends Component {
   loadData = async () => {
     try {
       let posts = {};
+      let { isRandomPage } = this.props;
       let postId = this.props.match.params.id;
       let category = this.props.match.params.category;
 
       if(postId) {
         this.setState({
-          isPostList: false
+          isPostList: false,
+          isRandomPost: false
         });
 
         posts = await this.post(postId);
         if(posts.postId !== postId) {
           this.props.history.push(`/${posts.postId}`);
         }
+      } else if(isRandomPage) {
+        this.setState({
+          isPostList: false,
+          isRandomPost: true
+        });
+
+        posts = await this.randomPost();
+        this.props.history.push(`/${posts.postId}`);
       } else {
         this.setState({
-          isPostList: true
+          isPostList: true,
+          isRandomPost: false
         });
 
         let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null);
@@ -113,35 +134,37 @@ export default class Posts extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if(prevProps.pageKey !== this.props.pageKey) {
-      if(!this.props.isCategory && !prevProps.isCategory) {
-        //navigating away from home
-        if(prevProps.match.params.id === undefined) {
-          this.setState({
-            homePosts: prevState.posts,
-            lastEvaluatedHomePost: prevState.lastEvaluatedPost,
-            scrollY: window.pageYOffset || document.documentElement.scrollTop
-          });
-        }
-
-        //coming back to home
-        if(this.props.isHomePage) {
-          if(this.state.homePosts.length > 0) {
+      if(!prevProps.isRandomPage) {
+        if(!this.props.isCategory && !prevProps.isCategory) {
+          //navigating away from home
+          if(prevProps.match.params.id === undefined) {
             this.setState({
-              posts: this.state.homePosts,
-              lastEvaluatedPost: this.state.lastEvaluatedHomePost
+              homePosts: prevState.posts,
+              lastEvaluatedHomePost: prevState.lastEvaluatedPost,
+              scrollY: window.pageYOffset || document.documentElement.scrollTop
             });
-            window.scrollTo(0, this.state.scrollY);
-            return;
+          }
+  
+          //coming back to home
+          if(this.props.isHomePage) {
+            if(this.state.homePosts.length > 0) {
+              this.setState({
+                posts: this.state.homePosts,
+                lastEvaluatedPost: this.state.lastEvaluatedHomePost
+              });
+              window.scrollTo(0, this.state.scrollY);
+              return;
+            }
           }
         }
+  
+        this.setState({
+          posts: {},
+          isLoading: true
+        });
+        this.loadData();
+        window.scrollTo(0, 0);  
       }
-
-      this.setState({
-        posts: {},
-        isLoading: true
-      });
-      this.loadData();
-      window.scrollTo(0, 0);
     }
   }
 
