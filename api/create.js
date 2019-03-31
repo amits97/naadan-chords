@@ -16,6 +16,8 @@ function slugify(text) {
 export async function main(event, context, callback) {
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
+  const provider = event.requestContext.identity.cognitoAuthenticationProvider;
+  const sub = provider.split(':')[2];
 
   const params = {
     TableName: "NaadanChords",
@@ -28,7 +30,7 @@ export async function main(event, context, callback) {
     // - 'status': post status
     // - 'createdAt': current Unix timestamp
     Item: {
-      userId: event.requestContext.identity.cognitoIdentityId,
+      userId: sub,
       postId: slugify(data.title),
       title: data.title,
       song: data.song || null,

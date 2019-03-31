@@ -1,6 +1,7 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
+import * as userNameLib from "./libs/username-lib";
 
-export async function main(event, context) {
+export async function main(event, context, callback) {
   const params = {
     TableName: "NaadanChords",
     IndexName: "postType-createdAt-index",
@@ -9,7 +10,7 @@ export async function main(event, context) {
       ":postType": event.postType || "POST",
     },
     ScanIndexForward: false,
-    ProjectionExpression: "postId, createdAt, postType, title",
+    ProjectionExpression: "postId, createdAt, postType, title, userId",
     Limit: 10
   };
 
@@ -29,7 +30,19 @@ export async function main(event, context) {
 
   try {
     const result = await dynamoDbLib.call("query", params);
-    // Return the matching list of items in response body
+    let users = {};
+
+    for(let i = 0; i < result.Items.length; i++) {
+      let userId = result.Items[i].userId;
+
+      if(!users.hasOwnProperty(userId)) {
+        let userName = await userNameLib.call(userId);
+        users[userId] = userName;
+      }
+
+      result.Items[i].userName =  users[userId];
+    }
+
     return result;
   } catch (e) {
     return { status: false, error: e };

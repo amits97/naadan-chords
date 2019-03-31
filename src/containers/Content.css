@@ -16,12 +16,12 @@
 
 .Content .postList .title-container {
   overflow: auto;
+  padding: 0 15px 3px 15px;
 }
 
 .Content .postList h6 {
   color: #999999;
   margin-top: 0;
-  padding-left: 15px;
   float: left;
 }
 

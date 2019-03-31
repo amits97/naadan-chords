@@ -3,6 +3,7 @@ import { success, failure } from "./libs/response-lib";
 
 export async function main(event, context) {
   const data = JSON.parse(event.body);
+
   const params = {
     TableName: "NaadanChords",
     Key: {
@@ -15,11 +16,11 @@ export async function main(event, context) {
       ":album": data.album || null,
       ":singers": data.singers || null,
       ":music": data.music || null,
-      ":category": data.category || "MALAYALAM",
+      ":category": data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
       ":content": data.content || null,
       ":leadTabs": data.leadTabs || null,
       ":youtubeId": data.youtubeId || null,
-      ":postType": data.postType || null
+      ":postType": data.postType || "POST"
     },
     ReturnValues: "ALL_NEW"
   };

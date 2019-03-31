@@ -10,7 +10,7 @@ import "./Footer.css";
 export default class Footer extends Component {
   constructor(props) {
     super(props);
-    this.packageDetails = require('../../package.json')
+    this.packageDetails = require('../../package.json');
   }
 
   render() {

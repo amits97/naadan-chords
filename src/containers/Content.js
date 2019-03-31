@@ -66,7 +66,7 @@ export default class Content extends Component {
               <h6>{title ? title : "LATEST POSTS"}</h6>
               <LinkContainer to="/random">
                 <a href="#/" className={`${title? "d-none":""} random-post text-primary`}>
-                  <FontAwesomeIcon className="mr-1" icon={ faRandom } /> Random
+                  <FontAwesomeIcon className="mr-2" icon={ faRandom } />Random
                 </a>
               </LinkContainer>
             </div>
@@ -75,7 +75,7 @@ export default class Content extends Component {
                 <LinkContainer key={i} exact to={`/${ post.postId }`}>
                   <div className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
                     <h5>{ post.title }</h5>
-                    <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">Amit S Namboothiry</a></small>
+                    <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">{ post.userName }</a></small>
                   </div>
                 </LinkContainer>
               )
@@ -113,7 +113,7 @@ export default class Content extends Component {
           <small>
             { this.formatDate( post.createdAt ) }
             <span className="ml-1 mr-1">|</span>
-            Posted by <a href="#/">Amit S Namboothiry</a>
+            Posted by <a href="#/">{ post.userName }</a>
             <span className="ml-1 mr-1">in</span>
               <LinkContainer exact to={`/category/${post.category.toLowerCase()}`}>
                 <a href="#/">

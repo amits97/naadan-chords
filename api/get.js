@@ -1,4 +1,5 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
+import * as userNameLib from "./libs/username-lib";
 import { success, failure } from "./libs/response-lib";
 
 function retryLoop(postId) {
@@ -27,7 +28,10 @@ async function retryGet(postId) {
     try {
       const result = await dynamoDbLib.call("scan", params);
       if(result.Items.length > 0) {
-        return success(result.Items[0]);
+        let result = result.Items[0];
+        let userId = result.userId;
+        result.userName = await userNameLib.call(userId);
+        return success(result);
       } else {
         return retryLoop(postId);
       }
@@ -50,7 +54,8 @@ export async function main(event, context) {
   try {
     const result = await dynamoDbLib.call("get", params);
     if (result.Item) {
-      // Return the retrieved item
+      let userId = result.Item.userId;
+      result.Item.userName = await userNameLib.call(userId);
       return success(result.Item);
     } else {
       return retryLoop(event.pathParameters.id);
