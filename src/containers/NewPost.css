@@ -69,6 +69,21 @@
   border-top: 0;
 }
 
+.NewPost .preview-placeholder {
+  text-align: center;
+  color: #888888;
+  padding-top: 50px;
+}
+
+.NewPost .preview-placeholder p {
+  color: #888888;
+  margin-top: 10px;
+}
+
+.NewPost .preview-placeholder .preview-icon {
+  font-size: 80px;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .NewPost .LoaderButton {

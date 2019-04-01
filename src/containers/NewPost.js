@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Form, Row, Col, Tabs, Tab } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../components/LoaderButton";
 import { API } from "aws-amplify";
@@ -31,6 +33,14 @@ export default class NewPost extends Component {
     };
   }
 
+  safeStringNullOrEmpty = (string, prefix) => {
+    if(string === null || string === "") {
+      return "";
+    } else {
+      return prefix ? ` ${prefix} ` + string : string;
+    }
+  }
+
   validateForm() {
     if(this.state.postType === "POST") {
       return this.state.title !== null
@@ -58,7 +68,7 @@ export default class NewPost extends Component {
         album = event.target.value;
       }
 
-      let title = song + (album === null ? "" : " - " + album);
+      let title = this.safeStringNullOrEmpty(song) + this.safeStringNullOrEmpty(album, " - ");
 
       this.setState({
         title: title
@@ -154,6 +164,15 @@ export default class NewPost extends Component {
         });
       }
     } 
+  }
+
+  renderPreviewPlaceholder = () => {
+    return(
+      <div className="preview-placeholder">
+        <FontAwesomeIcon className="preview-icon" icon={faEye} />
+        <p>Preview</p>
+      </div>
+    );
   }
 
   renderPreviewContent = () => {
@@ -275,7 +294,7 @@ export default class NewPost extends Component {
             <div className="preview-pane">
               <h2 className="title">{this.state.title}</h2>
               {this.state.title ? <hr /> : ''}
-              {this.renderPreviewContent()}
+              {this.state.title ? this.renderPreviewContent() : this.renderPreviewPlaceholder()}
             </div>
           </Col>
         </Row>
