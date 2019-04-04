@@ -76,6 +76,19 @@
   color: #ff9700;
 }
 
+.App .navbar .search-form {
+  width: 100%;
+  margin-right: 50px;
+}
+
+.App .navbar .search-form input {
+  width: 100%;
+  border: 0;
+  background: #082c63;
+  color: #ffffff;
+  max-width: 650px;
+}
+
 .App .contents {
   min-height: calc(100vh - 356px);
 }

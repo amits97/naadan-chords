@@ -1,8 +1,17 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import * as userNameLib from "./libs/username-lib";
 
+function slugify(text) {
+  return text.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
+}
+
 export async function main(event, context, callback) {
-  const params = {
+  let params = {
     TableName: "NaadanChords",
     IndexName: "postType-createdAt-index",
     KeyConditionExpression: "postType = :postType",
@@ -29,7 +38,22 @@ export async function main(event, context, callback) {
   }
 
   try {
-    const result = await dynamoDbLib.call("query", params);
+    let result = {};
+    if(event.search) {
+      //search
+      params = {
+        TableName: "NaadanChords",
+        FilterExpression: "contains(postId, :postId)",
+        ExpressionAttributeValues: {
+          ":postId": slugify(event.search)
+        },
+        ProjectionExpression: "postId, createdAt, postType, title, userId"
+      };
+      result = await dynamoDbLib.call("scan", params);
+    } else {
+      result = await dynamoDbLib.call("query", params);
+    }
+
     let users = {};
 
     for(let i = 0; i < result.Items.length; i++) {

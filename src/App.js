@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Form, FormControl } from "react-bootstrap";
+import * as urlLib from "./libs/url-lib";
 import Routes from "./Routes";
 import logo from './logo.svg';
 import Footer from "./containers/Footer";
@@ -12,10 +13,14 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    //timeout variable to throttle search results
+    this.searchTimeout = null;
+
     this.state = {
       navExpanded: false,
       isAuthenticated: false,
-      isAuthenticating: true
+      isAuthenticating: true,
+      search: ""
     };
   }
 
@@ -30,11 +35,29 @@ class App extends Component {
       }
     }
   
-    this.setState({ isAuthenticating: false });
+    this.setState({
+      isAuthenticating: false,
+      search: urlLib.getUrlParameter("s")
+    });
   }
   
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if(this.state.search && this.state.search !== prevState.search) {
+      //clear previous timeouts
+      clearTimeout(this.searchTimeout);
+
+      //1s delay
+      this.searchTimeout = setTimeout(() => {
+        this.setState({
+          search: this.state.search
+        });
+        this.props.history.push(`/?s=${this.state.search}`);
+      }, 500);
+    }
   }
 
   handleLogout = async event => {
@@ -71,10 +94,29 @@ class App extends Component {
     }
   }
 
+  setSearch = (value) => {
+    this.setState({
+      search: value
+    });
+  }
+
+  handleSearchSubmit = (event) => {
+    event.preventDefault();
+    this.props.history.push(`/?s=${this.state.search}`);
+  }
+
+  handleSearchChange = (event) => {
+    this.setState({
+      search: event.target.value
+    });
+  }
+
   render() {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated
+      userHasAuthenticated: this.userHasAuthenticated,
+      search: this.state.search,
+      setSearch: this.setSearch
     };
 
     return (
@@ -89,6 +131,9 @@ class App extends Component {
             </Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
+              <Form inline className="search-form" onSubmit={this.handleSearchSubmit}>
+                <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} />
+              </Form>
               <Nav>
                 <LinkContainer exact to="/">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>Home</a>

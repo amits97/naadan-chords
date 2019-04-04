@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
+import * as urlLib from "../libs/url-lib";
 import Content from "./Content";
 
 export default class Posts extends Component {
@@ -37,9 +38,11 @@ export default class Posts extends Component {
     return API.get("posts", `/posts/${postId}`);
   }
 
-  posts(category) {
+  posts(category, search) {
     if(category) {
       return API.get("posts", `/posts?category=${category}`);
+    } else if(search) {
+      return API.get("posts", `/posts?s=${search}`);
     } else {
       return API.get("posts", "/posts");
     }
@@ -76,7 +79,7 @@ export default class Posts extends Component {
           isRandomPost: false
         });
 
-        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null);
+        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, urlLib.getUrlParameter("s"));
         posts = postsResult.Items;
 
         if(postsResult.hasOwnProperty("LastEvaluatedKey")) {
@@ -134,6 +137,25 @@ export default class Posts extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if(prevProps.pageKey !== this.props.pageKey) {
+      let searchQuery = urlLib.getUrlParameter("s");
+
+      if(this.props.search || searchQuery) {
+        if(!searchQuery) {
+          //clear search
+          this.props.setSearch("");
+        } else if(this.props.search !== searchQuery) {
+          this.props.setSearch(searchQuery);
+        }
+
+        this.setState({
+          posts: {},
+          isLoading: true
+        });
+        this.loadData();
+        window.scrollTo(0, 0);
+        return;
+      }
+
       if(!prevProps.isRandomPage) {
         if(!this.props.isCategory && !prevProps.isCategory) {
           //navigating away from home
@@ -146,7 +168,7 @@ export default class Posts extends Component {
           }
   
           //coming back to home
-          if(this.props.isHomePage) {
+          if(this.props.isHomePage && !urlLib.getUrlParameter("s")) {
             if(this.state.homePosts.length > 0) {
               this.setState({
                 posts: this.state.homePosts,
@@ -163,21 +185,30 @@ export default class Posts extends Component {
           isLoading: true
         });
         this.loadData();
-        window.scrollTo(0, 0);  
+        window.scrollTo(0, 0);
       }
     }
   }
 
   render() {
-    let { isLoading, posts, lastEvaluatedPost, isPaginationLoading, isPostList } = this.state;
     let title = "";
-    
+    let searchQuery = urlLib.getUrlParameter("s");
+
     if(this.props.isCategory) {
       title = `${this.props.match.params.category.toUpperCase()} - GUITAR CHORDS AND TABS`
+    } else if(searchQuery) {
+      title = `SEARCH RESULTS - ${searchQuery.toUpperCase()}`
+    }
+
+    let childProps = {
+      ...this.state,
+      title: title,
+      loadPosts: this.loadMorePosts,
+      goBack: this.goBack
     }
 
     return (
-      <Content isLoading={isLoading} posts={posts} lastEvaluatedPost={lastEvaluatedPost} loadPosts = {this.loadMorePosts} isPaginationLoading={isPaginationLoading} title={title} isPostList = {isPostList} goBack={this.goBack} />
+      <Content {...childProps} />
     );
   }
 }
