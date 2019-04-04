@@ -11,6 +11,7 @@ import TextareaAutosize from "react-autosize-textarea";
 import Skeleton from "react-loading-skeleton";
 import SearchComponent from "../components/SearchComponent";
 import PromptWrapper from "../components/PromptWrapper";
+import NewPostEditorPanel from "./NewPostEditorPanel";
 import ContentParser from "./ContentParser";
 import "./NewPost.css";
 
@@ -250,18 +251,23 @@ export default class NewPost extends SearchComponent {
   renderContentInputs = () => {
     if(this.state.postType === "PAGE") {
       return (
-        <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control page`} style={{ minHeight: 250 }} />
+        <div>
+          <NewPostEditorPanel />
+          <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control page`} style={{ minHeight: 250 }} />
+        </div>
       );
     } else {
       return (
         <Tabs defaultActiveKey="chords">
           <Tab eventKey="chords" title="CHORDS">
             <div className="mt-3">
+              <NewPostEditorPanel />
               <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} />
             </div>
           </Tab>
           <Tab eventKey="tabs" title="LEAD TABS">
             <div className="mt-3">
+              <NewPostEditorPanel />
               <TextareaAutosize placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} />
             </div>
           </Tab>
