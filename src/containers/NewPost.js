@@ -9,11 +9,12 @@ import ReactMarkdown from "react-markdown";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea";
 import Skeleton from "react-loading-skeleton";
+import SearchComponent from "../components/SearchComponent";
 import PromptWrapper from "../components/PromptWrapper";
 import ContentParser from "./ContentParser";
 import "./NewPost.css";
 
-export default class NewPost extends Component {
+export default class NewPost extends SearchComponent {
   constructor(props) {
     super(props);
 

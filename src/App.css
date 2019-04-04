@@ -93,10 +93,6 @@
   min-height: calc(100vh - 356px);
 }
 
-.App .form-control {
-  line-height: 4;
-}
-
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .App .navbar .navbar-nav .nav-link {

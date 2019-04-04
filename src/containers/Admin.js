@@ -6,9 +6,10 @@ import Skeleton from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import LoaderButton from "../components/LoaderButton";
+import SearchComponent from "../components/SearchComponent";
 import "./Admin.css";
 
-export default class Admin extends Component {
+export default class Admin extends SearchComponent {
   constructor(props) {
     super(props);
 
@@ -36,12 +37,6 @@ export default class Admin extends Component {
       });
     } catch (e) {
       console.log(e);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if(this.props.search) {
-      this.props.history.push(`/?s=${this.props.search}`);
     }
   }
 
