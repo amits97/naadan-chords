@@ -54,6 +54,14 @@ export default class NewPost extends Component {
     }
   }
 
+  anyDetailsEntered = () => {
+    return this.state.title !== null
+        || this.state.content !== null
+        || this.state.song !== null
+        || this.state.album !== null
+        || this.state.music !== null;
+  }
+
   handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
@@ -267,7 +275,12 @@ export default class NewPost extends Component {
 
   cancelPost = (e) => {
     e.preventDefault();
-    if(window.confirm("Are you sure? Any unsaved changes will be lost")) {
+
+    if(this.anyDetailsEntered()) {
+      if(window.confirm("Are you sure? Any unsaved changes will be lost")) {
+        this.props.history.goBack();
+      }
+    } else {
       this.props.history.goBack();
     }
   }
