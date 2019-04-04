@@ -13,9 +13,6 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    //timeout variable to throttle search results
-    this.searchTimeout = null;
-
     this.state = {
       navExpanded: false,
       isAuthenticated: false,
@@ -43,21 +40,6 @@ class App extends Component {
   
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
-  }
-
-  componentDidUpdate = (prevProps, prevState) => {
-    if(this.state.search && this.state.search !== prevState.search) {
-      //clear previous timeouts
-      clearTimeout(this.searchTimeout);
-
-      //1s delay
-      this.searchTimeout = setTimeout(() => {
-        this.setState({
-          search: this.state.search
-        });
-        this.props.history.push(`/?s=${this.state.search}`);
-      }, 500);
-    }
   }
 
   handleLogout = async event => {
@@ -102,7 +84,6 @@ class App extends Component {
 
   handleSearchSubmit = (event) => {
     event.preventDefault();
-    this.props.history.push(`/?s=${this.state.search}`);
   }
 
   handleSearchChange = (event) => {

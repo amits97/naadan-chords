@@ -7,6 +7,9 @@ export default class Posts extends Component {
   constructor(props) {
     super(props);
 
+    //timeout variable to throttle search results
+    this.searchTimeout = null;
+
     this.state = {
       isLoading: true,
       isPaginationLoading: false,
@@ -48,6 +51,18 @@ export default class Posts extends Component {
     }
   }
 
+  setPagination = (postsResult) => {
+    if(postsResult.hasOwnProperty("LastEvaluatedKey")) {
+      this.setState({
+        lastEvaluatedPost: postsResult.LastEvaluatedKey
+      });
+    } else {
+      this.setState({
+        lastEvaluatedPost: {}
+      });
+    }
+  }
+
   loadData = async () => {
     try {
       let posts = {};
@@ -55,7 +70,19 @@ export default class Posts extends Component {
       let postId = this.props.match.params.id;
       let category = this.props.match.params.category;
 
-      if(postId) {
+      if(this.props.search) {
+        this.setState({
+          isPostList: true,
+          isRandomPost: false
+        });
+
+        let postsResult = await this.posts(null, this.props.search);
+        this.props.history.push(`/?s=${this.props.search}`);
+        
+        posts = postsResult.Items? postsResult.Items : [];
+
+        this.setPagination(postsResult);
+      } else if(postId) {
         this.setState({
           isPostList: false,
           isRandomPost: false
@@ -79,18 +106,9 @@ export default class Posts extends Component {
           isRandomPost: false
         });
 
-        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, urlLib.getUrlParameter("s"));
+        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null);
         posts = postsResult.Items;
-
-        if(postsResult.hasOwnProperty("LastEvaluatedKey")) {
-          this.setState({
-            lastEvaluatedPost: postsResult.LastEvaluatedKey
-          });
-        } else {
-          this.setState({
-            lastEvaluatedPost: {}
-          });
-        }
+        this.setPagination(postsResult);
       }
 
       this.setState({
@@ -131,31 +149,40 @@ export default class Posts extends Component {
   }
 
   componentDidMount() {
-    this.loadData();
-    window.scrollTo(0, 0);
+    if(!urlLib.getUrlParameter("s")) {
+      this.loadData();
+      window.scrollTo(0, 0);
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevProps.pageKey !== this.props.pageKey) {
-      let searchQuery = urlLib.getUrlParameter("s");
-
-      if(this.props.search || searchQuery) {
-        if(!searchQuery) {
-          //clear search
-          this.props.setSearch("");
-        } else if(this.props.search !== searchQuery) {
-          this.props.setSearch(searchQuery);
-        }
+    if(this.props.search) {
+      if(prevProps.search !== this.props.search) {
+        //clear previous timeouts
+        clearTimeout(this.searchTimeout);
 
         this.setState({
           posts: {},
           isLoading: true
         });
-        this.loadData();
-        window.scrollTo(0, 0);
-        return;
-      }
 
+        //250ms delay
+        this.searchTimeout = setTimeout(() => {
+          this.loadData();
+          window.scrollTo(0, 0);
+        }, 250);
+
+        return;
+      } else if(!urlLib.getUrlParameter("s")) {
+        if(!this.state.isLoading) {
+          //clear search
+          this.props.setSearch("");
+          return;
+        }
+      }
+    }
+
+    if(prevProps.pageKey !== this.props.pageKey || prevProps.search !== this.props.search) {
       if(!prevProps.isRandomPage) {
         if(!this.props.isCategory && !prevProps.isCategory) {
           //navigating away from home
@@ -168,7 +195,7 @@ export default class Posts extends Component {
           }
   
           //coming back to home
-          if(this.props.isHomePage && !urlLib.getUrlParameter("s")) {
+          if(this.props.isHomePage && !prevProps.search) {
             if(this.state.homePosts.length > 0) {
               this.setState({
                 posts: this.state.homePosts,
@@ -192,7 +219,7 @@ export default class Posts extends Component {
 
   render() {
     let title = "";
-    let searchQuery = urlLib.getUrlParameter("s");
+    let searchQuery = this.props.search;
 
     if(this.props.isCategory) {
       title = `${this.props.match.params.category.toUpperCase()} - GUITAR CHORDS AND TABS`
