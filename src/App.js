@@ -38,7 +38,7 @@ class App extends Component {
       search: urlLib.getUrlParameter("s")
     });
   }
-  
+
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
   }

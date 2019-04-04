@@ -181,6 +181,9 @@ export default class Posts extends Component {
           return;
         }
       }
+    } else if(urlLib.getUrlParameter("s") !== "") {
+      this.props.setSearch(urlLib.getUrlParameter("s"));
+      return;
     }
 
     if(prevProps.pageKey !== this.props.pageKey || prevProps.search !== this.props.search) {
