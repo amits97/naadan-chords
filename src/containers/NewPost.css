@@ -46,7 +46,7 @@
 .NewPost nav {
   font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
   margin-top: 25px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .NewPost nav a {
@@ -72,12 +72,17 @@
 .NewPost .preview-placeholder {
   text-align: center;
   color: #888888;
-  padding-top: 50px;
+  padding-top: 80px;
 }
 
 .NewPost .preview-placeholder p {
   color: #888888;
   margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.NewPost .preview-placeholder small {
+  font-style: italic;
 }
 
 .NewPost .preview-placeholder .preview-icon {

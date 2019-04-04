@@ -171,6 +171,7 @@ export default class NewPost extends Component {
       <div className="preview-placeholder">
         <FontAwesomeIcon className="preview-icon" icon={faEye} />
         <p>Preview</p>
+        <small>Start entering details to see live preview</small>
       </div>
     );
   }
@@ -201,22 +202,34 @@ export default class NewPost extends Component {
     } else {
       return (
         <div>
-          <Form.Group controlId="song">
-            <Form.Control autoComplete="off" type="text" placeholder="Song" onChange={this.handleChange} value={this.state.song ? this.state.song : ""} />
-          </Form.Group>
-          <Form.Group controlId="album">
-            <Form.Control autoComplete="off" type="text" placeholder="Album" onChange={this.handleChange} value={this.state.album ? this.state.album : ""} />
-          </Form.Group>
-          <Form.Group controlId="singers">
-            <Form.Control autoComplete="off" type="text" placeholder="Singers" onChange={this.handleChange} value={this.state.singers ? this.state.singers : ""} />
-          </Form.Group>
-          <Form.Group controlId="music">
-            <Form.Control autoComplete="off" type="text" placeholder="Music Director" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
-          </Form.Group>
+          <Row>
+            <Col>
+              <Form.Group controlId="song">
+                <Form.Control autoComplete="off" type="text" placeholder="Song" onChange={this.handleChange} value={this.state.song ? this.state.song : ""} />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="album">
+                <Form.Control autoComplete="off" type="text" placeholder="Album" onChange={this.handleChange} value={this.state.album ? this.state.album : ""} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group controlId="singers">
+                <Form.Control autoComplete="off" type="text" placeholder="Singers" onChange={this.handleChange} value={this.state.singers ? this.state.singers : ""} />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="music">
+                <Form.Control autoComplete="off" type="text" placeholder="Music Director" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
+              </Form.Group>
+            </Col>
+          </Row>
           <Form.Group>
             <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""}>
-                <option value="MALAYALAM">Malayalam</option>
-                <option value="TAMIL">Tamil</option>
+            <option value="MALAYALAM">Malayalam</option>
+            <option value="TAMIL">Tamil</option>
             </Form.Control>
           </Form.Group>
         </div>
