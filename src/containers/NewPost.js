@@ -333,7 +333,7 @@ export default class NewPost extends SearchComponent {
 
     return (
       <div className="NewPost">
-        <PromptWrapper when={this.anyDetailsEntered} message="Are you sure? Any unsaved changes will be lost" />
+        <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted} message="Are you sure? Any unsaved changes will be lost" />
         <h1>
           <LinkContainer exact to="/admin">
             <a href="#/" className="text-primary">Admin</a>

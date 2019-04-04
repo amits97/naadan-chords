@@ -18,7 +18,7 @@ export default class PromptWrapper extends Component {
   render() {
     return(
       <Prompt
-        when={this.state.when && this.props.when()}
+        when={this.state.when && this.props.when}
         message={this.props.message}
       />
     )
