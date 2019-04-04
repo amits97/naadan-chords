@@ -93,6 +93,22 @@
   min-height: calc(100vh - 356px);
 }
 
+@media (max-width: 992px) {
+  .App .navbar .show-search {
+    display: block;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .App .navbar .search-form.fixed-search {
+    width: calc(100% - 2rem);
+    position: fixed;
+    top: 5px;
+    height: 50px;
+    background: #093579;
+  }
+}
+
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .App .navbar .navbar-nav .nav-link {

@@ -97,7 +97,8 @@ class App extends Component {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
       search: this.state.search,
-      setSearch: this.setSearch
+      setSearch: this.setSearch,
+      closeNav: this.closeNav
     };
 
     return (
@@ -111,8 +112,8 @@ class App extends Component {
               </Link>
             </Navbar.Brand>
             <Navbar.Toggle />
-            <Navbar.Collapse className="justify-content-end">
-              <Form inline className="search-form" onSubmit={this.handleSearchSubmit}>
+            <Navbar.Collapse className={`justify-content-end ${this.state.search ? 'show-search':''}`}>
+              <Form inline className={`search-form ${this.state.search ? 'fixed-search':''}`} onSubmit={this.handleSearchSubmit}>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} />
               </Form>
               <Nav>

@@ -76,6 +76,7 @@ export default class Posts extends Component {
           isRandomPost: false
         });
 
+        this.props.closeNav();
         let postsResult = await this.posts(null, this.props.search);
         this.props.history.push(`/?s=${this.props.search}`);
         

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { API } from "aws-amplify";
 import { Button, ListGroup, Tab, Row, Col, Nav, Form } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";

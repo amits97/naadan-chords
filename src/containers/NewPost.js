@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
