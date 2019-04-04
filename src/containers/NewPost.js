@@ -265,6 +265,13 @@ export default class NewPost extends Component {
     }
   }
 
+  cancelPost = (e) => {
+    e.preventDefault();
+    if(window.confirm("Are you sure? Any unsaved changes will be lost")) {
+      this.props.history.goBack();
+    }
+  }
+
   renderEditor(isEditMode) {
     if(isEditMode && this.state.isLoading && !this.state.submitted) {
       return(
@@ -299,9 +306,7 @@ export default class NewPost extends Component {
               loadingText={isEditMode ? "Updating…" : "Creating…"}
             />
 
-            <LinkContainer exact to="/admin">
-              <a href="#/" className="text-primary ml-3 pt-1">Cancel</a>
-            </LinkContainer>
+            <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
           </Col>
           <Col xs={12} md={6}>
             <div className="preview-pane">
