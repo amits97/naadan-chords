@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea";
 import Skeleton from "react-loading-skeleton";
+import PromptWrapper from "../components/PromptWrapper";
 import ContentParser from "./ContentParser";
 import "./NewPost.css";
 
@@ -171,7 +172,7 @@ export default class NewPost extends Component {
           isLoading: false
         });
       }
-    } 
+    }
   }
 
   renderPreviewPlaceholder = () => {
@@ -275,14 +276,7 @@ export default class NewPost extends Component {
 
   cancelPost = (e) => {
     e.preventDefault();
-
-    if(this.anyDetailsEntered()) {
-      if(window.confirm("Are you sure? Any unsaved changes will be lost")) {
-        this.props.history.goBack();
-      }
-    } else {
-      this.props.history.goBack();
-    }
+    this.props.history.goBack();
   }
 
   renderEditor(isEditMode) {
@@ -338,6 +332,7 @@ export default class NewPost extends Component {
 
     return (
       <div className="NewPost">
+        <PromptWrapper when={this.anyDetailsEntered} message="Are you sure? Any unsaved changes will be lost" />
         <h1>
           <LinkContainer exact to="/admin">
             <a href="#/" className="text-primary">Admin</a>
