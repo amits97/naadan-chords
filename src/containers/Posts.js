@@ -217,6 +217,13 @@ export default class Posts extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if(this.props.search) {
+      clearTimeout(this.searchTimeout);
+      this.props.setSearch("");
+    }
+  }
+
   render() {
     let title = "";
     let searchQuery = this.props.search;

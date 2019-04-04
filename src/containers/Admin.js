@@ -39,6 +39,12 @@ export default class Admin extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if(this.props.search) {
+      this.props.history.push(`/?s=${this.props.search}`);
+    }
+  }
+
   posts() {
     return API.get("posts", "/posts");
   }
