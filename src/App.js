@@ -17,7 +17,8 @@ class App extends Component {
       navExpanded: false,
       isAuthenticated: false,
       isAuthenticating: true,
-      search: ""
+      search: "",
+      isSearchFocus: false
     };
   }
 
@@ -92,6 +93,18 @@ class App extends Component {
     });
   }
 
+  onSearchFocus = () => {
+    this.setState({
+      isSearchFocus: true
+    });
+  }
+
+  onSearchBlur = () => {
+    this.setState({
+      isSearchFocus: false
+    });
+  }
+
   render() {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
@@ -112,9 +125,9 @@ class App extends Component {
               </Link>
             </Navbar.Brand>
             <Navbar.Toggle />
-            <Navbar.Collapse className={`justify-content-end ${this.state.search ? 'show-search':''}`}>
-              <Form inline className={`search-form ${this.state.search ? 'fixed-search':''}`} onSubmit={this.handleSearchSubmit}>
-                <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} />
+            <Navbar.Collapse className={`justify-content-end ${this.state.search || this.state.isSearchFocus ? 'show-search':''}`}>
+              <Form inline className={`search-form ${this.state.search || this.state.isSearchFocus ? 'fixed-search':''}`} onSubmit={this.handleSearchSubmit}>
+                <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} onFocus={this.onSearchFocus} onBlur={this.onSearchBlur} />
               </Form>
               <Nav>
                 <LinkContainer exact to="/">
