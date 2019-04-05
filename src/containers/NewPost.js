@@ -7,11 +7,11 @@ import LoaderButton from "../components/LoaderButton";
 import { API } from "aws-amplify";
 import ReactMarkdown from "react-markdown";
 import { LinkContainer } from "react-router-bootstrap";
-import TextareaAutosize from "react-autosize-textarea";
+import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton from "react-loading-skeleton";
 import SearchComponent from "../components/SearchComponent";
 import PromptWrapper from "../components/PromptWrapper";
-import NewPostEditorPanel from "./NewPostEditorPanel";
+import EditorPanel from "./EditorPanel";
 import ContentParser from "./ContentParser";
 import "./NewPost.css";
 
@@ -175,6 +175,9 @@ export default class NewPost extends SearchComponent {
         });
       }
     }
+
+    //remove overflow hidden
+    this.props.setAppClassName("overflow-initial");
   }
 
   renderPreviewPlaceholder = () => {
@@ -252,7 +255,7 @@ export default class NewPost extends SearchComponent {
     if(this.state.postType === "PAGE") {
       return (
         <div>
-          <NewPostEditorPanel />
+          <EditorPanel />
           <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control page`} style={{ minHeight: 250 }} />
         </div>
       );
@@ -261,13 +264,13 @@ export default class NewPost extends SearchComponent {
         <Tabs defaultActiveKey="chords">
           <Tab eventKey="chords" title="CHORDS">
             <div className="mt-3">
-              <NewPostEditorPanel />
+              <EditorPanel />
               <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} />
             </div>
           </Tab>
           <Tab eventKey="tabs" title="LEAD TABS">
             <div className="mt-3">
-              <NewPostEditorPanel />
+              <EditorPanel />
               <TextareaAutosize placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} />
             </div>
           </Tab>

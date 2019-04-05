@@ -17,6 +17,7 @@ class App extends Component {
       navExpanded: false,
       isAuthenticated: false,
       isAuthenticating: true,
+      appClassName: "",
       search: "",
       isSearchFocus: false
     };
@@ -105,17 +106,24 @@ class App extends Component {
     });
   }
 
+  setAppClassName = (className) => {
+    this.setState({
+      appClassName: className
+    });
+  }
+
   render() {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
       search: this.state.search,
       setSearch: this.setSearch,
+      setAppClassName: this.setAppClassName,
       closeNav: this.closeNav
     };
 
     return (
-      <div className="App">
+      <div className={`App ${this.state.appClassName}`}>
         <Navbar fluid="true" expand="lg" sticky="top" variant="dark" onToggle={this.setNavExpanded} expanded={this.state.navExpanded}>
           <div className="container-fluid">
             <Navbar.Brand>
