@@ -49,7 +49,7 @@
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
-@media (max-width: 576px) {
+@media (max-width: 575.98px) {
   .Sidebar .sidebar-button {
     display: block;
   }

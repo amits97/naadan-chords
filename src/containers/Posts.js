@@ -78,8 +78,7 @@ export default class Posts extends Component {
 
         this.props.closeNav();
         let postsResult = await this.posts(null, this.props.search);
-        this.props.history.push(`/?s=${this.props.search}`);
-        
+
         posts = postsResult.Items? postsResult.Items : [];
 
         this.setPagination(postsResult);
@@ -98,7 +97,6 @@ export default class Posts extends Component {
           isPostList: false,
           isRandomPost: true
         });
-
         posts = await this.randomPost();
         this.props.history.push(`/${posts.postId}`);
       } else {
@@ -156,67 +154,85 @@ export default class Posts extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(this.props.search) {
-      if(prevProps.search !== this.props.search) {
-        //clear previous timeouts
-        clearTimeout(this.searchTimeout);
+  setLoadingAndLoadData = () => {
+    this.setState({
+      posts: {},
+      isLoading: true
+    });
+    this.loadData();
+    window.scrollTo(0, 0);
+  }
 
-        this.setState({
-          posts: {},
-          isLoading: true
-        });
-
-        //250ms delay
-        this.searchTimeout = setTimeout(() => {
-          this.loadData();
-          window.scrollTo(0, 0);
-        }, 250);
-
-        return;
-      } else if(!urlLib.getUrlParameter("s")) {
-        if(!this.state.isLoading) {
-          //clear search
-          this.props.setSearch("");
-          return;
-        }
-      }
-    } else if(urlLib.getUrlParameter("s") !== "") {
-      this.props.setSearch(urlLib.getUrlParameter("s"));
+  componentDidUpdateSearch = (prevProps) => {
+    if(this.props.search === "" && prevProps.search && this.props.match.params.id) {
+      this.setLoadingAndLoadData();
       return;
     }
 
-    if(prevProps.pageKey !== this.props.pageKey || prevProps.search !== this.props.search) {
-      if(!prevProps.isRandomPage) {
-        if(!this.props.isCategory && !prevProps.isCategory) {
-          //navigating away from home
-          if(prevProps.match.params.id === undefined) {
-            this.setState({
-              homePosts: prevState.posts,
-              lastEvaluatedHomePost: prevState.lastEvaluatedPost,
-              scrollY: window.pageYOffset || document.documentElement.scrollTop
-            });
-          }
-  
-          //coming back to home
-          if(this.props.isHomePage && !prevProps.search) {
-            if(this.state.homePosts.length > 0) {
-              this.setState({
-                posts: this.state.homePosts,
-                lastEvaluatedPost: this.state.lastEvaluatedHomePost
-              });
-              window.scrollTo(0, this.state.scrollY);
-              return;
-            }
-          }
-        }
-  
-        this.setState({
-          posts: {},
-          isLoading: true
-        });
+    if(prevProps.search !== this.props.search) {
+      //clear previous timeouts
+      clearTimeout(this.searchTimeout);
+
+      this.setState({
+        posts: {},
+        isLoading: true
+      });
+
+      if(this.props.search) {
+        this.props.history.push(`/?s=${this.props.search}`);
+      } else {
+        this.props.history.push("/");
+      }
+
+      //500ms delay
+      this.searchTimeout = setTimeout(() => {
         this.loadData();
         window.scrollTo(0, 0);
+      }, 500);
+
+      return;
+    } else if(!urlLib.getUrlParameter("s")) {
+      //clear search
+      this.props.setSearch("");       
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.search || prevProps.search) {
+      this.componentDidUpdateSearch(prevProps);
+    } else {
+      if(urlLib.getUrlParameter("s")) {
+        this.props.setSearch(urlLib.getUrlParameter("s"));
+        return;
+      }
+
+      if(prevProps.pageKey !== this.props.pageKey) {
+        if(!prevProps.isRandomPage) {
+          if(!this.props.isCategory && !prevProps.isCategory) {
+            //navigating away from home
+            if(prevProps.match.params.id === undefined) {
+              this.setState({
+                homePosts: prevState.posts,
+                lastEvaluatedHomePost: prevState.lastEvaluatedPost,
+                scrollY: window.pageYOffset || document.documentElement.scrollTop
+              });
+            }
+
+            //coming back home
+            if(this.props.isHomePage && !prevProps.search) {
+              if(this.state.homePosts.length > 0) {
+                this.setState({
+                  posts: this.state.homePosts,
+                  lastEvaluatedPost: this.state.lastEvaluatedHomePost
+                });
+                window.scrollTo(0, this.state.scrollY);
+                return;
+              }
+            }
+          }
+
+          this.setLoadingAndLoadData();
+        }
       }
     }
   }

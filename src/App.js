@@ -3,6 +3,8 @@ import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
 import { Navbar, Nav, Form, FormControl } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
 import Routes from "./Routes";
 import logo from './logo.svg';
@@ -101,6 +103,7 @@ class App extends Component {
   }
 
   onSearchBlur = () => {
+    this.closeNav();
     this.setState({
       isSearchFocus: false
     });
@@ -110,6 +113,10 @@ class App extends Component {
     this.setState({
       appClassName: className
     });
+  }
+
+  handleSearchClose = () => {
+    this.setSearch("");
   }
 
   render() {
@@ -136,6 +143,7 @@ class App extends Component {
             <Navbar.Collapse className={`justify-content-end ${this.state.search || this.state.isSearchFocus ? 'show-search':''}`}>
               <Form inline className={`search-form ${this.state.search || this.state.isSearchFocus ? 'fixed-search':''}`} onSubmit={this.handleSearchSubmit}>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} onFocus={this.onSearchFocus} onBlur={this.onSearchBlur} />
+                <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} />
               </Form>
               <Nav>
                 <LinkContainer exact to="/">

@@ -93,11 +93,16 @@
   max-width: 650px;
 }
 
+.App .navbar .search-form .clear-search {
+  display: none;
+}
+
 .App .contents {
   min-height: calc(100vh - 356px);
 }
 
-@media (max-width: 992px) {
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
   .App .navbar .show-search {
     display: block;
     height: 0;
@@ -110,6 +115,13 @@
     top: 5px;
     height: 50px;
     background: #093579;
+  }
+
+  .App .navbar .search-form.fixed-search .clear-search {
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    right: 10px;
   }
 }
 
