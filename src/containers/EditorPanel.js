@@ -14,28 +14,34 @@ export default class EditorPanel extends Component {
       <div className="EditorPanel">
         <ButtonGroup>
           <ButtonGroup className="border">
-            <Button variant="light"><FontAwesomeIcon icon={faBold} />
+            <Button variant="light" onClick={() => this.handleClick("bold")}>
+              <FontAwesomeIcon icon={faBold} />
               <span>Bold</span>
             </Button>
-            <Button variant="light"><FontAwesomeIcon icon={faItalic} />
+            <Button variant="light" onClick={() => this.handleClick("italic")}>
+              <FontAwesomeIcon icon={faItalic} />
               <span>Italic</span>
             </Button>
           </ButtonGroup>
           <ButtonGroup className="ml-2 border">
-            <Button variant="light"><FontAwesomeIcon icon={faHeading} />
+            <Button variant="light" onClick={() => this.handleClick("heading")}>
+              <FontAwesomeIcon icon={faHeading} />
               <span>Heading</span>
             </Button>
           </ButtonGroup>
           <ButtonGroup className="ml-2 border">
-            <Button variant="light" onClick={() => this.handleClick("{separator}")}><FontAwesomeIcon icon={faGripLines} />
+            <Button variant="light" onClick={() => this.handleClick("separator")}>
+              <FontAwesomeIcon icon={faGripLines} />
               <span>Separator</span>
             </Button>
           </ButtonGroup>
           <ButtonGroup className="ml-2 border">
-            <Button variant="light"><FontAwesomeIcon icon={faGuitar} />
+            <Button variant="light" onClick={() => this.handleClick("tabs")}>
+              <FontAwesomeIcon icon={faGuitar} />
               <span>Tabs</span>
             </Button>
-            <Button variant="light"><FontAwesomeIcon icon={faArrowsAltV} />
+            <Button variant="light" onClick={() => this.handleClick("strumming")}>
+              <FontAwesomeIcon icon={faArrowsAltV} />
               <span>Strumming</span>
             </Button>
           </ButtonGroup>

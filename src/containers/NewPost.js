@@ -11,6 +11,7 @@ import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton from "react-loading-skeleton";
 import SearchComponent from "../components/SearchComponent";
 import PromptWrapper from "../components/PromptWrapper";
+import * as inputSelectionLib from "../libs/input-selection-lib";
 import EditorPanel from "./EditorPanel";
 import ContentParser from "./ContentParser";
 import "./NewPost.css";
@@ -38,17 +39,21 @@ export default class NewPost extends SearchComponent {
   }
 
   insertAtCursor = (myValue) => {
-    var myField = this.chordsEditor.current;
+    var myField = this.chordsEditor.current.textarea;
+    myField.focus();
     var contentValue = this.state.content ? this.state.content : "";
+    var selection = inputSelectionLib.getInputSelection(myField);
 
-    if (myField.selectionStart || myField.selectionStart === 0) {
-        var startPos = myField.selectionStart;
-        var endPos = myField.selectionEnd;
-        contentValue = contentValue.substring(0, startPos)
-            + myValue
-            + contentValue.substring(endPos, contentValue.length);
+    if(selection.start === selection.end) {
+      contentValue = contentValue.substring(0, selection.start)
+      + `{${myValue}}`
+      + contentValue.substring(selection.end, contentValue.length);
     } else {
-      contentValue += myValue;
+      contentValue = contentValue.substring(0, selection.start)
+      + `{start_${myValue}}`
+      + contentValue.substring(selection.start, selection.end)
+      + `{end_${myValue}}`
+      + contentValue.substring(selection.end, contentValue.length);
     }
 
     this.setState({
