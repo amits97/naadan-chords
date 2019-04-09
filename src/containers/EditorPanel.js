@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {ButtonGroup, Button} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBold, faItalic, faHeading, faGripLines, faGuitar } from "@fortawesome/free-solid-svg-icons";
+import { faBold, faItalic, faHeading, faGripLines, faGuitar, faArrowsAltV } from "@fortawesome/free-solid-svg-icons";
 import "./EditorPanel.css";
 
 export default class EditorPanel extends Component {
@@ -40,6 +40,8 @@ export default class EditorPanel extends Component {
             <Button variant="light"><FontAwesomeIcon icon={faHeading} />
               <span>Heading</span>
             </Button>
+          </ButtonGroup>
+          <ButtonGroup className="ml-2 border">
             <Button variant="light"><FontAwesomeIcon icon={faGripLines} />
               <span>Separator</span>
             </Button>
@@ -47,6 +49,9 @@ export default class EditorPanel extends Component {
           <ButtonGroup className="ml-2 border">
             <Button variant="light"><FontAwesomeIcon icon={faGuitar} />
               <span>Tabs</span>
+            </Button>
+            <Button variant="light"><FontAwesomeIcon icon={faArrowsAltV} />
+              <span>Strumming</span>
             </Button>
           </ButtonGroup>
         </ButtonGroup>

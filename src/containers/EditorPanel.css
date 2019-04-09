@@ -13,8 +13,9 @@
 }
 
 .EditorPanel .btn-group .btn span {
-  margin-left: 10px;
-  font-size: 15px;
+  font-size: 13px;
+  color: #444444;
+  margin-left: 5px;
 }
 
 .EditorPanel .btn-group .btn:not(:first-child) {
