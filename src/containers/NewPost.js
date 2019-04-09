@@ -38,7 +38,7 @@ export default class NewPost extends SearchComponent {
     };
   }
 
-  insertAtCursor = (myValue) => {
+  insertAtCursor = (myValue, addNewLines) => {
     var myField = this.chordsEditor.current.textarea;
     myField.focus();
     var contentValue = this.state.content ? this.state.content : "";
@@ -51,7 +51,9 @@ export default class NewPost extends SearchComponent {
     } else {
       contentValue = contentValue.substring(0, selection.start)
       + `{start_${myValue}}`
+      + `${addNewLines ? "\n" : ""}`
       + contentValue.substring(selection.start, selection.end)
+      + `${addNewLines ? "\n" : ""}`
       + `{end_${myValue}}`
       + contentValue.substring(selection.end, contentValue.length);
     }

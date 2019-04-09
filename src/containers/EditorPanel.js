@@ -5,8 +5,8 @@ import { faBold, faItalic, faHeading, faGripLines, faGuitar, faArrowsAltV } from
 import "./EditorPanel.css";
 
 export default class EditorPanel extends Component {
-  handleClick = (text) => {
-    this.props.insertAtCursor(text);
+  handleClick = (text, addNewLines) => {
+    this.props.insertAtCursor(text, addNewLines);
   }
 
   render() {
@@ -36,7 +36,7 @@ export default class EditorPanel extends Component {
             </Button>
           </ButtonGroup>
           <ButtonGroup className="ml-2 border">
-            <Button variant="light" onClick={() => this.handleClick("tabs")}>
+            <Button variant="light" onClick={() => this.handleClick("tab", true)}>
               <FontAwesomeIcon icon={faGuitar} />
               <span>Tabs</span>
             </Button>
