@@ -40,7 +40,7 @@ export default class ContentParser extends Component {
     //Chords regex
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
-    const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|b|bm|5)?";
+    const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|b|bm|5|7)?";
     const sharp = "(#)?";
     const chordsRegex = new RegExp("\\b" + notes  + chords + "\\b" + sharp + chords + tabBeginning, "g");
 
