@@ -5,24 +5,9 @@ import { faBold, faItalic, faHeading, faGripLines, faGuitar, faArrowsAltV } from
 import "./EditorPanel.css";
 
 export default class EditorPanel extends Component {
-  // insertAtCursor = (myField, myValue) => {
-  //   //IE support
-  //   if (document.selection) {
-  //       myField.focus();
-  //       var sel = document.selection.createRange();
-  //       sel.text = myValue;
-  //   }
-  //   //MOZILLA and others
-  //   else if (myField.selectionStart || myField.selectionStart == '0') {
-  //       var startPos = myField.selectionStart;
-  //       var endPos = myField.selectionEnd;
-  //       myField.value = myField.value.substring(0, startPos)
-  //           + myValue
-  //           + myField.value.substring(endPos, myField.value.length);
-  //   } else {
-  //       myField.value += myValue;
-  //   }
-  // }
+  handleClick = (text) => {
+    this.props.insertAtCursor(text);
+  }
 
   render() {
     return (
@@ -42,7 +27,7 @@ export default class EditorPanel extends Component {
             </Button>
           </ButtonGroup>
           <ButtonGroup className="ml-2 border">
-            <Button variant="light"><FontAwesomeIcon icon={faGripLines} />
+            <Button variant="light" onClick={() => this.handleClick("{separator}")}><FontAwesomeIcon icon={faGripLines} />
               <span>Separator</span>
             </Button>
           </ButtonGroup>

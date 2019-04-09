@@ -20,6 +20,7 @@ export default class NewPost extends SearchComponent {
     super(props);
 
     this.parseHtml = htmlParser();
+    this.chordsEditor = React.createRef();
 
     this.state = {
       isLoading: null,
@@ -34,6 +35,25 @@ export default class NewPost extends SearchComponent {
       postType: "POST",
       submitted: false
     };
+  }
+
+  insertAtCursor = (myValue) => {
+    var myField = this.chordsEditor.current;
+    var contentValue = this.state.content ? this.state.content : "";
+
+    if (myField.selectionStart || myField.selectionStart === 0) {
+        var startPos = myField.selectionStart;
+        var endPos = myField.selectionEnd;
+        contentValue = contentValue.substring(0, startPos)
+            + myValue
+            + contentValue.substring(endPos, contentValue.length);
+    } else {
+      contentValue += myValue;
+    }
+
+    this.setState({
+      content: contentValue
+    });
   }
 
   safeStringNullOrEmpty = (string, prefix) => {
@@ -264,8 +284,8 @@ export default class NewPost extends SearchComponent {
         <Tabs defaultActiveKey="chords">
           <Tab eventKey="chords" title="CHORDS">
             <div className="mt-3">
-              <EditorPanel />
-              <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} />
+              <EditorPanel insertAtCursor={this.insertAtCursor} />
+              <TextareaAutosize ref={this.chordsEditor} placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} />
             </div>
           </Tab>
           <Tab eventKey="tabs" title="LEAD TABS">
