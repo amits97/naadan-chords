@@ -4,12 +4,17 @@
 }
 
 .EditorPanel .btn-group {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .EditorPanel .btn-group .btn {
   border-radius: 0;
   border-right: 1px solid #dee2e6;
+}
+
+.EditorPanel .btn-group .btn span {
+  margin-left: 10px;
+  font-size: 15px;
 }
 
 .EditorPanel .btn-group .btn:not(:first-child) {
