@@ -13,38 +13,30 @@ export default class EditorPanel extends Component {
     return (
       <div className="EditorPanel">
         <ButtonGroup>
-          <ButtonGroup className="border">
-            <Button variant="light" onClick={() => this.handleClick("bold")}>
-              <FontAwesomeIcon icon={faBold} />
-              <span>Bold</span>
-            </Button>
-            <Button variant="light" onClick={() => this.handleClick("italic")}>
-              <FontAwesomeIcon icon={faItalic} />
-              <span>Italic</span>
-            </Button>
-          </ButtonGroup>
-          <ButtonGroup className="ml-2 border">
-            <Button variant="light" onClick={() => this.handleClick("heading")}>
-              <FontAwesomeIcon icon={faHeading} />
-              <span>Heading</span>
-            </Button>
-          </ButtonGroup>
-          <ButtonGroup className="ml-2 border">
-            <Button variant="light" onClick={() => this.handleClick("separator")}>
-              <FontAwesomeIcon icon={faGripLines} />
-              <span>Separator</span>
-            </Button>
-          </ButtonGroup>
-          <ButtonGroup className="ml-2 border">
-            <Button variant="light" onClick={() => this.handleClick("tab", true)}>
-              <FontAwesomeIcon icon={faGuitar} />
-              <span>Tabs</span>
-            </Button>
-            <Button variant="light" onClick={() => this.handleClick("strumming")}>
-              <FontAwesomeIcon icon={faArrowsAltV} />
-              <span>Strumming</span>
-            </Button>
-          </ButtonGroup>
+          <Button variant="link" onClick={() => this.handleClick("bold")}>
+            <FontAwesomeIcon icon={faBold} />
+            <span>Bold</span>
+          </Button>
+          <Button variant="link" onClick={() => this.handleClick("italic")}>
+            <FontAwesomeIcon icon={faItalic} />
+            <span>Italic</span>
+          </Button>
+          <Button variant="link" onClick={() => this.handleClick("heading")}>
+            <FontAwesomeIcon icon={faHeading} />
+            <span>Heading</span>
+          </Button>
+          <Button variant="link" onClick={() => this.handleClick("separator")}>
+            <FontAwesomeIcon icon={faGripLines} />
+            <span>Separator</span>
+          </Button>
+          <Button variant="link" onClick={() => this.handleClick("tab", true)}>
+            <FontAwesomeIcon icon={faGuitar} />
+            <span>Tabs</span>
+          </Button>
+          <Button variant="link" onClick={() => this.handleClick("strumming")}>
+            <FontAwesomeIcon icon={faArrowsAltV} />
+            <span>Strumming</span>
+          </Button>
         </ButtonGroup>
       </div>
     );

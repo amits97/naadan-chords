@@ -19,6 +19,12 @@
   margin-bottom: 0;
 }
 
+.NewPost form textarea {
+  border-top: 0;
+  padding-top: 50px;
+  border: 1px solid #dee2e6;
+}
+
 .NewPost form textarea.form-control, .NewPost form select.form-control {
   margin-bottom: 20px;
   line-height: 1.5;

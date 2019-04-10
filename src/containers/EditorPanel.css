@@ -1,16 +1,22 @@
 .EditorPanel {
   position: sticky;
   top: 61px;
+  border: 1px solid #dee2e6;
+  margin-bottom: -40px;
+  border-radius: .25rem .25rem 0 0;
+  background: #ffffff;
 }
 
 .EditorPanel .btn-group {
-  margin-bottom: 5px;
-  background: #ffffff;
+  width: 100%;
 }
 
 .EditorPanel .btn-group .btn {
   border-radius: 0;
-  border-right: 1px solid #dee2e6;
+}
+
+.EditorPanel .btn-group .btn:hover {
+  text-decoration: none;
 }
 
 .EditorPanel .btn-group .btn span {
@@ -21,8 +27,4 @@
 
 .EditorPanel .btn-group .btn:not(:first-child) {
   margin-left: 0;
-}
-
-.EditorPanel .btn-group .btn:last-child {
-  border-right: 0;
 }
