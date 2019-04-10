@@ -3,7 +3,7 @@
 }
 
 .Content a {
-  font-weight: bold;
+  color: #777777;
 }
 
 .Content .contentRow {
@@ -105,4 +105,15 @@
   font-size: 87.5%;
   white-space: pre-wrap;
   overflow-x: scroll !important;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .Content small span.separator {
+    display: none;
+  }
+
+  .Content small time {
+    display: block;
+  }
 }

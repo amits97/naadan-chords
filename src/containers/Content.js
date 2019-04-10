@@ -112,7 +112,7 @@ export default class Content extends Component {
           <h1>{ post.title }</h1>
           <small>
             { this.formatDate( post.createdAt ) }
-            <span className="ml-1 mr-1">|</span>
+            <span className="separator ml-1 mr-1">|</span>
             Posted by <a href="#/">{ post.userName }</a>
             <span className="ml-1 mr-1">in</span>
               <LinkContainer exact to={`/category/${post.category.toLowerCase()}`}>
