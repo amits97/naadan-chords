@@ -68,6 +68,10 @@
   display: block !important;
 }
 
+.ContentParser .__react_component_tooltip.type-light.border.place-top:before {
+  border-top: 8px solid #dee2e6;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .ContentParser .tab-contents {

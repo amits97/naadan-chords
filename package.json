@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
@@ -19,7 +19,8 @@
     "react-moment": "^0.8.4",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "react-tooltip": "^3.10.0"
   },
   "scripts": {
     "start": "react-scripts start",
