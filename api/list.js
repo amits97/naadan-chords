@@ -49,6 +49,13 @@ export async function main(event, context, callback) {
         },
         ProjectionExpression: "postId, createdAt, postType, title, userId"
       };
+      if(event.postType) {
+        params.FilterExpression = "contains(postId, :postId) AND postType = :postType";
+        params.ExpressionAttributeValues = {
+          ":postType": event.postType,
+          ":postId": slugify(event.search)
+        };
+      }
       result = await dynamoDbLib.call("scan", params);
     } else {
       result = await dynamoDbLib.call("query", params);

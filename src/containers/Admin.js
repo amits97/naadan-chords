@@ -1,6 +1,6 @@
 import React from "react";
 import { API } from "aws-amplify";
-import { Button, ListGroup, Tab, Row, Col, Nav, Form } from "react-bootstrap";
+import { Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,18 +13,26 @@ export default class Admin extends SearchComponent {
   constructor(props) {
     super(props);
 
+    //timeout variable to throttle search results
+    this.searchTimeout = null;
+
     this.state = {
       posts: [],
       pages: [],
       isLoading: true,
       isPaginationLoading: false,
       activeTab: "posts",
-      postsToBeDeleted: []
+      postsToBeDeleted: [],
+      search: ""
     };
   }
 
-  async componentDidMount() {
-    window.scrollTo(0, 0);
+  loadData = async () => {
+    this.setState({
+      isLoading: true,
+      posts: [],
+      pages: []
+    });
 
     try {
       const posts = await this.posts();
@@ -40,12 +48,19 @@ export default class Admin extends SearchComponent {
     }
   }
 
+  async componentDidMount() {
+    window.scrollTo(0, 0);
+    this.loadData();
+  }
+
   posts() {
-    return API.get("posts", "/posts");
+    let { search } = this.state;
+    return API.get("posts", `/posts/${search ? "?s=" + search : ""}`);
   }
 
   pages() {
-    return API.get("posts", "/posts?postType=PAGE");
+    let { search } = this.state;
+    return API.get("posts", `/posts?postType=PAGE${search ? "&s=" + search : ""}`);
   }
 
   addPostToDelete = (event, postId) => {
@@ -208,6 +223,21 @@ export default class Admin extends SearchComponent {
     }
   }
 
+  handleSearchChange = (event) => {
+    this.setState({
+      search: event.target.value
+    });
+
+    //clear previous timeouts
+    clearTimeout(this.searchTimeout);
+
+    //500ms delay
+    this.searchTimeout = setTimeout(() => {
+      this.loadData();
+      window.scrollTo(0, 0);
+    }, 500);
+  }
+
   render() {
     let { posts, pages } = this.state;
 
@@ -236,6 +266,7 @@ export default class Admin extends SearchComponent {
               <Form onSubmit={this.handleSubmit}>
                 <div className={`delete-container border-bottom`}>
                   <Form.Check type="checkbox" className="checkbox pt-2 pl-4 form-check" onChange={this.toggleCheckboxes} checked={this.validateDeletes()} />
+                  <FormControl type="text" placeholder="Search" className="admin-search" value={this.state.search} onChange={this.handleSearchChange} />
                   <LoaderButton
                     variant="danger"
                     className="mt-1"

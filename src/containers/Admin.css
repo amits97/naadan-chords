@@ -61,14 +61,21 @@
   font-size: 24px;
 }
 
+.Admin .admin-search {
+  width: initial;
+  float: left;
+}
+
 .Admin .delete-container {
   margin-bottom: 10px;
   padding-bottom: 15px;
+  height: 50px;
 }
 
 .Admin .delete-container .btn {
   height: 30px;
   padding-top: 4px;
+  float: right;
 }
 
 .Admin .checkbox {
