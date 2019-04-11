@@ -9,7 +9,6 @@
 .Content .contentColumn {
   padding-top: 30px;
   padding-bottom: 50px;
-  padding-right: 25px;
 }
 
 .Content .sidebarColumn {
@@ -121,5 +120,12 @@
 
   .Content .postList small time {
     display: inline-block;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .Content .contentColumn {
+    padding-right: 25px;
   }
 }
