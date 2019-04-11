@@ -105,7 +105,6 @@
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 87.5%;
   white-space: pre-wrap;
-  overflow-x: scroll !important;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

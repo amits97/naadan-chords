@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import YouTubeEmbed from "../components/YouTubeEmbed";
+import ChordControls from "./ChordControls";
 import "./ContentParser.css";
 
 export default class ContentParser extends Component {
@@ -8,6 +9,8 @@ export default class ContentParser extends Component {
     super(props);
 
     this.state = {
+      content: "",
+      transposeAmount: 0,
       isVideoReady: false
     }
   }
@@ -27,7 +30,18 @@ export default class ContentParser extends Component {
     return doc.body.textContent || "";
   }
 
+  transposeChords = (transposeAmount) => {
+    var finalTransposeAmount = (this.state.transposeAmount + transposeAmount) % 12;
+    this.setState({
+      transposeAmount: finalTransposeAmount
+    });
+  }
+
   parseContent = (content) => {
+    if(!content) {
+      content = this.state.content;
+    }
+
     const tabRegExp = /{start_tab}\n([\s\S]*?)\n{end_tab}/gim;
     const boldRegExp = /{start_bold}([\s\S]*?){end_bold}/gim;
     const italicRegExp = /{start_italic}([\s\S]*?){end_italic}/gim;
@@ -38,11 +52,13 @@ export default class ContentParser extends Component {
     const separatorRegExp = /{separator}/gim;
 
     //Chords regex
+    const scale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
     const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|b|bm|5|7)?";
     const sharp = "(#)?";
     const chordsRegex = new RegExp("\\b" + notes  + chords + "\\b" + sharp + chords + tabBeginning, "g");
+    const chordsOnlyRegex = new RegExp(chords, "g");
 
     //replace tabs
     content = content.replace(tabRegExp, (match, p1) => {
@@ -70,8 +86,12 @@ export default class ContentParser extends Component {
     });
 
     //replace chords
-    content = content.replace(chordsRegex, (match) => {
-      return (`<span class="chord">${match}</span>`);
+    content = content.replace(chordsRegex, (match, p1, p2, p3) => {
+      let i = (scale.indexOf(match.replace(chordsOnlyRegex,'')) + this.state.transposeAmount) % scale.length;
+      p1 = p1 ? p1.replace("#","") : "";
+			p2 = p2 ? p2.replace("#","") : "";
+			p3 = p3 ? p3.replace("#","") : "";
+      return (`<span class="chord">${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3}</span>`);
     });
 
     //replace image
@@ -95,11 +115,11 @@ export default class ContentParser extends Component {
     });
   }
 
-  renderTabs = (content, leadTabs, youtubeId) => {
+  renderTabs = (leadTabs, youtubeId) => {
     if(leadTabs || youtubeId) {
       const tabs = [
         <Tab eventKey="chords" title="CHORDS" key="chords">
-          <div className="tab-contents chord-sheet" dangerouslySetInnerHTML={ this.parseContent(content) } />
+          <div className="tab-contents chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
         </Tab>
       ];
 
@@ -128,7 +148,7 @@ export default class ContentParser extends Component {
       );
     } else {
       return (
-        <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent(content) } />
+        <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
       )
     }
   }
@@ -150,15 +170,23 @@ export default class ContentParser extends Component {
     }
   }
 
-  render() {
+  componentDidMount() {
     let content = this.props.post.content ? this.stripHtml(this.props.post.content) : "";
+
+    this.setState({
+      content: content
+    });
+  }
+
+  render() {
     let leadTabs = this.props.post.leadTabs ? this.stripHtml(this.props.post.leadTabs) : "";
     let { youtubeId } = this.props.post;
 
     return (
       <div className="ContentParser">
         { this.renderSongMeta() }
-        { this.renderTabs(content, leadTabs, youtubeId) }
+        { this.renderTabs(leadTabs, youtubeId) }
+        <ChordControls transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} />
       </div>
     );
   }

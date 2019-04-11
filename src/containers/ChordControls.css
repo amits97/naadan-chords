@@ -1,0 +1,36 @@
+.ChordControls {
+  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  position: sticky;
+  bottom: 10px;
+  margin-top: 25px;
+  opacity: 0.95;
+  padding: 10px 15px;
+  height: 60px;
+}
+
+.ChordControls .feature-label {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.ChordControls .transpose-amount {
+  font-size: 90%;
+  position: absolute;
+  margin-top: -5px;
+}
+
+.ChordControls .btn-group {
+  margin-left: 20px;
+}
+
+.ChordControls .btn-group .btn {
+  border-radius: 0;
+  padding-top: 7px;
+  height: 35px;
+  width: 40px;
+  font-size: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}

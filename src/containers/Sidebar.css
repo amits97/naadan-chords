@@ -61,8 +61,14 @@
     top: 130vh;
   }
 
+  .Sidebar .sidebar-content {
+    padding-left: 0;
+  }
+
   .Sidebar .sidebar.opened {
     top: 86px;
     height: calc(100vh - 56px);
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
