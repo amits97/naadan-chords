@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Tabs, Tab } from "react-bootstrap";
-import ReactTooltip from "react-tooltip";
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import "./ContentParser.css";
 
@@ -70,6 +69,11 @@ export default class ContentParser extends Component {
       return (`<hr />`);
     });
 
+    //replace chords
+    content = content.replace(chordsRegex, (match) => {
+      return (`<span class="chord">${match}</span>`);
+    });
+
     //replace image
     content = content.replace(imageRegExp, (match, p1) => {
       return (`<img src="${p1}" alt="${this.getFilename(p1)}" />`);
@@ -80,11 +84,6 @@ export default class ContentParser extends Component {
       return (`<span class="ignore-chords">${p1.replace(chordsInStrummingRegExp, (match) => {
         return (`<span class="override-chords">${match}</span>`);
       })}</span>`);
-    });
-
-    //replace chords
-    content = content.replace(chordsRegex, (match) => {
-      return (`<span class="chord" data-tip="<img src='http://chordgenerator.net/D.png?p=xx0232&f=---132&s=2' />">${match}</span>`);
     });
 
     return {__html: content};
@@ -158,7 +157,6 @@ export default class ContentParser extends Component {
 
     return (
       <div className="ContentParser">
-        <ReactTooltip html={true} type="light" border={true} effect="solid"  />
         { this.renderSongMeta() }
         { this.renderTabs(content, leadTabs, youtubeId) }
       </div>
