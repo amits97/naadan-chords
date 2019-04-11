@@ -75,7 +75,7 @@ export default class Content extends Component {
                 <LinkContainer key={i} exact to={`/${ post.postId }`}>
                   <div className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
                     <h5>{ post.title }</h5>
-                    <small>{ this.formatDate( post.createdAt ) } <span>|</span> <a href="#/">{ post.userName }</a></small>
+                    <small>{ this.formatDate( post.createdAt ) } <span className="separator">|</span> <a href="#/">{ post.userName }</a></small>
                   </div>
                 </LinkContainer>
               )

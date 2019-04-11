@@ -60,7 +60,7 @@
   font-size: 80%;
 }
 
-.Content .postList .post span {
+.Content .postList .post small span.separator {
   margin: 0 2.5px;
 }
 
@@ -116,6 +116,10 @@
 
   .Content .post small time {
     display: block;
+  }
+
+  .Content .postList small span.separator {
+    display: inline-block;
   }
 
   .Content .postList small time {
