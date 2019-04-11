@@ -2,15 +2,6 @@
   outline: none;
 }
 
-.App {
-  overflow: hidden;
-  padding-top: 60px;
-}
-
-.App.overflow-initial {
-  overflow: visible;
-}
-
 .App .container-fluid {
   max-width: 1264px;
 }
@@ -20,7 +11,6 @@
   color: #dddddd;
   padding-top: 0;
   padding-bottom: 0;
-  position: fixed;
   width: 100%;
 }
 
@@ -127,6 +117,10 @@
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
+  .App .contents {
+    padding: 0 25px;
+  }
+
   .App .navbar .navbar-nav .nav-link {
     padding-right: 0.8rem;
     padding-left: 0.8rem;

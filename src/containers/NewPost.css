@@ -1,5 +1,7 @@
 .NewPost {
-  margin: 20px auto 100px auto;
+  padding-top: 50px;
+  margin-top: -50px;
+  padding-bottom: 50px;
 }
 
 .NewPost h1 {

@@ -38,7 +38,7 @@ export default class Sidebar extends Component {
 
     return (
       <div className="Sidebar">
-        <div className={`sidebar bg-light border-left ${mobileSidebarOpened ? 'opened' : ''}`}>
+        <div className={`sidebar ${mobileSidebarOpened ? 'opened' : ''}`}>
           <div className="sidebar-content">
             <h6>FOLLOW NAADAN CHORDS</h6>
             <hr />

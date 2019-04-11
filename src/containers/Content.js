@@ -209,7 +209,7 @@ export default class Content extends Component {
           <Col sm={8} className="contentColumn">
             { this.renderContent() }
           </Col>
-          <Col sm={4}>
+          <Col sm={4} className="sidebarColumn border-left">
             <Sidebar />
           </Col>
         </Row>

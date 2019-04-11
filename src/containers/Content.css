@@ -1,7 +1,3 @@
-.Content {
-  margin-top: 30px;
-}
-
 .Content a {
   color: #777777;
 }
@@ -11,7 +7,13 @@
 }
 
 .Content .contentColumn {
+  padding-top: 30px;
   padding-bottom: 50px;
+  padding-right: 25px;
+}
+
+.Content .sidebarColumn {
+  padding-top: 30px;
 }
 
 .Content .postList .title-container {
@@ -109,11 +111,15 @@
 
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
-  .Content small span.separator {
+  .Content .post small span.separator {
     display: none;
   }
 
-  .Content small time {
+  .Content .post small time {
     display: block;
+  }
+
+  .Content .postList small time {
+    display: inline-block;
   }
 }

@@ -19,7 +19,6 @@ class App extends Component {
       navExpanded: false,
       isAuthenticated: false,
       isAuthenticating: true,
-      appClassName: "",
       search: "",
       isSearchFocus: false
     };
@@ -109,12 +108,6 @@ class App extends Component {
     });
   }
 
-  setAppClassName = (className) => {
-    this.setState({
-      appClassName: className
-    });
-  }
-
   handleSearchClose = () => {
     this.setSearch("");
   }
@@ -125,14 +118,13 @@ class App extends Component {
       userHasAuthenticated: this.userHasAuthenticated,
       search: this.state.search,
       setSearch: this.setSearch,
-      setAppClassName: this.setAppClassName,
       closeNav: this.closeNav
     };
 
     return (
-      <div className={`App ${this.state.appClassName}`}>
+      <div className="App bg-light">
         <Navbar fluid="true" expand="lg" sticky="top" variant="dark" onToggle={this.setNavExpanded} expanded={this.state.navExpanded}>
-          <div className="container-fluid">
+          <div className="container">
             <Navbar.Brand>
               <Link to="/">
                 <img src={logo} alt="logo" />
@@ -157,7 +149,7 @@ class App extends Component {
             </Navbar.Collapse>
           </div>
         </Navbar>
-        <div className="container contents">
+        <div className="container contents bg-white">
           <Routes childProps={childProps} />
         </div>
         <Footer />

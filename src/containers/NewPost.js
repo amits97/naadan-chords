@@ -202,9 +202,6 @@ export default class NewPost extends SearchComponent {
         });
       }
     }
-
-    //remove overflow hidden
-    this.props.setAppClassName("overflow-initial");
   }
 
   renderPreviewPlaceholder = () => {

@@ -1,20 +1,18 @@
 .Sidebar {
-  height: 110%;
+  height: 100%;
 }
 
 .Sidebar .sidebar {
   z-index: 2;
   margin-top: -30px;
-  margin-right: -999px;
-  padding-right: 999px;
   transition: all 0.25s;
   height: 100%;
 }
 
 .Sidebar .sidebar-content {
   min-width: 200px;
-  padding: 20px;
   padding-top: 30px;
+  padding-left: 10px;
 }
 
 .Sidebar .sidebar-content h6 {
