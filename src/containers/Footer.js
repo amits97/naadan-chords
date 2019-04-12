@@ -53,6 +53,7 @@ export default class Footer extends Component {
                   </ul>
                   <h6>CONTRIBUTE</h6>
                   <ul className="list-unstyled">
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/amits97/naadan-chords/issues">Report bug <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/amits97/naadan-chords/">GitHub <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                   </ul>
                 </Col>
