@@ -1,4 +1,5 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
+import * as userNameLib from "./libs/username-lib";
 import { success, failure } from "./libs/response-lib";
 
 function getRandomInt(min, max) {
@@ -42,6 +43,8 @@ export async function main(event, context) {
   try {
     const result = await retryLoop();
     // Return the retrieved item
+    let userId = result.userId;
+    result.userName = await userNameLib.call(userId);
     return success(result);
   } catch (e) {
     return failure({ status: false, error: e });
