@@ -193,6 +193,19 @@ export default class ContentParser extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    let prevContent = prevProps.post.content ? prevProps.post.content : "";
+    let content = this.props.post.content ? this.props.post.content : "";
+
+    if(prevContent.length !== content.length) {
+      let content = this.props.post.content ? this.stripHtml(this.props.post.content) : "";
+
+      this.setState({
+        content: content
+      });
+    }
+  }
+
   render() {
     let leadTabs = this.props.post.leadTabs ? this.stripHtml(this.props.post.leadTabs) : "";
     let { youtubeId } = this.props.post;
