@@ -48,8 +48,9 @@ export default class ContentParser extends Component {
     const headingRegExp = /{start_heading}([\s\S]*?){end_heading}/gim;
     const strummingRegExp = /{start_strumming}([\s\S]*?){end_strumming}/gim;
     const imageRegExp = /{start_image}([\s\S]*?){end_image}/gim;
-    const chordsInStrummingRegExp = /\[([\s\S]*?)\]/gim;
     const separatorRegExp = /{separator}/gim;
+
+    const ignoreChordsRegExp = /<span class="ignore-chords">([\s\S]*?)<\/span>/g;
 
     //Chords regex
     const scale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
@@ -85,6 +86,27 @@ export default class ContentParser extends Component {
       return (`<hr />`);
     });
 
+    //replace strumming
+    content = content.replace(strummingRegExp, (match, p1) => {
+      return (`<span class="ignore-chords">${p1}</span>`);
+    });
+
+    if(this.state.transposeAmount !== 0) {
+      //undo accidental transposes
+      let ignoreChordTags = content.match(ignoreChordsRegExp);
+      if(ignoreChordTags && ignoreChordTags.length > 0) {
+        content = content.replace(ignoreChordsRegExp, (match) => {
+          return match.replace(chordsRegex, (match, p1, p2, p3) => {
+            let i = (scale.indexOf(match.replace(chordsOnlyRegex,'')) - this.state.transposeAmount) % scale.length;
+            p1 = p1 ? p1.replace("#","") : "";
+            p2 = p2 ? p2.replace("#","") : "";
+            p3 = p3 ? p3.replace("#","") : "";
+            return (`${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3}`);
+          });
+        });
+      }
+    }
+
     //replace chords
     content = content.replace(chordsRegex, (match, p1, p2, p3) => {
       let i = (scale.indexOf(match.replace(chordsOnlyRegex,'')) + this.state.transposeAmount) % scale.length;
@@ -97,13 +119,6 @@ export default class ContentParser extends Component {
     //replace image
     content = content.replace(imageRegExp, (match, p1) => {
       return (`<img src="${p1}" alt="${this.getFilename(p1)}" />`);
-    });
-
-    //replace strumming
-    content = content.replace(strummingRegExp, (match, p1) => {
-      return (`<span class="ignore-chords">${p1.replace(chordsInStrummingRegExp, (match) => {
-        return (`<span class="override-chords">${match}</span>`);
-      })}</span>`);
     });
 
     return {__html: content};

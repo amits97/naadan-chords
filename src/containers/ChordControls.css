@@ -5,7 +5,7 @@
   position: sticky;
   bottom: 10px;
   margin-top: 25px;
-  opacity: 0.95;
+  opacity: 0.97;
   padding: 10px 15px;
   height: 60px;
 }
@@ -33,4 +33,11 @@
   font-size: 15px;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .ChordControls {
+    display: none;
+  }
 }
