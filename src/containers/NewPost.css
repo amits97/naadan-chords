@@ -32,6 +32,10 @@
   line-height: 1.5;
 }
 
+.NewPost form textarea.form-control {
+  overflow-x: scroll !important;
+}
+
 .NewPost form textarea.form-control, .NewPost .preview {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 87.5%;
