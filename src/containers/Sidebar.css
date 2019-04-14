@@ -26,13 +26,6 @@
   margin: 0.75rem 0;
 }
 
-.Sidebar .sidebar-content a.active {
-  border-left: 5px solid #17a2b8;
-  font-weight: bold;
-  margin-left: -20px;
-  padding-left: 15px;
-}
-
 .Sidebar .sidebar-button {
   border-radius: 50%;
   width: 60px;
@@ -44,6 +37,36 @@
   z-index: 1020;
   display: none;
   font-size: 24px;
+}
+
+.Sidebar .top-posts {
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.Sidebar .top-posts .popular-icon {
+  margin-right: 2.5px;
+  color: #ff9800;
+}
+
+.Sidebar .top-posts.loading {
+  max-width: 300px;
+}
+
+.Sidebar .top-posts a {
+  color: inherit;
+  font-size: 1rem;
+  font-family: "DINNextLTPro-Heavy", sans-serif;
+}
+
+.Sidebar .top-posts a span {
+  color: #777777;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.Sidebar .top-posts a:hover {
+  text-decoration: none;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
@@ -69,6 +92,11 @@
     top: 86px;
     height: calc(100vh - 56px);
     padding-left: 20px;
+    overflow-y: scroll;
     padding-right: 20px;
+  }
+
+  .Sidebar .top-posts {
+    margin-bottom: 0;
   }
 }

@@ -51,6 +51,14 @@ export default class Posts extends Component {
     }
   }
 
+  postVisit(postId) {
+    return API.post("posts", "/post-visit", {
+      body: {
+        postId: postId
+      }
+    });
+  }
+
   setPagination = (postsResult) => {
     if(postsResult.hasOwnProperty("LastEvaluatedKey")) {
       this.setState({
@@ -91,6 +99,10 @@ export default class Posts extends Component {
         posts = await this.post(postId);
         if(posts.postId !== postId) {
           this.props.history.push(`/${posts.postId}`);
+        }
+
+        if(posts.postType === "POST") {
+          this.logPostVisit();
         }
       } else if(isRandomPage) {
         this.setState({
@@ -147,7 +159,7 @@ export default class Posts extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if(!urlLib.getUrlParameter("s")) {
       this.loadData();
       window.scrollTo(0, 0);
@@ -194,6 +206,18 @@ export default class Posts extends Component {
     } else if(!urlLib.getUrlParameter("s")) {
       //clear search
       this.props.setSearch("");       
+    }
+  }
+
+  logPostVisit = async () => {
+    let postId = this.props.match.params.id;
+    console.log(this.state.posts);
+    if(postId) {
+      try {
+        await this.postVisit(postId);
+      } catch(e) {
+        console.log(e);
+      }
     }
   }
 
