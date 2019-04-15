@@ -104,7 +104,7 @@ class App extends Component {
 
     setTimeout(() => {
       this.searchInput.current.focus();
-    }, 250);
+    }, 0);
   }
 
   onSearchFocus = () => {

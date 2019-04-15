@@ -2,18 +2,16 @@
   outline: none;
 }
 
-.App .collapsing {
-  -webkit-transition: none;
-  transition: none;
-  display: none;
-}
-
 .App .navbar {
   background: #093579;
   color: #dddddd;
   padding-top: 0;
   padding-bottom: 0;
   width: 100%;
+}
+
+.App .navbar .navbar-collapse {
+  transition: none;
 }
 
 .App .navbar .container {
@@ -76,11 +74,19 @@
   color: #ff9700;
 }
 
+.App .navbar button {
+  width: 50px;
+}
+
+.App .navbar .navbar-toggler {
+  padding-left: 0.6rem;
+}
+
 .App .navbar .search-button {
   display: none;
   height: 40px;
   position: absolute;
-  right: 70px;
+  right: 60px;
   color: #bbbbbb;
 }
 
@@ -105,8 +111,20 @@
   min-height: calc(100vh - 356px);
 }
 
+/* Tiny devices (mobiles, less than 350px) */
+@media (max-width: 350px) {
+  .App .navbar .search-button {
+    display: none !important;
+  }
+}
+
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
+  .App .navbar .navbar-brand a p {
+    font-size: 1.15rem;
+    margin-left: 0;
+  }
+
   .App .navbar .show-search {
     display: block;
     height: 0;
@@ -115,6 +133,7 @@
 
   .App .navbar .search-form.fixed-search {
     width: calc(100% - 2rem);
+    max-width: 540px;
     position: fixed;
     top: 5px;
     height: 50px;
