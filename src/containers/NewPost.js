@@ -268,6 +268,7 @@ export default class NewPost extends SearchComponent {
             <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""}>
             <option value="MALAYALAM">Malayalam</option>
             <option value="TAMIL">Tamil</option>
+            <option value="HINDI">Hindi</option>
             </Form.Control>
           </Form.Group>
         </div>
