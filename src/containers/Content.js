@@ -206,10 +206,10 @@ export default class Content extends Component {
     return (
       <div className="Content">
         <Row className="contentRow">
-          <Col sm={8} className="contentColumn">
+          <Col md={8} className="contentColumn">
             { this.renderContent() }
           </Col>
-          <Col sm={4} className="sidebarColumn border-left">
+          <Col md={4} className="sidebarColumn border-left">
             <Sidebar />
           </Col>
         </Row>
