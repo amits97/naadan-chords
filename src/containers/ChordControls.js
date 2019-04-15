@@ -11,7 +11,7 @@ export default class ChordControls extends Component {
 
   render() {
     return (
-      <div className="ChordControls border bg-light">
+      <div className={`ChordControls border bg-light ${this.props.className}`}>
         <div className="transpose-container">
           <span className="feature-label">
             TRANSPOSE <span className="transpose-amount text-primary">{this.props.transposeAmount ? this.props.transposeAmount : ''}</span>

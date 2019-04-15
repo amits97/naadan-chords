@@ -134,7 +134,10 @@ export default class ContentParser extends Component {
     if(leadTabs || youtubeId) {
       const tabs = [
         <Tab eventKey="chords" title="CHORDS" key="chords">
-          <div className="tab-contents chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
+          <div className="tab-contents">
+            <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
+            <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} />
+          </div>
         </Tab>
       ];
 
@@ -163,7 +166,10 @@ export default class ContentParser extends Component {
       );
     } else {
       return (
-        <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
+        <div>
+          <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
+          <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} />
+        </div>
       )
     }
   }
@@ -214,7 +220,6 @@ export default class ContentParser extends Component {
       <div className="ContentParser">
         { this.renderSongMeta() }
         { this.renderTabs(leadTabs, youtubeId) }
-        <ChordControls transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} />
       </div>
     );
   }
