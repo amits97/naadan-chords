@@ -56,7 +56,7 @@ export default class ContentParser extends Component {
     const scale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
-    const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|b|bm|5|7)?";
+    const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|b|bm|5|7|b7|bsus2)?";
     const sharp = "(#)?";
     const chordsRegex = new RegExp("\\b" + notes  + chords + "\\b" + sharp + chords + tabBeginning, "g");
     const chordsOnlyRegex = new RegExp(chords, "g");
