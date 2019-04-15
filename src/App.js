@@ -4,7 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
 import { Navbar, Nav, Form, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
 import Routes from "./Routes";
 import logo from './logo.svg';
@@ -14,6 +14,8 @@ import "./App.css";
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.searchInput = React.createRef();
 
     this.state = {
       navExpanded: false,
@@ -95,6 +97,16 @@ class App extends Component {
     });
   }
 
+  handleSearchClick = () => {
+    this.setState({
+      navExpanded: true
+    });
+
+    setTimeout(() => {
+      this.searchInput.current.focus();
+    }, 250);
+  }
+
   onSearchFocus = () => {
     this.setState({
       isSearchFocus: true
@@ -131,10 +143,13 @@ class App extends Component {
                 <p>NAADAN<span>CHORDS</span></p>
               </Link>
             </Navbar.Brand>
+            <button className={`navbar-toggler search-button ${this.state.navExpanded ? "d-none": ""}`} onClick={this.handleSearchClick}>
+              <FontAwesomeIcon icon={faSearch} />
+            </button>
             <Navbar.Toggle />
             <Navbar.Collapse className={`justify-content-end ${this.state.search || this.state.isSearchFocus ? 'show-search':''}`}>
               <Form inline className={`search-form ${this.state.search || this.state.isSearchFocus ? 'fixed-search':''}`} onSubmit={this.handleSearchSubmit}>
-                <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} onFocus={this.onSearchFocus} onBlur={this.onSearchBlur} />
+                <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} onFocus={this.onSearchFocus} onBlur={this.onSearchBlur} ref={this.searchInput} />
                 <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} />
               </Form>
               <Nav>

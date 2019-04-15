@@ -2,8 +2,10 @@
   outline: none;
 }
 
-.App .container-fluid {
-  max-width: 1264px;
+.App .collapsing {
+  -webkit-transition: none;
+  transition: none;
+  display: none;
 }
 
 .App .navbar {
@@ -12,6 +14,10 @@
   padding-top: 0;
   padding-bottom: 0;
   width: 100%;
+}
+
+.App .navbar .container {
+  position: relative;
 }
 
 .App .navbar a {
@@ -70,6 +76,14 @@
   color: #ff9700;
 }
 
+.App .navbar .search-button {
+  display: none;
+  height: 40px;
+  position: absolute;
+  right: 70px;
+  color: #bbbbbb;
+}
+
 .App .navbar .search-form {
   width: 100%;
   margin-right: 50px;
@@ -112,6 +126,11 @@
     display: block;
     position: absolute;
     right: 10px;
+    font-size: 20px;
+  }
+
+  .App .navbar .search-button {
+    display: inline-block;
   }
 }
 
