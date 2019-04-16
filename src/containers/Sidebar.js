@@ -34,9 +34,11 @@ export default class Sidebar extends Component {
     }
   }
 
-  componentWillUpdate() {
-    if(this.state.mobileSidebarOpened) {
-      this.handleMobileSidebarClick();
+  componentWillUpdate(nextProps) {
+    if(this.props.pageKey !== nextProps.pageKey) {
+      if(this.state.mobileSidebarOpened) {
+        this.handleMobileSidebarClick();
+      }
     }
   }
 

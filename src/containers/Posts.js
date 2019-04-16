@@ -211,7 +211,7 @@ export default class Posts extends Component {
 
   logPostVisit = async () => {
     let postId = this.props.match.params.id;
-    console.log(this.state.posts);
+
     if(postId) {
       try {
         await this.postVisit(postId);
@@ -280,6 +280,7 @@ export default class Posts extends Component {
 
     let childProps = {
       ...this.state,
+      ...this.props,
       title: title,
       loadPosts: this.loadMorePosts,
       goBack: this.goBack

@@ -210,7 +210,7 @@ export default class Content extends Component {
             { this.renderContent() }
           </Col>
           <Col md={4} className="sidebarColumn border-left">
-            <Sidebar />
+            <Sidebar pageKey={this.props.pageKey} />
           </Col>
         </Row>
       </div>

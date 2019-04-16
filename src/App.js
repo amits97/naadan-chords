@@ -22,7 +22,7 @@ class App extends Component {
       isAuthenticated: false,
       isAuthenticating: true,
       search: "",
-      isSearchFocus: false
+      isSearchOpen: false
     };
   }
 
@@ -99,7 +99,7 @@ class App extends Component {
 
   handleSearchClick = () => {
     this.setState({
-      navExpanded: true
+      isSearchOpen: true
     });
 
     setTimeout(() => {
@@ -107,21 +107,22 @@ class App extends Component {
     }, 0);
   }
 
-  onSearchFocus = () => {
-    this.setState({
-      isSearchFocus: true
-    });
-  }
-
   onSearchBlur = () => {
-    this.closeNav();
     this.setState({
-      isSearchFocus: false
+      isSearchOpen: false
     });
   }
 
   handleSearchClose = () => {
     this.setSearch("");
+  }
+
+  onNavBlur = () => {
+    setTimeout(() => {
+      this.setState({
+        navExpanded: false
+      });
+    }, 250);
   }
 
   render() {
@@ -135,7 +136,7 @@ class App extends Component {
 
     return (
       <div className="App bg-light">
-        <Navbar fluid="true" expand="lg" sticky="top" variant="dark" onToggle={this.setNavExpanded} expanded={this.state.navExpanded}>
+        <Navbar fluid="true" expand="lg" sticky="top" variant="dark" onToggle={this.setNavExpanded} expanded={this.state.navExpanded} onBlur={this.onNavBlur}>
           <div className="container">
             <Navbar.Brand>
               <Link to="/">
@@ -146,12 +147,12 @@ class App extends Component {
             <button className={`navbar-toggler search-button ${this.state.navExpanded ? "d-none": ""}`} onClick={this.handleSearchClick}>
               <FontAwesomeIcon icon={faSearch} />
             </button>
+            <Form inline className={`search-form ${this.state.search || this.state.isSearchOpen ? 'show-search':''}`} onSubmit={this.handleSearchSubmit}>
+              <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} onBlur={this.onSearchBlur} ref={this.searchInput} />
+              <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} />
+            </Form>
             <Navbar.Toggle />
-            <Navbar.Collapse className={`justify-content-end ${this.state.search || this.state.isSearchFocus ? 'show-search':''}`}>
-              <Form inline className={`search-form ${this.state.search || this.state.isSearchFocus ? 'fixed-search':''}`} onSubmit={this.handleSearchSubmit}>
-                <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} onFocus={this.onSearchFocus} onBlur={this.onSearchBlur} ref={this.searchInput} />
-                <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} />
-              </Form>
+            <Navbar.Collapse className="justify-content-end">
               <Nav>
                 <LinkContainer exact to="/">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>Home</a>
@@ -164,7 +165,7 @@ class App extends Component {
             </Navbar.Collapse>
           </div>
         </Navbar>
-        <div className="container contents bg-white">
+        <div className="container contents bg-white" onTouchStart={this.onNavBlur}>
           <Routes childProps={childProps} />
         </div>
         <Footer />
