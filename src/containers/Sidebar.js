@@ -97,11 +97,13 @@ export default class Sidebar extends Component {
       <div className="Sidebar">
         <div className={`sidebar ${mobileSidebarOpened ? 'opened' : ''} bg-white`}>
           <div className="sidebar-content">
-            <h6>FOLLOW NAADAN CHORDS</h6>
-            <hr />
-            <FacebookProvider appId="178749152169432">
-              <Page href="https://www.facebook.com/naadanchords/" adaptContainerWidth hideCTA showFacepile="false" />
-            </FacebookProvider>
+              <div className="facebook-widget">
+              <h6>FOLLOW NAADAN CHORDS</h6>
+              <hr />
+              <FacebookProvider appId="178749152169432">
+                <Page href="https://www.facebook.com/naadanchords/" adaptContainerWidth hideCTA showFacepile="false" />
+              </FacebookProvider>
+            </div>
             {this.renderTopPostsList()}
           </div>
         </div>
