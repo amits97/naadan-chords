@@ -187,7 +187,7 @@ export default class ContentParser extends Component {
     if(song) {
       return (
         <div className="meta">
-          <p style={{fontSize: this.state.fontSize + 2}}>
+          <p>
             <b>Song: </b>{song}<br />
             <b>Album: </b>{album}<br />
             <b>Singers: </b>{singers}<br />
