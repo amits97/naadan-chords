@@ -12,7 +12,7 @@
 
 .ChordControls .controls-container {
   float: left;
-  margin-left: 40px;
+  margin-left: 25px;
 }
 
 .ChordControls .controls-container:nth-child(1) {
@@ -28,11 +28,11 @@
 .ChordControls .transpose-amount, .ChordControls .font-amount {
   font-size: 90%;
   position: absolute;
-  margin-top: -10px;
+  margin-top: -5px;
 }
 
 .ChordControls .btn-group {
-  margin-left: 15px;
+  margin-left: 10px;
 }
 
 .ChordControls .btn-group .btn {

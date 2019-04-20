@@ -26,13 +26,15 @@ export default class ChordControls extends Component {
   }
 
   render() {
+    let { transposeAmount, fontSize } = this.props;
+
     return (
       <div className={`ChordControls border bg-light ${this.props.className}`}>
         <div className="controls-container transpose-container">
           <span className="feature-label">
-            TRANSPOSE <span className="transpose-amount text-primary">{this.props.transposeAmount ? this.props.transposeAmount : ''}</span>
+            TRANSPOSE <span className="transpose-amount text-primary">{transposeAmount ? transposeAmount : ''}</span>
           </span>
-          <ButtonGroup>
+          <ButtonGroup className={`${transposeAmount ? 'ml-3' : '' }`}>
             <Button variant="outline-dark" onClick={() => this.handleTransposeClick(1)}>
               <FontAwesomeIcon icon={faPlus} />
             </Button>
@@ -44,9 +46,9 @@ export default class ChordControls extends Component {
 
         <div className="controls-container font-size-container">
           <span className="feature-label">
-            FONT <span className="font-amount text-primary">{this.props.fontSize === 15 ? '' : this.computeFontAmount()}</span>
+            FONT <span className="font-amount text-primary">{fontSize === 15 ? '' : this.computeFontAmount()}</span>
           </span>
-          <ButtonGroup>
+          <ButtonGroup className={`${fontSize === 15 ? '' : 'ml-3' }`}>
             <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
               <FontAwesomeIcon icon={faPlus} />
             </Button>
