@@ -10,19 +10,29 @@
   height: 60px;
 }
 
+.ChordControls .controls-container {
+  float: left;
+  margin-left: 40px;
+}
+
+.ChordControls .controls-container:nth-child(1) {
+  margin-left: 0;
+}
+
 .ChordControls .feature-label {
   display: inline-block;
   margin-top: 10px;
+  font-size: 14px;
 }
 
-.ChordControls .transpose-amount {
+.ChordControls .transpose-amount, .ChordControls .font-amount {
   font-size: 90%;
   position: absolute;
-  margin-top: -5px;
+  margin-top: -10px;
 }
 
 .ChordControls .btn-group {
-  margin-left: 20px;
+  margin-left: 15px;
 }
 
 .ChordControls .btn-group .btn {

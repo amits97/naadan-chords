@@ -11,6 +11,7 @@ export default class ContentParser extends Component {
     this.state = {
       content: "",
       transposeAmount: 0,
+      fontSize: 15,
       isVideoReady: false
     }
   }
@@ -34,6 +35,12 @@ export default class ContentParser extends Component {
     var finalTransposeAmount = (this.state.transposeAmount + transposeAmount) % 12;
     this.setState({
       transposeAmount: finalTransposeAmount
+    });
+  }
+
+  changeFontSize = (changeAmount) => {
+    this.setState({
+      fontSize: this.state.fontSize + changeAmount
     });
   }
 
@@ -135,8 +142,8 @@ export default class ContentParser extends Component {
       const tabs = [
         <Tab eventKey="chords" title="CHORDS" key="chords">
           <div className="tab-contents">
-            <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
-            <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} />
+            <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: this.state.fontSize}} />
+            <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} fontSize={this.state.fontSize} changeFontSize={this.changeFontSize} />
           </div>
         </Tab>
       ];
@@ -167,8 +174,8 @@ export default class ContentParser extends Component {
     } else {
       return (
         <div>
-          <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } />
-          <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} />
+          <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: this.state.fontSize}} />
+          <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} fontSize={this.state.fontSize} changeFontSize={this.changeFontSize} />
         </div>
       )
     }
@@ -180,7 +187,7 @@ export default class ContentParser extends Component {
     if(song) {
       return (
         <div className="meta">
-          <p>
+          <p style={{fontSize: this.state.fontSize + 2}}>
             <b>Song: </b>{song}<br />
             <b>Album: </b>{album}<br />
             <b>Singers: </b>{singers}<br />

@@ -9,10 +9,26 @@ export default class ChordControls extends Component {
     this.props.transposeChords(transposeAmount);
   }
 
+  handleFontSizeClick = (sizeAmount) => {
+    this.props.changeFontSize(sizeAmount);
+  }
+
+  checkFontSize = (button) => {
+    if(button === "up") {
+      return this.props.fontSize > 20;
+    } else if(button === "down") {
+      return this.props.fontSize < 12;
+    }
+  }
+
+  computeFontAmount = () => {
+    return (this.props.fontSize - 15) / 2;
+  }
+
   render() {
     return (
       <div className={`ChordControls border bg-light ${this.props.className}`}>
-        <div className="transpose-container">
+        <div className="controls-container transpose-container">
           <span className="feature-label">
             TRANSPOSE <span className="transpose-amount text-primary">{this.props.transposeAmount ? this.props.transposeAmount : ''}</span>
           </span>
@@ -21,6 +37,20 @@ export default class ChordControls extends Component {
               <FontAwesomeIcon icon={faPlus} />
             </Button>
             <Button variant="outline-dark" onClick={() => this.handleTransposeClick(-1)}>
+              <FontAwesomeIcon icon={faMinus} />
+            </Button>
+          </ButtonGroup>
+        </div>
+
+        <div className="controls-container font-size-container">
+          <span className="feature-label">
+            FONT <span className="font-amount text-primary">{this.props.fontSize === 15 ? '' : this.computeFontAmount()}</span>
+          </span>
+          <ButtonGroup>
+            <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
+              <FontAwesomeIcon icon={faPlus} />
+            </Button>
+            <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(-2)} disabled={this.checkFontSize("down")}>
               <FontAwesomeIcon icon={faMinus} />
             </Button>
           </ButtonGroup>
