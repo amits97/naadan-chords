@@ -8,10 +8,12 @@ export default class ContentParser extends Component {
   constructor(props){
     super(props);
 
+    this.autoScrollTimer = null;
     this.state = {
       content: "",
       transposeAmount: 0,
       fontSize: 15,
+      scrollAmount: 0,
       isVideoReady: false
     }
   }
@@ -42,6 +44,25 @@ export default class ContentParser extends Component {
     this.setState({
       fontSize: this.state.fontSize + changeAmount
     });
+  }
+
+  autoScroll = (scrollAmount) => {
+    clearInterval(this.autoScrollTimer);
+
+    if(scrollAmount !== 0) {
+      this.autoScrollTimer = setInterval(() => {
+        window.scrollBy(0, scrollAmount * 1.5);
+      }, 100);
+    }
+  }
+
+  changeScrollAmount = (changeAmount) => {
+    let scrollAmount = this.state.scrollAmount + changeAmount;
+
+    this.setState({
+      scrollAmount: scrollAmount
+    });
+    this.autoScroll(scrollAmount);
   }
 
   parseContent = (content) => {
@@ -138,12 +159,21 @@ export default class ContentParser extends Component {
   }
 
   renderTabs = (leadTabs, youtubeId) => {
+    let { content, fontSize } = this.state;
+
+    let chordControlsProps = {
+      ...this.state,
+      transposeChords: this.transposeChords,
+      changeFontSize: this.changeFontSize,
+      changeScrollAmount: this.changeScrollAmount
+    };
+
     if(leadTabs || youtubeId) {
       const tabs = [
         <Tab eventKey="chords" title="CHORDS" key="chords">
           <div className="tab-contents">
-            <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: this.state.fontSize}} />
-            <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} fontSize={this.state.fontSize} changeFontSize={this.changeFontSize} />
+            <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: fontSize}} />
+            <ChordControls className={`${content ? '':'d-none'}`} {...chordControlsProps} />
           </div>
         </Tab>
       ];
@@ -174,8 +204,8 @@ export default class ContentParser extends Component {
     } else {
       return (
         <div>
-          <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: this.state.fontSize}} />
-          <ChordControls className={`${this.state.content ? '':'d-none'}`} transposeChords={this.transposeChords} transposeAmount={this.state.transposeAmount} fontSize={this.state.fontSize} changeFontSize={this.changeFontSize} />
+          <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: fontSize}} />
+          <ChordControls className={`${content ? '':'d-none'}`} {...chordControlsProps} />
         </div>
       )
     }

@@ -13,6 +13,10 @@ export default class ChordControls extends Component {
     this.props.changeFontSize(sizeAmount);
   }
 
+  handleScrollAmountClick = (scrollAmount) => {
+    this.props.changeScrollAmount(scrollAmount);
+  }
+
   checkFontSize = (button) => {
     if(button === "up") {
       return this.props.fontSize > 20;
@@ -21,18 +25,26 @@ export default class ChordControls extends Component {
     }
   }
 
+  checkScrollAmount = (button) => {
+    if(button === "up") {
+      return this.props.scrollAmount > 4;
+    } else if(button === "down") {
+      return this.props.scrollAmount < 1;
+    }
+  }
+
   computeFontAmount = () => {
     return (this.props.fontSize - 15) / 2;
   }
 
   render() {
-    let { transposeAmount, fontSize } = this.props;
+    let { transposeAmount, fontSize, scrollAmount } = this.props;
 
     return (
       <div className={`ChordControls border bg-light ${this.props.className}`}>
         <div className="controls-container transpose-container">
           <span className="feature-label">
-            TRANSPOSE <span className="transpose-amount text-primary">{transposeAmount ? transposeAmount : ''}</span>
+            TRANSPOSE <span className="amount text-primary">{transposeAmount ? transposeAmount : ''}</span>
           </span>
           <ButtonGroup className={`${transposeAmount ? 'ml-3' : '' }`}>
             <Button variant="outline-dark" onClick={() => this.handleTransposeClick(1)}>
@@ -46,13 +58,27 @@ export default class ChordControls extends Component {
 
         <div className="controls-container font-size-container">
           <span className="feature-label">
-            FONT <span className="font-amount text-primary">{fontSize === 15 ? '' : this.computeFontAmount()}</span>
+            FONT <span className="amount text-primary">{fontSize === 15 ? '' : this.computeFontAmount()}</span>
           </span>
           <ButtonGroup className={`${fontSize === 15 ? '' : 'ml-3' }`}>
             <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
               <FontAwesomeIcon icon={faPlus} />
             </Button>
             <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(-2)} disabled={this.checkFontSize("down")}>
+              <FontAwesomeIcon icon={faMinus} />
+            </Button>
+          </ButtonGroup>
+        </div>
+
+        <div className="controls-container scroll-container">
+          <span className="feature-label">
+            SCROLL <span className="amount text-primary">{scrollAmount ? scrollAmount : ''}</span>
+          </span>
+          <ButtonGroup className={`${scrollAmount ? 'ml-3' : '' }`}>
+            <Button variant="outline-dark" onClick={() => this.handleScrollAmountClick(1)} disabled={this.checkScrollAmount("up")}>
+              <FontAwesomeIcon icon={faPlus} />
+            </Button>
+            <Button variant="outline-dark" onClick={() => this.handleScrollAmountClick(-1)} disabled={this.checkScrollAmount("down")}>
               <FontAwesomeIcon icon={faMinus} />
             </Button>
           </ButtonGroup>

@@ -78,12 +78,15 @@
     right: 0;
     z-index: 3;
     top: 130vh;
-    max-width: 540px;
     margin: auto;
   }
 
   .Sidebar .sidebar-content {
     padding-left: 0;
+    max-width: 540px;
+    margin: auto;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   .Sidebar .sidebar-content .facebook-widget {
@@ -93,9 +96,7 @@
   .Sidebar .sidebar.opened {
     top: 60px;
     height: calc(100vh - 56px);
-    padding-left: 20px;
     overflow-y: scroll;
-    padding-right: 20px;
   }
 
   .Sidebar .top-posts {

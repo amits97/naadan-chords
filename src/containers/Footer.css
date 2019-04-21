@@ -35,3 +35,10 @@
   padding-bottom: 2px;
   margin-left: 2px;
 }
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 768px) {
+  .Footer .external-icon {
+    display: none;
+  }
+}

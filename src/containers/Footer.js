@@ -23,7 +23,7 @@ export default class Footer extends Component {
                 <Col>
                   <h1><Link to="/"><img src={logo} alt="logo" /></Link></h1>
                   <small>Guitar chords and tabs</small><br />
-                  <small><a href="/sitemap.xml">sitemap</a> | rev {this.packageDetails.version}</small>
+                  <small><a href="/sitemap.xml">sitemap</a> | v{this.packageDetails.version}</small>
                 </Col>
                 <Col>
                   <h6>CATEGORIES</h6>
