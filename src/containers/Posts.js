@@ -52,11 +52,17 @@ export default class Posts extends Component {
   }
 
   postVisit(postId) {
-    return API.post("posts", "/post-visit", {
-      body: {
-        postId: postId
+    if(typeof Storage !== "undefined") {
+      if(localStorage.getItem(postId) === null) {
+        localStorage.setItem(postId, "0");
+
+        return API.post("posts", "/post-visit", {
+          body: {
+            postId: postId
+          }
+        });
       }
-    });
+    }
   }
 
   setPagination = (postsResult) => {
