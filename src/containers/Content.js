@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Row, Col } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
+import { Helmet } from "react-helmet";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import Disqus from "disqus-react";
@@ -202,9 +203,39 @@ export default class Content extends Component {
     }
   }
 
+  renderSEOTags() {
+    let { posts = {} } = this.props;
+
+    if(posts.content && !Array.isArray(posts)) {
+      let description = posts.content.substring(0, 157).trim();
+      description = description.substr(0, Math.min(description.length, description.lastIndexOf(" "))) + "..";
+
+      return (
+        <Helmet>
+          <title>{posts.title.toUpperCase()} | Naadan Chords</title>
+          <meta name="description" content={description} />
+          <meta name="twitter:card" content="summary" />
+          <meta property="og:title" content={posts.title} />
+          <meta property="og:description" content={description} />
+        </Helmet>
+      );
+    } else {
+      return (
+        <Helmet>
+          <title>Naadan Chords | Guitar Chords and Tabs of Malayalam Songs</title>
+          <meta name="description" content="" />
+          <meta name="twitter:card" content="summary" />
+          <meta property="og:title" content="Naadan Chords | Guitar Chords and Tabs of Malayalam Songs" />
+          <meta property="og:description" content="" />
+        </Helmet>
+      );
+    }
+  }
+
   render() {
     return (
       <div className="Content">
+        { this.renderSEOTags() }
         <Row className="contentRow">
           <Col md={8} className="contentColumn">
             { this.renderContent() }
