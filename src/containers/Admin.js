@@ -2,6 +2,7 @@ import React from "react";
 import { API } from "aws-amplify";
 import { Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { Helmet } from "react-helmet";
 import Skeleton from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -238,11 +239,24 @@ export default class Admin extends SearchComponent {
     }, 500);
   }
 
+  renderSEOTags() {
+    return (
+      <Helmet>
+        <title>Admin | Naadan Chords</title>
+        <meta name="description" content="" />
+        <meta name="twitter:card" content="summary" />
+        <meta property="og:title" content="Admin | Naadan Chords" />
+        <meta property="og:description" content="" />
+      </Helmet>
+    );
+  }
+
   render() {
     let { posts, pages } = this.state;
 
     return (
       <div className="Admin">
+        { this.renderSEOTags() }
         <div className="header border-bottom">
           <h1 className="float-left">Admin</h1>
           <LinkContainer exact to="/admin/new-post">

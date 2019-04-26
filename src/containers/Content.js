@@ -93,7 +93,7 @@ export default class Content extends Component {
   }
 
   capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    return string.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
   }
 
   renderPostMeta = (post) => {
@@ -222,7 +222,7 @@ export default class Content extends Component {
     } else {
       return (
         <Helmet>
-          <title>Naadan Chords | Guitar Chords and Tabs of Malayalam Songs</title>
+          <title>{this.props.title ? `${this.capitalizeFirstLetter(this.props.title)} | Naadan Chords` : "Naadan Chords | Guitar Chords and Tabs of Malayalam Songs"}</title>
           <meta name="description" content="" />
           <meta name="twitter:card" content="summary" />
           <meta property="og:title" content="Naadan Chords | Guitar Chords and Tabs of Malayalam Songs" />

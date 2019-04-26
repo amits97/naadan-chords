@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Alert, FormGroup, FormControl, FormLabel } from "react-bootstrap";
+import { Helmet } from "react-helmet";
 import { Auth } from "aws-amplify";
 import LoaderButton from "../components/LoaderButton";
 import "./Login.css";
@@ -54,9 +55,22 @@ export default class Login extends Component {
     }
   }
 
+  renderSEOTags() {
+    return (
+      <Helmet>
+        <title>Login | Naadan Chords</title>
+        <meta name="description" content="" />
+        <meta name="twitter:card" content="summary" />
+        <meta property="og:title" content="Login | Naadan Chords" />
+        <meta property="og:description" content="" />
+      </Helmet>
+    );
+  }
+
   render() {
     return (
       <div className="Login">
+        { this.renderSEOTags() }
         <form onSubmit={this.handleSubmit}>
           {this.renderError()}
           <FormGroup controlId="email">
