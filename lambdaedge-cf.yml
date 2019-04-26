@@ -119,7 +119,7 @@ Resources:
                if (request.headers['x-redirect-legacy']) {
                  request.origin = {
                      custom: {
-                         domainName: 'nadanchords.com',
+                         domainName: 'legacy.naadanchords.com',
                          port: 443,
                          protocol: 'https',
                          readTimeout: 20,
@@ -128,7 +128,7 @@ Resources:
                          sslProtocols: ['TLSv1', 'TLSv1.1']
                      }
                   };
-                  request.headers['host'] = [{ key: 'host', value: 'nadanchords.com'}];
+                  request.headers['host'] = [{ key: 'host', value: 'legacy.naadanchords.com'}];
                }
                if (request.headers['x-prerender-token'] && request.headers['x-prerender-host']) {
                  request.origin = {
@@ -147,7 +147,7 @@ Resources:
               callback(null, request);
           };
       Runtime: "nodejs8.10"
-  RedirectToLegacyOrPrerenderVersion1:
+  RedirectToLegacyOrPrerenderVersion2:
     Type: "AWS::Lambda::Version"
     Properties:
       FunctionName:
@@ -178,7 +178,7 @@ Resources:
             - EventType: viewer-request
               LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion2, Version] ] ]
             - EventType: origin-request
-              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToLegacyOrPrerender, Arn], !GetAtt [RedirectToLegacyOrPrerenderVersion1, Version] ] ]
+              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToLegacyOrPrerender, Arn], !GetAtt [RedirectToLegacyOrPrerenderVersion2, Version] ] ]
         Enabled: true
         CustomErrorResponses:
           - ErrorCode: 404
