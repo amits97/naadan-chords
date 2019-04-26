@@ -1,13 +1,15 @@
 .ChordControls {
-  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+  font-family: DINNextLTPro-Regular,Helvetica Neue,sans-serif;
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 700;
   position: sticky;
-  bottom: 10px;
+  bottom: 0;
   margin-top: 25px;
-  opacity: 0.97;
-  padding: 10px 15px;
-  height: 60px;
+  opacity: .97;
+  padding: 5px 15px;
+  height: 50px;
+  margin-left: -1rem;
+  margin-right: -1rem;
 }
 
 .ChordControls .controls-container {
@@ -21,8 +23,8 @@
 
 .ChordControls .feature-label {
   display: inline-block;
-  margin-top: 10px;
-  font-size: 14px;
+  margin-top: 12px;
+  font-size: 12px;
 }
 
 .ChordControls .amount {
@@ -37,10 +39,10 @@
 
 .ChordControls .btn-group .btn {
   border-radius: 0;
-  padding-top: 7px;
-  height: 35px;
-  width: 40px;
-  font-size: 15px;
+  padding-top: 5px;
+  height: 31px;
+  width: 35px;
+  font-size: 14px;
   padding-left: 10px;
   padding-right: 10px;
 }
