@@ -86,7 +86,7 @@ export default class Content extends Component {
         );
       } else {
         return (
-          <h4>No posts found!</h4>
+          <h4 style={{marginTop: '10px'}}>No posts found!</h4>
         );
       }
     }
@@ -185,7 +185,7 @@ export default class Content extends Component {
         );
       } else {
         return (
-          <h4>No posts found!</h4>
+          <h4 style={{marginTop: '10px'}}>No posts found!</h4>
         );
       }
     }
