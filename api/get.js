@@ -28,15 +28,15 @@ async function retryGet(postId) {
     try {
       const result = await dynamoDbLib.call("scan", params);
       if(result.Items.length > 0) {
-        let result = result.Items[0];
-        let userId = result.userId;
-        result.userName = await userNameLib.call(userId);
-        return success(result);
+        let finalResult = result.Items[0];
+        let userId = finalResult.userId;
+        finalResult.userName = await userNameLib.call(userId);
+        return success(finalResult);
       } else {
         return retryLoop(postId);
       }
     } catch (e) {
-      return failure({ status: false });
+      return failure({ status: false, error: e });
     }
   } else {
     return failure({ status: false, error: "Item not found." });
@@ -58,9 +58,9 @@ export async function main(event, context) {
       result.Item.userName = await userNameLib.call(userId);
       return success(result.Item);
     } else {
-      return retryLoop(event.pathParameters.id);
+      return retryGet(event.pathParameters.id);
     }
   } catch (e) {
-    return failure({ status: false });
+    return failure({ status: false, error: e });
   }
 }
