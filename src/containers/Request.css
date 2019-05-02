@@ -1,0 +1,24 @@
+.Request .contentRow {
+  min-height: calc(60vh - 56px);
+}
+
+.Request .contentColumn {
+  padding-top: 30px;
+  padding-bottom: 50px;
+}
+
+.Request .sidebarColumn {
+  padding-top: 30px;
+}
+
+.Request h1 {
+  margin-bottom: -10px;
+  margin-top: 0;
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .Request .contentColumn {
+    padding-right: 25px;
+  }
+}

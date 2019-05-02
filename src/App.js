@@ -160,6 +160,9 @@ class App extends Component {
                 <LinkContainer exact to="/about">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>About</a>
                 </LinkContainer>
+                <LinkContainer exact to="/request">
+                  <a href="#/" className="nav-link" onClick={this.closeNav}>Request</a>
+                </LinkContainer>
                 { this.authenticatedOptions() }
               </Nav>
             </Navbar.Collapse>
