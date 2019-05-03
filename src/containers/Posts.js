@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
+import { Helmet } from "react-helmet";
+import ReactGA from "react-ga";
 import * as urlLib from "../libs/url-lib";
 import Content from "./Content";
-import ReactGA from "react-ga";
 import "./Posts.css";
 
 export default class Posts extends Component {
@@ -308,6 +309,32 @@ export default class Posts extends Component {
     );
   }
 
+  renderRedirect = () => {
+    if(this.props.isPageUrl) {
+      this.props.history.push("/");
+
+      return (
+        <Helmet>
+          <meta name="prerender-status-code" content="301" />
+          <meta name="prerender-header" content={`Location: https://www.naadanchords.com`} />
+        </Helmet>
+      );
+    } else if(this.props.isCategory) {
+      let category = this.props.match.params.category.toLowerCase();
+      if(this.getCategoryFromLegacy(category) !== category) {
+        console.log("here");
+        this.props.history.push(`/category/${this.getCategoryFromLegacy(category)}`)
+
+        return (
+          <Helmet>
+            <meta name="prerender-status-code" content="301" />
+            <meta name="prerender-header" content={`Location: https://www.naadanchords.com/category/${this.getCategoryFromLegacy(category)}`} />
+          </Helmet>
+        );
+      }
+    }
+  }
+
   render() {
     let title = "";
     let searchQuery = this.props.search;
@@ -329,6 +356,7 @@ export default class Posts extends Component {
     return (
       <div className="Posts">
         { this.renderTopAd() }
+        { this.renderRedirect() }
         <Content {...childProps} />
       </div>
     );

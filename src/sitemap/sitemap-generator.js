@@ -52,6 +52,10 @@ async function generateSitemap() {
     postsResult = await loadPosts(prepareLastEvaluatedPostRequest(postsResult.LastEvaluatedKey));
   }
 
+  for(var i = 0; i < postsResult.Items.length; i++) {
+    idMap.push({ id: postsResult.Items[i].postId });
+  }
+
   const paramsConfig = {
     "/:id": idMap
   };

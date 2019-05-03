@@ -172,7 +172,7 @@ export default class Content extends Component {
           <meta name="prerender-status-code" content="501" />
         </Helmet>
         <h4 style={{marginTop: '10px'}}>No posts found!</h4>
-        <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank">report a bug</a>.</p>
+        <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
       </div>
     );
   }
