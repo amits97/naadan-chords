@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { API } from "aws-amplify";
 import * as urlLib from "../libs/url-lib";
 import Content from "./Content";
+import ReactGA from "react-ga";
 import "./Posts.css";
 
 export default class Posts extends Component {
@@ -184,6 +185,9 @@ export default class Posts extends Component {
       this.loadData();
       window.scrollTo(0, 0);
     }
+
+    ReactGA.initialize("UA-34900138-2");
+    ReactGA.pageview(window.location.pathname + window.location.search);
   }
 
   setLoadingAndLoadData = () => {
@@ -227,6 +231,8 @@ export default class Posts extends Component {
       //clear search
       this.props.setSearch("");       
     }
+
+    ReactGA.pageview(window.location.pathname + window.location.search);
   }
 
   logPostVisit = async () => {
@@ -278,6 +284,8 @@ export default class Posts extends Component {
           this.setLoadingAndLoadData();
         }
       }
+
+      ReactGA.pageview(window.location.pathname + window.location.search);
     }
   }
 
