@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { API } from "aws-amplify";
 import * as urlLib from "../libs/url-lib";
 import Content from "./Content";
+import "./Posts.css";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -177,6 +178,8 @@ export default class Posts extends Component {
   }
 
   async componentDidMount() {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+
     if(!urlLib.getUrlParameter("s")) {
       this.loadData();
       window.scrollTo(0, 0);
@@ -285,6 +288,18 @@ export default class Posts extends Component {
     }
   }
 
+  renderTopAd = () => {
+    return (
+      <div className="ad">
+        <ins className="adsbygoogle bg-light"
+          style={{display:"inline-block", width: "728px", height: "90px"}}
+          data-ad-client="ca-pub-1783579460797635"
+          data-ad-slot="1349463901">
+        </ins>
+      </div>
+    );
+  }
+
   render() {
     let title = "";
     let searchQuery = this.props.search;
@@ -304,7 +319,10 @@ export default class Posts extends Component {
     }
 
     return (
-      <Content {...childProps} />
+      <div className="Posts">
+        { this.renderTopAd() }
+        <Content {...childProps} />
+      </div>
     );
   }
 }

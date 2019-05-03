@@ -20,7 +20,7 @@ export async function main(event, context, callback) {
     },
     ScanIndexForward: false,
     ProjectionExpression: "postId, createdAt, postType, title, userId",
-    Limit: 10
+    Limit: 15
   };
 
   if(event.exclusiveStartKey) {

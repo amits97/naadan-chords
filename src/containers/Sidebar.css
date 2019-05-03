@@ -13,6 +13,7 @@
   min-width: 200px;
   padding-top: 30px;
   padding-left: 10px;
+  height: 100%;
 }
 
 .Sidebar .sidebar-content h6 {
@@ -40,8 +41,8 @@
 }
 
 .Sidebar .top-posts {
-  margin-top: 50px;
-  margin-bottom: 100px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .Sidebar .top-posts .popular-icon {
@@ -65,6 +66,23 @@
   text-decoration: none;
 }
 
+.Sidebar .ad1, .Sidebar .ad2 {
+  margin: 10px 0;
+}
+
+.Sidebar .ad1 {
+  margin: 30px 0;
+}
+
+.Sidebar .ad2 {
+  margin-bottom: 50px;
+}
+
+.Sidebar .sticky-ad {
+  position: sticky;
+  top: 80px;
+}
+
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 767.98px) {
   .Sidebar .sidebar-button {
@@ -79,6 +97,10 @@
     z-index: 3;
     top: 130vh;
     margin: auto;
+  }
+
+  .Sidebar .ad1 {
+    display: none;
   }
 
   .Sidebar .sidebar-content {

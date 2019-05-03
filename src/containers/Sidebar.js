@@ -23,6 +23,9 @@ export default class Sidebar extends Component {
   }
 
   async componentDidMount() {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+
     try {
       let topPosts = await this.topPosts();
       this.setState({
@@ -90,6 +93,30 @@ export default class Sidebar extends Component {
     }
   }
 
+  renderSidebarAd1 = () => {
+    return (
+      <div className="ad1">
+        <ins className="adsbygoogle bg-light"
+          style={{display: "inline-block", width: "250px", height: "250px"}}
+          data-ad-client="ca-pub-1783579460797635"
+          data-ad-slot="4869884700">
+        </ins>
+      </div>
+    );
+  }
+
+  renderSidebarAd2 = () => {
+    return (
+      <div className="sticky-ad ad2">
+        <ins className="adsbygoogle bg-light"
+          style={{display: "inline-block", width: "250px", height: "250px"}}
+          data-ad-client="ca-pub-1783579460797635"
+          data-ad-slot="9918861903">
+        </ins>
+      </div>
+    );
+  }
+
   render() {
     let { mobileSidebarOpened } = this.state;
 
@@ -97,14 +124,16 @@ export default class Sidebar extends Component {
       <div className="Sidebar">
         <div className={`sidebar ${mobileSidebarOpened ? 'opened' : ''} bg-white`}>
           <div className="sidebar-content">
-              <div className="facebook-widget">
+            <div className="facebook-widget">
               <h6>FOLLOW NAADAN CHORDS</h6>
               <hr />
               <FacebookProvider appId="178749152169432">
                 <Page href="https://www.facebook.com/naadanchords/" adaptContainerWidth hideCTA showFacepile="false" />
               </FacebookProvider>
             </div>
+            {this.renderSidebarAd1()}
             {this.renderTopPostsList()}
+            {this.renderSidebarAd2()}
           </div>
         </div>
         <div className="sidebar-button btn btn-primary" onClick={this.handleMobileSidebarClick}>

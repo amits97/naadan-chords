@@ -51,7 +51,7 @@ export default class Content extends Component {
     if(isLoading) {
       let skeleton = [];
 
-      for(var i=0; i<9; i++) {
+      for(var i=0; i<15; i++) {
         skeleton.push(
           <div key={i} className="post pt-1 pb-1 no-hover">
             <h5><Skeleton /></h5>
@@ -176,7 +176,7 @@ export default class Content extends Component {
         <div className="post">
           <h1><Skeleton /></h1>
           <hr />
-          <Skeleton count={18} />
+          <Skeleton count={25} />
         </div>
       );
     } else {
