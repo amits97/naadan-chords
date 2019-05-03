@@ -43,6 +43,7 @@ export default class Posts extends Component {
 
   posts(category, search) {
     if(category) {
+      category = this.getCategoryFromLegacy(category).toUpperCase();
       return API.get("posts", `/posts?category=${category}`);
     } else if(search) {
       return API.get("posts", `/posts?s=${search}`);
@@ -141,6 +142,15 @@ export default class Posts extends Component {
     }
   }
 
+  getCategoryFromLegacy = (category) => {
+    category = category.toLowerCase();
+    if(category.indexOf("song-guitar-chords-and-tabs") > -1) {
+      category = category.replace("-song-guitar-chords-and-tabs", "");
+    }
+
+    return category;
+  }
+
   loadMorePosts = async (exclusiveStartKey) => {
     this.setState({
       isPaginationLoading: true
@@ -149,7 +159,8 @@ export default class Posts extends Component {
     try {
       let queryRequest = `/posts?exclusiveStartKey=${exclusiveStartKey}`;
       if(this.props.isCategory) {
-        queryRequest += `&category=${this.props.match.params.category.toUpperCase()}`
+        let category = this.getCategoryFromLegacy(this.props.match.params.category);
+        queryRequest += `&category=${category.toUpperCase()}`
       }
       let postsResult = await API.get("posts", queryRequest);
       this.setState({
@@ -279,7 +290,7 @@ export default class Posts extends Component {
     let searchQuery = this.props.search;
 
     if(this.props.isCategory) {
-      title = `${this.props.match.params.category.toUpperCase()} - GUITAR CHORDS AND TABS`
+      title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS`
     } else if(searchQuery) {
       title = `SEARCH RESULTS - ${searchQuery.toUpperCase()}`
     }

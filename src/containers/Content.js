@@ -14,6 +14,11 @@ import LoaderButton from "../components/LoaderButton";
 import "./Content.css";
 
 export default class Content extends Component {
+  constructor(props) {
+    super(props);
+    this.removeMd = require("remove-markdown");
+  }
+
   formatDate(date) {
     return(
       <Moment format="MMMM D, YYYY">{ date }</Moment>
@@ -210,12 +215,18 @@ export default class Content extends Component {
       let description = posts.content.substring(0, 157).trim();
       description = description.substr(0, Math.min(description.length, description.lastIndexOf(" "))) + "..";
 
+      if(posts.postType === "PAGE") {
+        description = this.removeMd(description);
+      } else {
+        description = `Guitar chords and tabs of ${posts.song} from ${posts.album}`
+      }
+
       return (
         <Helmet>
           <title>{posts.title.toUpperCase()} | Naadan Chords</title>
           <meta name="description" content={description} />
           <meta name="twitter:card" content="summary" />
-          <meta property="og:title" content={posts.title} />
+          <meta property="og:title" content={`${posts.title} | Naadan Chords`} />
           <meta property="og:description" content={description} />
         </Helmet>
       );
@@ -223,10 +234,10 @@ export default class Content extends Component {
       return (
         <Helmet>
           <title>{this.props.title ? `${this.capitalizeFirstLetter(this.props.title)} | Naadan Chords` : "Naadan Chords | Guitar Chords and Tabs of Malayalam Songs"}</title>
-          <meta name="description" content="" />
+          <meta name="description" content="Guitar Chords and Tabs of Malayalam Songs" />
           <meta name="twitter:card" content="summary" />
           <meta property="og:title" content="Naadan Chords | Guitar Chords and Tabs of Malayalam Songs" />
-          <meta property="og:description" content="" />
+          <meta property="og:description" content="Guitar Chords and Tabs of Malayalam Songs" />
         </Helmet>
       );
     }
