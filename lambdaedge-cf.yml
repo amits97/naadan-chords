@@ -173,7 +173,7 @@ Resources:
               - "X-Prerender-Cachebuster"
               - "X-Redirect-Legacy"
           TargetOriginId: origin
-          ViewerProtocolPolicy : allow-all
+          ViewerProtocolPolicy : redirect-to-https
           LambdaFunctionAssociations:
             - EventType: viewer-request
               LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion2, Version] ] ]
@@ -184,6 +184,15 @@ Resources:
           - ErrorCode: 404
             ResponseCode: 200
             ResponsePagePath: /index.html
+          - ErrorCode: 501
+            ResponseCode: 404
+            ResponsePagePath: /index.html
+        Aliases:
+          - "www.naadanchords.com"
+        ViewerCertificate:
+          AcmCertificateArn: "arn:aws:acm:us-east-1:608318364761:certificate/2460dc04-8a28-4e30-aa3c-d9e0b63a52e0"
+          MinimumProtocolVersion: 'TLSv1.1_2016'
+          SslSupportMethod: 'sni-only'
         HttpVersion: http2
         Origins:
           - CustomOriginConfig:

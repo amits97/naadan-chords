@@ -90,9 +90,7 @@ export default class Content extends Component {
           </div>
         );
       } else {
-        return (
-          <h4 style={{marginTop: '10px'}}>No posts found!</h4>
-        );
+        return this.render404();
       }
     }
   }
@@ -167,6 +165,18 @@ export default class Content extends Component {
     }
   }
 
+  render404 = () => {
+    return (
+      <div>
+        <Helmet>
+          <meta name="prerender-status-code" content="501" />
+        </Helmet>
+        <h4 style={{marginTop: '10px'}}>No posts found!</h4>
+        <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank">report a bug</a>.</p>
+      </div>
+    );
+  }
+
   renderPost = () => {
     let { isLoading, posts } = this.props;
     let post = posts;
@@ -189,9 +199,7 @@ export default class Content extends Component {
           </div>
         );
       } else {
-        return (
-          <h4 style={{marginTop: '10px'}}>No posts found!</h4>
-        );
+        return this.render404();
       }
     }
   }
