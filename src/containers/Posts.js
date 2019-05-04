@@ -22,7 +22,9 @@ export default class Posts extends Component {
       scrollY: 0,
       lastEvaluatedPost: {},
       isPostList: false,
-      isRandomPost: false
+      isRandomPost: false,
+      redirect: false,
+      redirectUrl: ""
     };
   }
 
@@ -187,6 +189,25 @@ export default class Posts extends Component {
       window.scrollTo(0, 0);
     }
 
+    if(this.props.isPageUrl) {
+      this.props.history.push("/");
+
+      this.setState({
+        redirect: true,
+        redirectUrl: "/"
+      });
+    } else if(this.props.isCategory) {
+      let category = this.props.match.params.category.toLowerCase();
+      if(this.getCategoryFromLegacy(category) !== category) {
+        this.props.history.push(`/category/${this.getCategoryFromLegacy(category)}`)
+
+        this.setState({
+          redirect: true,
+          redirectUrl: `/category/${this.getCategoryFromLegacy(category)}`
+        });
+      }
+    }
+
     ReactGA.initialize("UA-34900138-2");
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
@@ -310,28 +331,13 @@ export default class Posts extends Component {
   }
 
   renderRedirect = () => {
-    if(this.props.isPageUrl) {
-      this.props.history.push("/");
-
-      return (
+    if(this.state.redirect) {
+      return(
         <Helmet>
           <meta name="prerender-status-code" content="301" />
-          <meta name="prerender-header" content={`Location: https://www.naadanchords.com`} />
+          <meta name="prerender-header" content={`Location: https://www.naadanchords.com${this.state.redirectUrl}`} />
         </Helmet>
       );
-    } else if(this.props.isCategory) {
-      let category = this.props.match.params.category.toLowerCase();
-      if(this.getCategoryFromLegacy(category) !== category) {
-        console.log("here");
-        this.props.history.push(`/category/${this.getCategoryFromLegacy(category)}`)
-
-        return (
-          <Helmet>
-            <meta name="prerender-status-code" content="301" />
-            <meta name="prerender-header" content={`Location: https://www.naadanchords.com/category/${this.getCategoryFromLegacy(category)}`} />
-          </Helmet>
-        );
-      }
     }
   }
 
