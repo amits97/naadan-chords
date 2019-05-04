@@ -35,6 +35,12 @@ provider:
       Action:
         - cognito-idp:ListUsers
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
+    - Effect: Deny
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "*"
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
