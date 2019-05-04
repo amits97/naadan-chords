@@ -93,13 +93,21 @@ export default class Sidebar extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if(this.props.pageKey !== prevProps.pageKey) {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  }
+
   renderSidebarAd1 = () => {
     return (
       <div className="ad1">
         <ins className="adsbygoogle bg-light"
           style={{display: "inline-block", width: "250px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="4869884700">
+          data-ad-slot="4869884700"
+          key={this.props.pageKey}>
         </ins>
       </div>
     );
@@ -111,7 +119,8 @@ export default class Sidebar extends Component {
         <ins className="adsbygoogle bg-light"
           style={{display: "inline-block", width: "250px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="9918861903">
+          data-ad-slot="9918861903"
+          key={this.props.pageKey}>
         </ins>
       </div>
     );

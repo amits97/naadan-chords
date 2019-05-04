@@ -254,6 +254,7 @@ export default class Posts extends Component {
       this.props.setSearch("");       
     }
 
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
 
@@ -305,9 +306,10 @@ export default class Posts extends Component {
 
           this.setLoadingAndLoadData();
         }
-      }
 
-      ReactGA.pageview(window.location.pathname + window.location.search);
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        ReactGA.pageview(window.location.pathname + window.location.search);
+      }
     }
   }
 
@@ -324,7 +326,8 @@ export default class Posts extends Component {
         <ins className="adsbygoogle bg-light"
           style={{display:"inline-block", width: "728px", height: "90px"}}
           data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="1349463901">
+          data-ad-slot="1349463901"
+          key={this.props.pageKey}>
         </ins>
       </div>
     );
