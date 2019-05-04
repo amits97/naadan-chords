@@ -28,7 +28,7 @@ export default class NotFound extends Component {
             { this.render404Core() }
           </Col>
           <Col md={4} className="sidebarColumn border-left">
-            <Sidebar pageKey={this.props.pageKey} />
+          <Sidebar {...this.props} />
           </Col>
         </Row>
       );

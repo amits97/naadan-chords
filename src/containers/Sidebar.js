@@ -94,9 +94,11 @@ export default class Sidebar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.pageKey !== prevProps.pageKey) {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    if(!(this.props.search)) {
+      if(this.props.pageKey !== prevProps.pageKey) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
     }
   }
 

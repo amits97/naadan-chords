@@ -255,7 +255,7 @@ export default class Content extends Component {
             { this.renderContent() }
           </Col>
           <Col md={4} className="sidebarColumn border-left">
-            <Sidebar pageKey={this.props.pageKey} />
+            <Sidebar {...this.props} />
           </Col>
         </Row>
       </div>

@@ -49,7 +49,7 @@ export default class Request extends Component {
             <div className="contactForm" ref={this.requestForm}></div>
           </Col>
           <Col md={4} className="sidebarColumn border-left">
-            <Sidebar pageKey={this.props.pageKey} />
+            <Sidebar {...this.props} />
           </Col>
         </Row>
       </div>

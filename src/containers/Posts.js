@@ -254,7 +254,6 @@ export default class Posts extends Component {
       this.props.setSearch("");       
     }
 
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
 
