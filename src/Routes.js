@@ -5,6 +5,7 @@ import Login from "./containers/Login";
 import Admin from "./containers/Admin";
 import NewPost from "./containers/NewPost";
 import Request from "./containers/Request";
+import NotFound from "./containers/NotFound";
 import AppliedRoute from "./components/AppliedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
@@ -21,4 +22,6 @@ export default ({ childProps }) =>
     <AuthenticatedRoute path="/admin/edit-post/:id" exact component={NewPost} props={{isEditMode: true, ...childProps}} />
     <AppliedRoute path="/request" exact component={Request} props={{...childProps}} />
     <AppliedRoute path="/:id" exact component={Posts} props={{pageKey: window.location.href, ...childProps}} />
+    { /* Finally, catch all unmatched routes */ }
+    <AppliedRoute component={NotFound} />
   </Switch>;

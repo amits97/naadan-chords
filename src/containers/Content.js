@@ -9,6 +9,7 @@ import Disqus from "disqus-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRandom } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
+import NotFound from "./NotFound";
 import ContentParser from "./ContentParser";
 import LoaderButton from "../components/LoaderButton";
 import "./Content.css";
@@ -167,13 +168,7 @@ export default class Content extends Component {
 
   render404 = () => {
     return (
-      <div>
-        <Helmet>
-          <meta name="prerender-status-code" content="501" />
-        </Helmet>
-        <h4 style={{marginTop: '10px'}}>No posts found!</h4>
-        <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
-      </div>
+      <NotFound isEmbed={true} />
     );
   }
 
