@@ -24,7 +24,8 @@ export default class Posts extends Component {
       isPostList: false,
       isRandomPost: false,
       redirect: false,
-      redirectUrl: ""
+      redirectUrl: "",
+      adKey: props.pageKey
     };
   }
 
@@ -272,6 +273,12 @@ export default class Posts extends Component {
   componentDidUpdate(prevProps, prevState) {
     if(this.props.search || prevProps.search) {
       this.componentDidUpdateSearch(prevProps);
+
+      if(!this.props.search) {
+        this.setState({
+          adKey: this.props.pageKey
+        });        
+      }
     } else {
       if(urlLib.getUrlParameter("s")) {
         this.props.setSearch(urlLib.getUrlParameter("s"));
@@ -306,9 +313,15 @@ export default class Posts extends Component {
           this.setLoadingAndLoadData();
         }
 
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        this.setState({
+          adKey: this.props.pageKey
+        });
         ReactGA.pageview(window.location.pathname + window.location.search);
       }
+    }
+
+    if(prevState.adKey !== this.state.adKey) {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
   }
 
@@ -326,7 +339,7 @@ export default class Posts extends Component {
           style={{display:"inline-block", width: "728px", height: "90px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="1349463901"
-          key={this.props.pageKey}>
+          key={this.state.adKey}>
         </ins>
       </div>
     );

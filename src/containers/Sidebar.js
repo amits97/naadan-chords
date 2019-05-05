@@ -14,7 +14,8 @@ export default class Sidebar extends Component {
     this.state = {
       isLoading: true,
       topPosts: [],
-      mobileSidebarOpened: false
+      mobileSidebarOpened: false,
+      adKey: props.pageKey
     };
   }
 
@@ -93,12 +94,18 @@ export default class Sidebar extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if(!(this.props.search)) {
-      if(this.props.pageKey !== prevProps.pageKey) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      if((this.props.pageKey !== prevProps.pageKey) || prevProps.search) {
+        this.setState({
+          adKey: this.props.pageKey
+        });
       }
+    }
+
+    if(this.state.adKey !== prevState.adKey) {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
   }
 
@@ -109,7 +116,7 @@ export default class Sidebar extends Component {
           style={{display: "inline-block", width: "250px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="4869884700"
-          key={this.props.pageKey}>
+          key={this.state.adKey}>
         </ins>
       </div>
     );
@@ -122,7 +129,7 @@ export default class Sidebar extends Component {
           style={{display: "inline-block", width: "250px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="9918861903"
-          key={this.props.pageKey}>
+          key={this.state.adKey}>
         </ins>
       </div>
     );
