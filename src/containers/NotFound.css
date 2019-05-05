@@ -16,6 +16,11 @@
   margin-top: 0;
 }
 
+.NotFound .ad {
+  padding: 15px 0 10px 0;
+  text-align: center;
+}
+
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .NotFound .contentColumn {

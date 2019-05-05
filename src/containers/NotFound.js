@@ -10,28 +10,40 @@ export default class NotFound extends SearchComponent {
     window.scrollTo(0, 0);
   }
 
-  render404Core = () => {
+  renderTopAd = () => {
     return (
-      <div>
-        <h3>Sorry, page not found!</h3>
-        <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
+      <div className="ad">
+        <ins className="adsbygoogle bg-light"
+          style={{display:"inline-block", width: "728px", height: "90px"}}
+          data-ad-client="ca-pub-1783579460797635"
+          data-ad-slot="1349463901">
+        </ins>
       </div>
     );
   }
 
   renderNotFound = () => {
     if(this.props.isEmbed) {
-      return this.render404Core();
+      return (
+        <div>
+          <h3>No posts found!</h3>
+          <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
+        </div>
+      );
     } else {
       return (
-        <Row className="contentRow">
-          <Col md={8} className="contentColumn">
-            { this.render404Core() }
-          </Col>
-          <Col md={4} className="sidebarColumn border-left">
-          <Sidebar {...this.props} />
-          </Col>
-        </Row>
+        <div>
+          { this.renderTopAd() }
+          <Row className="contentRow">
+            <Col md={8} className="contentColumn">
+              <h3>Page not found!</h3>
+              <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
+            </Col>
+            <Col md={4} className="sidebarColumn border-left">
+            <Sidebar {...this.props} />
+            </Col>
+          </Row>
+        </div>
       );
     }
   }
