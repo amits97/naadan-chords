@@ -23,5 +23,5 @@ export default ({ childProps }) =>
     <AppliedRoute path="/request" exact component={Request} props={{...childProps}} />
     <AppliedRoute path="/:id" exact component={Posts} props={{pageKey: window.location.href, ...childProps}} />
     { /* Finally, catch all unmatched routes */ }
-    <AppliedRoute component={NotFound} />
+    <AppliedRoute component={NotFound} props={{...childProps}} />
   </Switch>;

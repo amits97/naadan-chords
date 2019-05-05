@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import { Alert, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { Auth } from "aws-amplify";
 import LoaderButton from "../components/LoaderButton";
+import SearchComponent from "../components/SearchComponent";
 import "./Login.css";
 
-export default class Login extends Component {
+export default class Login extends SearchComponent {
   constructor(props) {
     super(props);
 

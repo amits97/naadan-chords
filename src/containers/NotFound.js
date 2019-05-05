@@ -1,10 +1,11 @@
-import React, {Component} from "react";
+import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import Sidebar from "./Sidebar";
+import SearchComponent from "../components/SearchComponent";
 import "./NotFound.css";
 
-export default class NotFound extends Component {
+export default class NotFound extends SearchComponent {
   componentDidMount() {
     window.scrollTo(0, 0);
   }
