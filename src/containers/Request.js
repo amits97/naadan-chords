@@ -19,6 +19,7 @@ export default class Request extends Component {
     script.dataset["role"] = "form";
     script.dataset["defaultWidth"] = "650px";
     this.requestForm.current.appendChild(script);
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
   }
 
   renderSEOTags = () => {

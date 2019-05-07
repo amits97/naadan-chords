@@ -8,6 +8,7 @@ import "./NotFound.css";
 export default class NotFound extends SearchComponent {
   componentDidMount() {
     window.scrollTo(0, 0);
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
   }
 
   renderTopAd = () => {
