@@ -18,7 +18,6 @@ export default class NotFound extends SearchComponent {
 
   componentDidUpdate() {
     if(!this.adLoaded) {
-      console.log("here");
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
   }
