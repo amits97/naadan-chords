@@ -20,6 +20,10 @@ export default class Content extends Component {
     this.removeMd = require("remove-markdown");
   }
 
+  slugify(text) {
+    return text.toString().toLowerCase().split(' ').join('-');
+  }
+
   formatDate(date) {
     return(
       <Moment format="MMMM D, YYYY">{ date }</Moment>
@@ -82,7 +86,13 @@ export default class Content extends Component {
                 <LinkContainer key={i} exact to={`/${ post.postId }`}>
                   <div className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
                     <h5>{ post.title }</h5>
-                    <small>{ this.formatDate( post.createdAt ) } <span className="separator">|</span> <a href="#/">{ post.userName }</a></small>
+                    <small>
+                      { this.formatDate( post.createdAt ) }
+                      <span className="separator"> | </span>
+                      <LinkContainer key={i} to={`/user/${ post.userId }/${ this.slugify(post.userName) }`}>
+                        <a href="#/">{ post.userName }</a>
+                      </LinkContainer>
+                    </small>
                   </div>
                 </LinkContainer>
               )
@@ -118,7 +128,10 @@ export default class Content extends Component {
           <small>
             { this.formatDate( post.createdAt ) }
             <span className="separator ml-1 mr-1">|</span>
-            Posted by <a href="#/">{ post.userName }</a>
+            Posted by&nbsp;
+            <LinkContainer to={`/user/${ post.userId }/${ this.slugify(post.userName) }`}>
+              <a href="#/">{ post.userName }</a>
+            </LinkContainer>
             <span className="ml-1 mr-1">in</span>
               <LinkContainer exact to={`/category/${post.category.toLowerCase()}`}>
                 <a href="#/">

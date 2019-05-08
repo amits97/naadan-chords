@@ -29,6 +29,10 @@ export default class Posts extends Component {
     };
   }
 
+  makeTitle(slug) {
+    return slug.split('-').join(' ');
+  }
+
   goBack = (e) => {
     e.preventDefault();
 
@@ -47,12 +51,14 @@ export default class Posts extends Component {
     return API.get("posts", `/posts/${postId}`);
   }
 
-  posts(category, search) {
+  posts(category, search, user) {
     if(category) {
       category = this.getCategoryFromLegacy(category).toUpperCase();
       return API.get("posts", `/posts?category=${category}`);
     } else if(search) {
       return API.get("posts", `/posts?s=${search}`);
+    } else if(user){
+      return API.get("posts", `/user-posts?userId=${user}`);
     } else {
       return API.get("posts", "/posts");
     }
@@ -130,7 +136,7 @@ export default class Posts extends Component {
           isRandomPost: false
         });
 
-        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null);
+        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, null, this.props.isUserPosts ? this.props.match.params.userId : null);
         posts = postsResult.Items;
         this.setPagination(postsResult);
       }
@@ -168,7 +174,12 @@ export default class Posts extends Component {
         let category = this.getCategoryFromLegacy(this.props.match.params.category);
         queryRequest += `&category=${category.toUpperCase()}`
       }
-      let postsResult = await API.get("posts", queryRequest);
+      let postsResult = [];
+      if(this.props.isUserPosts) {
+        postsResult = await API.get("posts",`/user-posts?userId=${this.props.match.params.userId}&exclusiveStartKey=${exclusiveStartKey}`)
+      } else {
+        postsResult = await API.get("posts", queryRequest);
+      }
       this.setState({
         posts: this.state.posts.concat(postsResult.Items),
         lastEvaluatedPost: postsResult.LastEvaluatedKey,
@@ -223,7 +234,7 @@ export default class Posts extends Component {
   }
 
   componentDidUpdateSearch = (prevProps) => {
-    if(this.props.search === "" && prevProps.search && this.props.match.params.id) {
+    if(this.props.search === "" && prevProps.search && (this.props.match.params.id || this.props.isCategory || this.props.isUserPosts)) {
       this.setLoadingAndLoadData();
       return;
     }
@@ -287,7 +298,7 @@ export default class Posts extends Component {
 
       if(prevProps.pageKey !== this.props.pageKey) {
         if(!prevProps.isRandomPage) {
-          if(!this.props.isCategory && !prevProps.isCategory) {
+          if(!this.props.isCategory && !prevProps.isCategory && !this.props.isUserPosts && !prevProps.isUserPosts) {
             //navigating away from home
             if(prevProps.match.params.id === undefined) {
               this.setState({
@@ -361,9 +372,13 @@ export default class Posts extends Component {
     let searchQuery = this.props.search;
 
     if(this.props.isCategory) {
-      title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS`
+      title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS`;
     } else if(searchQuery) {
-      title = `SEARCH RESULTS - ${searchQuery.toUpperCase()}`
+      title = `SEARCH RESULTS - ${searchQuery.toUpperCase()}`;
+    } else if(this.props.isUserPosts) {
+      let userName = this.props.match.params.userName || "";
+      userName = this.makeTitle(userName);
+      title = `POSTS BY ${userName.toUpperCase()}`;
     }
 
     let childProps = {

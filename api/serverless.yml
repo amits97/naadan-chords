@@ -140,6 +140,17 @@ functions:
           path: top-posts
           method: get
           cors: true
+  user-posts:
+    handler: user-posts.main
+    events:
+      - http:
+          path: user-posts
+          method: get
+          cors: true
+          integration: lambda
+          request:
+            template:
+              application/json: '{ "userId" : "$input.params(''userId'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')"  }'
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors

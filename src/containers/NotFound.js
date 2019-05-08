@@ -6,9 +6,21 @@ import SearchComponent from "../components/SearchComponent";
 import "./NotFound.css";
 
 export default class NotFound extends SearchComponent {
+  constructor(props) {
+    super(props);
+    this.adLoaded = false;
+  }
+
   componentDidMount() {
     window.scrollTo(0, 0);
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    this.adLoaded = true;
+  }
+
+  componentDidUpdate() {
+    if(!this.adLoaded) {
+      console.log("here");
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }
   }
 
   renderTopAd = () => {
