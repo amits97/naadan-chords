@@ -117,8 +117,9 @@
     display: block;
   }
 
-  .Content .postList small span.separator {
+  .Content .postList .post small span.separator {
     display: inline-block;
+    margin: 0 5px;
   }
 
   .Content .postList small time {
