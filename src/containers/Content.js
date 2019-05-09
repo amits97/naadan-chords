@@ -228,13 +228,15 @@ export default class Content extends Component {
     let { posts = {} } = this.props;
 
     if(posts.content && !Array.isArray(posts)) {
-      let description = posts.content.substring(0, 157).trim();
-      description = description.substr(0, Math.min(description.length, description.lastIndexOf(" "))) + "..";
+      let description = "";
 
       if(posts.postType === "PAGE") {
+        description = posts.content.substring(0, 157).trim();
+        description = description.substr(0, Math.min(description.length, description.lastIndexOf(" "))) + "..";
         description = this.removeMd(description);
       } else {
-        description = `Guitar chords and tabs of ${posts.song} from ${posts.album}`
+        description = `Guitar chords and tabs of ${posts.song} - ${posts.album}`;
+        description += `. Music by ${posts.music} and Sung by ${posts.singers}`;
       }
 
       return (
