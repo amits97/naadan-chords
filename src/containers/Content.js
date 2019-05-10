@@ -235,8 +235,8 @@ export default class Content extends Component {
         description = description.substr(0, Math.min(description.length, description.lastIndexOf(" "))) + "..";
         description = this.removeMd(description);
       } else {
-        description = `Guitar chords and tabs of ${posts.song} - ${posts.album}`;
-        description += `. Music by ${posts.music} and Sung by ${posts.singers}.`;
+        description = `Guitar chords and tabs of ${posts.song} - ${posts.album} with lyrics`;
+        description += `. Music by ${posts.music} and Sung by ${posts.singers}. Transpose to any scale or pitch.`;
       }
 
       return (

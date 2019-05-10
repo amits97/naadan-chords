@@ -118,6 +118,11 @@ export default class Posts extends Component {
         posts = await this.post(postId);
         if(posts.postId !== postId) {
           this.props.history.push(`/${posts.postId}`);
+
+          this.setState({
+            redirect: true,
+            redirectUrl: `/${posts.postId}`
+          });
         }
 
         if(posts.postType === "POST") {
