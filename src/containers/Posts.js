@@ -206,6 +206,13 @@ export default class Posts extends Component {
       window.scrollTo(0, 0);
     }
 
+    if(this.props.match.params.id === "post-sitemap.xml") {
+      this.setState({
+        redirect: true,
+        redirectUrl: "/sitemap.xml"
+      });
+    }
+
     if(this.props.isPageUrl) {
       this.props.history.push("/");
 
