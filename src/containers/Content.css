@@ -33,7 +33,6 @@
 
 .Content .postList .post {
   transition: all 0.5s;
-  cursor: pointer;
   padding: 12.5px 15px;
 }
 
@@ -48,6 +47,10 @@
 
 .Content .postList .post.no-hover:hover {
   background: inherit !important;
+}
+
+.Content .postList a.post-title {
+  color: inherit;
 }
 
 .Content .postList .post h5 {

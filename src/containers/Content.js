@@ -83,18 +83,20 @@ export default class Content extends Component {
             </div>
             {
               posts.map((post, i) =>
-                <LinkContainer key={i} exact to={`/${ post.postId }`}>
-                  <div className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
-                    <h5>{ post.title }</h5>
-                    <small>
-                      { this.formatDate( post.createdAt ) }
-                      <span className="separator"> | </span>
-                      <LinkContainer key={i} to={`/user/${ post.userId }/${ this.slugify(post.userName) }`}>
-                        <a href="#/">{ post.userName }</a>
-                      </LinkContainer>
-                    </small>
-                  </div>
-                </LinkContainer>
+                <div key={i} className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
+                  <LinkContainer  exact to={`/${ post.postId }`}>
+                    <a href="#/" className="post-title">
+                      <h5>{ post.title }</h5>
+                    </a>
+                  </LinkContainer>
+                  <small>
+                    { this.formatDate( post.createdAt ) }
+                    <span className="separator"> | </span>
+                    <LinkContainer key={i} to={`/user/${ post.userId }/${ this.slugify(post.userName) }`}>
+                      <a href="#/">{ post.userName }</a>
+                    </LinkContainer>
+                  </small>
+                </div>
               )
             }
             { this.loadPagination(lastEvaluatedPost) }
@@ -252,10 +254,10 @@ export default class Content extends Component {
       return (
         <Helmet>
           <title>{this.props.title ? `${this.capitalizeFirstLetter(this.props.title)} | Naadan Chords` : "Naadan Chords | Guitar Chords and Tabs of Malayalam Songs"}</title>
-          <meta name="description" content="Guitar Chords and Tabs of Malayalam Songs" />
+          <meta name="description" content="Naadan Chords is the best place to get the chords for your favorite Malayalam and Tamil songs. Transpose chords to any scale or pitch, autoscroll chord sheet to play hassle free and adjust font size of lyrics." />
           <meta name="twitter:card" content="summary" />
           <meta property="og:title" content="Naadan Chords | Guitar Chords and Tabs of Malayalam Songs" />
-          <meta property="og:description" content="Guitar Chords and Tabs of Malayalam Songs" />
+          <meta property="og:description" content="Naadan Chords is the best place to get the chords for your favorite Malayalam and Tamil songs. Transpose chords to any scale or pitch, autoscroll chord sheet to play hassle free and adjust font size of lyrics." />
         </Helmet>
       );
     }
