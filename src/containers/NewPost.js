@@ -260,7 +260,7 @@ export default class NewPost extends SearchComponent {
             </Col>
             <Col>
               <Form.Group controlId="music">
-                <Form.Control autoComplete="off" type="text" placeholder="Music Director" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
+                <Form.Control autoComplete="off" type="text" placeholder="Music" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
               </Form.Group>
             </Col>
           </Row>

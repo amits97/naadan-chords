@@ -53,6 +53,18 @@ async function loadPages(page, category) {
   }
 }
 
+async function generatePagination(category) {
+  let page = 0;
+  let pageMap = [];
+  let pagesResult = await loadPages(page+1, category ? category : null);
+  while(pagesResult.hasOwnProperty("LastEvaluatedKey")) {
+    pageMap.push({ number: page+1 });
+    page++;
+    pagesResult = await loadPages(page, category ? category : null);
+  }
+  return pageMap;
+}
+
 async function generateSitemap() {
   //posts
   let postsResult = await loadPosts();
@@ -71,29 +83,13 @@ async function generateSitemap() {
   }
 
   //posts pages
-  let page = 0;
-  let pageMap = [];
-  let pagesResult = await loadPages(page+1);
-  while(pagesResult.hasOwnProperty("LastEvaluatedKey")) {
-    pageMap.push({ number: page+1 });
-    page++;
-    pagesResult = await loadPages(page);
-  }
-
-  //Malayalam category pages
-  let malayalamPage = 0;
-  let malayalamPageMap = [];
-  let malayalamPagesResult = await loadPages(malayalamPage+1, "MALAYALAM");
-  while(malayalamPagesResult.hasOwnProperty("LastEvaluatedKey")) {
-    malayalamPageMap.push({ malayalamPageNumber: malayalamPage+1 });
-    malayalamPage++;
-    malayalamPagesResult = await loadPages(malayalamPage, "MALAYALAM");
-  }
+  let pageMap = await generatePagination();
+  let malayalamPageMap = await generatePagination("MALAYALAM");
 
   const paramsConfig = {
     "/:id": idMap,
     "/page/:number": pageMap,
-    "/category/malayalam/page/:malayalamPageNumber": malayalamPageMap
+    "/category/malayalam/page/:number": malayalamPageMap
   };
 
   return (
