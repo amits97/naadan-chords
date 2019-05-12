@@ -39,7 +39,7 @@ export async function main(event, context, callback) {
     }
   }
 
-  if(lastEvaluatedKey) {
+  if(lastEvaluatedKey || page === 0) {
     let params = {
       TableName: "NaadanChords",
       IndexName: "postType-createdAt-index",
