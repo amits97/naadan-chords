@@ -42,9 +42,9 @@ async function loadPosts(exclusiveStartKey) {
 
 async function loadPages(page, category) {
   try {
-    let queryRequest = `/posts/page/${page}`;
+    let queryRequest = `/posts?page=${page}`;
     if(category) {
-      queryRequest = `/posts/category/${category}/page/${page}`;
+      queryRequest = `/posts?category=${category}&page=${page}`;
     }
     let pageResult = await API.get("posts", queryRequest);
     return pageResult;

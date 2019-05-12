@@ -11,6 +11,43 @@ function slugify(text) {
 }
 
 export async function main(event, context, callback) {
+  var lastEvaluatedKey;
+  if(event.page) {
+    var page = event.page - 1;
+    
+    if(page > 0) {
+      let skipParams = {
+        TableName: "NaadanChords",
+        IndexName: "postType-createdAt-index",
+        KeyConditionExpression: "postType = :postType",
+        ExpressionAttributeValues: {
+          ":postType": event.postType || "POST",
+        },
+        ScanIndexForward: false,
+        ProjectionExpression: "postId",
+        Limit: 15 * page
+      };
+  
+      if(event.category) {
+        //filter by category
+        skipParams.IndexName = "category-createdAt-index";
+        skipParams.KeyConditionExpression = "category = :category";
+        skipParams.ExpressionAttributeValues =  {
+          ":category": event.category
+        };
+      }
+  
+      try {
+        var skipResult = await dynamoDbLib.call("query", skipParams);
+        if(skipResult.hasOwnProperty("LastEvaluatedKey")) {
+          lastEvaluatedKey = skipResult.LastEvaluatedKey;
+        }
+      } catch(e) {
+        return failure({ status: false, error: e });
+      }
+    }
+  }
+
   let params = {
     TableName: "NaadanChords",
     IndexName: "postType-createdAt-index",
@@ -26,6 +63,10 @@ export async function main(event, context, callback) {
   if(event.exclusiveStartKey) {
     //pagination
     params.ExclusiveStartKey = JSON.parse(decodeURIComponent(event.exclusiveStartKey).replace(/'/g, '"'));
+  }
+  if(lastEvaluatedKey) {
+    //pagination
+    params.ExclusiveStartKey = lastEvaluatedKey;
   }
 
   if(event.category) {

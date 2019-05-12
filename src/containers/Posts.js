@@ -66,9 +66,9 @@ export default class Posts extends Component {
 
   pagePosts(pageNumber, category) {
     if(category) {
-      return API.get("posts", `/posts/category/${category.toUpperCase()}/page/${pageNumber}`);
+      return API.get("posts", `/posts?category=${category.toUpperCase()}&page=${pageNumber}`);
     } else {
-      return API.get("posts", `/posts/page/${pageNumber}`);
+      return API.get("posts", `/posts?page=${pageNumber}`);
     }
   }
 
