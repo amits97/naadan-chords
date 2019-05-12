@@ -64,6 +64,14 @@ export default class Posts extends Component {
     }
   }
 
+  pagePosts(pageNumber, category) {
+    if(category) {
+      return API.get("posts", `/posts/category/${category.toUpperCase()}/page/${pageNumber}`);
+    } else {
+      return API.get("posts", `/posts/page/${pageNumber}`);
+    }
+  }
+
   postVisit(postId) {
     if(typeof Storage !== "undefined") {
       if(localStorage.getItem(postId) === null) {
@@ -93,9 +101,10 @@ export default class Posts extends Component {
   loadData = async () => {
     try {
       let posts = {};
-      let { isRandomPage } = this.props;
+      let { isRandomPage, isPageUrl } = this.props;
       let postId = this.props.match.params.id;
       let category = this.props.match.params.category;
+      let pageNumber = this.props.match.params.number;
 
       if(this.props.search) {
         this.setState({
@@ -106,6 +115,16 @@ export default class Posts extends Component {
         this.props.closeNav();
         let postsResult = await this.posts(null, this.props.search);
 
+        posts = postsResult.Items? postsResult.Items : [];
+
+        this.setPagination(postsResult);
+      } else if(isPageUrl) {
+        let postsResult = [];
+        if(this.props.isCategory) {
+          postsResult = await this.pagePosts(pageNumber, category);
+        } else {
+          postsResult = await this.pagePosts(pageNumber);
+        }
         posts = postsResult.Items? postsResult.Items : [];
 
         this.setPagination(postsResult);
@@ -206,14 +225,7 @@ export default class Posts extends Component {
       window.scrollTo(0, 0);
     }
 
-    if(this.props.isPageUrl) {
-      this.props.history.push("/");
-
-      this.setState({
-        redirect: true,
-        redirectUrl: "/"
-      });
-    } else if(this.props.isCategory) {
+    if(this.props.isCategory) {
       let category = this.props.match.params.category.toLowerCase();
       if(this.getCategoryFromLegacy(category) !== category) {
         this.props.history.push(`/category/${this.getCategoryFromLegacy(category)}`)
@@ -376,14 +388,20 @@ export default class Posts extends Component {
     let title = "";
     let searchQuery = this.props.search;
 
-    if(this.props.isCategory) {
-      title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS`;
-    } else if(searchQuery) {
+    if(searchQuery) {
       title = `SEARCH RESULTS - ${searchQuery.toUpperCase()}`;
     } else if(this.props.isUserPosts) {
       let userName = this.props.match.params.userName || "";
       userName = this.makeTitle(userName);
       title = `POSTS BY ${userName.toUpperCase()}`;
+    } else if(this.props.isPageUrl) {
+      if(this.props.isCategory) {
+        title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS - PAGE ${this.props.match.params.number}`;
+      } else {
+        title = `LATEST POSTS - PAGE ${this.props.match.params.number}`;
+      }
+    } else if(this.props.isCategory) {
+      title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS`;
     }
 
     let childProps = {

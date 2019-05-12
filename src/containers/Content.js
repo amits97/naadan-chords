@@ -36,16 +36,46 @@ export default class Content extends Component {
 
   loadPagination = (lastEvaluatedPost) => {
     if(lastEvaluatedPost && lastEvaluatedPost.hasOwnProperty("postId")) {
+      if(this.props.isPageUrl) {
+        let nextPage = parseInt(this.props.match.params.number) + 1;
+        let loadMorelink = "/#";
+        if(this.props.isHomePage) {
+          loadMorelink = `/page/${nextPage}`;
+        } else if(this.props.isCategory) {
+          loadMorelink = `/category/${this.props.match.params.category}/page/${nextPage}`;
+        }
+
+        return (
+          <LinkContainer to={loadMorelink}>
+            <LoaderButton
+              isLoading={false}
+              text="Next page"
+              className="load-posts btn-secondary"
+            />
+          </LinkContainer>
+        );
+      }
+
+      let loadMorelink = "/#";
+      if(this.props.isHomePage) {
+        loadMorelink = "/page/2";
+      } else if(this.props.isCategory) {
+        loadMorelink = `/category/${this.props.match.params.category}/page/2`;
+      }
+
       return (
-        <LoaderButton
-          isLoading={this.props.isPaginationLoading}
-          onClick={() => {
-            this.props.loadPosts(this.prepareLastEvaluatedPostRequest(lastEvaluatedPost));
-          }}
-          text="Load more"
-          loadingText="Loading"
-          className="load-posts btn-secondary"
-        />
+        <a href={loadMorelink}>
+          <LoaderButton
+            isLoading={this.props.isPaginationLoading}
+            onClick={(e) => {
+              e.preventDefault();
+              this.props.loadPosts(this.prepareLastEvaluatedPostRequest(lastEvaluatedPost));
+            }}
+            text="Load more"
+            loadingText="Loading"
+            className="load-posts btn-secondary"
+          />
+        </a>
       );
     }
   }
