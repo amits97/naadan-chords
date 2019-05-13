@@ -2,6 +2,22 @@ import * as dynamoDbLib from "./libs/dynamodb-lib";
 import * as userNameLib from "./libs/username-lib";
 import { success, failure } from "./libs/response-lib";
 
+async function getItemCount() {
+  const itemCountParams = {
+    TableName: "NaadanChords",
+    IndexName: "postType-createdAt-index",
+    KeyConditionExpression: "postType = :postType",
+    ExpressionAttributeValues: {
+      ":postType": "POST"
+    },
+    ProjectionExpression: "postId",
+    ScanIndexForward: false
+  };
+
+  let itemsResult = await dynamoDbLib.call("query", itemCountParams);
+  return itemsResult;
+}
+
 function getRandomInt(min, max) {
   //Will return a number inside the given range, inclusive of both minimum and maximum
   //i.e. if min=0, max=20, returns a number from 0-20
@@ -9,40 +25,24 @@ function getRandomInt(min, max) {
 }
 
 export async function main(event, context) {
-  async function query() {
-    var start = 13433472000001; //oldest post timestamp + 1
-    var end = new Date().getTime();
-    var randomDate = new Date(start + (Math.random()) * (end - start)).getTime();
-  
+  async function getPost(postId) {
     const params = {
       TableName: "NaadanChords",
-      IndexName: "postType-createdAt-index",
-      KeyConditionExpression: "postType = :postType AND createdAt < :createdAt",
-      ExpressionAttributeValues: {
-        ":postType": "POST",
-        ":createdAt": randomDate,
-      },
-      ScanIndexForward: false
+      Key: {
+        postId: postId
+      }
     };
-  
-    let result = await dynamoDbLib.call("query", params);
-    let randomIndex = getRandomInt(0, result.Count - 1);
-    return result.Items[randomIndex];
+
+    let result = await dynamoDbLib.call("get", params);
+    return result.Item;
   }
-  
-  async function retryLoop() {
-    const result = await query();
-  
-    if(result) {
-      return result;
-    } else {
-      return retryLoop();
-    }
-  }  
 
   try {
-    const result = await retryLoop();
-    // Return the retrieved item
+    let itemsResult = await getItemCount();
+    let itemCount = itemsResult.Items.length;
+    let randomItemNumber = getRandomInt(0, itemCount);
+
+    const result = await getPost(itemsResult.Items[randomItemNumber].postId);
     let userId = result.userId;
     result.userName = await userNameLib.call(userId);
     return success(result);

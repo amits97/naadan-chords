@@ -48,7 +48,7 @@ export async function main(event, context) {
     TableName: "NaadanChords",
     Key: {
       postId: event.pathParameters.id
-    },
+    }
   };
 
   try {
