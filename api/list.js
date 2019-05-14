@@ -41,10 +41,14 @@ export async function main(event, context, callback) {
         var skipResult = await dynamoDbLib.call("query", skipParams);
         if(skipResult.hasOwnProperty("LastEvaluatedKey")) {
           lastEvaluatedKey = skipResult.LastEvaluatedKey;
+        } else {
+          return [];
         }
       } catch(e) {
-        return failure({ status: false, error: e });
+        return { status: false, error: e };
       }
+    } else {
+      return [];
     }
   }
 
