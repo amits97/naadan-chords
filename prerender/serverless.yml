@@ -1,4 +1,4 @@
-service: lambda-prerender-service
+service: naadanchords-prerender
 provider:
   name: aws
   versionFunctions: false
