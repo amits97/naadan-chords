@@ -47,7 +47,7 @@ export async function main(event, context, callback) {
       } catch(e) {
         return { status: false, error: e };
       }
-    } else {
+    } else if(page !== 0) {
       return [];
     }
   }

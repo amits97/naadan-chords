@@ -1,0 +1,37 @@
+service: lambda-prerender-service
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs8.10
+  stage: ${opt:stage,'prod'}
+  region: ap-south-1
+  memorySize: 2048
+  timeout: 20
+  iamRoleStatements:
+    - Effect: Deny
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "*"
+plugins:
+  - serverless-webpack
+  - serverless-domain-manager
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  objectPrefix: '${self:service}-${self:provider.stage}'
+  customDomain:
+    domainName: prerender.naadanchords.com
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+functions:
+  prerender:
+    handler: prerender.handler
+    events:
+      - http:
+          path: prerender
+          method: get
+          cors: true
