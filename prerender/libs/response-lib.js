@@ -6,6 +6,20 @@ export function failure(body) {
   return buildResponse(400, body);
 }
 
+export function redirect(headers) {
+  let location = headers.replace("Location: ", "");
+  return {
+    statusCode: 301,
+    headers: {
+      "Location": location
+    }
+  };
+}
+
+export function custom(status, body) {
+  return buildResponse(status, body);
+}
+
 function buildResponse(statusCode, body) {
   return {
     statusCode: statusCode,

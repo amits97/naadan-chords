@@ -8,6 +8,16 @@ provider:
   memorySize: 2048
   timeout: 20
   iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:ap-south-1:*:*"
     - Effect: Deny
       Action:
         - logs:CreateLogGroup
