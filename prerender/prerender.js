@@ -13,10 +13,10 @@ async function dynamoDbCache(targetUrl) {
   };
 
   try {
-	let result = await dynamoDbLib.call("get", params);
-	if(result.Item) {
+    let result = await dynamoDbLib.call("get", params);
+    if(result.Item) {
       return result.Item.html;
-	}
+    }
   } catch (e) {
     // Do nothing for now
   }
