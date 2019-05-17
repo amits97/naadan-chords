@@ -315,7 +315,7 @@ export default class Posts extends Component {
 
       if(prevProps.pageKey !== this.props.pageKey) {
         if(!prevProps.isRandomPage) {
-          if(!this.props.isCategory && !prevProps.isCategory && !this.props.isUserPosts && !prevProps.isUserPosts) {
+          if(!this.props.isCategory && !prevProps.isCategory && !this.props.isUserPosts && !prevProps.isUserPosts && !this.props.isPageUrl && !prevProps.isPageUrl) {
             //navigating away from home
             if(prevProps.match.params.id === undefined) {
               this.setState({
