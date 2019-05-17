@@ -1,6 +1,4 @@
 Parameters:
-  PrerenderToken:
-    Type: String
   S3BucketName:
     Type: String
 Resources:
@@ -87,7 +85,6 @@ Resources:
                     prerender = prerender || /_escaped_fragment_/.test(request.querystring);
                     prerender = prerender && ! /\.(js|css|xml|less|png|jpg|jpeg|json|gif|pdf|doc|txt|ico|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent|ttf|woff|svg|eot)$/i.test(request.uri);
                     if (prerender) {
-                      headers['x-prerender-token'] = [{ key: 'X-Prerender-Token', value: '${PrerenderToken}'}];
                       headers['x-prerender-host'] = [{ key: 'X-Prerender-Host', value: host[0].value}];
                       headers['x-prerender-cachebuster'] = [{ key: 'X-Prerender-Cachebuster', value: Date.now().toString()}];
                     }
@@ -96,7 +93,7 @@ Resources:
                 callback(null, request);
             };
       Runtime: "nodejs8.10"
-  SetCustomHeadersVersion2:
+  SetCustomHeadersVersion3:
     Type: "AWS::Lambda::Version"
     Properties:
       FunctionName:
@@ -130,24 +127,25 @@ Resources:
                   };
                   request.headers['host'] = [{ key: 'host', value: 'legacy.naadanchords.com'}];
                }
-               if (request.headers['x-prerender-token'] && request.headers['x-prerender-host']) {
+               if (request.headers['x-prerender-host']) {
                  request.origin = {
                      custom: {
-                         domainName: 'service.prerender.io',
+                         domainName: 'prerender.naadanchords.com',
                          port: 443,
                          protocol: 'https',
                          readTimeout: 20,
                          keepaliveTimeout: 5,
                          customHeaders: {},
                          sslProtocols: ['TLSv1', 'TLSv1.1'],
-                         path: '/https%3A%2F%2F' + request.headers['x-prerender-host'][0].value
+                         path: '/prerender?url=https%3A%2F%2F' + request.headers['x-prerender-host'][0].value
                      }
                  };
+                 request.headers['host'] = [{ key: 'host', value: 'prerender.naadanchords.com'}];
               }
               callback(null, request);
           };
       Runtime: "nodejs8.10"
-  RedirectToLegacyOrPrerenderVersion2:
+  RedirectToLegacyOrPrerenderVersion3:
     Type: "AWS::Lambda::Version"
     Properties:
       FunctionName:
@@ -161,14 +159,13 @@ Resources:
           Compress: true
           # NOTE: we let cloudfront cache heavily the resurces of the SPA. Your deploy
           #       step will need to include an invalidation of the cloudfromt cache.
-          #       The requests to prerender.io are NOT cached thanks to the X-Prerender-Cachebuster
+          #       The requests to prerender.naadanchords.com are NOT cached thanks to the X-Prerender-Cachebuster
           #       header.
           MinTTL: 31536000
           DefaultTTL: 31536000
           ForwardedValues:
             QueryString: true
             Headers:
-              - "X-Prerender-Token"
               - "X-Prerender-Host"
               - "X-Prerender-Cachebuster"
               - "X-Redirect-Legacy"
@@ -176,9 +173,9 @@ Resources:
           ViewerProtocolPolicy : redirect-to-https
           LambdaFunctionAssociations:
             - EventType: viewer-request
-              LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion2, Version] ] ]
+              LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion3, Version] ] ]
             - EventType: origin-request
-              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToLegacyOrPrerender, Arn], !GetAtt [RedirectToLegacyOrPrerenderVersion2, Version] ] ]
+              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToLegacyOrPrerender, Arn], !GetAtt [RedirectToLegacyOrPrerenderVersion3, Version] ] ]
         Enabled: true
         CustomErrorResponses:
           - ErrorCode: 404
