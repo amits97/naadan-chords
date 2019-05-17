@@ -94,7 +94,7 @@ export async function handler(event, context, callback) {
       }
       browser.close();
       await writeDynamoDbCache(targetUrl, result);
-      return success(result + `<!-- cache = ${cache} -->`);
+      return success(result);
     } catch(e) {
       return failure(elementFetched);
     }
