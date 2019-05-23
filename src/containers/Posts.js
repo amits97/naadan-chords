@@ -341,9 +341,11 @@ export default class Posts extends Component {
           this.setLoadingAndLoadData();
         }
 
-        this.setState({
-          adKey: this.props.pageKey
-        });
+        if(!this.props.isRandomPage) {
+          this.setState({
+            adKey: this.props.pageKey
+          });
+        }
         ReactGA.pageview(window.location.pathname + window.location.search);
       }
     }

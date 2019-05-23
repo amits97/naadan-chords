@@ -95,7 +95,7 @@ export default class Sidebar extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(!(this.props.search)) {
+    if(!this.props.search && !this.props.isRandomPage) {
       if((this.props.pageKey !== prevProps.pageKey) || prevProps.search) {
         this.setState({
           adKey: this.props.pageKey
