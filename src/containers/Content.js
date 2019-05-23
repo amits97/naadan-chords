@@ -298,10 +298,10 @@ export default class Content extends Component {
       <div className="Content">
         { this.renderSEOTags() }
         <Row className="contentRow">
-          <Col md={8} className="contentColumn">
+          <Col lg={8} className="contentColumn">
             { this.renderContent() }
           </Col>
-          <Col md={4} className="sidebarColumn border-left">
+          <Col lg={4} className="sidebarColumn border-left">
             <Sidebar {...this.props} />
           </Col>
         </Row>
