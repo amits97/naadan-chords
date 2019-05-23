@@ -17,6 +17,7 @@ export default class NotFound extends SearchComponent {
   }
 
   componentDidUpdate() {
+    SearchComponent.prototype.componentDidUpdate.call(this);
     if(!this.adLoaded) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
@@ -39,7 +40,10 @@ export default class NotFound extends SearchComponent {
       return (
         <div>
           <h3>No posts found!</h3>
-          <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
+          <ul>
+            <li><a href="/request">Click here</a> to submit a request for the song you are looking for - it will only take a second.</li>
+            <li>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</li>
+          </ul>
         </div>
       );
     } else {
