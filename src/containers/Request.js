@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Helmet } from "react-helmet";
+import SearchComponent from "../components/SearchComponent";
 import Sidebar from "./Sidebar";
 import "./Request.css";
 
-export default class Request extends Component {
+export default class Request extends SearchComponent {
   constructor(props) {
     super(props);
 
