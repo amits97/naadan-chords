@@ -261,6 +261,7 @@ export default class Content extends Component {
 
     if(posts.content && !Array.isArray(posts)) {
       let description = "";
+      let imageURL = "";
 
       if(posts.postType === "PAGE") {
         description = posts.content.substring(0, 157).trim();
@@ -269,6 +270,7 @@ export default class Content extends Component {
       } else {
         description = `Guitar chords and tabs of ${posts.song} - ${posts.album} with lyrics`;
         description += `. Music by ${posts.music} and Sung by ${posts.singers}. Transpose chords to any scale or pitch.`;
+        imageURL = posts.image ? posts.image : "";
       }
 
       return (
@@ -278,6 +280,7 @@ export default class Content extends Component {
           <meta name="twitter:card" content="summary" />
           <meta property="og:title" content={`${posts.title} | Naadan Chords`} />
           <meta property="og:description" content={description} />
+          <meta property="og:image" content={imageURL} />
         </Helmet>
       );
     } else {

@@ -38,6 +38,7 @@ export async function main(event, context, callback) {
       singers: data.singers || null,
       music: data.music || null,
       category: data.category || "MALAYALAM",
+      image: data.image || null,
       content: data.content,
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
