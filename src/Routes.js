@@ -17,7 +17,7 @@ export default ({ childProps }) =>
     <AppliedRoute path="/random/" exact component={Posts} props={{pageKey: window.location.href, isRandomPage: true, ...childProps}} />
     <AppliedRoute path="/category/:category" exact component={Posts} props={{pageKey: window.location.href, isCategory: true, ...childProps}} />
     <AppliedRoute path="/category/:category/page/:number" exact component={Posts} props={{pageKey: window.location.href, isCategory: true, isPageUrl: true, ...childProps}} />
-    <AppliedRoute path="/user/:userId/:userName" exact component={Posts} props={{pageKey: window.location.href, isUserPosts: true, ...childProps}} />
+    <AppliedRoute path="/author/:userName" exact component={Posts} props={{pageKey: window.location.href, isUserPosts: true, ...childProps}} />
     <UnauthenticatedRoute path="/login" exact component={Login} props={childProps} />
     <AuthenticatedRoute path="/admin" exact component={Admin} props={childProps} />
     <AuthenticatedRoute path="/admin/new-post" exact component={NewPost} props={childProps} />

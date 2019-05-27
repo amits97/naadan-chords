@@ -44,7 +44,14 @@ export async function main(event, context) {
 
     const result = await getPost(itemsResult.Items[randomItemNumber].postId);
     let userId = result.userId;
-    result.userName = await userNameLib.call(userId);
+
+    //Get full attributes of author
+    let authorAttributes = await userNameLib.getAuthorAttributes(userId);
+    result.authorName = authorAttributes.authorName;
+    result.userName = authorAttributes.userName;
+
+    //Do not expose userId
+    delete(result.userId);
     return success(result);
   } catch (e) {
     return failure({ status: false, error: e });

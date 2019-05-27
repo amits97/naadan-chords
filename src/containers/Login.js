@@ -75,10 +75,10 @@ export default class Login extends SearchComponent {
         <form onSubmit={this.handleSubmit}>
           {this.renderError()}
           <FormGroup controlId="email">
-            <FormLabel>Email</FormLabel>
+            <FormLabel>Username / Email</FormLabel>
             <FormControl
               autoFocus
-              type="email"
+              type="text"
               value={this.state.email}
               onChange={this.handleChange}
             />

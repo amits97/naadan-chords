@@ -122,8 +122,8 @@ export default class Content extends Component {
                   <small>
                     { this.formatDate( post.createdAt ) }
                     <span className="separator"> | </span>
-                    <LinkContainer key={i} to={`/user/${ post.userId }/${ this.slugify(post.userName) }`}>
-                      <a href="#/">{ post.userName }</a>
+                    <LinkContainer key={i} to={`/author/${ post.userName }`}>
+                      <a href="#/">{ post.authorName }</a>
                     </LinkContainer>
                   </small>
                 </div>
@@ -161,8 +161,8 @@ export default class Content extends Component {
             { this.formatDate( post.createdAt ) }
             <span className="separator ml-1 mr-1">|</span>
             Posted by&nbsp;
-            <LinkContainer to={`/user/${ post.userId }/${ this.slugify(post.userName) }`}>
-              <a href="#/">{ post.userName }</a>
+            <LinkContainer to={`/author/${ post.userName }`}>
+              <a href="#/">{ post.authorName }</a>
             </LinkContainer>
             <span className="ml-1 mr-1">in</span>
               <LinkContainer exact to={`/category/${post.category.toLowerCase()}`}>

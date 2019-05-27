@@ -58,7 +58,7 @@ export default class Posts extends Component {
     } else if(search) {
       return API.get("posts", `/posts?s=${search}`);
     } else if(user){
-      return API.get("posts", `/user-posts?userId=${user}`);
+      return API.get("posts", `/user-posts?userName=${user}`);
     } else {
       return API.get("posts", "/posts");
     }
@@ -160,7 +160,7 @@ export default class Posts extends Component {
           isRandomPost: false
         });
 
-        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, null, this.props.isUserPosts ? this.props.match.params.userId : null);
+        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, null, this.props.isUserPosts ? this.props.match.params.userName : null);
         posts = postsResult.Items;
         this.setPagination(postsResult);
       }
@@ -200,7 +200,7 @@ export default class Posts extends Component {
       }
       let postsResult = [];
       if(this.props.isUserPosts) {
-        postsResult = await API.get("posts",`/user-posts?userId=${this.props.match.params.userId}&exclusiveStartKey=${exclusiveStartKey}`)
+        postsResult = await API.get("posts",`/user-posts?userName=${this.props.match.params.userName}&exclusiveStartKey=${exclusiveStartKey}`)
       } else {
         postsResult = await API.get("posts", queryRequest);
       }

@@ -112,11 +112,17 @@ export async function main(event, context, callback) {
       let userId = result.Items[i].userId;
 
       if(!users.hasOwnProperty(userId)) {
-        let userName = await userNameLib.call(userId);
-        users[userId] = userName;
+        users[userId] = {};
+
+        //Get full attributes of author
+        let authorAttributes = await userNameLib.getAuthorAttributes(userId);
+        users[userId].authorName = authorAttributes.authorName;
+        users[userId].userName = authorAttributes.userName;
       }
 
-      result.Items[i].userName =  users[userId];
+      delete(result.Items[i].userId);
+      result.Items[i].authorName =  users[userId].authorName;
+      result.Items[i].userName =  users[userId].userName;
     }
 
     return result;

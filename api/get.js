@@ -30,7 +30,11 @@ async function retryGet(postId) {
       if(result.Items.length > 0) {
         let finalResult = result.Items[0];
         let userId = finalResult.userId;
-        finalResult.userName = await userNameLib.call(userId);
+
+        //Get full attributes of author
+        let authorAttributes = await userNameLib.getAuthorAttributes(userId);
+        finalResult.authorName = authorAttributes.authorName;
+        finalResult.userName = authorAttributes.userName;
         return success(finalResult);
       } else {
         return retryLoop(postId);
@@ -55,7 +59,14 @@ export async function main(event, context) {
     const result = await dynamoDbLib.call("get", params);
     if (result.Item) {
       let userId = result.Item.userId;
-      result.Item.userName = await userNameLib.call(userId);
+
+      //Get full attributes of author
+      let authorAttributes = await userNameLib.getAuthorAttributes(userId);
+      result.Item.authorName = authorAttributes.authorName;
+      result.Item.userName = authorAttributes.userName;
+
+      //Do not expose userId
+      delete(result.Item.userId);
       return success(result.Item);
     } else {
       return retryGet(event.pathParameters.id);
