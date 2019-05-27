@@ -223,7 +223,11 @@ export default class Posts extends Component {
   }
 
   async componentDidMount() {
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch(e) {
+      console.log(e);
+    }
 
     if(!urlLib.getUrlParameter("s")) {
       this.loadData();
@@ -356,7 +360,11 @@ export default class Posts extends Component {
     }
 
     if(prevState.adKey !== this.state.adKey) {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch(e) {
+        console.log(e);
+      }
     }
   }
 

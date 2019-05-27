@@ -20,6 +20,14 @@ export default class Content extends Component {
     this.removeMd = require("remove-markdown");
   }
 
+  componentDidMount() {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
   slugify(text) {
     return text.toString().toLowerCase().split(' ').join('-');
   }
@@ -94,14 +102,22 @@ export default class Content extends Component {
       }
     }
 
-    return (
-      <div>
-        <Helmet>
-          <title>{`${displayTitle} | Naadan Chords`}</title>
-        </Helmet>
-        <h6>{displayTitle.toUpperCase()}</h6>
-      </div>
-    );
+    if(isUserPosts) {
+      return (
+        <div>
+          <Helmet>
+            <title>{`${displayTitle} | Naadan Chords`}</title>
+          </Helmet>
+          <h6>{displayTitle.toUpperCase()}</h6>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h6>{displayTitle.toUpperCase()}</h6>
+        </div>
+      );
+    }
   }
 
   renderPosts = () => {
@@ -215,6 +231,17 @@ export default class Content extends Component {
     }
   }
 
+  renderMatchedContentAd = () => {
+    return (
+      <ins className="adsbygoogle"
+        style={{display: "block"}}
+        data-ad-format="autorelaxed"
+        data-ad-client="ca-pub-1783579460797635"
+        data-ad-slot="2717060707">
+      </ins>
+    );
+  }
+
   renderDisqusComments = (post) => {
     if(post.song) {
       //Disqus comments
@@ -259,6 +286,7 @@ export default class Content extends Component {
           <div className="post">
             { this.renderPostMeta(post) }
             { this.renderPostContent(post) }
+            { this.renderMatchedContentAd() }
             { this.renderDisqusComments(post) }
           </div>
         );
