@@ -40,11 +40,19 @@ async function writeDynamoDbCache(url, html) {
   }
 }
 
+function trimUrl(targetUrl) {
+  //Remove query parameters
+  let cleanUrl = targetUrl.split("?")[0];
+
+  //Remove trailing slashes
+  return cleanUrl.replace(/\/$/, "");
+}
+
 export async function handler(event, context, callback) {
   const ERROR_MESSAGE = 'No query parameter given!';
 
   if (event.queryStringParameters) {
-    const targetUrl = event.queryStringParameters.url;
+    const targetUrl = trimUrl(event.queryStringParameters.url);
 
     if (!targetUrl) {
       return failure(ERROR_MESSAGE);
@@ -86,7 +94,7 @@ export async function handler(event, context, callback) {
             return redirect(redirectUrl);
           } catch (e) {
             // do nothing for now
-          }  
+          }
         } else {
           browser.close();
           return custom(parseInt(status), result);
