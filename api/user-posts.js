@@ -12,6 +12,40 @@ export async function main(event, context, callback) {
     return [];
   }
 
+  var lastEvaluatedKey;
+  if(event.page) {
+    var page = event.page - 1;
+
+    if(page > 0) {
+      let skipParams = {
+        TableName: "NaadanChords",
+        IndexName: "userId-createdAt-index",
+        KeyConditionExpression: "userId = :userId",
+        FilterExpression: "postType = :postType",
+        ExpressionAttributeValues: {
+          ":userId": userId,
+          ":postType": "POST"
+        },
+        ScanIndexForward: false,
+        ProjectionExpression: "postId",
+        Limit: 15 * page
+      };
+
+      try {
+        var skipResult = await dynamoDbLib.call("query", skipParams);
+        if(skipResult.hasOwnProperty("LastEvaluatedKey")) {
+          lastEvaluatedKey = skipResult.LastEvaluatedKey;
+        } else {
+          return [];
+        }
+      } catch(e) {
+        return { status: false, error: e };
+      }
+    } else if(page !== 0) {
+      return [];
+    }
+  }
+
   let params = {
     TableName: "NaadanChords",
     IndexName: "userId-createdAt-index",
@@ -29,6 +63,11 @@ export async function main(event, context, callback) {
   if(event.exclusiveStartKey) {
     //pagination
     params.ExclusiveStartKey = JSON.parse(decodeURIComponent(event.exclusiveStartKey).replace(/'/g, '"'));
+  }
+
+  if(lastEvaluatedKey) {
+    //pagination
+    params.ExclusiveStartKey = lastEvaluatedKey;
   }
 
   try {

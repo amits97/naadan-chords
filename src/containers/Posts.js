@@ -64,9 +64,11 @@ export default class Posts extends Component {
     }
   }
 
-  pagePosts(pageNumber, category) {
+  pagePosts(pageNumber, category, userName) {
     if(category) {
       return API.get("posts", `/posts?category=${category.toUpperCase()}&page=${pageNumber}`);
+    } else if(userName) {
+      return API.get("posts", `/user-posts?userName=${userName}&page=${pageNumber}`);
     } else {
       return API.get("posts", `/posts?page=${pageNumber}`);
     }
@@ -105,6 +107,7 @@ export default class Posts extends Component {
       let postId = this.props.match.params.id;
       let category = this.props.match.params.category;
       let pageNumber = this.props.match.params.number;
+      let userName = this.props.match.params.userName;
 
       if(this.props.search) {
         this.setState({
@@ -122,6 +125,8 @@ export default class Posts extends Component {
         let postsResult = [];
         if(this.props.isCategory) {
           postsResult = await this.pagePosts(pageNumber, category);
+        } else if(this.props.isUserPosts) {
+          postsResult = await this.pagePosts(pageNumber, null, userName);
         } else {
           postsResult = await this.pagePosts(pageNumber);
         }

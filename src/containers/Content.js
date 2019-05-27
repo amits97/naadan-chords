@@ -43,6 +43,8 @@ export default class Content extends Component {
           loadMorelink = `/page/${nextPage}`;
         } else if(this.props.isCategory) {
           loadMorelink = `/category/${this.props.match.params.category}/page/${nextPage}`;
+        } else if(this.props.isUserPosts) {
+          loadMorelink = `/authos/${this.props.match.params.userName}/page/${nextPage}`;
         }
 
         return (
@@ -61,6 +63,8 @@ export default class Content extends Component {
         loadMorelink = "/page/2";
       } else if(this.props.isCategory) {
         loadMorelink = `/category/${this.props.match.params.category}/page/2`;
+      } else if(this.props.isUserPosts) {
+        loadMorelink = `/author/${this.props.match.params.userName}/page/2`;
       }
 
       return (
@@ -80,8 +84,28 @@ export default class Content extends Component {
     }
   }
 
+  renderTitle = (title, isUserPosts, posts) => {
+    let displayTitle = title ? title : "LATEST POSTS";
+    if(isUserPosts) {
+      displayTitle = `Posts by - ${posts[0].authorName}`;
+
+      if(this.props.isPageUrl) {
+        displayTitle += ` - Page ${this.props.match.params.number}`;
+      }
+    }
+
+    return (
+      <div>
+        <Helmet>
+          <title>{`${displayTitle} | Naadan Chords`}</title>
+        </Helmet>
+        <h6>{displayTitle.toUpperCase()}</h6>
+      </div>
+    );
+  }
+
   renderPosts = () => {
-    let { isLoading, posts, lastEvaluatedPost, title } = this.props;
+    let { isLoading, posts, lastEvaluatedPost, title, isUserPosts } = this.props;
 
     if(isLoading) {
       let skeleton = [];
@@ -104,7 +128,7 @@ export default class Content extends Component {
         return (
           <div className="postList">
             <div className="title-container border-bottom mb-2">
-              <h6>{title ? title : "LATEST POSTS"}</h6>
+              { this.renderTitle(title, isUserPosts, posts) }
               <LinkContainer to="/random">
                 <a href="#/" className={`${title? "d-none":""} random-post text-primary`}>
                   <FontAwesomeIcon className="mr-2" icon={ faRandom } />Random
