@@ -100,7 +100,7 @@ export default class Content extends Component {
         </div>
       );
     } else {
-      if(posts.length > 0) {
+      if(posts && posts.length > 0) {
         return (
           <div className="postList">
             <div className="title-container border-bottom mb-2">

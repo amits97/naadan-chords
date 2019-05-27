@@ -8,6 +8,10 @@ export async function main(event, context, callback) {
 
   let userId = await userNameLib.getUserId(event.userName);
 
+  if(userId === "") {
+    return [];
+  }
+
   let params = {
     TableName: "NaadanChords",
     IndexName: "userId-createdAt-index",
