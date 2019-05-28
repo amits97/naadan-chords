@@ -22,7 +22,7 @@ export default class Content extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    if(prevProps.pageKey !== this.props.pageKey) {
+    if(prevProps.adKey !== this.props.adKey) {
       this.matchedContentInitialized = false;
     }
 
@@ -249,7 +249,8 @@ export default class Content extends Component {
           style={{display: "block"}}
           data-ad-format="autorelaxed"
           data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="2717060707">
+          data-ad-slot="2717060707"
+          key={this.props.adKey}>
         </ins>
       </div>
     );
