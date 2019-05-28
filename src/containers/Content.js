@@ -18,13 +18,21 @@ export default class Content extends Component {
   constructor(props) {
     super(props);
     this.removeMd = require("remove-markdown");
+    this.matchedContentInitialized = false;
   }
 
-  componentDidMount() {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch(e) {
-      console.log(e);
+  componentDidUpdate = (prevProps) => {
+    if(prevProps.pageKey !== this.props.pageKey) {
+      this.matchedContentInitialized = false;
+    }
+
+    if(document.querySelectorAll("div.matchedContent").length > 0 &&!this.matchedContentInitialized) {
+      this.matchedContentInitialized = true;
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch(e) {
+        console.log(e);
+      }
     }
   }
 
@@ -233,12 +241,17 @@ export default class Content extends Component {
 
   renderMatchedContentAd = () => {
     return (
-      <ins className="adsbygoogle"
-        style={{display: "block"}}
-        data-ad-format="autorelaxed"
-        data-ad-client="ca-pub-1783579460797635"
-        data-ad-slot="2717060707">
-      </ins>
+      <div className="matchedContent">
+        <br />
+        <hr />
+          <h6>YOU MAY ALSO LIKE</h6>
+          <ins className="adsbygoogle"
+          style={{display: "block"}}
+          data-ad-format="autorelaxed"
+          data-ad-client="ca-pub-1783579460797635"
+          data-ad-slot="2717060707">
+        </ins>
+      </div>
     );
   }
 

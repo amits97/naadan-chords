@@ -111,6 +111,10 @@
   white-space: pre-wrap;
 }
 
+.Content .post .matchedContent h6 {
+  color: #777777;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
   .Content .post small span.separator {
