@@ -239,21 +239,23 @@ export default class Content extends Component {
     }
   }
 
-  renderMatchedContentAd = () => {
-    return (
-      <div className="matchedContent">
-        <br />
-        <hr />
-          <h6>YOU MAY ALSO LIKE</h6>
-          <ins className="adsbygoogle"
-          style={{display: "block"}}
-          data-ad-format="autorelaxed"
-          data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="2717060707"
-          key={this.props.adKey}>
-        </ins>
-      </div>
-    );
+  renderMatchedContentAd = (post) => {
+    if(post.postType === "POST") {
+      return (
+        <div className="matchedContent">
+          <br />
+          <hr />
+            <h6>YOU MAY ALSO LIKE</h6>
+            <ins className="adsbygoogle"
+            style={{display: "block"}}
+            data-ad-format="autorelaxed"
+            data-ad-client="ca-pub-1783579460797635"
+            data-ad-slot="2717060707"
+            key={this.props.adKey}>
+          </ins>
+        </div>
+      );
+    }
   }
 
   renderDisqusComments = (post) => {
@@ -300,7 +302,7 @@ export default class Content extends Component {
           <div className="post">
             { this.renderPostMeta(post) }
             { this.renderPostContent(post) }
-            { this.renderMatchedContentAd() }
+            { this.renderMatchedContentAd(post) }
             { this.renderDisqusComments(post) }
           </div>
         );
