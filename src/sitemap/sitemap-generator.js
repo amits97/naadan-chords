@@ -40,11 +40,14 @@ async function loadPosts(exclusiveStartKey) {
   }
 }
 
-async function loadPages(page, category) {
+async function loadPages(page, category, author) {
   try {
     let queryRequest = `/posts?page=${page}`;
     if(category) {
       queryRequest = `/posts?category=${category}&page=${page}`;
+    }
+    if(author) {
+      queryRequest = `/user-posts?userName=${author}&page=${page}`;
     }
     let pageResult = await API.get("posts", queryRequest);
     return pageResult;
@@ -65,14 +68,32 @@ async function generatePagination(category) {
   return pageMap;
 }
 
+async function generateAuthorPagination(author) {
+  let page = 0;
+  let pageMap = [];
+
+  let pagesResult = await loadPages(page+1, null, author);
+  while(pagesResult.hasOwnProperty("LastEvaluatedKey")) {
+    pageMap.push({ userName: author, number: page+1});
+    page++;
+    pagesResult = await loadPages(page, null, author);
+  }
+  return pageMap;
+}
+
 async function generateSitemap() {
   //posts
   let postsResult = await loadPosts();
   let idMap = [];
+  let authorList = {};
 
   while(postsResult.hasOwnProperty("LastEvaluatedKey")) {
     for(var i = 0; i < postsResult.Items.length; i++) {
       idMap.push({ id: postsResult.Items[i].postId });
+
+      if(!authorList.hasOwnProperty(postsResult.Items[i].userName)) {
+        authorList[postsResult.Items[i].userName] = 1;
+      }
     }
 
     postsResult = await loadPosts(prepareLastEvaluatedPostRequest(postsResult.LastEvaluatedKey));
@@ -86,10 +107,23 @@ async function generateSitemap() {
   let pageMap = await generatePagination();
   let malayalamPageMap = await generatePagination("MALAYALAM");
 
+  let authorMap = [];
+  let authorPageMap = [];
+  //author pages
+  for(author in authorList) {
+    if(authorList.hasOwnProperty(author)) {
+      authorMap.push({ userName: author });
+      let authorPaginationResult = await generateAuthorPagination(author);
+      authorPageMap.push(...authorPaginationResult);
+    }
+  }
+
   const paramsConfig = {
     "/:id": idMap,
     "/page/:number": pageMap,
-    "/category/malayalam/page/:number": malayalamPageMap
+    "/category/malayalam/page/:number": malayalamPageMap,
+    "/author/:userName": authorMap,
+    "/author/:userName/page/:number": authorPageMap
   };
 
   return (

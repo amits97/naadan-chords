@@ -9,6 +9,8 @@ export default (
     <Route path='/category/malayalam/page/:number' />
     <Route path='/category/tamil' />
     <Route path='/category/hindi' />
+    <Route path='/author/:userName' />
+    <Route path='/author/:userName/page/:number' />
     <Route path='/about' />
 	</Route>
 );
