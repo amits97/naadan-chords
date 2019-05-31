@@ -60,7 +60,7 @@ export default class Content extends Component {
         } else if(this.props.isCategory) {
           loadMorelink = `/category/${this.props.match.params.category}/page/${nextPage}`;
         } else if(this.props.isUserPosts) {
-          loadMorelink = `/authos/${this.props.match.params.userName}/page/${nextPage}`;
+          loadMorelink = `/author/${this.props.match.params.userName}/page/${nextPage}`;
         }
 
         return (
