@@ -58,6 +58,15 @@
   margin-bottom: -4px;
 }
 
+.App .navbar .navbar-nav .dropdown-item:focus {
+  color: #212529;
+  background: initial;
+}
+
+.App .navbar .navbar-nav .dropdown-item {
+  color: #212529;
+}
+
 .App .navbar .navbar-nav a:hover {
   color: #ff9700;
 }
@@ -102,6 +111,23 @@
 
 .App .navbar .search-form .clear-search {
   display: none;
+}
+
+.App .navbar .dropdown.nav-item {
+  width: 100px;
+}
+
+.App .navbar .dropdown .active {
+  background: initial;
+}
+
+.App .navbar .dropdown .active:hover {
+  background: #f8f9fa;
+}
+
+.App .navbar .dropdown-toggle::after {
+  margin-left: .55em;
+  vertical-align: 0.15em;
 }
 
 .App .contents {
@@ -162,7 +188,7 @@
     padding-bottom: 0;
   }
 
-  .App .navbar .navbar-nav a.active {
+  .App .navbar .navbar-nav .nav-link.active {
     border-bottom: 3px solid #ff9700;
     padding-bottom: 10px;
     margin-bottom: -7px;

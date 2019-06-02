@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
-import { Navbar, Nav, Form, FormControl } from "react-bootstrap";
+import { Navbar, Nav, Form, FormControl, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
@@ -22,13 +22,27 @@ class App extends Component {
       isAuthenticated: false,
       isAuthenticating: true,
       search: "",
-      isSearchOpen: false
+      isSearchOpen: false,
+      userName: ""
     };
+  }
+
+  getUserDetails = () => {
+    Auth.currentAuthenticatedUser({
+      bypassCache: false
+    })
+    .then(user => {
+      this.setState({
+        userName: user.username
+      });
+    })
+    .catch(err => console.log(err));
   }
 
   async componentDidMount() {
     try {
       await Auth.currentSession();
+      this.getUserDetails();
       this.userHasAuthenticated(true);
     }
     catch(e) {
@@ -70,13 +84,26 @@ class App extends Component {
 
   authenticatedOptions = () => {
     if(this.state.isAuthenticated) {
+      if(this.state.userName === "") {
+        this.getUserDetails();
+      }
       return(
-        <React.Fragment>
-          <LinkContainer to="/admin">
-            <a href="#/" className="nav-link" onClick={this.closeNav}>Admin</a>
+        <NavDropdown title="Account" alignRight>
+          <LinkContainer to={`/author/${this.state.userName}`}>
+            <NavDropdown.Item onClick={this.closeNav} role="button">
+              Signed in as <b>{ this.state.userName }</b>
+            </NavDropdown.Item>
           </LinkContainer>
-          <a href="#/" className="nav-link" onClick={this.handleLogout}>Logout</a>
-        </React.Fragment>
+          <NavDropdown.Divider />
+          <LinkContainer to="/admin">
+            <NavDropdown.Item onClick={this.closeNav} role="button">
+              Admin
+            </NavDropdown.Item>
+          </LinkContainer>
+          <NavDropdown.Item onClick={this.handleLogout}>
+            Logout
+          </NavDropdown.Item>
+        </NavDropdown>
       );
     }
   }
