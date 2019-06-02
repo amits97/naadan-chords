@@ -1,6 +1,15 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import * as userNameLib from "./libs/username-lib";
 
+function slugify(text) {
+  return text.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
+}
+
 export async function main(event, context, callback) {
   if(!event.userName) {
     return { status: false, error: "No username specified" };
@@ -24,7 +33,7 @@ export async function main(event, context, callback) {
         FilterExpression: "postType = :postType",
         ExpressionAttributeValues: {
           ":userId": userId,
-          ":postType": "POST"
+          ":postType": event.postType ? event.postType : "POST"
         },
         ScanIndexForward: false,
         ProjectionExpression: "postId",
@@ -53,12 +62,23 @@ export async function main(event, context, callback) {
     FilterExpression: "postType = :postType",
     ExpressionAttributeValues: {
       ":userId": userId,
-      ":postType": "POST"
+      ":postType": event.postType ? event.postType : "POST"
     },
     ScanIndexForward: false,
     ProjectionExpression: "postId, createdAt, postType, title, userId",
     Limit: 15
   };
+
+  if(event.search) {
+    //search
+    params.FilterExpression = "contains(postId, :postId) AND postType = :postType";
+    params.ExpressionAttributeValues = {
+        ":userId": userId,
+        ":postId": slugify(event.search),
+        ":postType": event.postType ? event.postType : "POST"
+    };
+    params.ProjectionExpression = "postId, createdAt, postType, title, userId";
+  }
 
   if(event.exclusiveStartKey) {
     //pagination

@@ -150,7 +150,7 @@ functions:
           integration: lambda
           request:
             template:
-              application/json: '{ "userName" : "$input.params(''userName'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "page" : "$input.params(''page'')"  }'
+              application/json: '{ "userName" : "$input.params(''userName'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "page" : "$input.params(''page'')", "postType" : "$input.params(''postType'')", "search" : "$input.params(''s'')"  }'
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
