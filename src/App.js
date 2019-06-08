@@ -144,12 +144,17 @@ class App extends Component {
     this.setSearch("");
   }
 
-  onNavBlur = () => {
-    setTimeout(() => {
-      this.setState({
-        navExpanded: false
-      });
-    }, 250);
+  onNavBlur = (e) => {
+    if(e.relatedTarget) {
+      let targetClassList = e.relatedTarget.classList;
+      if(!(targetClassList.contains("dropdown-toggle"))) {
+        setTimeout(() => {
+          this.setState({
+            navExpanded: false
+          });
+        }, 250);
+      }
+    }
   }
 
   render() {

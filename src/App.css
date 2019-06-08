@@ -117,6 +117,10 @@
   width: 100px;
 }
 
+.App .navbar .dropdown-menu .dropdown-item:hover {
+  color: #072e69;
+}
+
 .App .navbar .dropdown .active {
   background: initial;
 }
@@ -170,6 +174,32 @@
     right: 10px;
     font-size: 20px;
     top: 19px;
+  }
+
+  .App .navbar .dropdown.nav-item {
+    width: 100%;
+  }
+
+  .App .navbar .dropdown-menu {
+    background: #072e69;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .App .navbar .navbar-nav .dropdown-item {
+    color: #dddddd;
+  }
+
+  .App .navbar .navbar-nav .dropdown-item:hover {
+    background: inherit;
+  }
+
+  .App .navbar .navbar-nav .dropdown-menu .dropdown-divider {
+    border-top: 1px solid #093579;
+  }
+
+  .App .navbar .dropdown-menu .dropdown-item:hover {
+    color: #ff9700;
   }
 }
 

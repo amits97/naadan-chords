@@ -58,7 +58,7 @@ export default class ChordControls extends Component {
 
         <div className="controls-container font-size-container">
           <span className="feature-label">
-            FONT <span className="amount text-primary">{fontSize === 15 ? '' : this.computeFontAmount()}</span>
+            FONT <span className="amount text-primary" key={fontSize}>{fontSize === 15 ? '' : this.computeFontAmount()}</span>
           </span>
           <ButtonGroup className={`${fontSize === 15 ? '' : 'ml-3' }`}>
             <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
