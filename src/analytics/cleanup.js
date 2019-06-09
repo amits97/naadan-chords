@@ -23,7 +23,7 @@ async function deleteCall() {
   try {
     let queryRequest = "/analytics-clean";
   
-    let postsResult = await API.get("posts", queryRequest);
+    let postsResult = await API.del("posts", queryRequest);
     return postsResult; 
   } catch(e) {
     console.log(e);

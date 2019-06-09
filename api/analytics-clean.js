@@ -7,7 +7,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 function getTimestamp3WeeksAgo() {
   var ourDate = new Date();
  
-  //Change it so that it is 7 days in the past.
+  //Change it so that it is 21 days (3 weeks) in the past.
   var pastDate = ourDate.getDate() - 21;
   ourDate.setDate(pastDate);
   

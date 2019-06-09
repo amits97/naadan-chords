@@ -156,7 +156,7 @@ functions:
     events:
       - http:
           path: analytics-clean
-          method: get
+          method: delete
           cors: true
 # Create our resources with separate CloudFormation templates
 resources:
