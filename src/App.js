@@ -145,9 +145,11 @@ class App extends Component {
   }
 
   onNavBlur = (e) => {
-    if(e.relatedTarget) {
-      let targetClassList = e.relatedTarget.classList;
-      if(!(targetClassList.contains("dropdown-toggle"))) {
+    if(this.state.navExpanded === true) {
+      let clickedElement = e.target;
+      let clickedElementClassList = clickedElement ? clickedElement.classList : "";
+      if(!clickedElementClassList.contains("navbar-toggler-icon")
+        && !clickedElementClassList.contains("dropdown-toggle")) {
         setTimeout(() => {
           this.setState({
             navExpanded: false
@@ -167,8 +169,8 @@ class App extends Component {
     };
 
     return (
-      <div className="App bg-light">
-        <Navbar fluid="true" expand="lg" sticky="top" variant="dark" onToggle={this.setNavExpanded} expanded={this.state.navExpanded} onBlur={this.onNavBlur}>
+      <div className="App bg-light" onClick={this.onNavBlur}>
+        <Navbar fluid="true" expand="lg" sticky="top" variant="dark" onToggle={this.setNavExpanded} expanded={this.state.navExpanded}>
           <div className="container">
             <Navbar.Brand>
               <Link to="/">
