@@ -18,3 +18,9 @@ export function call(action, params) {
 
   return dynamoDb[action](params).promise();
 }
+
+export function batchCall(params) {
+  const dynamoDb = new AWS.DynamoDB.DocumentClient();
+
+  return dynamoDb.batchWrite(params).promise();
+}

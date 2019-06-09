@@ -151,6 +151,13 @@ functions:
           request:
             template:
               application/json: '{ "userName" : "$input.params(''userName'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "page" : "$input.params(''page'')", "postType" : "$input.params(''postType'')", "search" : "$input.params(''s'')"  }'
+  analytics-clean:
+    handler: analytics-clean.main
+    events:
+      - http:
+          path: analytics-clean
+          method: get
+          cors: true
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
