@@ -155,7 +155,7 @@ functions:
     handler: analytics-clean.main
     events:
       - schedule:
-          rate: rate(7 days)
+          rate: rate(1 day)
           enabled: true
 # Create our resources with separate CloudFormation templates
 resources:
