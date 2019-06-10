@@ -154,10 +154,9 @@ functions:
   analytics-clean:
     handler: analytics-clean.main
     events:
-      - http:
-          path: analytics-clean
-          method: delete
-          cors: true
+      - schedule:
+          rate: rate(7 days)
+          enabled: true
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
