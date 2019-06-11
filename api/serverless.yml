@@ -133,6 +133,12 @@ functions:
           path: post-visit
           method: post
           cors: true
+  generate-top:
+    handler: generate-top.main
+    events:
+      - schedule:
+          rate: rate(6 hours)
+          enabled: true
   top-posts:
     handler: top.main
     events:
