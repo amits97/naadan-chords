@@ -145,7 +145,7 @@ Resources:
               callback(null, request);
           };
       Runtime: "nodejs8.10"
-  RedirectToLegacyOrPrerenderVersion4:
+  RedirectToLegacyOrPrerenderVersion3:
     Type: "AWS::Lambda::Version"
     Properties:
       FunctionName:
@@ -175,7 +175,7 @@ Resources:
             - EventType: viewer-request
               LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion4, Version] ] ]
             - EventType: origin-request
-              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToLegacyOrPrerender, Arn], !GetAtt [RedirectToLegacyOrPrerenderVersion4, Version] ] ]
+              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToLegacyOrPrerender, Arn], !GetAtt [RedirectToLegacyOrPrerenderVersion3, Version] ] ]
         Enabled: true
         CustomErrorResponses:
           - ErrorCode: 404
