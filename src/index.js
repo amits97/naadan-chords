@@ -24,6 +24,12 @@ Amplify.configure({
         region: config.apiGateway.REGION
       },
     ]
+  },
+  Storage: {
+    AWSS3: {
+        bucket: config.storage.BUCKET,
+        region: config.storage.REGION
+    }
   }
 });
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faSyncAlt, faImage, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../components/LoaderButton";
-import { API } from "aws-amplify";
+import { API, Storage } from "aws-amplify";
 import ReactMarkdown from "react-markdown";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea/lib";
@@ -22,6 +22,7 @@ export default class NewPost extends SearchComponent {
 
     this.parseHtml = htmlParser();
     this.chordsEditor = React.createRef();
+    this.fileUploader = React.createRef();
 
     this.state = {
       isLoading: null,
@@ -35,8 +36,22 @@ export default class NewPost extends SearchComponent {
       leadTabs: null,
       youtubeId: null,
       postType: "POST",
-      submitted: false
+      submitted: false,
+      imageLoading: false
     };
+  }
+
+  slugify = (text) => {
+    return text.toString().toLowerCase()
+      .replace(/\s+/g, '-')           // Replace spaces with -
+      .replace(/[^\w-]+/g, '')       // Remove all non-word chars
+      .replace(/--+/g, '-')         // Replace multiple - with single -
+      .replace(/^-+/, '')             // Trim - from start of text
+      .replace(/-+$/, '');            // Trim - from end of text
+  }
+
+  getFileName = (url) => {
+    return url.substring(url.lastIndexOf('/') + 1);
   }
 
   insertAtCursor = (myValue, addNewLines) => {
@@ -231,6 +246,36 @@ export default class NewPost extends SearchComponent {
     }
   }
 
+  onImageUploadChange = (e) => {
+    const file = e.target.files[0];
+    this.setState({
+      imageLoading: true
+    });
+    Storage.put(`${this.slugify(this.state.title)}.jpg`, file, {
+      contentType: 'image/jpg'
+    })
+    .then (result => {
+      this.setState({
+        image: `https://s3.ap-south-1.amazonaws.com/naadanchords-images/public/${result.key}`
+      });
+    })
+    .catch(err => console.log(err));
+  }
+
+  resetImage = (e) => {
+    e.preventDefault();
+
+    if(window.confirm('Are you sure you want to remove the image?')) {
+      var fileUploader = this.fileUploader.current;
+      fileUploader.value = null;
+
+      this.setState({
+        image: null,
+        imageLoading: false
+      });
+    }
+  }
+
   renderTitleInputs = () => {
     if(this.state.postType === "PAGE") {
       return (
@@ -279,7 +324,18 @@ export default class NewPost extends SearchComponent {
             </Col>
             <Col>
               <Form.Group controlId="image">
-                <Form.Control autoComplete="off" type="text" placeholder="Image URL" onChange={this.handleChange} value={this.state.image ? this.state.image : ""} />
+                <div className={`image-uploader ${this.state.image ? 'd-none' : 'd-block'}`}>
+                  <Form.Control type="file" accept='image/jpg' onChange={(e) => this.onImageUploadChange(e)} className={`${this.state.imageLoading ? 'd-none' : 'd-block'}`} ref={this.fileUploader} />
+                  <FontAwesomeIcon icon={faSyncAlt} className={`spinning ${this.state.imageLoading ? 'd-block' : 'd-none'}`} />
+                </div>
+                <div className={`image-viewer ${this.state.image ? 'd-block' : 'd-none'}`}>
+                  <a href={this.state.image} target="_blank" className="text-primary image-link" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faImage} className="mr-2 image-icon" />{this.state.image ? this.getFileName(this.state.image) : ""}
+                  </a>
+                  <a className="edit text-primary" href="#/" onClick={this.resetImage}>
+                    <FontAwesomeIcon icon={faTrashAlt} className="text-danger" />
+                  </a>
+                </div>
               </Form.Group>
             </Col>
           </Row>

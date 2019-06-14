@@ -100,6 +100,59 @@
   font-size: 40px;
 }
 
+.NewPost .image-uploader {
+  position: relative;
+  padding-top: 5px;
+}
+
+.NewPost .image-viewer {
+  padding-top: 7.5px;
+}
+
+.NewPost .image-viewer .external-icon {
+  font-size: 0.9em;
+  padding-bottom: 2px;
+  margin-left: 2px;
+}
+
+.NewPost .image-viewer .edit {
+  float: right;
+  margin-right: 5px;
+  border-left: 1px solid #ddd;
+  padding-left: 15px;
+  opacity: 0.8;
+}
+
+.NewPost .image-viewer .edit:hover {
+  opacity: 1;
+}
+
+.NewPost .image-viewer .image-link {
+  max-width: 175px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+
+.NewPost .image-viewer .image-icon {
+  font-size: 20px;
+  padding-top: 2px;
+  margin-bottom: -1.5px;
+}
+
+.NewPost .spinning {
+  position: absolute;
+  left: 5px;
+  top: 10px;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from { transform: scale(1) rotate(0deg); }
+  to { transform: scale(1) rotate(360deg); }
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .NewPost .LoaderButton {
