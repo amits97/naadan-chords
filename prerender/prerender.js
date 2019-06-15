@@ -22,14 +22,13 @@ async function dynamoDbCache(targetUrl) {
   }
 }
 
-async function writeDynamoDbCache(url, html, event) {
+async function writeDynamoDbCache(url, html) {
   const params = {
     TableName: "NaadanChordsPrerender",
     Item: {
       url: url,
       html: html,
-      timestamp: Date.now(),
-      event: JSON.stringify(event)
+      timestamp: Date.now()
     }
   };
 
@@ -102,7 +101,7 @@ export async function handler(event, context, callback) {
         }
       }
       browser.close();
-      await writeDynamoDbCache(targetUrl, result, event);
+      await writeDynamoDbCache(targetUrl, result);
       return success(result);
     } catch(e) {
       return failure(elementFetched);
