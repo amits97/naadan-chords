@@ -11,6 +11,8 @@ function slugify(text) {
 }
 
 export async function main(event, context, callback) {
+  let dynamoDbQueryType = "query";
+
   if(!event.userName) {
     return { status: false, error: "No username specified" };
   }
@@ -71,13 +73,17 @@ export async function main(event, context, callback) {
 
   if(event.search) {
     //search
-    params.FilterExpression = "contains(postId, :postId) AND postType = :postType";
-    params.ExpressionAttributeValues = {
+    dynamoDbQueryType = "scan";
+    params = {
+      TableName: "NaadanChords",
+      FilterExpression: "contains(postId, :postId) AND postType = :postType AND userId = :userId",
+      ExpressionAttributeValues: {
         ":userId": userId,
         ":postId": slugify(event.search),
         ":postType": event.postType ? event.postType : "POST"
+      },
+      ProjectionExpression: "postId, createdAt, postType, title, userId"
     };
-    params.ProjectionExpression = "postId, createdAt, postType, title, userId";
   }
 
   if(event.exclusiveStartKey) {
@@ -92,7 +98,7 @@ export async function main(event, context, callback) {
 
   try {
     let result = {};
-    result = await dynamoDbLib.call("query", params);
+    result = await dynamoDbLib.call(dynamoDbQueryType, params);
 
     //Get full attributes of author
     let authorAttributes = await userNameLib.getAuthorAttributes(userId);
