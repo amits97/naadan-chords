@@ -10,6 +10,20 @@ function slugify(text) {
     .replace(/-+$/, '');            // Trim - from end of text
 }
 
+function lowerCase(text) {
+  return text.toLowerCase();
+}
+
+function capitalizeFirstLetter(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function titleCase(str) {
+  return str.replace(/\w\S*/g, function(txt){
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+
 export async function main(event, context, callback) {
   var lastEvaluatedKey;
   if(event.page) {
@@ -88,9 +102,12 @@ export async function main(event, context, callback) {
       //search
       params = {
         TableName: "NaadanChords",
-        FilterExpression: "contains(postId, :postId)",
+        FilterExpression: "contains(postId, :postId) OR contains(content, :lowercase) OR contains(content, :capitalize) OR contains(content, :titlecase)",
         ExpressionAttributeValues: {
-          ":postId": slugify(event.search)
+          ":postId": slugify(event.search),
+          ":lowercase": lowerCase(event.search),
+          ":capitalize": capitalizeFirstLetter(event.search),
+          ":titlecase": titleCase(event.search)
         },
         ProjectionExpression: "postId, createdAt, postType, title, userId"
       };
