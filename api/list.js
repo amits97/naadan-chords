@@ -1,28 +1,6 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import * as userNameLib from "./libs/username-lib";
-
-function slugify(text) {
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // Replace spaces with -
-    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-    .replace(/^-+/, '')             // Trim - from start of text
-    .replace(/-+$/, '');            // Trim - from end of text
-}
-
-function lowerCase(text) {
-  return text.toLowerCase();
-}
-
-function capitalizeFirstLetter(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-function titleCase(str) {
-  return str.replace(/\w\S*/g, function(txt){
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-  });
-}
+import * as searchFilterLib from "./libs/searchfilter-lib";
 
 export async function main(event, context, callback) {
   var lastEvaluatedKey;
@@ -102,22 +80,9 @@ export async function main(event, context, callback) {
       //search
       params = {
         TableName: "NaadanChords",
-        FilterExpression: "contains(postId, :postId) OR contains(content, :lowercase) OR contains(content, :capitalize) OR contains(content, :titlecase)",
-        ExpressionAttributeValues: {
-          ":postId": slugify(event.search),
-          ":lowercase": lowerCase(event.search),
-          ":capitalize": capitalizeFirstLetter(event.search),
-          ":titlecase": titleCase(event.search)
-        },
-        ProjectionExpression: "postId, createdAt, postType, title, userId"
+        ProjectionExpression: "postId, createdAt, postType, title, userId",
+        ...searchFilterLib.getSearchFilter(event.search)
       };
-      if(event.postType) {
-        params.FilterExpression = "contains(postId, :postId) AND postType = :postType";
-        params.ExpressionAttributeValues = {
-          ":postType": event.postType,
-          ":postId": slugify(event.search)
-        };
-      }
       result = await dynamoDbLib.call("scan", params);
     } else {
       result = await dynamoDbLib.call("query", params);

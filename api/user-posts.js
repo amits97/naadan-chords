@@ -1,14 +1,6 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import * as userNameLib from "./libs/username-lib";
-
-function slugify(text) {
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // Replace spaces with -
-    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-    .replace(/^-+/, '')             // Trim - from start of text
-    .replace(/-+$/, '');            // Trim - from end of text
-}
+import * as searchFilterLib from "./libs/searchfilter-lib";
 
 export async function main(event, context, callback) {
   let dynamoDbQueryType = "query";
@@ -76,13 +68,8 @@ export async function main(event, context, callback) {
     dynamoDbQueryType = "scan";
     params = {
       TableName: "NaadanChords",
-      FilterExpression: "contains(postId, :postId) AND postType = :postType AND userId = :userId",
-      ExpressionAttributeValues: {
-        ":userId": userId,
-        ":postId": slugify(event.search),
-        ":postType": event.postType ? event.postType : "POST"
-      },
-      ProjectionExpression: "postId, createdAt, postType, title, userId"
+      ProjectionExpression: "postId, createdAt, postType, title, userId",
+      ...searchFilterLib.getSearchFilter(event.search, userId, event.postType ? event.postType : "POST")
     };
   }
 
