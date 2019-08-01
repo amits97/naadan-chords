@@ -90,6 +90,10 @@ export async function main(event, context, callback) {
     //Get full attributes of author
     let authorAttributes = await userNameLib.getAuthorAttributes(userId);
 
+    if(result.Items.length > 15) {
+      result.Items = result.Items.slice(0, 15);
+    }
+
     if(result.Items.length > 0) {
       for(let i = 0; i < result.Items.length; i++) {
         result.Items[i].userName = authorAttributes.userName;

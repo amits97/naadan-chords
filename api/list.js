@@ -90,6 +90,10 @@ export async function main(event, context, callback) {
 
     let users = {};
 
+    if(result.Items.length > 15) {
+      result.Items = result.Items.slice(0, 15);
+    }
+
     for(let i = 0; i < result.Items.length; i++) {
       let userId = result.Items[i].userId;
 
