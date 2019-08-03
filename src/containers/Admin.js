@@ -1,5 +1,5 @@
 import React from "react";
-import { API, Auth } from "aws-amplify";
+import { API } from "aws-amplify";
 import { Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
@@ -24,8 +24,7 @@ export default class Admin extends SearchComponent {
       isPaginationLoading: false,
       activeTab: "posts",
       postsToBeDeleted: [],
-      search: "",
-      userName: ""
+      search: ""
     };
   }
 
@@ -53,28 +52,22 @@ export default class Admin extends SearchComponent {
   async componentDidMount() {
     window.scrollTo(0, 0);
 
-    Auth.currentAuthenticatedUser({
-      bypassCache: false
-    })
-    .then(user => {
-      this.setState({
-        userName: user.username
-      });
+    if(!this.props.isAdmin) {
+      this.props.history.push("/");
+    }
 
-      this.loadData();
-    })
-    .catch(err => console.log(err));
+    this.loadData();
   }
 
   posts() {
     let { search } = this.state;
 
-    return API.get("posts", `/user-posts/?userName=${this.state.userName}&${search ? "s=" + search : ""}`);
+    return API.get("posts", `/posts/?${search ? "s=" + search : ""}`);
   }
 
   pages() {
     let { search } = this.state;
-    return API.get("posts", `/user-posts?userName=${this.state.userName}&postType=PAGE${search ? "&s=" + search : ""}`);
+    return API.get("posts", `/posts?postType=PAGE${search ? "&s=" + search : ""}`);
   }
 
   addPostToDelete = (event, postId) => {
@@ -167,7 +160,7 @@ export default class Admin extends SearchComponent {
     });
 
     try {
-      let postsResult = await API.get("posts", `/user-posts?userName=${this.state.userName}&exclusiveStartKey=${exclusiveStartKey}`);
+      let postsResult = await API.get("posts", `/posts?exclusiveStartKey=${exclusiveStartKey}`);
       this.setState({
         posts: { ...postsResult, Items: this.state.posts.Items.concat(postsResult.Items)},
         lastEvaluatedPost: postsResult.LastEvaluatedKey,

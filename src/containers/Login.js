@@ -36,6 +36,8 @@ export default class Login extends SearchComponent {
 
     try {
       await Auth.signIn(this.state.email, this.state.password);
+      let session = await Auth.currentSession();
+      await this.props.getUserPrevileges(session);
       this.props.userHasAuthenticated(true);
     } catch (e) {
       this.setState({

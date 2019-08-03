@@ -23,31 +23,48 @@ class App extends Component {
       isAuthenticating: true,
       search: "",
       isSearchOpen: false,
-      userName: ""
+      userName: "",
+      isAdmin: false
     };
   }
 
-  getUserDetails = () => {
+  getUserPrevileges = (session) => {
+    return new Promise(resolve => {
+      if(session && session.getIdToken) {
+        let sessionPayload = session.getIdToken().decodePayload();
+        if(sessionPayload["cognito:groups"] && sessionPayload["cognito:groups"].includes("admin")) {
+          this.setState({
+            isAdmin: true
+          }, resolve);
+        }
+      }
+      resolve();
+    });
+  }
+
+  getUserDetails = async (session) => {
     Auth.currentAuthenticatedUser({
       bypassCache: false
     })
-    .then(user => {
+    .then(async user => {
       this.setState({
         userName: user.username
       });
+
+      await this.getUserPrevileges(session);
     })
     .catch(err => console.log(err));
   }
 
   async componentDidMount() {
     try {
-      await Auth.currentSession();
-      this.getUserDetails();
+      let session = await Auth.currentSession();
+      this.getUserDetails(session);
       this.userHasAuthenticated(true);
     }
     catch(e) {
       if (e !== 'No current user') {
-        alert(e);
+        console.log(e);
       }
     }
   
@@ -95,7 +112,7 @@ class App extends Component {
             </NavDropdown.Item>
           </LinkContainer>
           <NavDropdown.Divider />
-          <LinkContainer to="/admin">
+          <LinkContainer to="/admin" className={`${this.state.isAdmin ? '' : 'd-none'}`}>
             <NavDropdown.Item onClick={this.closeNav} role="button">
               Admin
             </NavDropdown.Item>
@@ -163,6 +180,9 @@ class App extends Component {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
+      getUserDetails: this.getUserDetails,
+      getUserPrevileges: this.getUserPrevileges,
+      isAdmin: this.state.isAdmin,
       search: this.state.search,
       setSearch: this.setSearch,
       closeNav: this.closeNav

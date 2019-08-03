@@ -189,6 +189,10 @@ export default class NewPost extends SearchComponent {
   async componentDidMount() {
     window.scrollTo(0, 0);
 
+    if(!this.props.isAdmin) {
+      this.props.history.push("/");
+    }
+
     let { isEditMode } = this.props;
     if(isEditMode) {
       this.setState({
