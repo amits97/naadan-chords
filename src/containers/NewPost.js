@@ -55,7 +55,7 @@ export default class NewPost extends SearchComponent {
   }
 
   insertAtCursor = (myValue, addNewLines) => {
-    var myField = this.chordsEditor.current.textarea;
+    var myField = this.chordsEditor.current;
     myField.focus();
     var contentValue = this.state.content ? this.state.content : "";
     var selection = inputSelectionLib.getInputSelection(myField);
