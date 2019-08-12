@@ -148,6 +148,22 @@
   animation: spin 1s infinite linear;
 }
 
+.NewPost .auto-save {
+  color: #999999;
+  position: relative;
+  overflow: auto;
+  width: 200px;
+}
+
+.NewPost .auto-save .auto-saving {
+  position: relative;
+  width: 85px;
+}
+
+.NewPost .auto-save .auto-saving-icon {
+  margin-top: -8px;
+}
+
 @keyframes spin {
   from { transform: scale(1) rotate(0deg); }
   to { transform: scale(1) rotate(360deg); }

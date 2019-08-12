@@ -23,6 +23,7 @@ export default ({ childProps }) =>
     <AuthenticatedRoute path="/admin" exact component={Admin} props={childProps} />
     <AuthenticatedRoute path="/admin/new-post" exact component={NewPost} props={childProps} />
     <AuthenticatedRoute path="/admin/edit-post/:id" exact component={NewPost} props={{isEditMode: true, ...childProps}} />
+    <AuthenticatedRoute path="/admin/edit-draft/:id" exact component={NewPost} props={{isEditMode: true, isDraft: true, ...childProps}} />
     <AppliedRoute path="/request" exact component={Request} props={{...childProps}} />
     <AppliedRoute path="/:id" exact component={Posts} props={{pageKey: window.location.href, ...childProps}} />
     { /* Finally, catch all unmatched routes */ }

@@ -1,0 +1,7 @@
+{
+  "requestContext": {
+    "identity": {
+      "cognitoAuthenticationProvider": "aa:ss:USER-SUB-1234"
+    }
+  }
+}

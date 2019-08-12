@@ -1,5 +1,5 @@
 import React from "react";
-import { API } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 import { Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
@@ -32,16 +32,19 @@ export default class Admin extends SearchComponent {
     this.setState({
       isLoading: true,
       posts: [],
-      pages: []
+      pages: [],
+      drafts: []
     });
 
     try {
       const posts = await this.posts();
       const pages = await this.pages();
+      const drafts = await this.drafts();
 
       this.setState({
         posts: posts,
         pages: pages,
+        drafts: drafts,
         isLoading: false
       });
     } catch (e) {
@@ -52,6 +55,8 @@ export default class Admin extends SearchComponent {
   async componentDidMount() {
     window.scrollTo(0, 0);
 
+    let session = await Auth.currentSession();
+    await this.props.getUserPrevileges(session);
     if(!this.props.isAdmin) {
       this.props.history.push("/");
     }
@@ -68,6 +73,11 @@ export default class Admin extends SearchComponent {
   pages() {
     let { search } = this.state;
     return API.get("posts", `/posts?postType=PAGE${search ? "&s=" + search : ""}`);
+  }
+
+  drafts() {
+    let { search } = this.state;
+    return API.get("posts", `/drafts/?${search ? "s=" + search : ""}`);
   }
 
   addPostToDelete = (event, postId) => {
@@ -145,7 +155,11 @@ export default class Admin extends SearchComponent {
   }
 
   deletePost(postId) {
-    return API.del("posts", `/posts/${postId}`);
+    if(this.state.activeTab === "drafts") {
+      return API.del("posts", `/drafts/${postId}`);
+    } else {
+      return API.del("posts", `/posts/${postId}`);
+    }
   }
 
   setActiveTab = (tab) => {
@@ -194,7 +208,7 @@ export default class Admin extends SearchComponent {
     }
   }
 
-  renderPosts(posts) {
+  renderPosts(posts, isDraft) {
     let { isLoading } = this.state;
 
     if(isLoading) {
@@ -212,7 +226,7 @@ export default class Admin extends SearchComponent {
                 return (
                   <ListGroup.Item key={i}>
                     <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
-                    <LinkContainer exact to={`/admin/edit-post/${post.postId}`}>
+                    <LinkContainer exact to={`/admin/${isDraft ? 'edit-draft' : 'edit-post'}/${post.postId}`}>
                       <a href="#/" className="text-primary">{ post.title }</a>
                     </LinkContainer>
                   </ListGroup.Item>
@@ -258,7 +272,8 @@ export default class Admin extends SearchComponent {
   }
 
   render() {
-    let { posts, pages } = this.state;
+    let { posts, pages, drafts } = this.state;
+    let draftCount = (drafts && drafts.Items) ? this.state.drafts.Items.length : 0;
 
     return (
       <div className="Admin">
@@ -279,6 +294,9 @@ export default class Admin extends SearchComponent {
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link eventKey="pages" onClick={() => { this.clearCheckboxes(); this.setActiveTab("pages"); }}>Pages</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="drafts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("drafts"); }}>Drafts <span className={`${draftCount > 0 ? 'd-inline' : 'd-none'}`}>({draftCount})</span></Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
@@ -304,6 +322,9 @@ export default class Admin extends SearchComponent {
                   </Tab.Pane>
                   <Tab.Pane eventKey="pages">
                   { this.renderPosts(pages) }
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="drafts">
+                  { this.renderPosts(drafts, true) }
                   </Tab.Pane>
                 </Tab.Content>
               </Form>

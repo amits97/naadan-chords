@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faSyncAlt, faImage, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../components/LoaderButton";
-import { API, Storage } from "aws-amplify";
+import { Auth, API, Storage } from "aws-amplify";
 import ReactMarkdown from "react-markdown";
+import Moment from "react-moment";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton from "react-loading-skeleton";
@@ -23,6 +24,7 @@ export default class NewPost extends SearchComponent {
     this.parseHtml = htmlParser();
     this.chordsEditor = React.createRef();
     this.fileUploader = React.createRef();
+    this.autoWriteDraft = null;
 
     this.state = {
       isLoading: null,
@@ -37,7 +39,9 @@ export default class NewPost extends SearchComponent {
       youtubeId: null,
       postType: "POST",
       submitted: false,
-      imageLoading: false
+      imageLoading: false,
+      isAutoSaving: false,
+      autoSaveTimestamp: null
     };
   }
 
@@ -146,6 +150,21 @@ export default class NewPost extends SearchComponent {
     });
   }
 
+  handleDraft = async () => {
+    this.autoWriteDraft = setInterval(async () => {
+      this.setState({
+        isAutoSaving: true
+      });
+      if(this.state.song && this.state.album && this.state.singers && this.state.music) {
+        await this.writeDraft(this.preparePostObject());
+        this.setState({
+          isAutoSaving: false,
+          autoSaveTimestamp: new Date()
+        });
+      }
+    }, 10000);
+  }
+
   handleSubmit = async event => {
     event.preventDefault();
   
@@ -182,25 +201,48 @@ export default class NewPost extends SearchComponent {
     });
   }
 
+  writeDraft(post) {
+    return API.post("posts", "/drafts", {
+      body: post
+    });
+  }
+
   post() {
     return API.get("posts", `/posts/${this.props.match.params.id}`);
+  }
+
+  draft() {
+    return API.get("posts", `/drafts/${this.props.match.params.id}`);
+  }
+
+  componentWillUnmount() {
+    if(this.autoWriteDraft) {
+      clearInterval(this.autoWriteDraft);
+    }
   }
 
   async componentDidMount() {
     window.scrollTo(0, 0);
 
+    let session = await Auth.currentSession();
+    await this.props.getUserPrevileges(session);
     if(!this.props.isAdmin) {
       this.props.history.push("/");
     }
 
-    let { isEditMode } = this.props;
+    let { isEditMode, isDraft } = this.props;
     if(isEditMode) {
       this.setState({
         isLoading: true
       });
 
       try {
-        let post = await this.post();
+        let post;
+        if(isDraft) {
+          post = await this.draft();
+        } else {
+          post = await this.post();
+        }
 
         this.setState({
           title: post.title,
@@ -214,8 +256,13 @@ export default class NewPost extends SearchComponent {
           leadTabs: post.leadTabs,
           youtubeId: post.youtubeId,
           postType: post.postType,
+          autoSaveTimestamp: post.createdAt,
           isLoading: false
         });
+
+        if(isDraft) {
+          this.handleDraft();
+        }
       } catch(e) {
         console.log(e);
 
@@ -223,6 +270,8 @@ export default class NewPost extends SearchComponent {
           isLoading: false
         });
       }
+    } else {
+      this.handleDraft();
     }
   }
 
@@ -386,7 +435,7 @@ export default class NewPost extends SearchComponent {
     this.props.history.goBack();
   }
 
-  renderEditor(isEditMode) {
+  renderEditor(isEditMode, isDraft) {
     if(isEditMode && this.state.isLoading && !this.state.submitted) {
       return(
         <Row>
@@ -396,7 +445,7 @@ export default class NewPost extends SearchComponent {
         </Row>
       )
     }
-  
+
     return (
       <Form onSubmit={this.handleSubmit}>
         <Row>
@@ -416,11 +465,21 @@ export default class NewPost extends SearchComponent {
               disabled={!this.validateForm()}
               type="submit"
               isLoading={this.state.isLoading}
-              text={isEditMode ? "Update" : "Create"}
-              loadingText={isEditMode ? "Updating…" : "Creating…"}
+              text={isEditMode ? (isDraft ? "Publish" : "Update") : "Create"}
+              loadingText={isEditMode ? (isDraft ? "Publishing…" : "Updating…") : "Creating…"}
             />
 
             <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
+
+            <div className="auto-save float-right pt-2">
+              <span className={`float-right ${(this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
+                Saved <Moment fromNow>{ this.state.autoSaveTimestamp }</Moment>
+              </span>
+              <span className={`auto-saving float-right ${this.state.isAutoSaving ? '' : 'd-none'}`}>
+                <FontAwesomeIcon icon={faSyncAlt} className="float-left auto-saving-icon spinning" />
+                <span className={`float-right`}>Saving…</span>
+              </span>
+            </div>
           </Col>
           <Col xs={12} md={6}>
             <div className="preview-pane">
@@ -435,7 +494,7 @@ export default class NewPost extends SearchComponent {
   }
 
   render() {
-    let { isEditMode } = this.props;
+    let { isEditMode, isDraft } = this.props;
 
     return (
       <div className="NewPost">
@@ -444,10 +503,10 @@ export default class NewPost extends SearchComponent {
           <LinkContainer exact to="/admin">
             <a href="#/" className="text-primary">Admin</a>
           </LinkContainer>
-          <span> <small>&raquo;</small> {`${isEditMode? "Edit Post" : "New Post"}`}</span>
+          <span> <small>&raquo;</small> {`${isEditMode? (isDraft ? "Edit Draft" : "Edit Post") : "New Post"}`}</span>
         </h1>
         <hr />
-        { this.renderEditor(isEditMode) }
+        { this.renderEditor(isEditMode, isDraft) }
       </div>
     );
   }

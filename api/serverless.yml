@@ -164,6 +164,38 @@ functions:
       - schedule:
           rate: rate(1 day)
           enabled: true
+  draft-write:
+    handler: draft-write.main
+    events:
+      - http:
+          path: drafts
+          method: post
+          cors: true
+          authorizer: aws_iam
+  draft-list:
+    handler: draft-list.main
+    events:
+      - http:
+          path: drafts
+          method: get
+          cors: true
+          authorizer: aws_iam
+  draft-get:
+    handler: draft-get.main
+    events:
+      - http:
+          path: drafts/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+  draft-delete:
+    handler: draft-delete.main
+    events:
+      - http:
+          path: drafts/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
