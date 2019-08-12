@@ -81,7 +81,7 @@ export async function main(event, context, callback) {
       params = {
         TableName: "NaadanChords",
         ProjectionExpression: "postId, createdAt, postType, title, userId",
-        ...searchFilterLib.getSearchFilter(event.search)
+        ...searchFilterLib.getSearchFilter(event.search, null, event.postType ? event.postType : "POST")
       };
       result = await dynamoDbLib.call("scan", params);
     } else {

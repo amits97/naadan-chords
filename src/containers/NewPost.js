@@ -54,6 +54,10 @@ export default class NewPost extends SearchComponent {
       .replace(/-+$/, '');            // Trim - from end of text
   }
 
+  deleteDraft(postId) {
+    return API.del("posts", `/drafts/${postId}`);
+  }
+
   getFileName = (url) => {
     return url.substring(url.lastIndexOf('/') + 1);
   }
@@ -155,7 +159,7 @@ export default class NewPost extends SearchComponent {
       this.setState({
         isAutoSaving: true
       });
-      if(this.state.song && this.state.album && this.state.singers && this.state.music) {
+      if(this.state.title) {
         await this.writeDraft(this.preparePostObject());
         this.setState({
           isAutoSaving: false,
@@ -171,11 +175,15 @@ export default class NewPost extends SearchComponent {
     this.setState({ isLoading: true, submitted: true });
   
     try {
-      if(this.props.isEditMode) {
+      if(this.props.isEditMode && !this.props.isDraft) {
         await this.updatePost(this.preparePostObject());
         this.props.history.push(`/${this.props.match.params.id}`);
       } else {
         await this.createPost(this.preparePostObject());
+
+        if(this.props.isDraft) {
+          await this.deleteDraft(this.slugify(this.state.title));
+        }
         
         if(this.state.postType === "PAGE") {
           this.props.history.push("/admin");
@@ -472,7 +480,7 @@ export default class NewPost extends SearchComponent {
             <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
 
             <div className="auto-save float-right pt-2">
-              <span className={`float-right ${(this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
+              <span className={`float-right ${(!isDraft || this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
                 Saved <Moment fromNow>{ this.state.autoSaveTimestamp }</Moment>
               </span>
               <span className={`auto-saving float-right ${this.state.isAutoSaving ? '' : 'd-none'}`}>
