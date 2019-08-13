@@ -41,7 +41,8 @@ export default class NewPost extends SearchComponent {
       submitted: false,
       imageLoading: false,
       isAutoSaving: false,
-      autoSaveTimestamp: null
+      autoSaveTimestamp: null,
+      inputUpdated: false
     };
   }
 
@@ -118,7 +119,8 @@ export default class NewPost extends SearchComponent {
 
   handleChange = event => {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
+      inputUpdated: true
     });
 
     if(["song", "album"].indexOf(event.target.id) !== -1) {
@@ -156,15 +158,18 @@ export default class NewPost extends SearchComponent {
 
   handleDraft = async () => {
     this.autoWriteDraft = setInterval(async () => {
-      this.setState({
-        isAutoSaving: true
-      });
-      if(this.state.title) {
-        await this.writeDraft(this.preparePostObject());
+      if(this.state.inputUpdated) {
         this.setState({
-          isAutoSaving: false,
-          autoSaveTimestamp: new Date()
+          isAutoSaving: true,
+          inputUpdated: false
         });
+        if(this.state.title) {
+          await this.writeDraft(this.preparePostObject());
+          this.setState({
+            isAutoSaving: false,
+            autoSaveTimestamp: new Date()
+          });
+        }
       }
     }, 10000);
   }
