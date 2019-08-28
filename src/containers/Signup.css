@@ -1,0 +1,17 @@
+.Signup {
+  padding: 30px 0;
+}
+
+.Signup .header {
+  margin-bottom: 20px;
+}
+
+.Signup form {
+  margin: 0 auto;
+  margin-bottom: 30px;
+  max-width: 500px;
+}
+
+.Signup .form-group {
+  margin-bottom: 20px;
+}
