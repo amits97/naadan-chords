@@ -2,6 +2,10 @@
   color: #777777;
 }
 
+.Content a.load-more:hover {
+  text-decoration: none;
+}
+
 .Content .contentRow {
   min-height: calc(60vh - 56px);
 }

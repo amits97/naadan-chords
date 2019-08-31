@@ -12,5 +12,6 @@ export default (
     <Route path='/author/:userName' />
     <Route path='/author/:userName/page/:number' />
     <Route path='/about' />
+    <Route path='/privacy-policy' />
 	</Route>
 );

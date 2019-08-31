@@ -50,6 +50,34 @@ export default class Footer extends Component {
                       </LinkContainer>
                     </li>
                  </ul>
+                 <h6>PAGES</h6>
+                  <ul className="list-unstyled">
+                    <li>
+                      <LinkContainer exact to="/about">
+                        <a href="#/">
+                          About
+                        </a>
+                      </LinkContainer>
+                    </li>
+                    <li>
+                      <LinkContainer exact to="/request">
+                        <a href="#/">
+                          Request
+                        </a>
+                      </LinkContainer>
+                    </li>
+                    <li>
+                      <LinkContainer exact to="/privacy-policy">
+                        <a href="#/">
+                          Privacy Policy
+                        </a>
+                      </LinkContainer>
+                    </li>
+                  </ul>
+                  <h6>MOBILE APPS</h6>
+                  <ul className="list-unstyled">
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords">Android <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
+                  </ul>
                 </Col>
                 <Col>
                   <h6>SOCIAL MEDIA</h6>

@@ -65,11 +65,13 @@ export default class Content extends Component {
 
         return (
           <LinkContainer to={loadMorelink}>
-            <LoaderButton
-              isLoading={false}
-              text="Next page"
-              className="load-posts btn-secondary"
-            />
+            <a href="#/" className="load-more">
+              <LoaderButton
+                isLoading={false}
+                text="Next page"
+                className="load-posts btn-secondary"
+              />
+            </a>
           </LinkContainer>
         );
       }
@@ -84,7 +86,7 @@ export default class Content extends Component {
       }
 
       return (
-        <a href={loadMorelink}>
+        <a href={loadMorelink} className="load-more">
           <LoaderButton
             isLoading={this.props.isPaginationLoading}
             onClick={(e) => {

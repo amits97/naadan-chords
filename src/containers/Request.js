@@ -21,6 +21,8 @@ export default class Request extends SearchComponent {
     script.dataset["defaultWidth"] = "650px";
     this.requestForm.current.appendChild(script);
     (window.adsbygoogle = window.adsbygoogle || []).push({});
+
+    window.scrollTo(0, 0);
   }
 
   renderSEOTags = () => {
