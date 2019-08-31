@@ -69,7 +69,7 @@ export default class Footer extends Component {
                     <li>
                       <LinkContainer exact to="/privacy-policy">
                         <a href="#/">
-                          Privacy Policy
+                          Privacy<span className="trim"> Policy</span>
                         </a>
                       </LinkContainer>
                     </li>

@@ -41,4 +41,8 @@
   .Footer .external-icon {
     display: none;
   }
+
+  .Footer .trim {
+    display: none;
+  }
 }
