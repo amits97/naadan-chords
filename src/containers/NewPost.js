@@ -143,16 +143,16 @@ export default class NewPost extends SearchComponent {
   preparePostObject = () => {
     return ({
       title: this.state.title,
+      postType: this.state.postType,
       song: this.state.song,
       album: this.state.album,
       singers: this.state.singers,
       music: this.state.music,
-      category: this.state.category,
+      category: (this.state.postType === "PAGE") ? "PAGE" : this.state.category,
       image: this.state.image,
       content: this.state.content,
       leadTabs: this.state.leadTabs,
-      youtubeId: this.state.youtubeId,
-      postType: this.state.postType
+      youtubeId: this.state.youtubeId
     });
   }
 
@@ -414,7 +414,6 @@ export default class NewPost extends SearchComponent {
     if(this.state.postType === "PAGE") {
       return (
         <div>
-          <EditorPanel />
           <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control page`} style={{ minHeight: 250 }} />
         </div>
       );

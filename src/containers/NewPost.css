@@ -48,6 +48,7 @@
 
 .NewPost form textarea.form-control.page {
   white-space: pre-wrap;
+  padding-top: 10px;
 }
 
 .NewPost .preview-pane {
