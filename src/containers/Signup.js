@@ -17,12 +17,24 @@ export default class Signup extends SearchComponent {
       email: "",
       password: "",
       isErrorState: false,
-      errorMessage: ""
+      errorMessage: "",
+      signedUp: false
     };
   }
 
   validateForm() {
     return this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0 && this.state.password.length > 0;
+  }
+
+  validateUserName = () => {
+    let {username} = this.state;
+    const regExp = /^[a-zA-Z0-9]+$/;
+    return username ? username.match(regExp) !== null : true;
+  }
+
+  validatePassword = () => {
+    let {password} = this.state;
+    return password ? password.length > 7 : true;
   }
 
   handleChange = event => {
@@ -45,9 +57,9 @@ export default class Signup extends SearchComponent {
       }
     }).then(data => {
       this.setState({
-        isLoading: false
+        isLoading: false,
+        signedUp: true
       });
-      alert(data);
     }).catch(err => {
       this.setState({
         isLoading: false,
@@ -80,66 +92,79 @@ export default class Signup extends SearchComponent {
   }
 
   render() {
+    let {signedUp} = this.state;
+
     return (
       <div className="Signup">
-        { this.renderSEOTags() }
-        <form onSubmit={this.handleSubmit}>
-          <div className="header border-bottom">
-            <h1>Sign Up</h1>
-          </div>
-          {this.renderError()}
-          <FormGroup controlId="name">
-            <FormLabel>Name</FormLabel>
-            <FormControl
-              autoFocus
-              type="text"
-              value={this.state.name}
-              onChange={this.handleChange}
+        <div className={signedUp ? 'd-none' : 'd-block'}>
+          { this.renderSEOTags() }
+          <form onSubmit={this.handleSubmit}>
+            <div className="header border-bottom">
+              <h1>Sign Up</h1>
+            </div>
+            {this.renderError()}
+            <FormGroup controlId="name">
+              <FormLabel>Name</FormLabel>
+              <FormControl
+                autoFocus
+                type="text"
+                value={this.state.name}
+                onChange={this.handleChange}
+              />
+              <FormText className="text-muted">
+                Full name as you want to be shown in your profile.
+              </FormText>
+            </FormGroup>
+            <FormGroup controlId="username">
+              <FormLabel>Username</FormLabel>
+              <FormControl
+                isInvalid={!this.validateUserName()}
+                type="text"
+                value={this.state.username}
+                onChange={this.handleChange}
+              />
+              <FormControl.Feedback type="invalid" className={(this.validateUserName() ? 'd-none' : 'd-block')}>
+                Please enter valid username with only letters and numbers.
+              </FormControl.Feedback>
+            </FormGroup>
+            <FormGroup controlId="email">
+              <FormLabel>Email</FormLabel>
+              <FormControl
+                type="email"
+                value={this.state.email}
+                onChange={this.handleChange}
+              />
+              <FormText className="text-muted">
+                We'll never share your email with anyone else.
+              </FormText>
+            </FormGroup>
+            <FormGroup controlId="password">
+              <FormLabel>Password</FormLabel>
+              <FormControl
+                value={this.state.password}
+                isInvalid={!this.validatePassword()}
+                onChange={this.handleChange}
+                type="password"
+              />
+              <FormControl.Feedback type="invalid" className={(this.validatePassword() ? 'd-none' : 'd-block')}>
+                Please enter a password with minimum of 8 characters.
+              </FormControl.Feedback>
+            </FormGroup>
+            <LoaderButton
+              block
+              disabled={!this.validateForm()}
+              type="submit"
+              isLoading={this.state.isLoading}
+              text="Sign Up"
+              loadingText="Signing Up…"
             />
-            <FormText className="text-muted">
-              Full name as you want to be shown in your profile.
-            </FormText>
-          </FormGroup>
-          <FormGroup controlId="username">
-            <FormLabel>Username</FormLabel>
-            <FormControl
-              isInvalid={true}
-              type="text"
-              value={this.state.username}
-              onChange={this.handleChange}
-            />
-            <FormControl.Feedback type="invalid">
-              Whoops
-            </FormControl.Feedback>
-          </FormGroup>
-          <FormGroup controlId="email">
-            <FormLabel>Email</FormLabel>
-            <FormControl
-              type="text"
-              value={this.state.email}
-              onChange={this.handleChange}
-            />
-            <FormText className="text-muted">
-              We'll never share your email with anyone else.
-            </FormText>
-          </FormGroup>
-          <FormGroup controlId="password">
-            <FormLabel>Password</FormLabel>
-            <FormControl
-              value={this.state.password}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
-          <LoaderButton
-            block
-            disabled={!this.validateForm()}
-            type="submit"
-            isLoading={this.state.isLoading}
-            text="Sign Up"
-            loadingText="Signing Up…"
-          />
-        </form>
+          </form>
+        </div>
+
+        <div className={signedUp ? 'd-block' : 'd-none'}>
+          <h2>Thank you for Signing up!</h2>
+          <p>Please check your email for a verification link.<br />Once verified, you may <a href="/login">Login</a></p>
+        </div>
       </div>
     );
   }
