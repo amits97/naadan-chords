@@ -1,7 +1,8 @@
 import React from "react";
-import { Alert, FormGroup, FormControl, FormLabel } from "react-bootstrap";
+import { Alert, FormGroup, FormControl, FormLabel, FormText } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { Auth } from "aws-amplify";
+import { LinkContainer } from "react-router-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import "./Login.css";
@@ -75,9 +76,12 @@ export default class Login extends SearchComponent {
       <div className="Login">
         { this.renderSEOTags() }
         <form onSubmit={this.handleSubmit}>
+          <div className="border-bottom mb-4">
+            <h2>Login</h2>
+          </div>
           {this.renderError()}
           <FormGroup controlId="email">
-            <FormLabel>Username / Email</FormLabel>
+            <FormLabel>Username or Email</FormLabel>
             <FormControl
               autoFocus
               type="text"
@@ -92,6 +96,13 @@ export default class Login extends SearchComponent {
               onChange={this.handleChange}
               type="password"
             />
+            <FormText className="text-muted">
+              <LinkContainer to="/forgot-password">
+                <a href="#/">
+                  Forgot Password?
+                </a>
+              </LinkContainer>
+            </FormText>
           </FormGroup>
           <LoaderButton
             block

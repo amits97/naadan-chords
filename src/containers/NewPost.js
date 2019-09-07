@@ -484,7 +484,7 @@ export default class NewPost extends SearchComponent {
             <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
 
             <div className="auto-save float-right pt-2">
-              <span className={`float-right ${(!isDraft || this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
+              <span className={`float-right ${(this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
                 Saved <Moment fromNow>{ this.state.autoSaveTimestamp }</Moment>
               </span>
               <span className={`auto-saving float-right ${this.state.isAutoSaving ? '' : 'd-none'}`}>
