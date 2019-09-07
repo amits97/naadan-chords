@@ -17,6 +17,7 @@ export default class ResetPassword extends SearchComponent {
       password: "",
       complete: false,
       isErrorState: false,
+      timeRemaining: 5,
       errorMessage: "",
       isLoading: false,
       collectCode: false
@@ -71,6 +72,7 @@ export default class ResetPassword extends SearchComponent {
       if(this.state.collectCode) {
         let {username, code, password} = this.state;
         await Auth.forgotPasswordSubmit(username, code, password);
+        this.autoRedirect();
         this.setState({
           isLoading: false,
           isErrorState: false,
@@ -93,16 +95,27 @@ export default class ResetPassword extends SearchComponent {
     }
   }
 
+  autoRedirect() {
+    let timer = setInterval(() => {
+      let {timeRemaining} = this.state;
+      if(timeRemaining === 1) {
+        clearInterval(timer);
+        this.props.history.push("/login");
+      } else {
+        this.setState({
+          timeRemaining: timeRemaining - 1
+        });
+      }
+    }, 1000);
+  }
+
   renderForm() {
     if(this.state.complete) {
       return (
         <div>
-          <Alert variant="success">
-            Password reset successfully!
-          </Alert>
-          <p>
-            <LinkContainer to="/login"><a href="#/">Click here</a></LinkContainer> to Login.
-          </p>
+          <h2>Password reset done!</h2>
+          <p>Redirecting to login screen in {this.state.timeRemaining}s...</p>
+          <p>Alternatively, <LinkContainer to="/login"><a href="#/">click here</a></LinkContainer> to Login.</p>
         </div>
       );
     }
@@ -173,7 +186,7 @@ export default class ResetPassword extends SearchComponent {
     return (
       <div className="ForgotPassword">
         { this.renderSEOTags() }
-        <div className="border-bottom mb-4">
+        <div className={`border-bottom mb-4 ${this.state.complete ? 'd-none' : 'd-block'}`}>
           <h2>
             <LinkContainer exact to="/login">
               <a href="#/" className="text-primary">Login</a>

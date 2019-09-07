@@ -3,6 +3,7 @@ import { Alert, FormGroup, FormControl, FormLabel, FormText } from "react-bootst
 import { Helmet } from "react-helmet";
 import { Auth } from "aws-amplify";
 import LoaderButton from "../components/LoaderButton";
+import { LinkContainer } from "react-router-bootstrap";
 import SearchComponent from "../components/SearchComponent";
 import "./Signup.css";
 
@@ -16,14 +17,21 @@ export default class Signup extends SearchComponent {
       username: "",
       email: "",
       password: "",
+      code: "",
       isErrorState: false,
+      timeRemaining: 5,
       errorMessage: "",
-      signedUp: false
+      signedUp: false,
+      verified: false
     };
   }
 
   validateForm() {
-    return this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0 && this.state.password.length > 0;
+    if(this.state.signedUp) {
+      return this.state.code.length > 0;
+    } else {
+      return this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0 && this.state.password.length > 0;
+    }
   }
 
   validateUserName = () => {
@@ -43,30 +51,73 @@ export default class Signup extends SearchComponent {
     });
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
+  autoRedirect() {
+    let timer = setInterval(() => {
+      let {timeRemaining} = this.state;
+      if(timeRemaining === 1) {
+        clearInterval(timer);
+        this.props.history.push("/login");
+      } else {
+        this.setState({
+          timeRemaining: timeRemaining - 1
+        });
+      }
+    }, 1000);
+  }
+
+  async confirmUser(username, code) {
+    this.setState({ isLoading: true });
+
+    try {
+      await Auth.confirmSignUp(username, code);
+      this.autoRedirect();
+      this.setState({
+        isLoading: false,
+        verified: true
+      });
+    } catch(e) {
+      this.setState({
+        isLoading: false,
+        isErrorState: true,
+        errorMessage: e.message
+      });
+    }
+  }
+
   handleSubmit = async event => {
     event.preventDefault();
   
     this.setState({ isLoading: true });
 
-    Auth.signUp({
-      username: this.state.username,
-      password: this.state.password,
-      attributes: {
-        email: this.state.email,
-        name: this.state.name
+    try {
+      if(this.state.signedUp) {
+        this.confirmUser(this.state.username, this.state.code);
+      } else {
+        await Auth.signUp({
+          username: this.state.username,
+          password: this.state.password,
+          attributes: {
+            email: this.state.email,
+            name: this.state.name
+          }
+        });
+        window.scrollTo(0, 0);
+        this.setState({
+          isLoading: false,
+          signedUp: true
+        });
       }
-    }).then(data => {
-      this.setState({
-        isLoading: false,
-        signedUp: true
-      });
-    }).catch(err => {
+    } catch(e) {
       this.setState({
         isLoading: false,
         isErrorState: true,
-        errorMessage: err.message
+        errorMessage: e.message
       });
-    });
+    }
   }
 
   renderError = () => {
@@ -91,8 +142,44 @@ export default class Signup extends SearchComponent {
     );
   }
 
+  renderVerificationForm() {
+    if(this.state.signedUp) {
+      return(
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup controlId="code">
+            <FormLabel>Verification Code</FormLabel>
+            <FormControl
+              type="text"
+              value={this.state.code}
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+          <LoaderButton
+            block
+            disabled={!this.validateForm()}
+            type="submit"
+            isLoading={this.state.isLoading}
+            text="Verify Email"
+            loadingText="Verifying Email…"
+          />
+        </form>
+      );
+    }
+  }
+
   render() {
-    let {signedUp} = this.state;
+    let {signedUp,verified} = this.state;
+
+    if(verified) {
+      return (
+        <div className="Signup">
+          <h2>Email Verified!</h2>
+          <p>Redirecting to login screen in {this.state.timeRemaining}s...</p>
+          <p>Alternatively, <LinkContainer to="/login"><a href="#/">click here</a></LinkContainer> to Login.
+          </p>
+        </div>
+      );
+    }
 
     return (
       <div className="Signup">
@@ -163,7 +250,8 @@ export default class Signup extends SearchComponent {
 
         <div className={signedUp ? 'd-block' : 'd-none'}>
           <h2>Thank you for Signing up!</h2>
-          <p>Please check your email for a verification link.<br />Once verified, you may <a href="/login">Login</a></p>
+          <p>Please check your email for a verification code. If you can't find the email, it could be in the Spam folder.</p>
+          {this.renderVerificationForm()}
         </div>
       </div>
     );

@@ -20,6 +20,10 @@ export default class Login extends SearchComponent {
     };
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   validateForm() {
     return this.state.email.length > 0 && this.state.password.length > 0;
   }
