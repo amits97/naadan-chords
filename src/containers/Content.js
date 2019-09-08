@@ -3,6 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
+import ReactGA from "react-ga";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import Disqus from "disqus-react";
@@ -281,6 +282,15 @@ export default class Content extends Component {
   }
 
   render404 = () => {
+    if(this.props.search) {
+      //Event to track empty search results
+      ReactGA.event({
+        category: 'Search',
+        action: 'Empty result',
+        label: this.props.search
+      });
+    }
+
     return (
       <NotFound isEmbed={true} />
     );

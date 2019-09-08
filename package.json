@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.27.7",
+  "version": "0.27.8",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
