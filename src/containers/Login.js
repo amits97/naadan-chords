@@ -79,11 +79,11 @@ export default class Login extends SearchComponent {
     return (
       <div className="Login">
         { this.renderSEOTags() }
+        <div className="border-bottom mb-4">
+          <h2>Login</h2>
+        </div>
+        {this.renderError()}
         <form onSubmit={this.handleSubmit}>
-          <div className="border-bottom mb-4">
-            <h2>Login</h2>
-          </div>
-          {this.renderError()}
           <FormGroup controlId="email">
             <FormLabel>Username or Email</FormLabel>
             <FormControl
@@ -92,6 +92,13 @@ export default class Login extends SearchComponent {
               value={this.state.email}
               onChange={this.handleChange}
             />
+            <FormText className="text-muted">
+              <LinkContainer to="/signup">
+                <a href="#/">
+                  Don't have an account?
+                </a>
+              </LinkContainer>
+            </FormText>
           </FormGroup>
           <FormGroup controlId="password">
             <FormLabel>Password</FormLabel>

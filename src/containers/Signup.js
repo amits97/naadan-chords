@@ -190,6 +190,13 @@ export default class Signup extends SearchComponent {
               <h1>Sign Up</h1>
             </div>
             {this.renderError()}
+            <small className="text-muted d-block mb-3">
+              <LinkContainer to="/login">
+                <a href="#/">
+                  Already have an account? Click to Login.
+                </a>
+              </LinkContainer>
+            </small>
             <FormGroup controlId="name">
               <FormLabel>Name</FormLabel>
               <FormControl
