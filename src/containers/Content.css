@@ -119,6 +119,29 @@
   color: #777777;
 }
 
+.Content .post-rating:hover {
+  cursor: pointer;
+}
+
+.Content .post-rating .star-ratings {
+  top: -1.5px;
+}
+
+.Content .rate-container {
+  position: relative;
+}
+
+.Content .rate-container .dummy-anchor {
+  position: relative;
+  top: -200px;
+  visibility: hidden;
+}
+
+.Content h6.rate-heading {
+  color: #777777;
+  margin-top: 30px;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
   .Content .post small span.separator {
@@ -126,6 +149,10 @@
   }
 
   .Content .post small time {
+    display: block;
+  }
+
+  .Content .post-rating {
     display: block;
   }
 

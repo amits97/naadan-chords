@@ -197,6 +197,28 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+  rating-write:
+    handler: rating-write.main
+    events:
+      - http:
+          path: rating
+          method: post
+          cors: true
+          authorizer: aws_iam
+  rating-get:
+    handler: rating-get.main
+    events:
+      - http:
+          path: rating
+          method: get
+          cors: true
+          authorizer: aws_iam
+  rating-generate:
+    handler: rating-generate.main
+    events:
+      - schedule:
+          rate: rate(3 hours)
+          enabled: true
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors

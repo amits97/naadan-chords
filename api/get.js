@@ -2,6 +2,27 @@ import * as dynamoDbLib from "./libs/dynamodb-lib";
 import * as userNameLib from "./libs/username-lib";
 import { success, failure } from "./libs/response-lib";
 
+async function appendRating(item) {
+  const params = {
+    TableName: "NaadanChordsRatings",
+    Key: {
+      postId: item.postId
+    }
+  };
+
+  try {
+    let ratingResult = await dynamoDbLib.call("get", params);
+    if(ratingResult && ratingResult.hasOwnProperty("Item")) {
+      item.rating = ratingResult.Item.rating;
+      item.ratingCount = ratingResult.Item.count;
+    }
+  } catch(e) {
+    item.ratingError = e;
+  }
+
+  return item;
+}
+
 function retryLoop(postId) {
   let keywords = postId.split("-");
 
@@ -35,6 +56,11 @@ async function retryGet(postId) {
         let authorAttributes = await userNameLib.getAuthorAttributes(userId);
         finalResult.authorName = authorAttributes.authorName;
         finalResult.userName = authorAttributes.userName;
+
+        //Do not expose userId
+        delete(finalResult.userId);
+
+        finalResult = await appendRating(finalResult);
         return success(finalResult);
       } else {
         return retryLoop(postId);
@@ -67,7 +93,9 @@ export async function main(event, context) {
 
       //Do not expose userId
       delete(result.Item.userId);
-      return success(result.Item);
+
+      let finalResult = await appendRating(result.Item);
+      return success(finalResult);
     } else {
       return retryGet(event.pathParameters.id);
     }

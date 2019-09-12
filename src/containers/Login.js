@@ -21,7 +21,9 @@ export default class Login extends SearchComponent {
   }
 
   componentDidMount() {
-    window.scrollTo(0, 0);
+    if(!this.props.isDialog) {
+      window.scrollTo(0, 0);
+    }
   }
 
   validateForm() {
@@ -44,6 +46,10 @@ export default class Login extends SearchComponent {
       let session = await Auth.currentSession();
       await this.props.getUserPrevileges(session);
       this.props.userHasAuthenticated(true);
+
+      if(this.props.isDialog) {
+        this.props.closeLoginModal(true);
+      }
     } catch (e) {
       this.setState({
         isLoading: false,
@@ -64,35 +70,46 @@ export default class Login extends SearchComponent {
   }
 
   renderSEOTags() {
-    return (
-      <Helmet>
-        <title>Login | Naadan Chords</title>
-        <meta name="description" content="" />
-        <meta name="twitter:card" content="summary" />
-        <meta property="og:title" content="Login | Naadan Chords" />
-        <meta property="og:description" content="" />
-      </Helmet>
-    );
+    if(!this.props.isDialog) {
+      return (
+        <Helmet>
+          <title>Login | Naadan Chords</title>
+          <meta name="description" content="" />
+          <meta name="twitter:card" content="summary" />
+          <meta property="og:title" content="Login | Naadan Chords" />
+          <meta property="og:description" content="" />
+        </Helmet>
+      );
+    }
   }
 
   render() {
+    let {isDialog} = this.props;
+
     return (
-      <div className="Login">
+      <div className={`Login ${isDialog ? 'isDialog' : ''}`}>
         { this.renderSEOTags() }
-        <div className="border-bottom mb-4">
+        <div className={`border-bottom mb-4 ${isDialog ? 'd-none' : ''}`}>
           <h2>Login</h2>
         </div>
         {this.renderError()}
         <form onSubmit={this.handleSubmit}>
+          <div className={`${isDialog ? '' : 'd-none'} p-3 bg-light border rounded mb-4`}>
+            Don't have an account yet?<br />
+            <a href="/signup" target="_blank">
+              Click here to Signup
+            </a>
+          </div>
           <FormGroup controlId="email">
             <FormLabel>Username or Email</FormLabel>
             <FormControl
               autoFocus
               type="text"
+              tabIndex={1}
               value={this.state.email}
               onChange={this.handleChange}
             />
-            <FormText className="text-muted">
+            <FormText className={`text-muted ${isDialog ? 'd-none' : ''}`}>
               <LinkContainer to="/signup">
                 <a href="#/">
                   Don't have an account?
@@ -104,6 +121,7 @@ export default class Login extends SearchComponent {
             <FormLabel>Password</FormLabel>
             <FormControl
               value={this.state.password}
+              tabIndex={2}
               onChange={this.handleChange}
               type="password"
             />

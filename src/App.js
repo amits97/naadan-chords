@@ -84,7 +84,6 @@ class App extends Component {
   
     this.userHasAuthenticated(false);
     this.closeNav();
-    this.props.history.push("/");
   }
 
   setNavExpanded = (expanded) => {
@@ -97,6 +96,26 @@ class App extends Component {
     this.setState({
       navExpanded: false
     });
+  }
+
+  unauthenticatedOptions = () => {
+    if(!this.state.isAuthenticated) {
+      return (
+        <NavDropdown title="Account" alignRight>
+          <LinkContainer to="/login">
+            <NavDropdown.Item onClick={this.closeNav} role="button">
+              Login
+            </NavDropdown.Item>
+          </LinkContainer>
+          <NavDropdown.Divider />
+          <LinkContainer to="/signup">
+            <NavDropdown.Item onClick={this.closeNav} role="button">
+              Signup
+            </NavDropdown.Item>
+          </LinkContainer>
+        </NavDropdown>
+      );
+    }
   }
 
   authenticatedOptions = () => {
@@ -217,6 +236,7 @@ class App extends Component {
                 <LinkContainer exact to="/request">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>Request</a>
                 </LinkContainer>
+                { this.unauthenticatedOptions() }
                 { this.authenticatedOptions() }
               </Nav>
             </Navbar.Collapse>
