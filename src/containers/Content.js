@@ -204,6 +204,9 @@ export default class Content extends Component {
                       <a href="#/">{ post.authorName }</a>
                     </LinkContainer>
                   </small>
+                  <small>
+                    { this.renderRating(post, true) }
+                  </small>
                 </div>
               )
             }
@@ -220,13 +223,10 @@ export default class Content extends Component {
     return string.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
   }
 
-  ratingPopover = (post) => {
-    if(post.rating && post.ratingCount) {
+  renderRateLink = (isPostList) => {
+    if(!isPostList) {
       return (
-        <Popover id="popover-basic">
-          Average star rating of <b>{post.rating} / 5</b>.
-          <br />
-          Calculated from ratings by <b>{post.ratingCount}</b> user{post.ratingCount > 1 ? 's' : ''}.
+        <span>
           <hr class="mt-2 mb-2" />
           <a href="#/" className="text-primary" onClick={(e) => {
             e.preventDefault();
@@ -235,6 +235,19 @@ export default class Content extends Component {
           }}>
             Click here to add your rating
           </a>
+        </span>
+      );
+    }
+  }
+
+  ratingPopover = (post, isPostList) => {
+    if(post.rating && post.ratingCount) {
+      return (
+        <Popover id="popover-basic">
+          Average star rating of <b>{post.rating} / 5</b>.
+          <br />
+          Calculated from ratings by <b>{post.ratingCount}</b> user{post.ratingCount > 1 ? 's' : ''}.
+          { this.renderRateLink(isPostList) }
         </Popover>
       );
     } else {
@@ -242,29 +255,22 @@ export default class Content extends Component {
         <Popover id="popover-basic">
           No ratings yet.<br/>
           Why don't you be the first? :)
-          <hr class="mt-2 mb-2" />
-          <a href="#/" className="text-primary" onClick={(e) => {
-            e.preventDefault();
-            this.ratingEl.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            this.ratingEl.current.click();
-          }}>
-            Click here to add your rating
-          </a>
+          { this.renderRateLink(isPostList) }
         </Popover>
       );
     }
   }
 
-  renderRating = (post) => {
+  renderRating = (post, isPostList) => {
     return (
-      <span className="post-rating">
+      <span className={`post-rating ${isPostList ? 'post-list': ''}`}>
         <span className="separator ml-1 mr-1">|</span>
-        <OverlayTrigger trigger="click" placement="bottom" overlay={this.ratingPopover(post)} rootClose>
+        <OverlayTrigger trigger="click" placement="bottom" overlay={this.ratingPopover(post, isPostList)} rootClose>
           <span>
             <StarRatings
               starRatedColor="#FFD700"
               starHoverColor="#FFD700"
-              starDimension="18px"
+              starDimension={`${isPostList ? '15px' : '18px'}`}
               starSpacing="0.5px"
               numberOfStars={5}
               name="rating"

@@ -127,6 +127,10 @@
   top: -1.5px;
 }
 
+.Content .post-rating.post-list .star-ratings {
+  top: -2px;
+}
+
 .Content .rate-container {
   position: relative;
 }
@@ -156,9 +160,17 @@
     display: block;
   }
 
+  .Content .post-rating.post-list {
+    display: block;
+  }
+
   .Content .postList .post small span.separator {
     display: inline-block;
     margin: 0 5px;
+  }
+
+  .Content .postList .post small .post-rating.post-list span.separator {
+    display: none;
   }
 
   .Content .postList small time {
