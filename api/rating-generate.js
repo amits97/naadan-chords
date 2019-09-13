@@ -1,6 +1,44 @@
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { success, failure } from "./libs/response-lib";
 
+async function appendTitles(ratingMap) {
+  let filterExpression = "";
+  let expressionAttributeValues = {};
+  let i = 0;
+
+  for(let postId in ratingMap) {
+    if(ratingMap.hasOwnProperty(postId)) {
+      if(filterExpression) {
+        filterExpression += ` OR contains(postId, :postId${i})`;
+      } else {
+        filterExpression = `contains(postId, :postId${i})`;
+      }
+      expressionAttributeValues[`:postId${i}`] = postId;
+      i++;
+    }
+  }
+
+  let params = {
+    TableName: "NaadanChords",
+    FilterExpression: filterExpression,
+    ExpressionAttributeValues: expressionAttributeValues,
+    ProjectionExpression: "postId, title"
+  };
+
+  try {
+    let itemsResult = await dynamoDbLib.call("scan", params);
+    let items = itemsResult.Items;
+    
+    for(let i = 0; i < items.length; i++) {
+      ratingMap[items[i].postId].title = items[i].title;
+    }
+  } catch(e) {
+    //Do nothing
+  }
+
+  return ratingMap;
+}
+
 function constructRatingMap(result) {
   let ratingMap = {};
 
@@ -26,14 +64,45 @@ function constructRatingMap(result) {
   return ratingMap;
 }
 
+function calculateWeightedRatings(ratingMap) {
+  let totalAverageRating, totalAverage = 0, totalCount = 0;
+
+  for(let postId in ratingMap) {
+    if(ratingMap.hasOwnProperty(postId)) {
+      let item = ratingMap[postId];
+      totalAverage += item.rating;
+      totalCount++;
+    }
+  }
+
+  totalAverageRating = totalAverage / totalCount;
+
+  for(let postId in ratingMap) {
+    if(ratingMap.hasOwnProperty(postId)) {
+      let averageRating = ratingMap[postId].rating;
+      let ratingCount = ratingMap[postId].count;
+      let tuneParameter = 25000;
+
+      let weightedRating = (ratingCount / (ratingCount + tuneParameter)) * averageRating + (tuneParameter / (ratingCount + tuneParameter)) * totalAverageRating;
+      ratingMap[postId].weightedRating = weightedRating;
+    }
+  }
+  return ratingMap;
+}
+
 async function saveRatings(ratingMap) {
   let itemsArray = [];
+
+  ratingMap = calculateWeightedRatings(ratingMap);
+  ratingMap = await appendTitles(ratingMap);
+
   for(let postId in ratingMap) {
     if(ratingMap.hasOwnProperty(postId)) {
       let item = {
         PutRequest : {
           Item : {
             postId: postId,
+            postType: "POST",
             ...ratingMap[postId]
           }
         }

@@ -219,6 +219,13 @@ functions:
       - schedule:
           rate: rate(3 hours)
           enabled: true
+  top-rated-posts:
+    handler: top-rated.main
+    events:
+      - http:
+          path: top-rated-posts
+          method: get
+          cors: true
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors

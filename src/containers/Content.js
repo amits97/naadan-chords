@@ -254,7 +254,7 @@ export default class Content extends Component {
       return (
         <Popover id="popover-basic">
           No ratings yet.<br/>
-          Why don't you be the first? :)
+          <span className={`${isPostList ? 'd-none' : ''}`}>Why don't you be the first? :)</span>
           { this.renderRateLink(isPostList) }
         </Popover>
       );
@@ -357,7 +357,7 @@ export default class Content extends Component {
           rating={this.props.isAuthenticated ? this.state.rating : undefined}
           changeRating={this.changeRating}
         />
-        <small class={`pt-2 ${this.state.rating && this.props.isAuthenticated ? 'd-block' : 'd-none'}`}><i>You've rated this post. You can change your rating at any time.</i></small>
+        <small className={`pt-2 ${this.state.rating && this.props.isAuthenticated ? 'd-block' : 'd-none'}`}><i>You've rated this post. You can change your rating at any time.</i></small>
       </div>
     );
   }

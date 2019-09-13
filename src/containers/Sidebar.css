@@ -18,13 +18,18 @@
 
 .Sidebar .sidebar-content h6 {
   color: #777777;
-  margin-top: 0;
-  margin-bottom: -5px;
+  margin-top: 5px;
+  margin-bottom: 2px;
 }
 
 .Sidebar .sidebar-content a {
   display: block;
   margin: 0.75rem 0;
+}
+
+.Sidebar .sidebar-content .sidebar-widget a {
+  margin: 0;
+  margin-bottom: -1px;
 }
 
 .Sidebar .sidebar-button {
@@ -41,13 +46,17 @@
 }
 
 .Sidebar .top-posts {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: 20px;
+  margin-bottom: 5px;
 }
 
-.Sidebar .top-posts .popular-icon {
-  margin-right: 2.5px;
+.Sidebar .sidebar-widget .popular-icon, .Sidebar .sidebar-widget .top-rated-icon {
+  margin-right: 5px;
   color: #ff9800;
+}
+
+.Sidebar .sidebar-widget .top-rated-icon {
+  color: #FFD700;
 }
 
 .Sidebar .top-posts a {
@@ -123,8 +132,9 @@
   }
 
   .Sidebar .top-posts {
-    margin-top: 10px;
-    margin-bottom: 0;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 0;
   }
 
   .Sidebar .top-posts ul {

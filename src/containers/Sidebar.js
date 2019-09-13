@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV, faTimes, faFire } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faTimes, faFire, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FacebookProvider, Page } from 'react-facebook';
+import { Tabs, Tab } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { API } from "aws-amplify";
@@ -14,6 +15,7 @@ export default class Sidebar extends Component {
     this.state = {
       isLoading: true,
       topPosts: [],
+      topRatedPosts: [],
       mobileSidebarOpened: false,
       adKey: props.pageKey
     };
@@ -52,8 +54,8 @@ export default class Sidebar extends Component {
     });
   }
 
-  constructTopPosts = () => {
-    let {topPosts} = this.state;
+  constructTopPosts = (topRated) => {
+    let topPosts = topRated ? this.state.topRatedPosts : this.state.topPosts;
     let topPostsList = [];
 
     for(let i = 0; i < topPosts.length; i++) {
@@ -72,7 +74,7 @@ export default class Sidebar extends Component {
     return topPostsList;
   }
 
-  renderTopPostsList = () => {
+  renderTopPostsList = (topRated) => {
     if(this.state.isLoading) {
       return (
         <div className="top-posts loading">
@@ -84,14 +86,49 @@ export default class Sidebar extends Component {
     } else {
       return (
         <div className="top-posts">
-          <h6><FontAwesomeIcon className="popular-icon" icon={faFire} /> POPULAR THIS WEEK</h6>
-          <hr />
           <ul className="list-unstyled">
-          { this.constructTopPosts() }
+          { this.constructTopPosts(topRated) }
           </ul>
         </div>
       );
     }
+  }
+
+  loadTopRatedPosts = async () => {
+    if(this.state.topRatedPosts.length === 0) {
+      try {
+        let topRatedPosts = await API.get("posts", "/top-rated-posts");
+        this.setState({
+          isLoading: false,
+          topRatedPosts: topRatedPosts
+        });
+      } catch(e) {
+        //Do nothing
+      }
+    }
+  }
+
+  tabChanged = (eventKey) => {
+    if(eventKey === "top-rated-posts" && this.state.topRatedPosts.length === 0) {
+      this.setState({
+        isLoading: true
+      });
+
+      this.loadTopRatedPosts();
+    }
+  }
+
+  renderSidebarWidget = () => {
+    return(
+      <Tabs className="sidebar-widget" defaultActiveKey="top-posts" onSelect={this.tabChanged}>
+        <Tab eventKey="top-posts" title={<h6><FontAwesomeIcon className="popular-icon" icon={faFire} /> POPULAR</h6>} key="top-posts">
+          { this.renderTopPostsList() }
+        </Tab>
+        <Tab eventKey="top-rated-posts" title={<h6><FontAwesomeIcon className="top-rated-icon" icon={faStar} /> TOP RATED</h6>} key="top-rated-posts">
+          { this.renderTopPostsList(true) }
+        </Tab>
+      </Tabs>
+    );
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -150,7 +187,7 @@ export default class Sidebar extends Component {
               </FacebookProvider>
             </div>
             {this.renderSidebarAd1()}
-            {this.renderTopPostsList()}
+            {this.renderSidebarWidget()}
             {this.renderSidebarAd2()}
           </div>
         </div>
