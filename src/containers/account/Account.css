@@ -1,13 +1,13 @@
-.Signup {
+.Account {
   padding: 30px 0 60px 0;
   max-width: 500px;
   margin: 0 auto;
 }
 
-.Signup .header {
+.Account .header {
   margin-bottom: 20px;
 }
 
-.Signup .form-group {
+.Account .form-group {
   margin-bottom: 20px;
 }

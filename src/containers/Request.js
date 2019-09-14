@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Helmet } from "react-helmet";
+import { Auth } from "aws-amplify";
 import SearchComponent from "../components/SearchComponent";
 import Sidebar from "./Sidebar";
 import "./Request.css";
@@ -12,16 +13,26 @@ export default class Request extends SearchComponent {
     this.requestForm = React.createRef();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const script = document.createElement("script");
     script.defer = true;
     script.src = "//www.123formbuilder.com/embed/359128.js";
     script.type = "text/javascript";
     script.dataset["role"] = "form";
     script.dataset["defaultWidth"] = "650px";
-    if(this.props.isAuthenticated) {
+
+    try {
+      let session = await Auth.currentSession();
+      this.props.userHasAuthenticated(true);
+      await this.props.getUserAttributes(session);
       script.dataset["customVars"] = `control2297463=${this.props.name}&control2297464=${this.props.email}`;
     }
+    catch(e) {
+      if (e !== 'No current user') {
+        console.log(e);
+      }
+    }
+
     this.requestForm.current.appendChild(script);
     (window.adsbygoogle = window.adsbygoogle || []).push({});
 

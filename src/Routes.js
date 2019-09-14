@@ -5,6 +5,7 @@ import Login from "./containers/Login";
 import ResetPassword from "./containers/ResetPassword";
 import Signup from "./containers/Signup";
 import Admin from "./containers/Admin";
+import Account from "./containers/account/Account";
 import NewPost from "./containers/NewPost";
 import Request from "./containers/Request";
 import NotFound from "./containers/NotFound";
@@ -28,6 +29,7 @@ export default ({ childProps }) =>
     <AuthenticatedRoute path="/admin/new-post" exact component={NewPost} props={childProps} />
     <AuthenticatedRoute path="/admin/edit-post/:id" exact component={NewPost} props={{isEditMode: true, ...childProps}} />
     <AuthenticatedRoute path="/admin/edit-draft/:id" exact component={NewPost} props={{isEditMode: true, isDraft: true, ...childProps}} />
+    <AuthenticatedRoute path="/account" exact component={Account} props={{...childProps}} />
     <AppliedRoute path="/request" exact component={Request} props={{...childProps}} />
     <AppliedRoute path="/:id" exact component={Posts} props={{pageKey: window.location.href, ...childProps}} />
     { /* Finally, catch all unmatched routes */ }

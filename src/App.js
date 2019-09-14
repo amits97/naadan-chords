@@ -44,9 +44,30 @@ class App extends Component {
     });
   }
 
+  getUserAttributes = (session) => {
+    return new Promise(resolve => {
+      Auth.currentAuthenticatedUser({
+        bypassCache: true
+      })
+      .then(async user => {
+        this.setState({
+          userName: user.username,
+          name: user.attributes.name,
+          email: user.attributes.email
+        });
+        await this.getUserPrevileges(session);
+        resolve();
+      })
+      .catch(err => {
+        console.log(err);
+        resolve();
+      });
+    });
+  }
+
   getUserDetails = async (session) => {
     Auth.currentAuthenticatedUser({
-      bypassCache: false
+      bypassCache: true
     })
     .then(async user => {
       this.setState({
@@ -147,7 +168,7 @@ class App extends Component {
       }
       return(
         <NavDropdown title="Account" alignRight>
-          <LinkContainer to={`/author/${this.state.userName}`}>
+          <LinkContainer to="/account">
             <NavDropdown.Item onClick={this.closeNav} role="button">
               <b>{ this.state.name }</b>
             </NavDropdown.Item>
@@ -223,10 +244,12 @@ class App extends Component {
       userHasAuthenticated: this.userHasAuthenticated,
       getUserDetails: this.getUserDetails,
       getUserPrevileges: this.getUserPrevileges,
+      getUserAttributes: this.getUserAttributes,
       isAdmin: this.state.isAdmin,
       search: this.state.search,
       setSearch: this.setSearch,
       closeNav: this.closeNav,
+      username: this.state.userName,
       name: this.state.name,
       email: this.state.email
     };
