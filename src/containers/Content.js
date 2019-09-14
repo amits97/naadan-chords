@@ -244,7 +244,7 @@ export default class Content extends Component {
     if(post.rating && post.ratingCount) {
       return (
         <Popover id="popover-basic">
-          Average star rating of <b>{post.rating} / 5</b>.
+          Average star rating of <b>{post.rating.toFixed(2)} / 5</b>.
           <br />
           Calculated from ratings by <b>{post.ratingCount}</b> user{post.ratingCount > 1 ? 's' : ''}.
           { this.renderRateLink(isPostList) }
@@ -463,7 +463,7 @@ export default class Content extends Component {
         return (
           <div className="post">
             <Modal
-              style={{top: "50px"}}
+              style={{top: "20px"}}
               show={this.state.showLoginModal}
               onHide={this.closeLoginModal}
             >

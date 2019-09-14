@@ -12,5 +12,10 @@ export default {
   storage: {
     BUCKET: 'naadanchords-images',
     REGION: 'ap-south-1'
+  },
+  oauth: {
+    DOMAIN : 'naadan-chords.auth.ap-south-1.amazoncognito.com', 
+    REDIRECT_SIGN_IN : 'https://www.naadanchords.com',
+    REDIRECT_SIGN_OUT : 'https://www.naadanchords.com'
   }
 };

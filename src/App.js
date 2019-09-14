@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { Auth } from "aws-amplify";
+import { Auth, Hub } from "aws-amplify";
 import { Navbar, Nav, Form, FormControl, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +24,7 @@ class App extends Component {
       search: "",
       isSearchOpen: false,
       userName: "",
+      name: "",
       isAdmin: false
     };
   }
@@ -48,7 +49,8 @@ class App extends Component {
     })
     .then(async user => {
       this.setState({
-        userName: user.username
+        userName: user.username,
+        name: user.attributes.name
       });
 
       await this.getUserPrevileges(session);
@@ -72,6 +74,24 @@ class App extends Component {
       isAuthenticating: false,
       search: urlLib.getUrlParameter("s")
     });
+
+    this.subscribeAuthEvents();
+  }
+
+  subscribeAuthEvents = async () => {
+    const listener = async (data) => {
+      switch (data.payload.event) {
+        case 'signIn':
+          let session = await Auth.currentSession();
+          await this.getUserPrevileges(session);
+          this.userHasAuthenticated(true);
+          break;
+        default:
+          break;
+      }
+    }
+
+    Hub.listen('auth', listener);
   }
 
   userHasAuthenticated = authenticated => {
@@ -102,7 +122,7 @@ class App extends Component {
     if(!this.state.isAuthenticated) {
       return (
         <NavDropdown title="Account" alignRight>
-          <LinkContainer to="/login">
+          <LinkContainer to={`/login?redirect=${this.props.location.pathname}${this.props.location.search}`}>
             <NavDropdown.Item onClick={this.closeNav} role="button">
               Login
             </NavDropdown.Item>
@@ -127,7 +147,7 @@ class App extends Component {
         <NavDropdown title="Account" alignRight>
           <LinkContainer to={`/author/${this.state.userName}`}>
             <NavDropdown.Item onClick={this.closeNav} role="button">
-              Signed in as <b>{ this.state.userName }</b>
+              <b>{ this.state.name }</b>
             </NavDropdown.Item>
           </LinkContainer>
           <NavDropdown.Divider />

@@ -1,10 +1,11 @@
 {
   "name": "naadan-chords",
-  "version": "0.28.6",
+  "version": "0.28.8",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
+    "@fortawesome/free-brands-svg-icons": "^5.10.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "aws-amplify": "^1.1.36",
     "disqus-react": "^1.0.6",

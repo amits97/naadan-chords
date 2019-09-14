@@ -1,8 +1,10 @@
 import React from "react";
-import { Alert, FormGroup, FormControl, FormLabel, FormText } from "react-bootstrap";
+import { Alert, FormGroup, FormControl, FormLabel, FormText, Button } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { Auth } from "aws-amplify";
 import { LinkContainer } from "react-router-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import "./Login.css";
@@ -93,13 +95,19 @@ export default class Login extends SearchComponent {
           <h2>Login</h2>
         </div>
         {this.renderError()}
+        <Button className="social-login" onClick={() => Auth.federatedSignIn({provider: 'Facebook'})} block>
+          <span className="social-icon">
+            <FontAwesomeIcon icon={faFacebook} />
+          </span>
+          Login with Facebook
+        </Button>
+        <hr className="mt-4 mb-4" />
         <form onSubmit={this.handleSubmit}>
-          <div className={`${isDialog ? '' : 'd-none'} p-3 bg-light border rounded mb-4`}>
-            Don't have an account yet?<br />
-            <a href="/signup" target="_blank">
-              Click here to Signup
-            </a>
-          </div>
+          <a href="/signup" target="_blank" className="text-secondary">
+            <div className={`${isDialog ? '' : 'd-none'} mb-4`}>
+              Don't have an account yet?
+            </div>
+          </a>
           <FormGroup controlId="email">
             <FormLabel>Username or Email</FormLabel>
             <FormControl
