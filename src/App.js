@@ -25,6 +25,7 @@ class App extends Component {
       isSearchOpen: false,
       userName: "",
       name: "",
+      email: "",
       isAdmin: false
     };
   }
@@ -50,7 +51,8 @@ class App extends Component {
     .then(async user => {
       this.setState({
         userName: user.username,
-        name: user.attributes.name
+        name: user.attributes.name,
+        email: user.attributes.email
       });
 
       await this.getUserPrevileges(session);
@@ -224,7 +226,9 @@ class App extends Component {
       isAdmin: this.state.isAdmin,
       search: this.state.search,
       setSearch: this.setSearch,
-      closeNav: this.closeNav
+      closeNav: this.closeNav,
+      name: this.state.name,
+      email: this.state.email
     };
 
     return (

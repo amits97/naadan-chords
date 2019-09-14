@@ -19,6 +19,9 @@ export default class Request extends SearchComponent {
     script.type = "text/javascript";
     script.dataset["role"] = "form";
     script.dataset["defaultWidth"] = "650px";
+    if(this.props.isAuthenticated) {
+      script.dataset["customVars"] = `control2297463=${this.props.name}&control2297464=${this.props.email}`;
+    }
     this.requestForm.current.appendChild(script);
     (window.adsbygoogle = window.adsbygoogle || []).push({});
 
