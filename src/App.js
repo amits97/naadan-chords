@@ -24,6 +24,7 @@ class App extends Component {
       search: "",
       isSearchOpen: false,
       userName: "",
+      preferredUsername: "",
       name: "",
       email: "",
       isAdmin: false
@@ -72,6 +73,7 @@ class App extends Component {
     .then(async user => {
       this.setState({
         userName: user.username,
+        preferredUsername: user.attributes.preferred_username,
         name: user.attributes.name,
         email: user.attributes.email
       });
@@ -251,7 +253,8 @@ class App extends Component {
       closeNav: this.closeNav,
       username: this.state.userName,
       name: this.state.name,
-      email: this.state.email
+      email: this.state.email,
+      preferredUsername: this.state.preferredUsername
     };
 
     return (

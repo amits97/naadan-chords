@@ -1,6 +1,6 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
-import { Auth } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 import { Alert, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
@@ -18,7 +18,9 @@ export default class Account extends SearchComponent {
       email: "",
       isSuccessState: false,
       isErrorState: false,
-      errorMessage: ""
+      errorMessage: "",
+      usernameValid: true,
+      usernameMessage: ""
     };
   }
 
@@ -33,11 +35,10 @@ export default class Account extends SearchComponent {
       this.setState({
         isInitialLoading: false,
         name: this.props.name,
-        username: this.props.username,
+        username: this.props.preferredUsername ? this.props.preferredUsername: this.props.username,
         email: this.props.email
       });
     } catch (e) {
-      console.log(e);
       this.setState({
         isInitialLoading: false
       });
@@ -45,7 +46,9 @@ export default class Account extends SearchComponent {
   }
 
   validateForm() {
-    return this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
+    let valid = this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
+    valid = valid && (this.props.name !== this.state.name || (this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username));
+    return valid;
   }
 
   handleChange = event => {
@@ -76,18 +79,36 @@ export default class Account extends SearchComponent {
 
   handleSubmit = async event => {
     event.preventDefault();
-  
+
     this.setState({
       isLoading: true,
       isSuccessState: false,
       isErrorState: false
     });
 
+    let valid = await this.validateUserName();
+
+    if(!valid) {
+      this.setState({
+        isLoading: false
+      });
+      return;
+    }
+
     try {
       let user = await Auth.currentAuthenticatedUser();
-      await Auth.updateUserAttributes(user, {
-        name: this.state.name
-      });
+
+      let updateUserAttributes = {};
+
+      if(this.props.name !== this.state.name) {
+        updateUserAttributes.name = this.state.name;
+      }
+
+      if(this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username) {
+        updateUserAttributes.preferred_username = this.state.username;
+      }
+
+      await Auth.updateUserAttributes(user, updateUserAttributes);
       let session = await Auth.currentSession();
       await this.props.getUserAttributes(session);
       this.setState({
@@ -101,6 +122,42 @@ export default class Account extends SearchComponent {
         errorMessage: e.message,
         name: this.props.name
       });
+    }
+  }
+
+  validateUserName = async () => {
+    let {username} = this.state;
+    const regExp = /^[a-zA-Z0-9]+$/;
+
+    if(username.match(regExp) === null) {
+      this.setState({
+        usernameValid: false,
+        usernameMessage: "Please enter valid username with only letters and numbers."
+      });
+
+      return false;
+    } else {
+      this.setState({
+        usernameValid: true
+      });
+
+      if(this.props.username !== username) {
+        try {
+          let result = await API.get("posts", `/username-check?username=${username}`);
+          if(result.userExists) {
+            this.setState({
+              usernameValid: false,
+              usernameMessage: "Username already exists. Please try a different one."
+            });
+            return false;
+          }
+          return true;
+        } catch(e) {
+          console.log(e);
+        }
+      } else {
+        return true;
+      }
     }
   }
 
@@ -126,9 +183,13 @@ export default class Account extends SearchComponent {
             <FormLabel>Username</FormLabel>
             <FormControl
               type="text"
+              isInvalid={!this.state.usernameValid}
               value={this.state.username}
-              disabled
+              onChange={this.handleChange}
             />
+            <FormControl.Feedback type="invalid" className={(this.state.usernameValid ? 'd-none' : 'd-block')}>
+              {this.state.usernameMessage}
+            </FormControl.Feedback>
           </FormGroup>
           <FormGroup controlId="email">
             <FormLabel>Email</FormLabel>

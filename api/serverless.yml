@@ -226,6 +226,14 @@ functions:
           path: top-rated-posts
           method: get
           cors: true
+  username-check:
+    handler: username-check.main
+    events:
+      - http:
+          path: username-check
+          method: get
+          cors: true
+          authorizer: aws_iam
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
