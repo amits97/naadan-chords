@@ -43,6 +43,11 @@ provider:
         - cognito-idp:ListUsers
         - cognito-idp:AdminListGroupsForUser
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: "*"
     - Effect: Deny
       Action:
         - logs:CreateLogGroup

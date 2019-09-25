@@ -13,6 +13,18 @@ export async function getAuthorAttributes(userId) {
   return {authorName: authorName, userName: userName};
 }
 
+export async function getAuthorEmail(userId) {
+  const userParams = {
+    UserPoolId: "ap-south-1_l5klM91tP",
+    AttributesToGet: ["email"],
+    Filter: "sub=\"" + userId + "\""
+  };
+
+  let userResults = await cognitoLib.call("listUsers", userParams);
+  let email = userResults.Users[0].Attributes[0].Value;
+  return email;
+}
+
 export async function getUserId(userName) {
   const userParams = {
     UserPoolId: "ap-south-1_l5klM91tP",
