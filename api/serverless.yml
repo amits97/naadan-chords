@@ -218,12 +218,6 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
-  rating-generate:
-    handler: rating-generate.main
-    events:
-      - schedule:
-          rate: rate(3 hours)
-          enabled: true
   top-rated-posts:
     handler: top-rated.main
     events:
