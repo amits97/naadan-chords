@@ -227,7 +227,7 @@ export default class Content extends Component {
     if(!isPostList) {
       return (
         <span>
-          <hr class="mt-2 mb-2" />
+          <hr className="mt-2 mb-2" />
           <a href="#/" className="text-primary" onClick={(e) => {
             e.preventDefault();
             this.ratingEl.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -321,22 +321,25 @@ export default class Content extends Component {
     }
   }
 
-  changeRating = (newRating, name) => {
+  changeRating = (newRating, forceSubmit) => {
     let post = this.props.posts;
 
-    this.setState({
-      rating: newRating
-    });
-
     if(this.props.isAuthenticated) {
-      API.post("posts", "/rating", {
-        body: {
-          rating: newRating,
-          postId: post.postId
-        }
-      });
+      if(forceSubmit === true || newRating !== this.state.rating) {
+        this.setState({
+          rating: newRating
+        });
+
+        API.post("posts", "/rating", {
+          body: {
+            rating: newRating,
+            postId: post.postId
+          }
+        });
+      }
     } else {
       this.setState({
+        rating: newRating,
         showLoginModal: true
       });
     }
@@ -437,7 +440,7 @@ export default class Content extends Component {
     });
 
     if(retryRatingSubmit) {
-      this.changeRating(this.state.rating);
+      this.changeRating(this.state.rating, true);
     }
   }
 
