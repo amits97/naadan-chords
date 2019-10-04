@@ -1,10 +1,30 @@
 import React, {Component} from "react";
 import {ButtonGroup, Button} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faMinus, faCaretDown, faThumbtack } from "@fortawesome/free-solid-svg-icons";
 import "./ChordControls.css";
 
 export default class ChordControls extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isTrayMaximized: true
+    };
+  }
+
+  componentDidMount() {
+    if(typeof Storage !== "undefined") {
+      let localStorageItem = localStorage.getItem("isTrayMaximized");
+
+      if(localStorageItem !== null) {
+        this.setState({
+          isTrayMaximized: localStorageItem === "true"
+        });
+      }
+    }
+  }
+
   handleTransposeClick = (transposeAmount) => {
     this.props.transposeChords(transposeAmount);
   }
@@ -37,11 +57,23 @@ export default class ChordControls extends Component {
     return (this.props.fontSize - 15) / 2;
   }
 
+  toggleTray = () => {
+    let newTrayState = !this.state.isTrayMaximized;
+
+    this.setState({
+      isTrayMaximized: newTrayState
+    });
+
+    if(typeof Storage !== "undefined") {
+      localStorage.setItem("isTrayMaximized", newTrayState.toString());
+    }
+  }
+
   render() {
     let { transposeAmount, fontSize, scrollAmount } = this.props;
 
     return (
-      <div className={`ChordControls border bg-light ${this.props.className}`}>
+      <div className={`ChordControls border bg-light ${this.props.className} ${this.state.isTrayMaximized ? '' : 'minimized'}`}>
         <div className="controls-container transpose-container">
           <span className="feature-label">
             TRANSPOSE <span className="amount text-primary">{transposeAmount ? transposeAmount : ''}</span>
@@ -83,6 +115,10 @@ export default class ChordControls extends Component {
             </Button>
           </ButtonGroup>
         </div>
+
+        <Button variant="link" className="float-right tray-control" onClick={() => this.toggleTray()}>
+          <FontAwesomeIcon icon={this.state.isTrayMaximized ? faCaretDown : faThumbtack} />
+        </Button>
       </div>
     );
   }
