@@ -1,19 +1,43 @@
 .ChordControls {
+  height: 55px;
+  position: sticky;
+  bottom: 0;
+}
+
+.ChordControls.minimized {
+  margin-top: -25px;
+  padding-top: 25px;
+  bottom: -55px;
+  height: 105px;
+}
+
+.ChordControls .tray-saver {
+  position: absolute;
+  width: 45px;
+  height: 26px;
+  z-index: 2;
+  right: -1rem;
+  border: 1px solid #dee2e6;
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+}
+
+.ChordControls .tray-saver button {
+  padding: 0;
+  width: 100%;
+  line-height: 0;
+}
+
+.ChordControls .controls-tray {
   font-family: DINNextLTPro-Regular,Helvetica Neue,sans-serif;
   font-size: 15px;
   font-weight: 700;
-  position: sticky;
-  bottom: 0;
   margin-top: 25px;
   opacity: .97;
   padding: 5px 15px;
   height: 55px;
   margin-left: -1rem;
   margin-right: -1rem;
-}
-
-.ChordControls.minimized{
-  position: relative;
 }
 
 .ChordControls .controls-container {
@@ -59,11 +83,6 @@
 
 .ChordControls .tray-control:hover {
   color: #000000;
-}
-
-.ChordControls.minimized .tray-control {
-  font-size: 18px;
-  padding-top: 10px;
 }
 
 /* Small devices (landscape phones, less than 768px) */
