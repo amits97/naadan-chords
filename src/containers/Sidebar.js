@@ -161,7 +161,7 @@ export default class Sidebar extends Component {
 
   renderSidebarAd2 = () => {
     return (
-      <div className="sticky-ad ad2">
+      <div className="ad2">
         <ins className="adsbygoogle bg-light"
           style={{display: "inline-block", width: "250px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
@@ -187,8 +187,10 @@ export default class Sidebar extends Component {
               </FacebookProvider>
             </div>
             {this.renderSidebarAd1()}
-            {this.renderSidebarWidget()}
-            {this.renderSidebarAd2()}
+            <div className="sticky">
+              {this.renderSidebarWidget()}
+              {this.renderSidebarAd2()}
+            </div>
           </div>
         </div>
         <div className="sidebar-button btn btn-primary" onClick={this.handleMobileSidebarClick}>
