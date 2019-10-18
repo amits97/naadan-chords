@@ -74,6 +74,17 @@ export async function handler(event, context, callback) {
     try {
       let page = await browser.newPage();
       await page.goto(targetUrl);
+
+      //remove matched content ad since it breaks the mobile usability Google tests
+      let elementClassToRemove = ".matchedContent";
+
+      await page.evaluate((sel) => {
+        var elements = document.querySelectorAll(sel);
+        for(let i = 0; i < elements.length; i++){
+          elements[i].parentNode.removeChild(elements[i]);
+        }
+      }, elementClassToRemove);
+
       const result = await page.content();
 
       //Check for status code
