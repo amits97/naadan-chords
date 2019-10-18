@@ -1,7 +1,11 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { Tabs, Tab } from "react-bootstrap";
+import * as vexchords from "vexchords";
+import { findGuitarChord } from 'chord-fingering';
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import ChordControls from "./ChordControls";
+import ChordsPopup from "./ChordsPopup";
 import "./ContentParser.css";
 
 export default class ContentParser extends Component {
@@ -14,7 +18,8 @@ export default class ContentParser extends Component {
       transposeAmount: 0,
       fontSize: 15,
       scrollAmount: 0,
-      isVideoReady: false
+      isVideoReady: false,
+      hasChordPopupsRendered: false
     }
   }
 
@@ -248,7 +253,43 @@ export default class ContentParser extends Component {
       let content = this.props.post.content ? this.stripHtml(this.props.post.content) : "";
 
       this.setState({
-        content: content
+        content: content,
+        hasChordPopupsRendered: false
+      });
+    }
+
+    if(!this.state.hasChordPopupsRendered) {
+      this.renderChordHelpers();
+    }
+  }
+
+  renderChordHelpers = () => {
+    let chordSpans = document.querySelectorAll("span.chord");
+
+    if(chordSpans) {
+      for(let i = 0; i < chordSpans.length; i++) {
+        let chordName = chordSpans[i].innerHTML;
+        let chord = findGuitarChord(chordName);
+
+        if(chord) {
+          let positionString = chord.fingerings[0].positionString;
+          let chordPosition = [];
+          let chordElement = document.createElement("div");
+
+          for(let i = 1; i <= positionString.length; i++) {
+            chordPosition.push([i, positionString[positionString.length-i]]);
+          }
+
+          vexchords.draw(chordElement, {
+            chord: chordPosition
+          });
+
+          ReactDOM.render(<ChordsPopup chordName={chordName} chordElement={chordElement.innerHTML} />, chordSpans[i]);
+        }
+      }
+
+      this.setState({
+        hasChordPopupsRendered: true
       });
     }
   }
