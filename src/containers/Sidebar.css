@@ -46,7 +46,7 @@
 }
 
 .Sidebar .top-posts {
-  margin-top: 20px;
+  margin-top: 15px;
   margin-bottom: 5px;
 }
 
@@ -83,6 +83,10 @@
   margin-bottom: 20px;
 }
 
+.Sidebar .top-posts ul li a {
+  margin: 0.7rem 0;
+}
+
 .Sidebar .ad1 {
   margin: 30px 0;
 }
@@ -93,7 +97,7 @@
 
 .Sidebar .sticky {
   position: sticky;
-  top: 80px;
+  top: 75px;
 }
 
 /* Medium devices (tablets, less than 992px) */
