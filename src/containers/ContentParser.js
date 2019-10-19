@@ -282,6 +282,8 @@ export default class ContentParser extends Component {
 
           vexchords.draw(chordElement, {
             chord: chordPosition
+          }, {
+            defaultColor: "#212529"
           });
 
           ReactDOM.render(<ChordsPopup chordName={chordName} chordElement={chordElement.innerHTML} />, chordSpans[i]);
