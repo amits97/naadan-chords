@@ -70,6 +70,17 @@ export default class ContentParser extends Component {
     this.autoScroll(scrollAmount);
   }
 
+  getScale = (p1) => {
+    const sharpScale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const flatScale = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+
+    if(p1 && p1.indexOf("b") !== -1) {
+      return flatScale;
+    } else {
+      return sharpScale;
+    }
+  }
+
   parseContent = (content) => {
     if(!content) {
       content = this.state.content;
@@ -86,12 +97,12 @@ export default class ContentParser extends Component {
     const ignoreChordsRegExp = /<span class="ignore-chords">([\s\S]*?)<\/span>/g;
 
     //Chords regex
-    const scale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
-    const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|b|bm|5|7|b7|bsus2)?";
+    const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|5|7)?";
+    const flat = "(b)?";
     const sharp = "(#)?";
-    const chordsRegex = new RegExp("\\b" + notes  + chords + "\\b" + sharp + chords + tabBeginning, "g");
+    const chordsRegex = new RegExp("\\b" + notes + flat + chords + "\\b" + sharp + chords + tabBeginning, "g");
     const chordsOnlyRegex = new RegExp(chords, "g");
 
     //replace tabs
@@ -129,24 +140,28 @@ export default class ContentParser extends Component {
       let ignoreChordTags = content.match(ignoreChordsRegExp);
       if(ignoreChordTags && ignoreChordTags.length > 0) {
         content = content.replace(ignoreChordsRegExp, (match) => {
-          return match.replace(chordsRegex, (match, p1, p2, p3) => {
+          return match.replace(chordsRegex, (match, p1, p2, p3, p4) => {
+            let scale = this.getScale(p1);
             let i = (scale.indexOf(match.replace(chordsOnlyRegex,'')) - this.state.transposeAmount) % scale.length;
-            p1 = p1 ? p1.replace("#","") : "";
-            p2 = p2 ? p2.replace("#","") : "";
-            p3 = p3 ? p3.replace("#","") : "";
-            return (`${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3}`);
+            p1 = p1 ? p1.replace("#","").replace("b","") : "";
+            p2 = p2 ? p2.replace("#","").replace("b","") : "";
+            p3 = p3 ? p3.replace("#","").replace("b","") : "";
+            p4 = p4 ? p4.replace("#","").replace("b","") : "";
+            return (`${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3 + p4}`);
           });
         });
       }
     }
 
     //replace chords
-    content = content.replace(chordsRegex, (match, p1, p2, p3) => {
-      let i = (scale.indexOf(match.replace(chordsOnlyRegex,'')) + this.state.transposeAmount) % scale.length;
-      p1 = p1 ? p1.replace("#","") : "";
-			p2 = p2 ? p2.replace("#","") : "";
-			p3 = p3 ? p3.replace("#","") : "";
-      return (`<span class="chord">${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3}</span>`);
+    content = content.replace(chordsRegex, (match, p1, p2, p3, p4) => {
+      let scale = this.getScale(p1);
+      let i = (scale.indexOf(match.replace(chordsOnlyRegex, '')) + this.state.transposeAmount) % scale.length;
+      p1 = p1 ? p1.replace("#","").replace("b","") : "";
+      p2 = p2 ? p2.replace("#","").replace("b","") : "";
+      p3 = p3 ? p3.replace("#","").replace("b","") : "";
+      p4 = p4 ? p4.replace("#","").replace("b","") : "";
+      return (`<span class="chord">${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3 + p4}</span>`);
     });
 
     //replace image
@@ -324,7 +339,7 @@ export default class ContentParser extends Component {
 
             chordMap[chordName] = {
               chordPosition: chordPosition,
-              position: lowestPosition,
+              position: lowestPosition + 1,
               barres: barre
             };
           }
