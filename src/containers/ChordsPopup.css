@@ -1,3 +1,16 @@
 span.popup-trigger {
   cursor: pointer;
+  position: relative;
+}
+
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+  span.popup-trigger:after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    left: -10px;
+    right: -10px;
+  }
 }

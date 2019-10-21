@@ -243,7 +243,7 @@ export default class Content extends Component {
   ratingPopover = (post, isPostList) => {
     if(post.rating && post.ratingCount) {
       return (
-        <Popover id="popover-basic">
+        <Popover id="popover-basic" className="p-2">
           Average star rating of <b>{post.rating.toFixed(2)} / 5</b>.
           <br />
           Calculated from ratings by <b>{post.ratingCount}</b> user{post.ratingCount > 1 ? 's' : ''}.
@@ -252,7 +252,7 @@ export default class Content extends Component {
       );
     } else {
       return (
-        <Popover id="popover-basic">
+        <Popover id="popover-basic" className="p-2">
           No ratings yet.<br/>
           <span className={`${isPostList ? 'd-none' : ''}`}>Why don't you be the first? :)</span>
           { this.renderRateLink(isPostList) }
