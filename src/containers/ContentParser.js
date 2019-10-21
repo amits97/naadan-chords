@@ -245,7 +245,7 @@ export default class ContentParser extends Component {
     clearInterval(this.autoScrollTimer);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     let prevContent = prevProps.post.content ? prevProps.post.content : "";
     let content = this.props.post.content ? this.props.post.content : "";
 
@@ -258,8 +258,8 @@ export default class ContentParser extends Component {
       });
     }
 
-    if(!this.state.hasChordPopupsRendered) {
-      this.renderChordHelpers();
+    if(!this.state.hasChordPopupsRendered || this.state.transposeAmount !== prevState.transposeAmount) {
+      setTimeout(() => {this.renderChordHelpers() }, 0);
     }
   }
 
@@ -267,22 +267,76 @@ export default class ContentParser extends Component {
     let chordSpans = document.querySelectorAll("span.chord");
 
     if(chordSpans) {
+      let chordMap = {};
+
       for(let i = 0; i < chordSpans.length; i++) {
         let chordName = chordSpans[i].innerHTML;
         let chord = findGuitarChord(chordName);
 
         if(chord) {
-          let positionString = chord.fingerings[0].positionString;
-          let chordPosition = [];
           let chordElement = document.createElement("div");
 
-          for(let i = 1; i <= positionString.length; i++) {
-            chordPosition.push([i, positionString[positionString.length-i]]);
+          if(!chordMap.hasOwnProperty(chordName)) {
+            let positionString = chord.fingerings[0].positionString;
+            let chordPosition = [];
+
+            let lowestPosition = 12;
+            for(let i = 0; i < positionString.length; i++) {
+              let position = positionString[i];
+              if(position !== "x" && parseInt(position) < lowestPosition) {
+                lowestPosition = parseInt(position) - 1;
+              }
+            }
+
+            lowestPosition = lowestPosition < 0 ? 0 : lowestPosition;
+
+            for(let i = 1; i <= positionString.length; i++) {
+              let reverseIndex = positionString.length-i;
+              let fretPosition = positionString[reverseIndex];
+
+              if(fretPosition !== "x") {
+                fretPosition =  parseInt(fretPosition) - lowestPosition;
+              }
+
+              chordPosition.push([i, fretPosition]);
+            }
+
+            let barre = [];
+            if(chord.fingerings[0].barre) {
+              let fromString = 6 - chord.fingerings[0].barre.stringIndices[0];
+              let toString = 6 - (chord.fingerings[0].barre.stringIndices.slice(-1).pop());
+
+              if(fromString - toString > 2) {
+                barre.push({
+                  fromString: fromString,
+                  toString: toString,
+                  fret: chord.fingerings[0].barre.fret - lowestPosition
+                });
+
+                let i = chordPosition.length;
+                while(i--) {
+                  if(chordPosition[i][1] === chord.fingerings[0].barre.fret  - lowestPosition) {
+                    chordPosition.splice(i, 1);
+                  }
+                }
+              }
+            }
+
+            chordMap[chordName] = {
+              chordPosition: chordPosition,
+              position: lowestPosition,
+              barres: barre
+            };
           }
 
           vexchords.draw(chordElement, {
-            chord: chordPosition
+            chord: chordMap[chordName].chordPosition,
+            position: chordMap[chordName].position,
+            barres: chordMap[chordName].barres
           }, {
+            width: 120,
+            height: 140,
+            fontFamily: "'DINNextLTPro-Regular', 'Helvetica Neue', sans-serif",
             defaultColor: "#212529"
           });
 
