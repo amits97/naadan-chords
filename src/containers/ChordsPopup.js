@@ -28,6 +28,11 @@ export default class ChordsPopup extends Component {
 
       if(chord) {
         let positionString = chord.fingerings[0].positionString;
+
+        if(positionString.length > 6) {
+          return;
+        }
+
         for(let i = 0; i < positionString.length; i++) {
           let position = positionString[i];
           if(position !== "x" && parseInt(position) < lowestPosition) {
