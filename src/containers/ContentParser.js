@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Tabs, Tab } from "react-bootstrap";
-import * as vexchords from "vexchords";
-import { findGuitarChord } from 'chord-fingering';
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import ChordControls from "./ChordControls";
 import ChordsPopup from "./ChordsPopup";
@@ -282,81 +280,9 @@ export default class ContentParser extends Component {
     let chordSpans = document.querySelectorAll("span.chord");
 
     if(chordSpans) {
-      let chordMap = {};
-
       for(let i = 0; i < chordSpans.length; i++) {
         let chordName = chordSpans[i].innerHTML;
-        let chord = findGuitarChord(chordName);
-
-        if(chord) {
-          let chordElement = document.createElement("div");
-
-          if(!chordMap.hasOwnProperty(chordName)) {
-            let positionString = chord.fingerings[0].positionString;
-            let chordPosition = [];
-
-            let lowestPosition = 12;
-            for(let i = 0; i < positionString.length; i++) {
-              let position = positionString[i];
-              if(position !== "x" && parseInt(position) < lowestPosition) {
-                lowestPosition = parseInt(position) - 1;
-              }
-            }
-
-            lowestPosition = lowestPosition < 0 ? 0 : lowestPosition;
-
-            for(let i = 1; i <= positionString.length; i++) {
-              let reverseIndex = positionString.length-i;
-              let fretPosition = positionString[reverseIndex];
-
-              if(fretPosition !== "x") {
-                fretPosition =  parseInt(fretPosition) - lowestPosition;
-              }
-
-              chordPosition.push([i, fretPosition]);
-            }
-
-            let barre = [];
-            if(chord.fingerings[0].barre) {
-              let fromString = 6 - chord.fingerings[0].barre.stringIndices[0];
-              let toString = 6 - (chord.fingerings[0].barre.stringIndices.slice(-1).pop());
-
-              if(fromString - toString > 2) {
-                barre.push({
-                  fromString: fromString,
-                  toString: toString,
-                  fret: chord.fingerings[0].barre.fret - lowestPosition
-                });
-
-                let i = chordPosition.length;
-                while(i--) {
-                  if(chordPosition[i][1] === chord.fingerings[0].barre.fret  - lowestPosition) {
-                    chordPosition.splice(i, 1);
-                  }
-                }
-              }
-            }
-
-            chordMap[chordName] = {
-              chordPosition: chordPosition,
-              position: lowestPosition + 1,
-              barres: barre
-            };
-          }
-
-          vexchords.draw(chordElement, {
-            chord: chordMap[chordName].chordPosition,
-            position: chordMap[chordName].position,
-            barres: chordMap[chordName].barres
-          }, {
-            width: 120,
-            height: 140,
-            fontFamily: "'DINNextLTPro-Regular', 'Helvetica Neue', sans-serif",
-            defaultColor: "#212529"
-          });
-
-          ReactDOM.render(<ChordsPopup chordName={chordName} chordElement={chordElement.innerHTML} />, chordSpans[i]);
-        }
+        ReactDOM.render(<ChordsPopup chordName={chordName} />, chordSpans[i]);
       }
 
       this.setState({

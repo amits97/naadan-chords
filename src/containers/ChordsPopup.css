@@ -3,6 +3,28 @@ span.popup-trigger {
   position: relative;
 }
 
+.ChordsPopup .spinning {
+  position: absolute;
+  left: 45%;
+  top: 48%;
+  -webkit-transform: translate(-48%, -45%);
+  transform: translate(-48%, -45%);
+  animation: spin 1s infinite linear;
+}
+
+.ChordsPopup span.error {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  from { transform: scale(1) rotate(0deg); }
+  to { transform: scale(1) rotate(360deg); }
+}
+
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
   span.popup-trigger:after {
