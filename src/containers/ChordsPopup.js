@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import * as vexchords from "vexchords";
-import { findGuitarChord } from 'chord-fingering';
+import { findGuitarChord } from "chord-fingering";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSyncAlt, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import "./ChordsPopup.css";
@@ -30,7 +30,21 @@ export default class ChordsPopup extends Component {
         let positionString = chord.fingerings[0].positionString;
 
         if(positionString.length > 6) {
-          return;
+          let validFingeringFound = false;
+
+          for(let i = 1; i < chord.fingerings.length; i++) {
+            positionString = chord.fingerings[i].positionString;
+            if(positionString.length > 6) {
+              continue;
+            } else {
+              validFingeringFound = true;
+              break;
+            }
+          }
+
+          if(!validFingeringFound) {
+            return;
+          }
         }
 
         for(let i = 0; i < positionString.length; i++) {
@@ -137,7 +151,7 @@ export default class ChordsPopup extends Component {
     let {chordName} = this.props;
 
     return(
-      <OverlayTrigger trigger="hover" placement="auto" overlay={this.renderchordPopover(chordName)} onEntered={this.openPopover}>
+      <OverlayTrigger trigger="hover" placement="auto" overlay={this.renderchordPopover(chordName)} onEntered={this.openPopover} delay={{show: 0, hide: 100}}>
         <span className="chord popup-trigger">
           { chordName }
         </span>
