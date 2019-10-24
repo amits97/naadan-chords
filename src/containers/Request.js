@@ -56,7 +56,7 @@ export default class Request extends SearchComponent {
   renderTopAd = () => {
     return (
       <div className="ad">
-        <ins className="adsbygoogle bg-light"
+        <ins className="adsbygoogle"
           style={{display:"inline-block", width: "728px", height: "90px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="1349463901">

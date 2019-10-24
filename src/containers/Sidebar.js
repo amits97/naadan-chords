@@ -149,7 +149,7 @@ export default class Sidebar extends Component {
   renderSidebarAd1 = () => {
     return (
       <div className="ad1">
-        <ins className="adsbygoogle bg-light"
+        <ins className="adsbygoogle"
           style={{display: "inline-block", width: "250px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="4869884700"
@@ -162,7 +162,7 @@ export default class Sidebar extends Component {
   renderSidebarAd2 = () => {
     return (
       <div className="ad2">
-        <ins className="adsbygoogle bg-light"
+        <ins className="adsbygoogle"
           style={{display: "inline-block", width: "250px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="9918861903"
