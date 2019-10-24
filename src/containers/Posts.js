@@ -387,9 +387,10 @@ export default class Posts extends Component {
     return (
       <div className="ad">
         <ins className="adsbygoogle bg-light"
-          style={{display:"inline-block", width: "728px", height: "90px"}}
+          style={{display:"block"}}
           data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="1349463901"
+          data-ad-slot="6826392919"
+          data-full-width-responsive="true"
           key={this.state.adKey}>
         </ins>
       </div>
