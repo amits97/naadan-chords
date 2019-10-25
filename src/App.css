@@ -91,7 +91,7 @@
   display: none;
   height: 40px;
   position: absolute;
-  right: 60px;
+  right: 75px;
   color: #bbbbbb;
   top: 10px;
 }
@@ -160,7 +160,7 @@
     position: absolute;
     top: 0;
     z-index: 2000;
-    width: 100%;
+    width: calc(100% - 2rem);
     height: 58px;
     padding-top: 9px;
     overflow: visible;
