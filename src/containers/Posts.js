@@ -385,11 +385,13 @@ export default class Posts extends Component {
 
   renderTopAd = () => {
     return (
-      <div className="ad">
+      <div className="ad" style={{maxHeight: "115px"}}>
         <ins className="adsbygoogle"
-          style={{display:"inline-block", width: "728px", height: "90px"}}
+          style={{display:"block"}}
           data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="1349463901"
+          data-ad-slot="6826392919"
+          data-ad-format="horizontal"
+          data-full-width-responsive="false"
           key={this.state.adKey}>
         </ins>
       </div>
