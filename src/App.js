@@ -258,7 +258,7 @@ class App extends Component {
     };
 
     return (
-      <div className="App bg-light" onClick={this.onNavBlur}>
+      <div className="App" onClick={this.onNavBlur}>
         <Navbar fluid="true" expand="lg" sticky="top" variant="dark" onToggle={this.setNavExpanded} expanded={this.state.navExpanded}>
           <div className="container-fluid">
             <Navbar.Brand>
