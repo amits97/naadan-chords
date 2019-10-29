@@ -292,7 +292,7 @@ class App extends Component {
             </Navbar.Collapse>
           </div>
         </Navbar>
-        <div className="container contents bg-white" onTouchStart={this.onNavBlur}>
+        <div className="contents bg-white" onTouchStart={this.onNavBlur}>
           <Routes childProps={childProps} />
         </div>
         <Footer />

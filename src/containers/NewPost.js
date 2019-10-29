@@ -509,7 +509,7 @@ export default class NewPost extends SearchComponent {
     let { isEditMode, isDraft } = this.props;
 
     return (
-      <div className="NewPost">
+      <div className="container NewPost">
         <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted} message="Are you sure? Any unsaved changes will be lost" />
         <h1>
           <LinkContainer exact to="/admin">

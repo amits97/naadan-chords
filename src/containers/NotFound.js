@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import Sidebar from "./Sidebar";
 import SearchComponent from "../components/SearchComponent";
@@ -25,7 +25,7 @@ export default class NotFound extends SearchComponent {
 
   renderTopAd = () => {
     return (
-      <div className="ad" style={{maxHeight: "115px"}}>
+      <div className="ad bg-light border-bottom" style={{maxHeight: "120px"}}>
         <ins className="adsbygoogle"
           style={{display:"block"}}
           data-ad-client="ca-pub-1783579460797635"
@@ -52,15 +52,17 @@ export default class NotFound extends SearchComponent {
       return (
         <div>
           { this.renderTopAd() }
-          <Row className="contentRow">
-            <Col md={8} className="contentColumn">
-              <h3>Page not found!</h3>
-              <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
-            </Col>
-            <Col md={4} className="sidebarColumn border-left">
-            <Sidebar {...this.props} />
-            </Col>
-          </Row>
+          <Container>
+            <Row className="contentRow">
+              <Col md={8} className="contentColumn">
+                <h3>Page not found!</h3>
+                <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
+              </Col>
+              <Col md={4} className="sidebarColumn border-left">
+              <Sidebar {...this.props} />
+              </Col>
+            </Row>
+          </Container>
         </div>
       );
     }

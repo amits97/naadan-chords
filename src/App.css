@@ -209,10 +209,6 @@
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-  .App .contents {
-    padding: 0 25px;
-  }
-
   .App .navbar .navbar-nav .nav-link {
     padding-right: 0.8rem;
     padding-left: 0.8rem;

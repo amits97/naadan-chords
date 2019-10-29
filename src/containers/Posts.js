@@ -385,7 +385,7 @@ export default class Posts extends Component {
 
   renderTopAd = () => {
     return (
-      <div className="ad" style={{maxHeight: "115px"}}>
+      <div className="ad bg-light border-bottom" style={{maxHeight: "120px"}}>
         <ins className="adsbygoogle"
           style={{display:"block"}}
           data-ad-client="ca-pub-1783579460797635"
@@ -441,7 +441,9 @@ export default class Posts extends Component {
       <div className="Posts">
         { this.renderTopAd() }
         { this.renderRedirect() }
-        <Content {...childProps} />
+        <div className="container">
+          <Content {...childProps} />
+        </div>
       </div>
     );
   }

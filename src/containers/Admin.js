@@ -276,7 +276,7 @@ export default class Admin extends SearchComponent {
     let draftCount = (drafts && drafts.Items) ? this.state.drafts.Items.length : 0;
 
     return (
-      <div className="Admin">
+      <div className="container Admin">
         { this.renderSEOTags() }
         <div className="header border-bottom">
           <h1 className="float-left">Admin</h1>
