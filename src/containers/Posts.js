@@ -385,7 +385,7 @@ export default class Posts extends Component {
 
   renderTopAd = () => {
     return (
-      <div className="ad bg-light border-bottom" style={{maxHeight: "120px"}}>
+      <div className="ad" style={{maxHeight: "120px"}}>
         <ins className="adsbygoogle"
           style={{display:"block"}}
           data-ad-client="ca-pub-1783579460797635"

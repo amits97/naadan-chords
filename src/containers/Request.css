@@ -19,11 +19,24 @@
 .Request .ad {
   padding: 15px 0;
   text-align: center;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .Request .contentColumn {
     padding-right: 25px;
+  }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .Request .ad {
+    margin-left: -15px;
+    margin-right: -15px;
+    overflow: hidden;
+    background: #ffffff;
+    border-bottom: none;
   }
 }

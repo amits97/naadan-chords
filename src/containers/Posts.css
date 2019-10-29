@@ -1,6 +1,8 @@
 .Posts .ad {
   padding: 15px 0;
   text-align: center;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
 }
 
 /* Small devices (landscape phones, less than 768px) */
@@ -9,5 +11,7 @@
     margin-left: -15px;
     margin-right: -15px;
     overflow: hidden;
+    background: #ffffff;
+    border-bottom: none;
   }
 }
