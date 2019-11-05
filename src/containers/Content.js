@@ -487,17 +487,10 @@ export default class Content extends Component {
               {
                 "@context": "http://schema.org",
                 "@type": "BreadcrumbList",
-                "itemListElement":[{
-                  "@type": "ListItem",
-                  "position": 1,
-                  "item":{
-                    "@id": "https://www.naadanchords.com/author/${post.userName}",
-                    "name": "${post.authorName}"
-                  }
-                },
+                "itemListElement":[
                 {
                   "@type": "ListItem",
-                  "position": 2,
+                  "position": 1,
                   "item":{
                     "@id": "https://www.naadanchords.com/category/${category}",
                     "name": "${this.capitalizeFirstLetter(post.category)}"
@@ -505,7 +498,7 @@ export default class Content extends Component {
                 },
                 {
                   "@type": "ListItem",
-                  "position": 3,
+                  "position": 2,
                   "item":{
                     "@id": "https://www.naadanchords.com/${post.postId}",
                     "name": "${post.title}"
