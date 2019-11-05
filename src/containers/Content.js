@@ -444,6 +444,81 @@ export default class Content extends Component {
     }
   }
 
+  renderStructuredData = (post) => {
+    if(post.hasOwnProperty("rating")) {
+      let createdAtISOString = new Date(post.createdAt).toISOString();
+      let category = post.category.toLowerCase();
+
+      return (
+        <React.Fragment>
+          <script type="application/ld+json">
+            {
+              `{
+                "@context":"http://schema.org",
+                "@type":"MusicRecording",
+                "byArtist": {
+                  "@context":"http://schema.org",
+                  "@type":"MusicGroup",
+                  "name":"${post.singers}"
+                },
+                "inAlbum": {
+                  "@context":"http://schema.org",
+                  "@type":"MusicAlbum",
+                  "name":"${post.album}",
+                  "byArtist": {
+                    "@context":"http://schema.org",
+                    "@type":"MusicGroup",
+                    "name":"${post.music}"
+                  }
+                },
+                "name":"${post.song}",
+                "url":"https://www.naadanchords.com/${post.postId}",
+                "datePublished": "${createdAtISOString}",
+                "aggregateRating": {
+                  "@type": "AggregateRating",
+                  "ratingValue": "${post.rating}",
+                  "reviewCount": "${post.ratingCount}"
+                }
+              }`
+            }
+          </script>
+          <script type="application/ld+json">
+            {`
+              {
+                "@context": "http://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement":[{
+                  "@type": "ListItem",
+                  "position": 1,
+                  "item":{
+                    "@id": "https://www.naadanchords.com/author/${post.userName}",
+                    "name": "${post.authorName}"
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "item":{
+                    "@id": "https://www.naadanchords.com/category/${category}",
+                    "name": "${this.capitalizeFirstLetter(post.category)}"
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "item":{
+                    "@id": "https://www.naadanchords.com/${post.postId}",
+                    "name": "${post.title}"
+                  }
+                }]
+              }
+            `}
+          </script>
+        </React.Fragment>
+      );
+    }
+  }
+
   renderPost = () => {
     let { isLoading, posts } = this.props;
     let post = posts;
@@ -483,6 +558,7 @@ export default class Content extends Component {
             { this.renderPostContent(post) }
             { this.renderMatchedContentAd(post) }
             { this.renderDisqusComments(post) }
+            { this.renderStructuredData(post) }
           </div>
         );
       } else {
