@@ -445,7 +445,7 @@ export default class Content extends Component {
   }
 
   renderStructuredData = (post) => {
-    if(post.hasOwnProperty("rating")) {
+    if(post.postType === "POST" && post.hasOwnProperty("rating")) {
       let createdAtISOString = new Date(post.createdAt).toISOString();
       let category = post.category.toLowerCase();
 
