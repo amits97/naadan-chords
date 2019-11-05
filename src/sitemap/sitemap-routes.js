@@ -11,6 +11,7 @@ export default (
     <Route path='/category/hindi' />
     <Route path='/author/:userName' />
     <Route path='/author/:userName/page/:number' />
+    <Route path='/album/:album' />
     <Route path='/about' />
     <Route path='/privacy-policy' />
 	</Route>

@@ -77,6 +77,15 @@ export async function main(event, context, callback) {
           ":category": event.category
         };
       }
+
+      if(event.album) {
+        //filter by album
+        skipParams.IndexName = "album-createdAt-index";
+        skipParams.KeyConditionExpression = "album = :album";
+        skipParams.ExpressionAttributeValues =  {
+          ":album": event.album
+        };
+      }
   
       try {
         var skipResult = await dynamoDbLib.call("query", skipParams);
@@ -101,7 +110,7 @@ export async function main(event, context, callback) {
       ":postType": event.postType || "POST",
     },
     ScanIndexForward: false,
-    ProjectionExpression: "postId, createdAt, postType, title, userId",
+    ProjectionExpression: "postId, createdAt, postType, title, album, userId",
     Limit: 15
   };
 
@@ -120,6 +129,15 @@ export async function main(event, context, callback) {
     params.KeyConditionExpression = "category = :category";
     params.ExpressionAttributeValues =  {
       ":category": event.category
+    };
+  }
+
+  if(event.album) {
+    //filter by album
+    params.IndexName = "album-createdAt-index";
+    params.KeyConditionExpression = "album = :album";
+    params.ExpressionAttributeValues =  {
+      ":album": event.album
     };
   }
 

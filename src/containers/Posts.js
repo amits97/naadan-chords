@@ -3,6 +3,7 @@ import { API } from "aws-amplify";
 import { Helmet } from "react-helmet";
 import ReactGA from "react-ga";
 import * as urlLib from "../libs/url-lib";
+import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Content from "./Content";
 import "./Posts.css";
 
@@ -51,7 +52,7 @@ export default class Posts extends Component {
     return API.get("posts", `/posts/${postId}`);
   }
 
-  posts(category, search, user) {
+  posts(category, search, user, album) {
     if(category) {
       category = this.getCategoryFromLegacy(category).toUpperCase();
       return API.get("posts", `/posts?category=${category}`);
@@ -59,16 +60,22 @@ export default class Posts extends Component {
       return API.get("posts", `/posts?s=${search}`);
     } else if(user){
       return API.get("posts", `/user-posts?userName=${user}`);
+    } else if(album) {
+      album = capitalizeFirstLetter(this.makeTitle(album));
+      return API.get("posts", `/posts?album=${album}`);
     } else {
       return API.get("posts", "/posts");
     }
   }
 
-  pagePosts(pageNumber, category, userName) {
+  pagePosts(pageNumber, category, userName, album) {
     if(category) {
       return API.get("posts", `/posts?category=${category.toUpperCase()}&page=${pageNumber}`);
     } else if(userName) {
       return API.get("posts", `/user-posts?userName=${userName}&page=${pageNumber}`);
+    } else if(album) {
+      album = capitalizeFirstLetter(this.makeTitle(album));
+      return API.get("posts", `/posts?album=${album}&page=${pageNumber}`);
     } else {
       return API.get("posts", `/posts?page=${pageNumber}`);
     }
@@ -114,6 +121,7 @@ export default class Posts extends Component {
       let { isRandomPage, isPageUrl } = this.props;
       let postId = this.props.match.params.id;
       let category = this.props.match.params.category;
+      let album = this.props.match.params.album;
       let pageNumber = this.props.match.params.number;
       let userName = this.props.match.params.userName;
 
@@ -135,6 +143,8 @@ export default class Posts extends Component {
           postsResult = await this.pagePosts(pageNumber, category);
         } else if(this.props.isUserPosts) {
           postsResult = await this.pagePosts(pageNumber, null, userName);
+        } else if(this.props.isAlbum) {
+          postsResult = await this.pagePosts(pageNumber, null, null, album);
         } else {
           postsResult = await this.pagePosts(pageNumber);
         }
@@ -173,7 +183,7 @@ export default class Posts extends Component {
           isRandomPost: false
         });
 
-        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, null, this.props.isUserPosts ? this.props.match.params.userName : null);
+        let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, null, this.props.isUserPosts ? this.props.match.params.userName : null, this.props.isAlbum ? this.props.match.params.album : null);
         posts = postsResult.Items;
         this.setPagination(postsResult);
       }
@@ -209,7 +219,10 @@ export default class Posts extends Component {
       let queryRequest = `/posts?exclusiveStartKey=${exclusiveStartKey}`;
       if(this.props.isCategory) {
         let category = this.getCategoryFromLegacy(this.props.match.params.category);
-        queryRequest += `&category=${category.toUpperCase()}`
+        queryRequest += `&category=${category.toUpperCase()}`;
+      } else if(this.props.isAlbum) {
+        let album = capitalizeFirstLetter(this.makeTitle(this.props.match.params.album));
+        queryRequest += `&album=${album}`;
       }
       let postsResult = [];
       if(this.props.isUserPosts) {
@@ -254,6 +267,18 @@ export default class Posts extends Component {
       }
     }
 
+    if(this.props.isAlbum) {
+      let album = this.props.match.params.album;
+      if(slugify(album) !== album) {
+        this.props.history.push(`/album/${slugify(album)}`)
+
+        this.setState({
+          redirect: true,
+          redirectUrl: `/album/${slugify(album)}`
+        });
+      }
+    }
+
     ReactGA.initialize("UA-34900138-2");
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
@@ -268,7 +293,7 @@ export default class Posts extends Component {
   }
 
   componentDidUpdateSearch = (prevProps) => {
-    if(this.props.search === "" && prevProps.search && (this.props.match.params.id || this.props.isCategory || this.props.isUserPosts)) {
+    if(this.props.search === "" && prevProps.search && (this.props.match.params.id || this.props.isCategory || this.props.isUserPosts || this.props.isAlbum)) {
       this.setLoadingAndLoadData();
       return;
     }
@@ -332,7 +357,7 @@ export default class Posts extends Component {
 
       if(prevProps.pageKey !== this.props.pageKey) {
         if(!prevProps.isRandomPage) {
-          if(!this.props.isCategory && !prevProps.isCategory && !this.props.isUserPosts && !prevProps.isUserPosts && !this.props.isPageUrl && !prevProps.isPageUrl) {
+          if(!this.props.isCategory && !prevProps.isCategory && !this.props.isUserPosts && !prevProps.isUserPosts && !this.props.isPageUrl && !prevProps.isPageUrl && !this.props.isAlbum && !prevProps.isAlbum) {
             //navigating away from home
             if(prevProps.match.params.id === undefined) {
               this.setState({
@@ -422,11 +447,15 @@ export default class Posts extends Component {
     } else if(this.props.isPageUrl) {
       if(this.props.isCategory) {
         title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS - PAGE ${this.props.match.params.number}`;
+      } else if (this.props.isAlbum) {
+        title = `${this.makeTitle(this.props.match.params.album)} - GUITAR CHORDS AND TABS - PAGE ${this.props.match.params.number}`;
       } else {
         title = `LATEST POSTS - PAGE ${this.props.match.params.number}`;
       }
     } else if(this.props.isCategory) {
       title = `${this.getCategoryFromLegacy(this.props.match.params.category).toUpperCase()} - GUITAR CHORDS AND TABS`;
+    } else if(this.props.isAlbum) {
+      title = `${this.makeTitle(this.props.match.params.album)} - GUITAR CHORDS AND TABS`;
     }
 
     let childProps = {

@@ -6,6 +6,10 @@
   font-size: 17px;
 }
 
+.ContentParser .meta a {
+  color: inherit;
+}
+
 .ContentParser nav {
   font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
   margin-top: 25px;

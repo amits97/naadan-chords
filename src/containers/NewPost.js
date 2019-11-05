@@ -13,6 +13,7 @@ import Skeleton from "react-loading-skeleton";
 import SearchComponent from "../components/SearchComponent";
 import PromptWrapper from "../components/PromptWrapper";
 import * as inputSelectionLib from "../libs/input-selection-lib";
+import { slugify } from "../libs/utils";
 import EditorPanel from "./EditorPanel";
 import ContentParser from "./ContentParser";
 import "./NewPost.css";
@@ -44,15 +45,6 @@ export default class NewPost extends SearchComponent {
       autoSaveTimestamp: null,
       inputUpdated: false
     };
-  }
-
-  slugify = (text) => {
-    return text.toString().toLowerCase()
-      .replace(/\s+/g, '-')           // Replace spaces with -
-      .replace(/[^\w-]+/g, '')       // Remove all non-word chars
-      .replace(/--+/g, '-')         // Replace multiple - with single -
-      .replace(/^-+/, '')             // Trim - from start of text
-      .replace(/-+$/, '');            // Trim - from end of text
   }
 
   deleteDraft(postId) {
@@ -187,7 +179,7 @@ export default class NewPost extends SearchComponent {
         await this.createPost(this.preparePostObject());
 
         if(this.props.isDraft) {
-          await this.deleteDraft(this.slugify(this.state.title));
+          await this.deleteDraft(slugify(this.state.title));
         }
         
         if(this.state.postType === "PAGE") {
@@ -317,7 +309,7 @@ export default class NewPost extends SearchComponent {
     this.setState({
       imageLoading: true
     });
-    Storage.put(`${this.slugify(this.state.title)}.jpg`, file, {
+    Storage.put(`${slugify(this.state.title)}.jpg`, file, {
       contentType: 'image/jpg'
     })
     .then (result => {

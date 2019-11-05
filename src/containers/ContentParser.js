@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import { LinkContainer } from "react-router-bootstrap";
 import { Tabs, Tab } from "react-bootstrap";
+import { slugify } from "../libs/utils";
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import ChordControls from "./ChordControls";
 import ChordsPopup from "./ChordsPopup";
@@ -237,7 +239,15 @@ export default class ContentParser extends Component {
         <div className="meta">
           <p>
             <b>Song: </b>{song}<br />
-            <b>Album: </b>{album}<br />
+            <span>
+              <b>Album: </b>
+              <LinkContainer to={`/album/${slugify(album)}`}>
+                <a href="#/">
+                  {album}
+                </a>
+              </LinkContainer>
+              <br />
+            </span>
             <b>Singers: </b>{singers}<br />
             <b>Music: </b>{music}<br />
           </p>

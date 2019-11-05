@@ -110,7 +110,7 @@ functions:
           integration: lambda
           request:
             template:
-              application/json: '{ "postType" : "$input.params(''postType'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "category" : "$input.params(''category'')", "search" : "$input.params(''s'')", "page" : "$input.params(''page'')"  }'
+              application/json: '{ "postType" : "$input.params(''postType'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "category" : "$input.params(''category'')", "album" : "$input.params(''album'')", "search" : "$input.params(''s'')", "page" : "$input.params(''page'')"  }'
   update:
     # Defines an HTTP API endpoint that calls the main function in update.js
     # - path: url path is /posts/{id}

@@ -10,6 +10,8 @@ const Amplify = AWSAmplify.default;
 const API = AWSAmplify.API;
 const config = require("../config").default;
 
+const slugify = require("../libs/utils").slugify;
+
 Amplify.configure({
   API: {
     endpoints: [
@@ -86,6 +88,7 @@ async function generateSitemap() {
   let postsResult = await loadPosts();
   let idMap = [];
   let authorList = {};
+  let albumList = {};
 
   while(postsResult.hasOwnProperty("LastEvaluatedKey")) {
     for(var i = 0; i < postsResult.Items.length; i++) {
@@ -93,6 +96,10 @@ async function generateSitemap() {
 
       if(!authorList.hasOwnProperty(postsResult.Items[i].userName)) {
         authorList[postsResult.Items[i].userName] = 1;
+      }
+
+      if(!albumList.hasOwnProperty(postsResult.Items[i].album)) {
+        albumList[postsResult.Items[i].album] = 1;
       }
     }
 
@@ -118,10 +125,18 @@ async function generateSitemap() {
     }
   }
 
+  let albumMap = [];
+  for(album in albumList) {
+    if(albumList.hasOwnProperty(album)) {
+      albumMap.push({ album: slugify(album) });
+    }
+  }
+
   const paramsConfig = {
     "/:id": idMap,
     "/page/:number": pageMap,
     "/category/malayalam/page/:number": malayalamPageMap,
+    "/album/:album": albumMap,
     "/author/:userName": authorMap,
     "/author/:userName/page/:number": authorPageMap
   };

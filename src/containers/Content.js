@@ -8,9 +8,10 @@ import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import Disqus from "disqus-react";
 import { API } from "aws-amplify";
-import StarRatings from 'react-star-ratings';
+import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRandom } from "@fortawesome/free-solid-svg-icons";
+import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
 import ContentParser from "./ContentParser";
@@ -62,10 +63,6 @@ export default class Content extends Component {
         rating: undefined
       });   
     }
-  }
-
-  slugify(text) {
-    return text.toString().toLowerCase().split(' ').join('-');
   }
 
   formatDate(date) {
@@ -219,10 +216,6 @@ export default class Content extends Component {
     }
   }
 
-  capitalizeFirstLetter = (string) => {
-    return string.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-  }
-
   renderRateLink = (isPostList) => {
     if(!isPostList) {
       return (
@@ -310,7 +303,7 @@ export default class Content extends Component {
             <span className="ml-1 mr-1">in</span>
             <LinkContainer exact to={`/category/${post.category.toLowerCase()}`}>
               <a href="#/">
-                { this.capitalizeFirstLetter(post.category) }
+                { capitalizeFirstLetter(post.category) }
               </a>
             </LinkContainer>
             { this.renderRating(post) }
@@ -445,12 +438,51 @@ export default class Content extends Component {
   }
 
   renderStructuredData = (post) => {
-    if(post.postType === "POST" && post.hasOwnProperty("rating")) {
-      let createdAtISOString = new Date(post.createdAt).toISOString();
+    if(post.postType === "POST") {
+      let structuredData = [];
       let category = post.category.toLowerCase();
+      let album = post.album;
 
-      return (
-        <React.Fragment>
+      structuredData.push(
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "http://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement":[
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item":{
+                  "@id": "https://www.naadanchords.com/category/${category}",
+                  "name": "${capitalizeFirstLetter(post.category)}"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item":{
+                  "@id": "https://www.naadanchords.com/album/${slugify(album)}",
+                  "name": "${album}"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item":{
+                  "@id": "https://www.naadanchords.com/${post.postId}",
+                  "name": "${post.song}"
+                }
+              }]
+            }
+          `}
+        </script>
+      );
+
+      if(post.hasOwnProperty("rating")) {
+        let createdAtISOString = new Date(post.createdAt).toISOString();
+
+        structuredData.push(
           <script type="application/ld+json">
             {
               `{
@@ -482,33 +514,10 @@ export default class Content extends Component {
               }`
             }
           </script>
-          <script type="application/ld+json">
-            {`
-              {
-                "@context": "http://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement":[
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "item":{
-                    "@id": "https://www.naadanchords.com/category/${category}",
-                    "name": "${this.capitalizeFirstLetter(post.category)}"
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "item":{
-                    "@id": "https://www.naadanchords.com/${post.postId}",
-                    "name": "${post.title}"
-                  }
-                }]
-              }
-            `}
-          </script>
-        </React.Fragment>
-      );
+        );
+      }
+
+      return structuredData;
     }
   }
 
@@ -602,7 +611,7 @@ export default class Content extends Component {
     } else {
       return (
         <Helmet>
-          <title>{this.props.title ? `${this.capitalizeFirstLetter(this.props.title)} | Naadan Chords` : "Naadan Chords | Guitar Chords and Tabs of Malayalam Songs"}</title>
+          <title>{this.props.title ? `${capitalizeFirstLetter(this.props.title)} | Naadan Chords` : "Naadan Chords | Guitar Chords and Tabs of Malayalam Songs"}</title>
           <meta name="description" content="Naadan Chords is the best place to get the chords for your favorite Malayalam and Tamil songs. Transpose chords to any scale or pitch, autoscroll chord sheet to play hassle free and adjust font size of lyrics." />
           <meta name="twitter:card" content="summary" />
           <meta property="og:title" content="Naadan Chords | Guitar Chords and Tabs of Malayalam Songs" />
