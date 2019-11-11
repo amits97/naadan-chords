@@ -102,7 +102,9 @@ export default class ContentParser extends Component {
     const chords = "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|add9|m|5|7)?";
     const flat = "(b)?";
     const sharp = "(#)?";
-    const chordsRegex = new RegExp("\\b" + notes + flat + chords + "\\b" + sharp + chords + tabBeginning, "g");
+    const chordsPattern = "\\b" + notes + flat + chords + "\\b" + sharp + chords;
+    const chordsWithSlashPattern = chordsPattern + "(/)?\\b" + notes + "?" + flat + chords + "\\b" + sharp + chords;
+    const chordsRegex = new RegExp(chordsWithSlashPattern + tabBeginning, "g");
     const chordsOnlyRegex = new RegExp(chords, "g");
 
     //replace tabs
@@ -154,14 +156,20 @@ export default class ContentParser extends Component {
     }
 
     //replace chords
-    content = content.replace(chordsRegex, (match, p1, p2, p3, p4) => {
+    content = content.replace(chordsRegex, (match, p1, p2, p3, p4, p5, p6, p7, p8, p9) => {
       let scale = this.getScale(p1);
-      let i = (scale.indexOf(match.replace(chordsOnlyRegex, '')) + this.state.transposeAmount) % scale.length;
+      let i = (scale.indexOf(match.split("/")[0].replace(chordsOnlyRegex,'')) + this.state.transposeAmount) % scale.length;
+      let j = match.split("/")[1] ? (scale.indexOf(match.split("/")[1].replace(chordsOnlyRegex,'')) + this.state.transposeAmount) % scale.length : null;
       p1 = p1 ? p1.replace("#","").replace("b","") : "";
       p2 = p2 ? p2.replace("#","").replace("b","") : "";
       p3 = p3 ? p3.replace("#","").replace("b","") : "";
       p4 = p4 ? p4.replace("#","").replace("b","") : "";
-      return (`<span class="chord">${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3 + p4}</span>`);
+      p5 = p5 ? p5 : "";
+      p6 = p6 ? p6.replace("#","").replace("b","") : "";
+      p7 = p7 ? p7.replace("#","").replace("b","") : "";
+      p8 = p8 ? p8.replace("#","").replace("b","") : "";
+      p9 = p9 ? p9.replace("#","").replace("b","") : "";
+      return (`<span class="chord">${scale[ i < 0 ? i + scale.length : i ] + p1 + p2 + p3 + p4 + p5 + (j ? (`${scale[ j < 0 ? j + scale.length : j ]}`) : '') + p6 + p7 + p8 + p9}</span>`);
     });
 
     //replace image
@@ -286,6 +294,13 @@ export default class ContentParser extends Component {
     }
   }
 
+  hasIgnoreChordsParent(element) {
+    if (element && element.className && element.className.split(" ").indexOf("ignore-chords") >=0 ) {
+      return true;
+    }
+    return element.parentNode && this.hasIgnoreChordsParent(element.parentNode);
+  }
+
   renderChordHelpers = () => {
     let chordSpans = document.querySelectorAll("span.chord");
 
@@ -293,7 +308,7 @@ export default class ContentParser extends Component {
       for(let i = 0; i < chordSpans.length; i++) {
         let chordName = chordSpans[i].innerHTML;
         let parentElement = chordSpans[i].parentElement;
-        if(parentElement && !parentElement.classList.contains("ignore-chords")) {
+        if(parentElement && !this.hasIgnoreChordsParent(parentElement)) {
           ReactDOM.render(<ChordsPopup chordName={chordName} />, chordSpans[i]);
         }
       }
