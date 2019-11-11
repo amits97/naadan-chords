@@ -150,7 +150,7 @@ export default class Sidebar extends Component {
     return (
       <div className="ad1">
         <ins className="adsbygoogle"
-          style={{display: "inline-block", width: "250px", height: "250px"}}
+          style={{display: "inline-block", width: "300px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="4869884700"
           key={this.state.adKey}>
@@ -163,7 +163,7 @@ export default class Sidebar extends Component {
     return (
       <div className="ad2">
         <ins className="adsbygoogle"
-          style={{display: "inline-block", width: "250px", height: "250px"}}
+          style={{display: "inline-block", width: "300px", height: "250px"}}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="9918861903"
           key={this.state.adKey}>
