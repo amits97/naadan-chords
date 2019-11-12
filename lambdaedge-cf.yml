@@ -81,7 +81,7 @@ Resources:
                     headers['x-redirect-legacy'] = [{ key: 'X-Redirect-Legacy', value: 'true'}];
                     headers['x-prerender-cachebuster'] = [{ key: 'X-Prerender-Cachebuster', value: Date.now().toString()}];
                   } else {
-                    var prerender = /googlebot|Mediapartners-Google|AdsBot-Google-Mobile|AdsBot-Google-Mobile|AdsBot-Google|Googlebot-Image|Googlebot-News|FeedFetcher-Google|Google-Read-Aloud|Google-Structured-Data-Testing-Tool|bingbot|yandex|baiduspider|Facebot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/i.test(user_agent[0].value);
+                    var prerender = /googlebot|Mediapartners-Google|AdsBot-Google-Mobile|AdsBot-Google-Mobile|AdsBot-Google|Googlebot-Image|Googlebot-News|FeedFetcher-Google|Google-Read-Aloud|Google-Structured-Data-Testing-Tool|Google Page Speed Insights|Chrome-Lighthouse|bingbot|yandex|baiduspider|Facebot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/i.test(user_agent[0].value);
                     prerender = prerender || /_escaped_fragment_/.test(request.querystring);
                     prerender = prerender && ! /\.(js|css|xml|less|png|jpg|jpeg|json|gif|pdf|doc|txt|ico|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent|ttf|woff|svg|eot)$/i.test(request.uri);
                     if (prerender) {
@@ -93,7 +93,7 @@ Resources:
                 callback(null, request);
             };
       Runtime: "nodejs10.x"
-  SetCustomHeadersVersion5:
+  SetCustomHeadersVersion6:
     Type: "AWS::Lambda::Version"
     Properties:
       FunctionName:
@@ -173,7 +173,7 @@ Resources:
           ViewerProtocolPolicy : redirect-to-https
           LambdaFunctionAssociations:
             - EventType: viewer-request
-              LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion5, Version] ] ]
+              LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion6, Version] ] ]
             - EventType: origin-request
               LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToLegacyOrPrerender, Arn], !GetAtt [RedirectToLegacyOrPrerenderVersion3, Version] ] ]
         Enabled: true
