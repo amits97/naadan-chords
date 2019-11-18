@@ -83,6 +83,7 @@ export default class Footer extends Component {
                   <h6>SOCIAL MEDIA</h6>
                   <ul className="list-unstyled">
                     <li><a target="_blank" rel="noopener noreferrer" href="https://facebook.com/naadanchords">Facebook <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://instagram.com/naadanchords">Instagram <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/channel/UCwV3HuITY0zprR5QjyJX8lg">YouTube <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://www.soundcloud.com/asn">SoundCloud <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                   </ul>
