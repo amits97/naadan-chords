@@ -1,6 +1,6 @@
-import * as dynamoDbLib from "./libs/dynamodb-lib";
-import * as adminCheckLib from "./libs/admincheck-lib";
-import { success, failure } from "./libs/response-lib";
+import * as dynamoDbLib from "../libs/dynamodb-lib";
+import * as adminCheckLib from "../libs/admincheck-lib";
+import { success, failure } from "../libs/response-lib";
 
 function slugify(text) {
   return text.toString().toLowerCase()
@@ -22,16 +22,8 @@ export async function main(event, context, callback) {
     return failure({ status: false, message: "No write permissions" });
   }
 
-  const params = {
-    TableName: "NaadanChords",
-    // 'Item' contains the attributes of the item to be created
-    // - 'userId': user identities are federated through the
-    //             Cognito Identity Pool, we will use the identity id
-    //             as the user id of the authenticated user
-    // - 'songId': a unique slug for the song
-    // - 'content': parsed from request body
-    // - 'status': post status
-    // - 'createdAt': current Unix timestamp
+  let params = {
+    TableName: "NaadanChordsDrafts",
     Item: {
       userId: sub,
       postId: slugify(data.title),
@@ -54,6 +46,34 @@ export async function main(event, context, callback) {
     await dynamoDbLib.call("put", params);
     return success(params.Item);
   } catch (e) {
-    return failure({ status: false });
+    //draft exists, update
+    try {
+      params = {
+        TableName: "NaadanChordsDrafts",
+        Key: {
+          postId: slugify(data.title)
+        },
+        UpdateExpression: "SET title = :title, song = :song, album = :album, singers = :singers, music = :music, category = :category, image = :image, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType",
+        ExpressionAttributeValues: {
+          ":title": data.title || null,
+          ":song": data.song || null,
+          ":album": data.album || null,
+          ":singers": data.singers || null,
+          ":music": data.music || null,
+          ":category": data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
+          ":image": data.image || null,
+          ":content": data.content || null,
+          ":leadTabs": data.leadTabs || null,
+          ":youtubeId": data.youtubeId || null,
+          ":postType": data.postType || "POST"
+        },
+        ReturnValues: "ALL_NEW"
+      };
+
+      await dynamoDbLib.call("update", params);
+      return success({ status: true });
+    } catch(e) {
+      return failure({ status: false });
+    }
   }
 }

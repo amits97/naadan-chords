@@ -294,11 +294,16 @@ export default class ContentParser extends Component {
     }
   }
 
-  hasIgnoreChordsParent(element) {
+  hasIgnoreChordsParent(depthLimit, element) {
     if (element && element.className && element.className.split(" ").indexOf("ignore-chords") >=0 ) {
       return true;
     }
-    return element.parentNode && this.hasIgnoreChordsParent(element.parentNode);
+    depthLimit--;
+    if(depthLimit > 0) {
+      return element.parentNode && this.hasIgnoreChordsParent(depthLimit, element.parentNode);
+    } else {
+      return false;
+    }
   }
 
   renderChordHelpers = () => {
@@ -306,9 +311,9 @@ export default class ContentParser extends Component {
 
     if(chordSpans) {
       for(let i = 0; i < chordSpans.length; i++) {
-        let chordName = chordSpans[i].innerHTML;
+        let chordName = chordSpans[i].innerText;
         let parentElement = chordSpans[i].parentElement;
-        if(parentElement && !this.hasIgnoreChordsParent(parentElement)) {
+        if(parentElement && !this.hasIgnoreChordsParent(5, parentElement)) {
           ReactDOM.render(<ChordsPopup chordName={chordName} />, chordSpans[i]);
         }
       }

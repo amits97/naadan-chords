@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
-import * as dynamoDbLib from "./libs/dynamodb-lib";
-import { success, failure } from "./libs/response-lib";
+import * as dynamoDbLib from "../libs/dynamodb-lib";
+import { success, failure } from "../libs/response-lib";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 

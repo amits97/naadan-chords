@@ -3,19 +3,19 @@ import { Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faSyncAlt, faImage, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
-import LoaderButton from "../components/LoaderButton";
+import LoaderButton from "../../components/LoaderButton";
 import { Auth, API, Storage } from "aws-amplify";
 import ReactMarkdown from "react-markdown";
 import Moment from "react-moment";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton from "react-loading-skeleton";
-import SearchComponent from "../components/SearchComponent";
-import PromptWrapper from "../components/PromptWrapper";
-import * as inputSelectionLib from "../libs/input-selection-lib";
-import { slugify } from "../libs/utils";
+import SearchComponent from "../../components/SearchComponent";
+import PromptWrapper from "../../components/PromptWrapper";
+import * as inputSelectionLib from "../../libs/input-selection-lib";
+import { slugify } from "../../libs/utils";
 import EditorPanel from "./EditorPanel";
-import ContentParser from "./ContentParser";
+import ContentParser from "../ContentParser";
 import "./NewPost.css";
 
 export default class NewPost extends SearchComponent {

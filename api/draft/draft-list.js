@@ -1,6 +1,6 @@
-import * as dynamoDbLib from "./libs/dynamodb-lib";
-import * as searchFilterLib from "./libs/searchfilter-lib";
-import { success, failure } from "./libs/response-lib";
+import * as dynamoDbLib from "../libs/dynamodb-lib";
+import * as searchFilterLib from "../libs/searchfilter-lib";
+import { success, failure } from "../libs/response-lib";
 
 export async function main(event, context, callback) {
   let provider, sub;

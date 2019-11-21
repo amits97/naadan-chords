@@ -6,8 +6,8 @@ import { Helmet } from "react-helmet";
 import Skeleton from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import LoaderButton from "../components/LoaderButton";
-import SearchComponent from "../components/SearchComponent";
+import LoaderButton from "../../components/LoaderButton";
+import SearchComponent from "../../components/SearchComponent";
 import "./Admin.css";
 
 export default class Admin extends SearchComponent {

@@ -1,7 +1,7 @@
-import * as dynamoDbLib from "./libs/dynamodb-lib";
-import * as userNameLib from "./libs/username-lib";
-import * as sesLib from "./libs/ses-lib";
-import { success, failure } from "./libs/response-lib";
+import * as dynamoDbLib from "../libs/dynamodb-lib";
+import * as userNameLib from "../libs/username-lib";
+import * as sesLib from "../libs/ses-lib";
+import { success, failure } from "../libs/response-lib";
 
 async function fetchPostDetails(postId) {
   let item;

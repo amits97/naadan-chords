@@ -3,6 +3,10 @@ span.popup-trigger {
   position: relative;
 }
 
+.ChordsPopup {
+  pointer-events: none;
+}
+
 .ChordsPopup .spinning {
   position: absolute;
   left: 45%;

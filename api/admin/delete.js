@@ -1,6 +1,6 @@
-import * as dynamoDbLib from "./libs/dynamodb-lib";
-import * as adminCheckLib from "./libs/admincheck-lib";
-import { success, failure } from "./libs/response-lib";
+import * as dynamoDbLib from "../libs/dynamodb-lib";
+import * as adminCheckLib from "../libs/admincheck-lib";
+import { success, failure } from "../libs/response-lib";
 
 export async function main(event, context) {
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
