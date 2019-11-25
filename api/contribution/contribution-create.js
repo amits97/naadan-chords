@@ -16,8 +16,8 @@ export async function main(event, context, callback) {
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
   const sub = provider.split(':')[2];
 
-  let params = {
-    TableName: "NaadanChordsDrafts",
+  const params = {
+    TableName: "NaadanChordsContributions",
     Item: {
       userId: sub,
       postId: slugify(data.title),
@@ -27,11 +27,10 @@ export async function main(event, context, callback) {
       singers: data.singers || null,
       music: data.music || null,
       category: data.category || "MALAYALAM",
-      image: data.image || null,
       content: data.content,
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
-      postType: data.postType || "POST",
+      postType: "POST",
       createdAt: Date.now()
     }
   };
@@ -40,34 +39,6 @@ export async function main(event, context, callback) {
     await dynamoDbLib.call("put", params);
     return success(params.Item);
   } catch (e) {
-    //draft exists, update
-    try {
-      params = {
-        TableName: "NaadanChordsDrafts",
-        Key: {
-          postId: slugify(data.title)
-        },
-        UpdateExpression: "SET title = :title, song = :song, album = :album, singers = :singers, music = :music, category = :category, image = :image, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType",
-        ExpressionAttributeValues: {
-          ":title": data.title || null,
-          ":song": data.song || null,
-          ":album": data.album || null,
-          ":singers": data.singers || null,
-          ":music": data.music || null,
-          ":category": data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
-          ":image": data.image || null,
-          ":content": data.content || null,
-          ":leadTabs": data.leadTabs || null,
-          ":youtubeId": data.youtubeId || null,
-          ":postType": data.postType || "POST"
-        },
-        ReturnValues: "ALL_NEW"
-      };
-
-      await dynamoDbLib.call("update", params);
-      return success({ status: true });
-    } catch(e) {
-      return failure({ status: false });
-    }
+    return failure({ status: false });
   }
 }

@@ -181,6 +181,11 @@ class App extends Component {
               Admin
             </NavDropdown.Item>
           </LinkContainer>
+          <LinkContainer to="/contributions">
+            <NavDropdown.Item onClick={this.closeNav} role="button">
+              Contributions
+            </NavDropdown.Item>
+          </LinkContainer>
           <NavDropdown.Item onClick={this.handleLogout}>
             Logout
           </NavDropdown.Item>
@@ -280,8 +285,8 @@ class App extends Component {
                 <LinkContainer exact to="/">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>Home</a>
                 </LinkContainer>
-                <LinkContainer exact to="/about">
-                  <a href="#/" className="nav-link" onClick={this.closeNav}>About</a>
+                <LinkContainer exact to="/contributions/new-post">
+                  <a href="#/" className="nav-link" onClick={this.closeNav}>Contribute</a>
                 </LinkContainer>
                 <LinkContainer exact to="/request">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>Request</a>

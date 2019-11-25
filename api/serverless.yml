@@ -233,6 +233,38 @@ functions:
           path: top-rated-posts
           method: get
           cors: true
+  contribution-create:
+    handler: contribution/contribution-create.main
+    events:
+      - http:
+          path: contributions
+          method: post
+          cors: true
+          authorizer: aws_iam
+  contribution-list:
+    handler: contribution/contribution-list.main
+    events:
+      - http:
+          path: contributions
+          method: get
+          cors: true
+          authorizer: aws_iam
+  contribution-delete:
+    handler: contribution/contribution-delete.main
+    events:
+      - http:
+          path: contributions/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+  contribution-get:
+    handler: contribution/contribution-get.main
+    events:
+      - http:
+          path: contributions/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors

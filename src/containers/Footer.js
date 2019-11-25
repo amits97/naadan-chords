@@ -80,17 +80,24 @@ export default class Footer extends Component {
                   </ul>
                 </Col>
                 <Col>
+                  <h6>CONTRIBUTE</h6>
+                  <ul className="list-unstyled">
+                    <li>
+                      <LinkContainer exact to="/contributions/new-post">
+                        <a href="#/">
+                          Submit Song
+                        </a>
+                      </LinkContainer>
+                    </li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/amits97/naadan-chords/issues">Report bug <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/amits97/naadan-chords/">GitHub <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
+                  </ul>
                   <h6>SOCIAL MEDIA</h6>
                   <ul className="list-unstyled">
                     <li><a target="_blank" rel="noopener noreferrer" href="https://facebook.com/naadanchords">Facebook <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://instagram.com/naadanchords">Instagram <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/channel/UCwV3HuITY0zprR5QjyJX8lg">YouTube <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://www.soundcloud.com/asn">SoundCloud <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
-                  </ul>
-                  <h6>CONTRIBUTE</h6>
-                  <ul className="list-unstyled">
-                    <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/amits97/naadan-chords/issues">Report bug <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
-                    <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/amits97/naadan-chords/">GitHub <FontAwesomeIcon className="external-icon" icon = { faExternalLinkAlt } /></a></li>
                   </ul>
                 </Col>
               </Row>

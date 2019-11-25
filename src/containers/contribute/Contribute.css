@@ -1,0 +1,199 @@
+.Contribute {
+  padding-top: 50px;
+  margin-top: -50px;
+  padding-bottom: 50px;
+}
+
+.Contribute h1 {
+  margin-bottom: -10px;
+}
+
+.Contribute h3 a:hover {
+  text-decoration: underline;
+}
+
+.Contribute form {
+  padding: 15px 0;
+}
+
+.Contribute .title {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.Contribute form textarea {
+  border-top: 0;
+  padding-top: 50px;
+  border: 1px solid #dee2e6;
+}
+
+.Contribute form textarea.form-control, .Contribute form select.form-control {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.Contribute form textarea.form-control {
+  overflow-x: scroll !important;
+}
+
+.Contribute form textarea.form-control, .Contribute .preview {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 87.5%;
+  white-space: pre;
+}
+
+.Contribute .preview {
+  white-space: pre-wrap;
+}
+
+.Contribute form textarea.form-control.page {
+  white-space: pre-wrap;
+  padding-top: 10px;
+}
+
+.Contribute .preview-pane {
+  margin-top: 15px;
+}
+
+.Contribute nav {
+  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.Contribute nav a {
+  font-size: 14px;
+  transition: none;
+  padding-top: 10px;
+  color: #888888;
+}
+
+.Contribute nav a:hover {
+  color: inherit;
+}
+
+.Contribute nav .nav-link.active {
+  background-color: inherit;
+  color: inherit;
+  font-weight: bold;
+  border-radius: 0;
+  box-shadow: 0 -3px 0 0 #ff9700;
+  border-top: 0;
+}
+
+.Contribute .preview-placeholder {
+  text-align: center;
+  color: #888888;
+  padding-top: 80px;
+}
+
+.Contribute .preview-placeholder p {
+  color: #888888;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.Contribute .preview-placeholder small {
+  font-style: italic;
+}
+
+.Contribute .preview-placeholder .preview-icon {
+  font-size: 40px;
+}
+
+.Contribute .image-uploader {
+  position: relative;
+  padding-top: 5px;
+}
+
+.Contribute .image-viewer {
+  padding-top: 7.5px;
+}
+
+.Contribute .image-viewer .external-icon {
+  font-size: 0.9em;
+  padding-bottom: 2px;
+  margin-left: 2px;
+}
+
+.Contribute .image-viewer .edit {
+  float: right;
+  margin-right: 5px;
+  border-left: 1px solid #ddd;
+  padding-left: 15px;
+  opacity: 0.8;
+}
+
+.Contribute .image-viewer .edit:hover {
+  opacity: 1;
+}
+
+.Contribute .image-viewer .image-link {
+  max-width: 175px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+
+.Contribute .image-viewer .image-icon {
+  font-size: 20px;
+  padding-top: 2px;
+  margin-bottom: -1.5px;
+}
+
+.Contribute .spinning {
+  position: absolute;
+  left: 5px;
+  top: 10px;
+  animation: spin 1s infinite linear;
+}
+
+.Contribute .auto-save {
+  color: #999999;
+  position: relative;
+  overflow: auto;
+  width: 200px;
+}
+
+.Contribute .auto-save .auto-saving {
+  position: relative;
+  width: 85px;
+}
+
+.Contribute .auto-save .auto-saving-icon {
+  margin-top: -8px;
+}
+
+@keyframes spin {
+  from { transform: scale(1) rotate(0deg); }
+  to { transform: scale(1) rotate(360deg); }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+  .Contribute .LoaderButton {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    padding-top: 6px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1020;
+    text-indent: -99999px;
+    line-height: 0;
+  }
+
+  .Contribute .LoaderButton .spinning {
+    display: none;
+  }
+
+  .Contribute .LoaderButton::after {
+    text-indent: 0;
+    display: block;
+    line-height: initial;
+    content: "GO";
+    font-weight: bold;
+  }
+}
