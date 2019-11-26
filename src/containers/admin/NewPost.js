@@ -172,16 +172,13 @@ export default class NewPost extends SearchComponent {
     this.setState({ isLoading: true, submitted: true });
   
     try {
+      await this.deleteDraft(slugify(this.state.title));
+
       if(this.props.isEditMode && !this.props.isDraft) {
         await this.updatePost(this.preparePostObject());
         this.props.history.push(`/${this.props.match.params.id}`);
       } else {
         await this.createPost(this.preparePostObject());
-
-        if(this.props.isDraft) {
-          await this.deleteDraft(slugify(this.state.title));
-        }
-        
         if(this.state.postType === "PAGE") {
           this.props.history.push("/admin");
         } else {

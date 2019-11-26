@@ -161,16 +161,13 @@ export default class Contribute extends SearchComponent {
     this.setState({ isLoading: true, submitted: true });
   
     try {
+      await this.deleteDraft(slugify(this.state.title));
+
       if(this.props.isEditMode && !this.props.isDraft) {
         await this.updatePost(this.preparePostObject());
         this.props.history.push(`/contributions`);
       } else {
         await this.createPost(this.preparePostObject());
-
-        if(this.props.isDraft) {
-          await this.deleteDraft(slugify(this.state.title));
-        }
-        
         this.props.history.push("/contributions");
       }
     } catch (e) {
@@ -246,11 +243,7 @@ export default class Contribute extends SearchComponent {
           this.handleDraft();
         }
       } catch(e) {
-        console.log(e);
-
-        this.setState({
-          isLoading: false
-        });
+        this.props.history.push("/contributions");
       }
     } else {
       this.handleDraft();

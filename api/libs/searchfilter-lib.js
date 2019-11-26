@@ -26,19 +26,34 @@ function titleCase(str) {
 }
 
 export function getSearchFilter(searchText, userId, postType) {
-  if(userId && postType) {
-    return {
-      FilterExpression: "postType = :postType AND userId = :userId AND (contains(postId, :postId) OR contains(content, :lowercase) OR contains(content, :capitalize) OR contains(content, :titlecase) OR contains(music, :titlecase) OR contains(singers, :titlecase) OR contains(category, :uppercase))",
-      ExpressionAttributeValues: {
-        ":postType": postType,
-        ":userId": userId,
-        ":postId": slugify(searchText),
-        ":lowercase": lowerCase(searchText),
-        ":capitalize": capitalizeFirstLetter(searchText),
-        ":titlecase": titleCase(searchText),
-        ":uppercase": upperCase(searchText)
-      }
-    };
+  if(userId) {
+    if(postType) {
+      return {
+        FilterExpression: "postType = :postType AND userId = :userId AND (contains(postId, :postId) OR contains(content, :lowercase) OR contains(content, :capitalize) OR contains(content, :titlecase) OR contains(music, :titlecase) OR contains(singers, :titlecase) OR contains(category, :uppercase))",
+        ExpressionAttributeValues: {
+          ":postType": postType,
+          ":userId": userId,
+          ":postId": slugify(searchText),
+          ":lowercase": lowerCase(searchText),
+          ":capitalize": capitalizeFirstLetter(searchText),
+          ":titlecase": titleCase(searchText),
+          ":uppercase": upperCase(searchText)
+        }
+      };
+    } else {
+      return {
+        FilterExpression: "userId = :userId AND (contains(postId, :postId) OR contains(content, :lowercase) OR contains(content, :capitalize) OR contains(content, :titlecase) OR contains(music, :titlecase) OR contains(singers, :titlecase) OR contains(category, :uppercase))",
+        ExpressionAttributeValues: {
+          ":postType": postType,
+          ":userId": userId,
+          ":postId": slugify(searchText),
+          ":lowercase": lowerCase(searchText),
+          ":capitalize": capitalizeFirstLetter(searchText),
+          ":titlecase": titleCase(searchText),
+          ":uppercase": upperCase(searchText)
+        }
+      };
+    }
   } else if(postType) {
     return {
       FilterExpression: "postType = :postType AND (contains(postId, :postId) OR contains(content, :lowercase) OR contains(content, :capitalize) OR contains(content, :titlecase) OR contains(music, :titlecase) OR contains(singers, :titlecase) OR contains(category, :uppercase))",

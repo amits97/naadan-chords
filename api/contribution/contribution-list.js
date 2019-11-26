@@ -2,7 +2,7 @@ import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as searchFilterLib from "../libs/searchfilter-lib";
 import { success, failure } from "../libs/response-lib";
 
-async function appendPublishedPosts(result, userId) {
+async function appendPublishedPosts(result, userId, queryStringParameters) {
   let params = {
     TableName: "NaadanChords",
     IndexName: "userId-createdAt-index",
@@ -17,7 +17,20 @@ async function appendPublishedPosts(result, userId) {
     Limit: 15
   };
 
-  let publishedResults = await dynamoDbLib.call("query", params);
+  let publishedResults = [];
+
+  if(queryStringParameters && queryStringParameters.s) {
+    //search
+    params = {
+      TableName: "NaadanChords",
+      ProjectionExpression: "postId, createdAt, postType, title, userId",
+      ...searchFilterLib.getSearchFilter(queryStringParameters.s, userId, "POST")
+    };
+    publishedResults = await dynamoDbLib.call("scan", params);
+  } else {
+    publishedResults = await dynamoDbLib.call("query", params);
+  }
+
   if(publishedResults.Items) {
     result.Items = result.Items.concat(publishedResults.Items);
   }
@@ -58,7 +71,7 @@ export async function main(event) {
       params = {
         TableName: "NaadanChordsContributions",
         ProjectionExpression: "postId, createdAt, postType, title, userId",
-        ...searchFilterLib.getSearchFilter(event.queryStringParameters.s)
+        ...searchFilterLib.getSearchFilter(event.queryStringParameters.s, sub, "POST")
       };
       result = await dynamoDbLib.call("scan", params);
     } else {
@@ -71,7 +84,7 @@ export async function main(event) {
       });
     }
 
-    result = await appendPublishedPosts(result, sub);
+    result = await appendPublishedPosts(result, sub, event.queryStringParameters);
 
     return success(result);
   } catch(e) {
