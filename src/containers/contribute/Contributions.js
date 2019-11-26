@@ -159,7 +159,7 @@ export default class Contributions extends SearchComponent {
     });
 
     try {
-      let postsResult = await API.get("posts", `/posts?exclusiveStartKey=${exclusiveStartKey}`);
+      let postsResult = await API.get("posts", `/contributions?exclusiveStartKey=${exclusiveStartKey}`);
       this.setState({
         posts: { ...postsResult, Items: this.state.posts.Items.concat(postsResult.Items)},
         lastEvaluatedPost: postsResult.LastEvaluatedKey,
