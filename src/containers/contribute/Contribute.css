@@ -4,10 +4,6 @@
   padding-bottom: 50px;
 }
 
-.Contribute h1 {
-  margin-bottom: -10px;
-}
-
 .Contribute h3 a:hover {
   text-decoration: underline;
 }
@@ -19,6 +15,25 @@
 .Contribute .title {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.Contribute .header {
+  overflow: auto;
+  margin-bottom: 30px;
+}
+
+.Contribute .header h3 {
+  margin-top: 30px;
+}
+
+.Contribute .header .btn {
+  margin-top: 30px;
+  padding-top: 8px;
+}
+
+.Contribute .header .btn span {
+  margin-left: 5px;
+  font-size: 14px;
 }
 
 .Contribute form textarea {

@@ -38,6 +38,7 @@ export default ({ childProps }) =>
     <AuthenticatedRoute path="/contributions/" exact component={Contributions} props={childProps} />
     <AuthenticatedRoute path="/contributions/new-post" exact component={Contribute} props={childProps} />
     <AuthenticatedRoute path="/contributions/edit-post/:id" exact component={Contribute} props={{isEditMode: true, ...childProps}} />
+    <AuthenticatedRoute path="/contributions/view-post/:id" exact component={Contribute} props={{isViewMode: true, ...childProps}} />
     <AuthenticatedRoute path="/contributions/edit-draft/:id" exact component={Contribute} props={{isEditMode: true, isDraft: true, ...childProps}} />
     <AppliedRoute path="/:id" exact component={Posts} props={{pageKey: window.location.href, ...childProps}} />
     { /* Finally, catch all unmatched routes */ }

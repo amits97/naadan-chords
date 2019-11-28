@@ -1,7 +1,7 @@
 import React from "react";
-import { Form, Row, Col, Tabs, Tab } from "react-bootstrap";
+import { Button, Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faSyncAlt, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../../components/LoaderButton";
 import { API } from "aws-amplify";
@@ -28,6 +28,7 @@ export default class Contribute extends SearchComponent {
 
     this.state = {
       isLoading: null,
+      postId: null,
       title: null,
       song: null,
       album: null,
@@ -195,7 +196,11 @@ export default class Contribute extends SearchComponent {
   }
 
   post() {
-    return API.get("posts", `/contributions/${this.props.match.params.id}`);
+    if(this.props.isViewMode) {
+      return API.get("posts", `/posts/${this.props.match.params.id}`);
+    } else {
+      return API.get("posts", `/contributions/${this.props.match.params.id}`);
+    }
   }
 
   draft() {
@@ -211,8 +216,8 @@ export default class Contribute extends SearchComponent {
   async componentDidMount() {
     window.scrollTo(0, 0);
 
-    let { isEditMode, isDraft } = this.props;
-    if(isEditMode) {
+    let { isEditMode, isDraft, isViewMode } = this.props;
+    if(isEditMode || isViewMode) {
       this.setState({
         isLoading: true
       });
@@ -226,6 +231,7 @@ export default class Contribute extends SearchComponent {
         }
 
         this.setState({
+          postId: post.postId,
           title: post.title,
           song: post.song,
           album: post.album,
@@ -268,37 +274,37 @@ export default class Contribute extends SearchComponent {
     );
   }
 
-  renderTitleInputs = () => {
+  renderTitleInputs = (isViewMode) => {
     return (
       <div>
         <Row>
           <Col>
             <Form.Group controlId="song">
-              <Form.Control autoComplete="off" type="text" placeholder="Song" onChange={this.handleChange} value={this.state.song ? this.state.song : ""} />
+              <Form.Control autoComplete="off" type="text" placeholder="Song" onChange={this.handleChange} value={this.state.song ? this.state.song : ""} readOnly={isViewMode} />
             </Form.Group>
           </Col>
           <Col>
             <Form.Group controlId="album">
-              <Form.Control autoComplete="off" type="text" placeholder="Album" onChange={this.handleChange} value={this.state.album ? this.state.album : ""} />
+              <Form.Control autoComplete="off" type="text" placeholder="Album" onChange={this.handleChange} value={this.state.album ? this.state.album : ""} readOnly={isViewMode} />
             </Form.Group>
           </Col>
         </Row>
         <Row>
           <Col>
             <Form.Group controlId="singers">
-              <Form.Control autoComplete="off" type="text" placeholder="Singers" onChange={this.handleChange} value={this.state.singers ? this.state.singers : ""} />
+              <Form.Control autoComplete="off" type="text" placeholder="Singers" onChange={this.handleChange} value={this.state.singers ? this.state.singers : ""} readOnly={isViewMode} />
             </Form.Group>
           </Col>
           <Col>
             <Form.Group controlId="music">
-              <Form.Control autoComplete="off" type="text" placeholder="Music" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} />
+              <Form.Control autoComplete="off" type="text" placeholder="Music" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} readOnly={isViewMode} />
             </Form.Group>
           </Col>
         </Row>
         <Row>
           <Col>
             <Form.Group>
-              <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""}>
+              <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""} readOnly={isViewMode}>
               <option value="MALAYALAM">Malayalam</option>
               <option value="TAMIL">Tamil</option>
               <option value="HINDI">Hindi</option>
@@ -310,24 +316,24 @@ export default class Contribute extends SearchComponent {
     );
   }
 
-  renderContentInputs = () => {
+  renderContentInputs = (isViewMode) => {
     return (
       <Tabs defaultActiveKey="chords">
         <Tab eventKey="chords" title="CHORDS">
           <div className="mt-3">
-            <EditorPanel insertAtCursor={this.insertAtCursor} />
-            <TextareaAutosize ref={this.chordsEditor} placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} />
+            <EditorPanel insertAtCursor={this.insertAtCursor} readOnly={isViewMode} />
+            <TextareaAutosize ref={this.chordsEditor} placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} readOnly={isViewMode} />
           </div>
         </Tab>
         <Tab eventKey="tabs" title="LEAD TABS">
           <div className="mt-3">
             <EditorPanel />
-            <TextareaAutosize placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} />
+            <TextareaAutosize placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} readOnly={isViewMode} />
           </div>
         </Tab>
         <Tab eventKey="video" title="VIDEO">
           <div className="mt-3 mb-5">
-            <Form.Control autoComplete="off" type="text" id="youtubeId" placeholder="YouTube video ID  (Optional)" onChange={this.handleChange} value={this.state.youtubeId ? this.state.youtubeId : ""} />
+            <Form.Control autoComplete="off" type="text" id="youtubeId" placeholder="YouTube video ID  (Optional)" onChange={this.handleChange} value={this.state.youtubeId ? this.state.youtubeId : ""} readOnly={isViewMode} />
           </div>
         </Tab>
       </Tabs>
@@ -339,7 +345,7 @@ export default class Contribute extends SearchComponent {
     this.props.history.goBack();
   }
 
-  renderEditor(isEditMode, isDraft) {
+  renderEditor(isEditMode, isDraft, isViewMode) {
     if(isEditMode && this.state.isLoading && !this.state.submitted) {
       return(
         <Row>
@@ -355,21 +361,21 @@ export default class Contribute extends SearchComponent {
         <Row>
           <Col xs={12} md={6}>
 
-            { this.renderTitleInputs() }
-            { this.renderContentInputs() }
+            { this.renderTitleInputs(isViewMode) }
+            { this.renderContentInputs(isViewMode) }
 
-            <LoaderButton
+            {isViewMode ? null : <LoaderButton
               variant="primary"
               disabled={!this.validateForm()}
               type="submit"
               isLoading={this.state.isLoading}
               text={isEditMode ? (isDraft ? "Publish" : "Update") : "Submit"}
               loadingText={isEditMode ? (isDraft ? "Publishing…" : "Updating…") : "Submitting…"}
-            />
+            />}
 
-            <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
+            <a href="#/" className={`text-primary pt-1 ${isViewMode ? '' : 'ml-3'}`} onClick={this.cancelPost}>Cancel</a>
 
-            <div className="auto-save float-right pt-2">
+            {isViewMode ? null : <div className="auto-save float-right pt-2">
               <span className={`float-right ${(this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
                 Saved <Moment fromNow>{ this.state.autoSaveTimestamp }</Moment>
               </span>
@@ -377,7 +383,7 @@ export default class Contribute extends SearchComponent {
                 <FontAwesomeIcon icon={faSyncAlt} className="float-left auto-saving-icon spinning" />
                 <span className={`float-right`}>Saving…</span>
               </span>
-            </div>
+            </div>}
           </Col>
           <Col xs={12} md={6}>
             <div className="preview-pane">
@@ -392,20 +398,24 @@ export default class Contribute extends SearchComponent {
   }
 
   render() {
-    let { isEditMode, isDraft } = this.props;
+    let { isEditMode, isDraft, isViewMode } = this.props;
 
     return (
       <div className="container Contribute">
-        <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted} message="Are you sure? Any unsaved changes will be lost" />
-        <h1>
-          <LinkContainer exact to="/contributions">
-            <a href="#/" className="text-primary">Contributions</a>
-          </LinkContainer>
-          <span> <small>&raquo;</small> {`${isEditMode? (isDraft ? "Edit Draft" : "Edit Post") : "New Post"}`}</span>
-        </h1>
-        <hr />
-        <small className="text-muted">All submissions will be published only after an Admin approval process.</small>
-        { this.renderEditor(isEditMode, isDraft) }
+        <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted && !isViewMode} message="Are you sure? Any unsaved changes will be lost" />
+
+        <div className="header border-bottom">
+          <h1 className="float-left">
+            <LinkContainer exact to="/contributions">
+              <a href="#/" className="text-primary">Contributions</a>
+            </LinkContainer>
+            <span> <small>&raquo;</small> {`${isEditMode? (isDraft ? "Edit Draft" : "Edit Post") : isViewMode ? "View Post" : "New Post"}`}</span>
+          </h1>
+          {isViewMode ? <Button href={`/${this.state.postId}`} target="_blank" variant="primary" className="float-right">View Post <span><FontAwesomeIcon icon={faExternalLinkAlt} /></span></Button> : null}
+        </div>
+
+        { isViewMode ? <small className="text-muted">Published posts cannot be edited.</small> : <small className="text-muted">All submissions will be published only after an Admin approval process.</small> }
+        { this.renderEditor(isEditMode, isDraft, isViewMode) }
       </div>
     );
   }
