@@ -21,7 +21,7 @@ export async function main(event, context) {
     ExpressionAttributeValues: {
       ":title": data.title || null,
       ":song": data.song || null,
-      ":album": data.album || null,
+      ":album": data.album || "PAGE",
       ":singers": data.singers || null,
       ":music": data.music || null,
       ":category": data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),

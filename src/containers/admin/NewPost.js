@@ -172,7 +172,11 @@ export default class NewPost extends SearchComponent {
     this.setState({ isLoading: true, submitted: true });
   
     try {
-      await this.deleteDraft(slugify(this.state.title));
+      try {
+        await this.deleteDraft(slugify(this.state.title));
+      } catch (e) {
+        console.log(e);
+      }
 
       if(this.props.isEditMode && !this.props.isDraft) {
         await this.updatePost(this.preparePostObject());
@@ -186,7 +190,7 @@ export default class NewPost extends SearchComponent {
         }
       }
     } catch (e) {
-      alert(e);
+      console.log(e);
       this.setState({ isLoading: false });
     }
   }

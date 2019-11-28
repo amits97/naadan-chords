@@ -1,6 +1,6 @@
 import React from "react";
 import { API } from "aws-amplify";
-import { Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl, Badge } from "react-bootstrap";
+import { Badge, Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
 import Skeleton from "react-loading-skeleton";
@@ -279,7 +279,7 @@ export default class Contributions extends SearchComponent {
                   <Nav.Link eventKey="posts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("posts"); }}>Posts</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="drafts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("drafts"); }}>Drafts <span className={`${draftCount > 0 ? 'd-inline' : 'd-none'}`}>({draftCount})</span></Nav.Link>
+                  <Nav.Link eventKey="drafts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("drafts"); }}>Drafts <span className={`${draftCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{draftCount}</Badge></span></Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>

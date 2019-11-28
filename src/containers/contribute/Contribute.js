@@ -160,9 +160,13 @@ export default class Contribute extends SearchComponent {
     event.preventDefault();
   
     this.setState({ isLoading: true, submitted: true });
-  
+
     try {
-      await this.deleteDraft(slugify(this.state.title));
+      try {
+        await this.deleteDraft(slugify(this.state.title));
+      } catch (e) {
+        console.log(e);
+      }
 
       if(this.props.isEditMode && !this.props.isDraft) {
         await this.updatePost(this.preparePostObject());
@@ -172,7 +176,6 @@ export default class Contribute extends SearchComponent {
         this.props.history.push("/contributions");
       }
     } catch (e) {
-      alert(e);
       this.setState({ isLoading: false });
     }
   }

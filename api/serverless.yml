@@ -241,6 +241,14 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+  contribution-update:
+    handler: contribution/contribution-update.main
+    events:
+      - http:
+          path: contributions/{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
   contribution-list:
     handler: contribution/contribution-list.main
     events:

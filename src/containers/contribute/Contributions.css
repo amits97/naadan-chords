@@ -103,6 +103,12 @@
   border-radius: 0;
 }
 
+.Contributions .draft-count {
+  margin: 2px 0 0 6px;
+  position: absolute;
+  padding: 4px 5px 2px 6px;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .Contributions .new-post-button {
