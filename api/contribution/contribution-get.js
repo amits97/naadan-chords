@@ -1,4 +1,6 @@
 import * as dynamoDbLib from "../libs/dynamodb-lib";
+import * as adminCheckLib from "../libs/admincheck-lib";
+import * as userNameLib from "../libs/username-lib";
 import { success, failure } from "../libs/response-lib";
 
 export async function main(event) {
@@ -24,10 +26,16 @@ export async function main(event) {
 
   try {
     const result = await dynamoDbLib.call("get", params);
+    const isAdminUser = await adminCheckLib.checkIfAdmin(sub);
 
-    if(result.Item.userId === sub) {
-      //Do not expose userId
-      delete(result.Item.userId);
+    if(result.Item.userId === sub || isAdminUser) {
+      let userId = result.Item.userId;
+
+      //Get full attributes of author
+      let authorAttributes = await userNameLib.getAuthorAttributes(userId);
+      result.Item.authorName = authorAttributes.authorName;
+      result.Item.userName = authorAttributes.userName;
+
       return success(result.Item);
     } else {
       return failure({ status: "Not authorized" });

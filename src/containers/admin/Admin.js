@@ -20,6 +20,8 @@ export default class Admin extends SearchComponent {
     this.state = {
       posts: [],
       pages: [],
+      drafts: [],
+      contributions: [],
       isLoading: true,
       isPaginationLoading: false,
       activeTab: "posts",
@@ -33,18 +35,21 @@ export default class Admin extends SearchComponent {
       isLoading: true,
       posts: [],
       pages: [],
-      drafts: []
+      drafts: [],
+      contributions: []
     });
 
     try {
       const posts = await this.posts();
       const pages = await this.pages();
       const drafts = await this.drafts();
+      const contributions = await this.contributions();
 
       this.setState({
-        posts: posts,
-        pages: pages,
-        drafts: drafts,
+        posts,
+        pages,
+        drafts,
+        contributions,
         isLoading: false
       });
     } catch (e) {
@@ -78,6 +83,11 @@ export default class Admin extends SearchComponent {
   drafts() {
     let { search } = this.state;
     return API.get("posts", `/drafts/?${search ? "s=" + search : ""}`);
+  }
+
+  contributions() {
+    let { search } = this.state;
+    return API.get("posts", `/contributions/list?${search ? "s=" + search : ""}`);
   }
 
   addPostToDelete = (event, postId) => {
@@ -208,7 +218,7 @@ export default class Admin extends SearchComponent {
     }
   }
 
-  renderPosts(posts, isDraft) {
+  renderPosts(posts, isDraft, isContribution) {
     let { isLoading } = this.state;
 
     if(isLoading) {
@@ -226,7 +236,7 @@ export default class Admin extends SearchComponent {
                 return (
                   <ListGroup.Item key={i}>
                     <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
-                    <LinkContainer exact to={`/admin/${isDraft ? 'edit-draft' : 'edit-post'}/${post.postId}`}>
+                    <LinkContainer exact to={`/admin/${isDraft ? 'edit-draft' : isContribution ? 'review-post' : 'edit-post'}/${post.postId}`}>
                       <a href="#/" className="text-primary">{ post.title }</a>
                     </LinkContainer>
                   </ListGroup.Item>
@@ -272,8 +282,9 @@ export default class Admin extends SearchComponent {
   }
 
   render() {
-    let { posts, pages, drafts } = this.state;
+    let { posts, pages, drafts, contributions } = this.state;
     let draftCount = (drafts && drafts.Items) ? this.state.drafts.Items.length : 0;
+    let contributionsCount = (contributions && contributions.Items) ? contributions.Items.length : 0;
 
     return (
       <div className="container Admin">
@@ -299,7 +310,7 @@ export default class Admin extends SearchComponent {
                   <Nav.Link eventKey="drafts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("drafts"); }}>Drafts <span className={`${draftCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{draftCount}</Badge></span></Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Nav.Link eventKey="review" onClick={() => { this.clearCheckboxes(); this.setActiveTab("review"); }}>Review</Nav.Link>
+                <Nav.Link eventKey="review" onClick={() => { this.clearCheckboxes(); this.setActiveTab("review"); }}>Review <span className={`${contributionsCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{contributionsCount}</Badge></span></Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
@@ -328,6 +339,9 @@ export default class Admin extends SearchComponent {
                   </Tab.Pane>
                   <Tab.Pane eventKey="drafts">
                   { this.renderPosts(drafts, true) }
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="review">
+                  { this.renderPosts(contributions, null, true) }
                   </Tab.Pane>
                 </Tab.Content>
               </Form>

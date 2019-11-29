@@ -266,6 +266,14 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+  review-list:
+    handler: admin/review-list.main
+    events:
+      - http:
+          path: contributions/list
+          method: get
+          cors: true
+          authorizer: aws_iam
   contribution-get:
     handler: contribution/contribution-get.main
     events:

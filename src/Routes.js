@@ -34,6 +34,7 @@ export default ({ childProps }) =>
     <AuthenticatedRoute path="/admin/new-post" exact component={NewPost} props={childProps} />
     <AuthenticatedRoute path="/admin/edit-post/:id" exact component={NewPost} props={{isEditMode: true, ...childProps}} />
     <AuthenticatedRoute path="/admin/edit-draft/:id" exact component={NewPost} props={{isEditMode: true, isDraft: true, ...childProps}} />
+    <AuthenticatedRoute path="/admin/review-post/:id" exact component={NewPost} props={{isReviewMode: true, ...childProps}} />
     <AuthenticatedRoute path="/account" exact component={Account} props={{...childProps}} />
     <AppliedRoute path="/request" exact component={Request} props={{...childProps}} />
     <AuthenticatedRoute path="/contributions/" exact component={Contributions} props={childProps} />

@@ -39,6 +39,8 @@ export default class NewPost extends SearchComponent {
       leadTabs: null,
       youtubeId: null,
       postType: "POST",
+      authorName: null,
+      userId: null,
       submitted: false,
       imageLoading: false,
       isAutoSaving: false,
@@ -221,6 +223,10 @@ export default class NewPost extends SearchComponent {
     return API.get("posts", `/drafts/${this.props.match.params.id}`);
   }
 
+  contribution() {
+    return API.get("posts", `/contributions/${this.props.match.params.id}`);
+  }
+
   componentWillUnmount() {
     if(this.autoWriteDraft) {
       clearInterval(this.autoWriteDraft);
@@ -236,8 +242,8 @@ export default class NewPost extends SearchComponent {
       this.props.history.push("/");
     }
 
-    let { isEditMode, isDraft } = this.props;
-    if(isEditMode) {
+    let { isEditMode, isDraft, isReviewMode } = this.props;
+    if(isEditMode || isReviewMode) {
       this.setState({
         isLoading: true
       });
@@ -246,6 +252,8 @@ export default class NewPost extends SearchComponent {
         let post;
         if(isDraft) {
           post = await this.draft();
+        } else if(isReviewMode) {
+          post = await this.contribution();
         } else {
           post = await this.post();
         }
@@ -262,6 +270,8 @@ export default class NewPost extends SearchComponent {
           leadTabs: post.leadTabs,
           youtubeId: post.youtubeId,
           postType: post.postType,
+          authorName: post.authorName ? post.authorName : null,
+          userId: post.userId ? post.userId : null,
           autoSaveTimestamp: post.createdAt,
           isLoading: false
         });
@@ -347,6 +357,16 @@ export default class NewPost extends SearchComponent {
     } else {
       return (
         <div>
+          {this.props.isReviewMode ?
+            <Row>
+              <Col>
+                <Form.Group controlId="userId">
+                  <small className="text-muted">Submitted by <b>{this.state.authorName}</b></small>
+                  <Form.Control autoComplete="off" type="text" placeholder="Author" onChange={this.handleChange} value={this.state.userId ? this.state.userId : ""} />
+                </Form.Group>
+              </Col>
+            </Row>
+          : null}
           <Row>
             <Col>
               <Form.Group controlId="song">
@@ -440,8 +460,8 @@ export default class NewPost extends SearchComponent {
     this.props.history.goBack();
   }
 
-  renderEditor(isEditMode, isDraft) {
-    if(isEditMode && this.state.isLoading && !this.state.submitted) {
+  renderEditor(isEditMode, isDraft, isReviewMode) {
+    if((isEditMode || isReviewMode) && this.state.isLoading && !this.state.submitted) {
       return(
         <Row>
           <Col>
@@ -455,12 +475,14 @@ export default class NewPost extends SearchComponent {
       <Form onSubmit={this.handleSubmit}>
         <Row>
           <Col xs={12} md={6}>
-            <Form.Group>
-              <Form.Control as="select" id="postType" onChange={this.handleChange} value={this.state.postType ? this.state.postType : ""}>
-                <option value="POST">Post</option>
-                <option value="PAGE">Page</option>
-              </Form.Control>
-            </Form.Group>
+            { isReviewMode ? null :
+              <Form.Group>
+                <Form.Control as="select" id="postType" onChange={this.handleChange} value={this.state.postType ? this.state.postType : ""}>
+                  <option value="POST">Post</option>
+                  <option value="PAGE">Page</option>
+                </Form.Control>
+              </Form.Group>
+            }
 
             { this.renderTitleInputs() }
             { this.renderContentInputs() }
@@ -499,19 +521,19 @@ export default class NewPost extends SearchComponent {
   }
 
   render() {
-    let { isEditMode, isDraft } = this.props;
+    let { isEditMode, isDraft, isReviewMode } = this.props;
 
     return (
       <div className="container NewPost">
-        <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted} message="Are you sure? Any unsaved changes will be lost" />
+        <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted && !isReviewMode} message="Are you sure? Any unsaved changes will be lost" />
         <h1>
           <LinkContainer exact to="/admin">
             <a href="#/" className="text-primary">Admin</a>
           </LinkContainer>
-          <span> <small>&raquo;</small> {`${isEditMode? (isDraft ? "Edit Draft" : "Edit Post") : "New Post"}`}</span>
+          <span> <small>&raquo;</small> {`${isEditMode? (isDraft ? "Edit Draft" : "Edit Post") : isReviewMode ? "Review Post" : "New Post"}`}</span>
         </h1>
         <hr />
-        { this.renderEditor(isEditMode, isDraft) }
+        { this.renderEditor(isEditMode, isDraft, isReviewMode) }
       </div>
     );
   }
