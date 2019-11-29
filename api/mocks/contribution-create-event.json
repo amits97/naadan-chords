@@ -1,0 +1,8 @@
+{
+  "body": "{\"content\":\"hello world\",\"title\":\"Cherathukal - Kumbalangi Nights\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoAuthenticationProvider": "USER-SUB-1234:BLAH:FOO"
+    }
+  }
+}

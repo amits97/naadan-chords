@@ -42,6 +42,7 @@ provider:
       Action:
         - cognito-idp:ListUsers
         - cognito-idp:AdminListGroupsForUser
+        - cognito-idp:ListUsersInGroup
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
     - Effect: Allow
       Action:

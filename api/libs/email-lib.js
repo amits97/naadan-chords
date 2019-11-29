@@ -358,7 +358,7 @@ export async function sendEmail(title, message, textMessage, emailId) {
     Source: 'admin@naadanchords.com', // SES SENDING EMAIL
     ReplyToAddresses: ['naadanchords@gmail.com'],
     Destination: {
-      ToAddresses: [emailId], // SES RECEIVING EMAIL
+      ToAddresses: Array.isArray(emailId) ? emailId : [emailId], // SES RECEIVING EMAIL
     },
     Message: {
       Body: {
@@ -378,5 +378,6 @@ export async function sendEmail(title, message, textMessage, emailId) {
     },
   };
 
-  await sesLib.call("sendEmail", emailParams);
+  let result = await sesLib.call("sendEmail", emailParams);
+  return result;
 }

@@ -35,3 +35,13 @@ export async function getUserId(userName) {
   let userResults = await cognitoLib.call("listUsers", userParams);
   return userResults.Users[0] ? userResults.Users[0].Attributes[0].Value : "";
 }
+
+export async function getAdminUsers() {
+  const userParams = {
+    UserPoolId: "ap-south-1_l5klM91tP",
+    GroupName: "admin"
+  };
+
+  let userResults = await cognitoLib.call("listUsersInGroup", userParams);
+  return userResults.Users;
+}
