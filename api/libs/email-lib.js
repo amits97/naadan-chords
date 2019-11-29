@@ -1,6 +1,6 @@
 import * as sesLib from "./ses-lib";
 
-export async function sendEmail(title, message, textMessage, emailId) {
+function getEmailBody(title, message) {
   const emailBody = `
     <!doctype html>
     <html>
@@ -354,6 +354,12 @@ export async function sendEmail(title, message, textMessage, emailId) {
     </html>
   `;
 
+  return emailBody;
+}
+
+export async function sendEmail(title, message, textMessage, emailId) {
+  const emailBody = getEmailBody(title, message);
+
   const emailParams = {
     Source: 'admin@naadanchords.com', // SES SENDING EMAIL
     ReplyToAddresses: ['naadanchords@gmail.com'],
@@ -379,5 +385,44 @@ export async function sendEmail(title, message, textMessage, emailId) {
   };
 
   let result = await sesLib.call("sendEmail", emailParams);
+  return result;
+}
+
+export function syncSendEmail(title, message, textMessage, emailId, callback) {
+  const AWS = require('aws-sdk');
+  const SES = new AWS.SES({
+    region: 'us-east-1'
+  });
+
+  const emailBody = getEmailBody(title, message);
+
+  const emailParams = {
+    Source: 'admin@naadanchords.com', // SES SENDING EMAIL
+    ReplyToAddresses: ['naadanchords@gmail.com'],
+    Destination: {
+      ToAddresses: Array.isArray(emailId) ? emailId : [emailId], // SES RECEIVING EMAIL
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: "UTF-8",
+          Data: emailBody
+        },
+        Text: {
+          Charset: 'UTF-8',
+          Data: textMessage,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: title,
+      },
+    },
+  };
+
+  let result = SES.sendEmail(emailParams, function(err, data) {
+    callback('Email sent');
+  });
+
   return result;
 }

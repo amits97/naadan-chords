@@ -18,7 +18,8 @@ export default class Login extends SearchComponent {
       email: "",
       password: "",
       isErrorState: false,
-      errorMessage: ""
+      errorMessage: "",
+      errorType: ""
     };
   }
 
@@ -56,7 +57,8 @@ export default class Login extends SearchComponent {
       this.setState({
         isLoading: false,
         isErrorState: true,
-        errorMessage: e.message
+        errorMessage: e.message,
+        errorType: e.code
       });
     }
   }
@@ -66,6 +68,12 @@ export default class Login extends SearchComponent {
       return(
         <Alert variant="danger">
           {this.state.errorMessage}
+          {this.state.errorType === "UserNotConfirmedException" ?
+            <React.Fragment>
+              &nbsp;<a href="/signup/verify">Click here</a> to verify.
+            </React.Fragment>
+            : null
+          }
         </Alert>
       );
     }

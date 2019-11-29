@@ -274,7 +274,9 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+  post-signup:
+    handler: post-signup.handler
+
 # Create our resources with separate CloudFormation templates
 resources:
-  # API Gateway Errors
   - ${file(resources/api-gateway-errors.yml)}

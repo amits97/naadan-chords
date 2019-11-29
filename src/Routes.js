@@ -29,6 +29,7 @@ export default ({ childProps }) =>
     <UnauthenticatedRoute path="/login" exact component={Login} props={childProps} />
     <UnauthenticatedRoute path="/forgot-password" exact component={ResetPassword} props={childProps} />
     <UnauthenticatedRoute path="/signup" exact component={Signup} props={childProps} />
+    <UnauthenticatedRoute path="/signup/verify" exact component={Signup} props={{isVerify: true, ...childProps}} />
     <AuthenticatedRoute path="/admin" exact component={Admin} props={childProps} />
     <AuthenticatedRoute path="/admin/new-post" exact component={NewPost} props={childProps} />
     <AuthenticatedRoute path="/admin/edit-post/:id" exact component={NewPost} props={{isEditMode: true, ...childProps}} />

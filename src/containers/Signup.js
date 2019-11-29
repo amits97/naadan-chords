@@ -15,6 +15,7 @@ export default class Signup extends SearchComponent {
       isLoading: false,
       name: "",
       username: "",
+      getUsername: false,
       email: "",
       password: "",
       code: "",
@@ -53,6 +54,25 @@ export default class Signup extends SearchComponent {
 
   componentDidMount() {
     window.scrollTo(0, 0);
+
+    if(this.props.isVerify) {
+      if(typeof Storage !== "undefined") {
+        let username = localStorage.getItem("username");
+
+        if(username) {
+          this.setState({
+            username
+          });
+        } else {
+          this.setState({
+            getUsername: true
+          });
+        }
+      }
+      this.setState({
+        signedUp: true
+      });
+    }
   }
 
   autoRedirect() {
@@ -110,6 +130,11 @@ export default class Signup extends SearchComponent {
           isLoading: false,
           signedUp: true
         });
+
+        if(typeof Storage !== "undefined") {
+          localStorage.setItem("username", this.state.username);
+        }
+        this.props.history.push("/signup/verify");
       }
     } catch(e) {
       this.setState({
@@ -146,6 +171,17 @@ export default class Signup extends SearchComponent {
     if(this.state.signedUp) {
       return(
         <form onSubmit={this.handleSubmit}>
+          {this.state.getUsername ?
+            <FormGroup controlId="username">
+              <FormLabel>Username</FormLabel>
+              <FormControl
+                type="text"
+                value={this.state.username}
+                onChange={this.handleChange}
+              />
+            </FormGroup>
+            : null
+          }
           <FormGroup controlId="code">
             <FormLabel>Verification Code</FormLabel>
             <FormControl
