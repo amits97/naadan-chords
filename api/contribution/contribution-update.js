@@ -27,7 +27,7 @@ export async function main(event) {
     let result = await dynamoDbLib.call("get", params);
     
     if(result.Item.userId === sub) {
-      params.UpdateExpression = "SET title = :title, song = :song, album = :album, singers = :singers, music = :music, category = :category, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId";
+      params.UpdateExpression = "SET title = :title, song = :song, album = :album, singers = :singers, music = :music, category = :category, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, #status = :status";
       params.ExpressionAttributeValues = {
         ":title": data.title || null,
         ":song": data.song || null,
@@ -37,7 +37,11 @@ export async function main(event) {
         ":category": data.category || "MALAYALAM",
         ":content": data.content || null,
         ":leadTabs": data.leadTabs || null,
-        ":youtubeId": data.youtubeId || null
+        ":youtubeId": data.youtubeId || null,
+        ":status": "PENDING"
+      };
+      params.ExpressionAttributeNames = {
+        "#status": "status"
       };
       params.ReturnValues = "ALL_NEW";
 

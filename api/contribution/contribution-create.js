@@ -59,6 +59,7 @@ export async function main(event) {
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
       postType: "POST",
+      status: "PENDING",
       createdAt: Date.now()
     }
   };

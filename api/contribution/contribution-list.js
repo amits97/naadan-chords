@@ -77,7 +77,10 @@ export async function main(event) {
       ":userId": sub,
     },
     ScanIndexForward: false,
-    ProjectionExpression: "postId, createdAt, postType, title",
+    ProjectionExpression: "postId, #status, createdAt, postType, title",
+    ExpressionAttributeNames: {
+      "#status": "status"
+    },
     Limit: 15
   };
 
@@ -87,18 +90,15 @@ export async function main(event) {
       //search
       params = {
         TableName: "NaadanChordsContributions",
-        ProjectionExpression: "postId, createdAt, postType, title, userId",
+        ProjectionExpression: "postId, #status, createdAt, postType, title, userId",
+        ExpressionAttributeNames: {
+          "#status": "status"
+        },
         ...searchFilterLib.getSearchFilter(event.queryStringParameters.s, sub, "POST")
       };
       result = await dynamoDbLib.call("scan", params);
     } else {
       result = await dynamoDbLib.call("query", params);
-    }
-
-    if(result.Items) {
-      result.Items.forEach((item) => {
-        item.pending = true
-      });
     }
 
     result = await appendPublishedPosts(result, sub, event.queryStringParameters);
