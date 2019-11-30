@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Row, Col, Tabs, Tab } from "react-bootstrap";
+import { Alert, Button, Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faSyncAlt, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
@@ -39,6 +39,8 @@ export default class Contribute extends SearchComponent {
       youtubeId: null,
       submitted: false,
       isAutoSaving: false,
+      status: null,
+      reviewComment: null,
       autoSaveTimestamp: null,
       inputUpdated: false
     };
@@ -244,6 +246,8 @@ export default class Contribute extends SearchComponent {
           content: post.content,
           leadTabs: post.leadTabs,
           youtubeId: post.youtubeId,
+          reviewComment: post.comment,
+          status: post.status,
           autoSaveTimestamp: post.createdAt,
           isLoading: false
         });
@@ -362,8 +366,23 @@ export default class Contribute extends SearchComponent {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Row>
+          <Col>
+            { this.state.reviewComment && this.state.status === "NEEDS_REVISION" ?
+              <React.Fragment>
+                <Alert variant="warning">
+                  <Alert.Heading>
+                    Comment from Admin
+                  </Alert.Heading>
+                  {this.state.reviewComment}
+                </Alert>
+                <hr />
+              </React.Fragment>
+              : null
+            }
+          </Col>
+        </Row>
+        <Row>
           <Col xs={12} md={6}>
-
             { this.renderTitleInputs(isViewMode) }
             { this.renderContentInputs(isViewMode) }
 

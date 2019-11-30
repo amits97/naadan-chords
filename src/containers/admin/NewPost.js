@@ -500,7 +500,6 @@ export default class NewPost extends SearchComponent {
             />
             : null
           }
-          <hr />
         </React.Fragment>
       );
     }
@@ -536,6 +535,7 @@ export default class NewPost extends SearchComponent {
               }
             </Col>
           </Row>
+          <hr />
         </Form>
         <Form onSubmit={this.handleSubmit}>
           <Row>

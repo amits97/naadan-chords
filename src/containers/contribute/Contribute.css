@@ -96,6 +96,11 @@
   border-top: 0;
 }
 
+.Contribute .alert .h4.alert-heading {
+  font-family: "DINNextLTPro-Heavy", sans-serif;
+  font-size: 1.25rem;
+}
+
 .Contribute .preview-placeholder {
   text-align: center;
   color: #888888;
