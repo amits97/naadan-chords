@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Row, Col, Tabs, Tab } from "react-bootstrap";
+import { Form, Row, Col, Tabs, Tab, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faSyncAlt, faImage, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
@@ -44,6 +44,8 @@ export default class NewPost extends SearchComponent {
       submitted: false,
       imageLoading: false,
       isAutoSaving: false,
+      reviewComment: null,
+      addingComment: false,
       autoSaveTimestamp: null,
       inputUpdated: false
     };
@@ -168,6 +170,20 @@ export default class NewPost extends SearchComponent {
     }, 10000);
   }
 
+  handleReviewComment = async event => {
+    event.preventDefault();
+
+    this.setState({ addingComment: true });
+
+    try {
+      await this.addReviewComment();
+      this.props.history.push("/admin");
+    } catch(e) {
+      console.log(e);
+      this.setState({ addingComment: false });
+    }
+  }
+
   handleSubmit = async event => {
     event.preventDefault();
   
@@ -200,6 +216,14 @@ export default class NewPost extends SearchComponent {
   createPost(post) {
     return API.post("posts", "/posts", {
       body: post
+    });
+  }
+
+  addReviewComment() {
+    return API.post("posts", `/contributions/${this.props.match.params.id}/comment`, {
+      body: {
+        comment: this.state.reviewComment
+      }
     });
   }
 
@@ -271,6 +295,7 @@ export default class NewPost extends SearchComponent {
           youtubeId: post.youtubeId,
           postType: post.postType,
           authorName: post.authorName ? post.authorName : null,
+          reviewComment: post.comment ? post.comment : null,
           userId: post.userId ? post.userId : null,
           autoSaveTimestamp: post.createdAt,
           isLoading: false
@@ -460,6 +485,27 @@ export default class NewPost extends SearchComponent {
     this.props.history.goBack();
   }
 
+  renderReviewCommentInput(isReviewMode) {
+    if(isReviewMode) {
+      return (
+        <React.Fragment>
+          <TextareaAutosize placeholder="Add review comment" onChange={this.handleChange} value={this.state.reviewComment ? this.state.reviewComment : "" } id="reviewComment" className={`form-control review-comment`} />
+          { this.state.reviewComment ?
+            <LoaderButton
+              variant="primary"
+              type="submit"
+              isLoading={this.state.addingComment}
+              text="Add Comment"
+              loadingText="Adding Comment…"
+            />
+            : null
+          }
+          <hr />
+        </React.Fragment>
+      );
+    }
+  }
+
   renderEditor(isEditMode, isDraft, isReviewMode) {
     if((isEditMode || isReviewMode) && this.state.isLoading && !this.state.submitted) {
       return(
@@ -472,51 +518,71 @@ export default class NewPost extends SearchComponent {
     }
 
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <Row>
-          <Col xs={12} md={6}>
-            { isReviewMode ? null :
-              <Form.Group>
-                <Form.Control as="select" id="postType" onChange={this.handleChange} value={this.state.postType ? this.state.postType : ""}>
-                  <option value="POST">Post</option>
-                  <option value="PAGE">Page</option>
-                </Form.Control>
-              </Form.Group>
-            }
+      <React.Fragment>
+        <Form onSubmit={this.handleReviewComment}>
+          <Row>
+            <Col xs={12} md={6}>
+              { this.renderReviewCommentInput(isReviewMode) }
+            </Col>
+            <Col xs={12} md={6}>
+              { this.props.isReviewMode && this.state.reviewComment ?
+                <Alert variant="warning">
+                  <Alert.Heading>
+                    Comment from Admin
+                  </Alert.Heading>
+                  {this.state.reviewComment}
+                </Alert>
+                : null
+              }
+            </Col>
+          </Row>
+        </Form>
+        <Form onSubmit={this.handleSubmit}>
+          <Row>
+            <Col xs={12} md={6}>
+              { isReviewMode ? null :
+                <Form.Group>
+                  <Form.Control as="select" id="postType" onChange={this.handleChange} value={this.state.postType ? this.state.postType : ""}>
+                    <option value="POST">Post</option>
+                    <option value="PAGE">Page</option>
+                  </Form.Control>
+                </Form.Group>
+              }
 
-            { this.renderTitleInputs() }
-            { this.renderContentInputs() }
+              { this.renderTitleInputs() }
+              { this.renderContentInputs() }
 
-            <LoaderButton
-              variant="primary"
-              disabled={!this.validateForm()}
-              type="submit"
-              isLoading={this.state.isLoading}
-              text={isEditMode ? (isDraft ? "Publish" : "Update") : "Create"}
-              loadingText={isEditMode ? (isDraft ? "Publishing…" : "Updating…") : "Creating…"}
-            />
+              <LoaderButton
+                variant="primary"
+                disabled={!this.validateForm()}
+                type="submit"
+                isLoading={this.state.isLoading}
+                text={isEditMode ? (isDraft ? "Publish" : "Update") : "Create"}
+                loadingText={isEditMode ? (isDraft ? "Publishing…" : "Updating…") : "Creating…"}
+              />
 
-            <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
+              <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
 
-            <div className="auto-save float-right pt-2">
-              <span className={`float-right ${(this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
-                Saved <Moment fromNow>{ this.state.autoSaveTimestamp }</Moment>
-              </span>
-              <span className={`auto-saving float-right ${this.state.isAutoSaving ? '' : 'd-none'}`}>
-                <FontAwesomeIcon icon={faSyncAlt} className="float-left auto-saving-icon spinning" />
-                <span className={`float-right`}>Saving…</span>
-              </span>
-            </div>
-          </Col>
-          <Col xs={12} md={6}>
-            <div className="preview-pane">
-              <h2 className="title">{this.state.title}</h2>
-              {this.state.title ? <hr /> : ''}
-              {this.state.title ? this.renderPreviewContent() : this.renderPreviewPlaceholder()}
-            </div>
-          </Col>
-        </Row>
-      </Form>
+              <div className="auto-save float-right pt-2">
+                <span className={`float-right ${(this.state.isAutoSaving || this.state.autoSaveTimestamp === null) ? 'd-none' : ''}`}>
+                  Saved <Moment fromNow>{ this.state.autoSaveTimestamp }</Moment>
+                </span>
+                <span className={`auto-saving float-right ${this.state.isAutoSaving ? '' : 'd-none'}`}>
+                  <FontAwesomeIcon icon={faSyncAlt} className="float-left auto-saving-icon spinning" />
+                  <span className={`float-right`}>Saving…</span>
+                </span>
+              </div>
+            </Col>
+            <Col xs={12} md={6}>
+              <div className="preview-pane">
+                <h2 className="title">{this.state.title}</h2>
+                {this.state.title ? <hr /> : ''}
+                {this.state.title ? this.renderPreviewContent() : this.renderPreviewPlaceholder()}
+              </div>
+            </Col>
+          </Row>
+        </Form>
+      </React.Fragment>
     );
   }
 

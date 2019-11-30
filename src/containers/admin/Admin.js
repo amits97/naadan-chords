@@ -236,6 +236,7 @@ export default class Admin extends SearchComponent {
                 return (
                   <ListGroup.Item key={i}>
                     <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
+                    { post.status ? <Badge variant="primary">{post.status}</Badge> : null }
                     <LinkContainer exact to={`/admin/${isDraft ? 'edit-draft' : isContribution ? 'review-post' : 'edit-post'}/${post.postId}`}>
                       <a href="#/" className="text-primary">{ post.title }</a>
                     </LinkContainer>

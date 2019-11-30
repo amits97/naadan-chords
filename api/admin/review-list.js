@@ -9,7 +9,7 @@ export async function main(event) {
 
   let isAdminUser = await adminCheckLib.checkIfAdmin(sub);
   if(!isAdminUser) {
-    return failure({ status: false, message: "No write permissions" });
+    return failure({ status: false, message: "Not authorized" });
   }
 
   let params = {
@@ -20,7 +20,10 @@ export async function main(event) {
       ":postType": "POST",
     },
     ScanIndexForward: false,
-    ProjectionExpression: "postId, createdAt, postType, title",
+    ProjectionExpression: "postId, #status, createdAt, postType, title",
+    ExpressionAttributeNames: {
+      "#status": "status"
+    },
     Limit: 15
   };
 
@@ -30,7 +33,10 @@ export async function main(event) {
       //search
       params = {
         TableName: "NaadanChordsContributions",
-        ProjectionExpression: "postId, createdAt, postType, title",
+        ProjectionExpression: "postId, #status, createdAt, postType, title",
+        ExpressionAttributeNames: {
+          "#status": "status"
+        },
         ...searchFilterLib.getSearchFilter(event.queryStringParameters.s, null, "POST")
       };
       result = await dynamoDbLib.call("scan", params);

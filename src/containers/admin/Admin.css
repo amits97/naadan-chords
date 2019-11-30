@@ -42,6 +42,14 @@
   border: 0;
 }
 
+.Admin .list-group-item span.badge {
+  margin-right: 8px;
+  margin-top: 3px;
+  float: left;
+  height: 16px;
+  text-transform: uppercase;
+}
+
 .Admin .list-group-item a:hover {
   text-decoration: underline;
 }

@@ -27,6 +27,16 @@
   border: 1px solid #dee2e6;
 }
 
+.NewPost form textarea.review-comment {
+  padding: .375rem .75rem;
+  white-space: unset;
+}
+
+.NewPost .alert .h4.alert-heading {
+  font-family: "DINNextLTPro-Heavy", sans-serif;
+  font-size: 1.25rem;
+}
+
 .NewPost form textarea.form-control, .NewPost form select.form-control {
   margin-bottom: 20px;
   line-height: 1.5;
