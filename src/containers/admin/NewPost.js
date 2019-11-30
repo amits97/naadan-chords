@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Row, Col, Tabs, Tab, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faSyncAlt, faImage, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faSyncAlt, faImage, faTrashAlt, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../../components/LoaderButton";
 import { Auth, API, Storage } from "aws-amplify";
@@ -489,14 +489,15 @@ export default class NewPost extends SearchComponent {
     if(isReviewMode) {
       return (
         <React.Fragment>
-          <TextareaAutosize placeholder="Add review comment" onChange={this.handleChange} value={this.state.reviewComment ? this.state.reviewComment : "" } id="reviewComment" className={`form-control review-comment`} />
+          <TextareaAutosize placeholder="Add review comment" onChange={this.handleChange} value={this.state.reviewComment ? this.state.reviewComment : "" } id="reviewComment" className={`form-control review-comment mb-3`} />
           { this.state.reviewComment ?
             <LoaderButton
               variant="primary"
+              className="review-comment-submit"
               type="submit"
               isLoading={this.state.addingComment}
-              text="Add Comment"
-              loadingText="Adding Comment…"
+              text={<React.Fragment>Comment <FontAwesomeIcon icon={faPaperPlane} className="ml-2" /></React.Fragment>}
+              loadingText="Sending…"
             />
             : null
           }
@@ -554,6 +555,7 @@ export default class NewPost extends SearchComponent {
 
               <LoaderButton
                 variant="primary"
+                className="post-submit"
                 disabled={!this.validateForm()}
                 type="submit"
                 isLoading={this.state.isLoading}

@@ -180,9 +180,16 @@
   to { transform: scale(1) rotate(360deg); }
 }
 
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .NewPost .review-comment-submit {
+    margin-bottom: 30px;
+  }
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
-  .NewPost .LoaderButton {
+  .NewPost .post-submit {
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -195,11 +202,11 @@
     line-height: 0;
   }
 
-  .NewPost .LoaderButton .spinning {
+  .NewPost .post-submit .spinning {
     display: none;
   }
 
-  .NewPost .LoaderButton::after {
+  .NewPost .post-submit::after {
     text-indent: 0;
     display: block;
     line-height: initial;
