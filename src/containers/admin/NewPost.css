@@ -185,6 +185,10 @@
   .NewPost .review-comment-submit {
     margin-bottom: 30px;
   }
+
+  .NewPost .review-submit-container {
+    margin-bottom: 30px;
+  }
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

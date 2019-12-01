@@ -33,7 +33,7 @@ export async function main(event, context, callback) {
     // - 'status': post status
     // - 'createdAt': current Unix timestamp
     Item: {
-      userId: sub,
+      userId: data.userId ? data.userId : sub,
       postId: slugify(data.title),
       title: data.title,
       song: data.song || null,

@@ -44,6 +44,8 @@ export default class NewPost extends SearchComponent {
       submitted: false,
       imageLoading: false,
       isAutoSaving: false,
+      isApproving: false,
+      isRejecting: false,
       reviewComment: null,
       addingComment: false,
       autoSaveTimestamp: null,
@@ -184,32 +186,36 @@ export default class NewPost extends SearchComponent {
     }
   }
 
-  handleSubmit = async event => {
+  handleSubmit = async (event, isReviewMode, approve) => {
     event.preventDefault();
   
-    this.setState({ isLoading: true, submitted: true });
-  
-    try {
+    if(isReviewMode) {
+      console.log(approve);
+    } else {
+      this.setState({ isLoading: true, submitted: true });
+
       try {
-        await this.deleteDraft(slugify(this.state.title));
+        try {
+          await this.deleteDraft(slugify(this.state.title));
+        } catch (e) {
+          console.log(e);
+        }
+
+        if(this.props.isEditMode && !this.props.isDraft) {
+          await this.updatePost(this.preparePostObject());
+          this.props.history.push(`/${this.props.match.params.id}`);
+        } else {
+          await this.createPost(this.preparePostObject());
+          if(this.state.postType === "PAGE") {
+            this.props.history.push("/admin");
+          } else {
+            this.props.history.push("/");
+          }
+        }
       } catch (e) {
         console.log(e);
+        this.setState({ isLoading: false });
       }
-
-      if(this.props.isEditMode && !this.props.isDraft) {
-        await this.updatePost(this.preparePostObject());
-        this.props.history.push(`/${this.props.match.params.id}`);
-      } else {
-        await this.createPost(this.preparePostObject());
-        if(this.state.postType === "PAGE") {
-          this.props.history.push("/admin");
-        } else {
-          this.props.history.push("/");
-        }
-      }
-    } catch (e) {
-      console.log(e);
-      this.setState({ isLoading: false });
     }
   }
   
@@ -489,7 +495,8 @@ export default class NewPost extends SearchComponent {
     if(isReviewMode) {
       return (
         <React.Fragment>
-          <TextareaAutosize placeholder="Add review comment" onChange={this.handleChange} value={this.state.reviewComment ? this.state.reviewComment : "" } id="reviewComment" className={`form-control review-comment mb-3`} />
+          <small className="text-muted">Comment from Admin</small>
+          <TextareaAutosize style={{ minHeight: 58 }} placeholder="Add review comment" onChange={this.handleChange} value={this.state.reviewComment ? this.state.reviewComment : "" } id="reviewComment" className={`form-control review-comment mb-3`} />
           { this.state.reviewComment ?
             <LoaderButton
               variant="primary"
@@ -553,15 +560,36 @@ export default class NewPost extends SearchComponent {
               { this.renderTitleInputs() }
               { this.renderContentInputs() }
 
-              <LoaderButton
-                variant="primary"
-                className="post-submit"
-                disabled={!this.validateForm()}
-                type="submit"
-                isLoading={this.state.isLoading}
-                text={isEditMode ? (isDraft ? "Publish" : "Update") : "Create"}
-                loadingText={isEditMode ? (isDraft ? "Publishing…" : "Updating…") : "Creating…"}
-              />
+              { isReviewMode ?
+                  <span className="review-submit-container d-inline-block">
+                    <LoaderButton
+                      variant="success"
+                      className="review-submit"
+                      onClick={(e) => this.handleSubmit(e, isReviewMode, true)}
+                      isLoading={this.state.isApproving}
+                      text="Approve"
+                      loadingText="Approving…"
+                    />
+                    <LoaderButton
+                      variant="danger"
+                      className="review-submit ml-2"
+                      onClick={(e) => this.handleSubmit(e, isReviewMode, false)}
+                      isLoading={this.state.isRejecting}
+                      text="Reject"
+                      loadingText="Rejecting…"
+                      />
+                  </span>
+                :
+                  <LoaderButton
+                  variant="primary"
+                  className="post-submit"
+                  disabled={!this.validateForm()}
+                  type="submit"
+                  isLoading={this.state.isLoading}
+                  text={isEditMode ? (isDraft ? "Publish" : "Update") : "Create"}
+                  loadingText={isEditMode ? (isDraft ? "Publishing…" : "Updating…") : "Creating…"}
+                  />
+              }
 
               <a href="#/" className="text-primary ml-3 pt-1" onClick={this.cancelPost}>Cancel</a>
 
