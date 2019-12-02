@@ -138,8 +138,8 @@ export default class NewPost extends SearchComponent {
     }
   }
 
-  preparePostObject = () => {
-    return ({
+  preparePostObject = (addUserId) => {
+    let postObject = {
       title: this.state.title,
       postType: this.state.postType,
       song: this.state.song,
@@ -151,7 +151,12 @@ export default class NewPost extends SearchComponent {
       content: this.state.content,
       leadTabs: this.state.leadTabs,
       youtubeId: this.state.youtubeId
-    });
+    };
+
+    if(addUserId) {
+      postObject.userId = this.state.userId;
+    }
+    return postObject;
   }
 
   handleDraft = async () => {
@@ -190,7 +195,14 @@ export default class NewPost extends SearchComponent {
     event.preventDefault();
   
     if(isReviewMode) {
-      console.log(approve);
+      if(approve) {
+        this.setState({ isApproving: true });
+        await this.createPost(this.preparePostObject(true));
+      } else {
+        this.setState({ isRejecting: true });
+        await this.rejectPost();
+      }
+      this.props.history.push("/admin");
     } else {
       this.setState({ isLoading: true, submitted: true });
 
@@ -231,6 +243,10 @@ export default class NewPost extends SearchComponent {
         comment: this.state.reviewComment
       }
     });
+  }
+
+  rejectPost() {
+    return API.del("posts", `/contributions/${this.props.match.params.id}/reject`);
   }
 
   updatePost(post) {

@@ -290,6 +290,14 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+  contribution-reject:
+    handler: admin/review-reject.main
+    events:
+      - http:
+          path: contributions/{id}/reject
+          method: delete
+          cors: true
+          authorizer: aws_iam
   post-signup:
     handler: post-signup.handler
 

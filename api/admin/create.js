@@ -1,5 +1,7 @@
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as adminCheckLib from "../libs/admincheck-lib";
+import * as usernameLib from "../libs/username-lib";
+import * as emailLib from "../libs/email-lib";
 import { success, failure } from "../libs/response-lib";
 
 function slugify(text) {
@@ -9,6 +11,38 @@ function slugify(text) {
     .replace(/\-\-+/g, '-')         // Replace multiple - with single -
     .replace(/^-+/, '')             // Trim - from start of text
     .replace(/-+$/, '');            // Trim - from end of text
+}
+
+async function notifyContributor(item) {
+  const email = await usernameLib.getAuthorEmail(item.userId);
+
+  const title = `Naadan Chords - Your contribution was approved`;
+  const message = `
+    <p>Hey,</p>
+    <p>Thank you for your contribution - <b>${item.title}</b>.</p>
+    <p>We are thrilled to let you know that your post was approved!</p>
+    <p><a href="https://www.naadanchords.com/${slugify(item.title)}">Click here</a> to see your post live on Naadan Chords. Feel free to share the link on social media to let your friends know that you are a Naadan Chords contributor :)</p>
+    <p>Thanks for your hard work!</p>
+  `;
+  const textMessage = `Naadan Chords - Your contribution was approved`;
+
+  await emailLib.sendEmail(title, message, textMessage, email);
+}
+
+async function deleteContribution(postId) {
+  const params = {
+    TableName: "NaadanChordsContributions",
+    Key: {
+      postId: postId
+    }
+  };
+
+  try {
+    await dynamoDbLib.call("delete", params);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 export async function main(event, context, callback) {
@@ -52,6 +86,10 @@ export async function main(event, context, callback) {
 
   try {
     await dynamoDbLib.call("put", params);
+    if(data.userId) {
+      await deleteContribution(slugify(data.title));
+      await notifyContributor(data);
+    }
     return success(params.Item);
   } catch (e) {
     return failure({ status: false });
