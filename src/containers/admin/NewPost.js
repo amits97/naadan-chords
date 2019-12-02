@@ -542,25 +542,30 @@ export default class NewPost extends SearchComponent {
 
     return (
       <React.Fragment>
-        <Form onSubmit={this.handleReviewComment}>
-          <Row>
-            <Col xs={12} md={6}>
-              { this.renderReviewCommentInput(isReviewMode) }
-            </Col>
-            <Col xs={12} md={6}>
-              { this.props.isReviewMode && this.state.reviewComment ?
-                <Alert variant="warning">
-                  <Alert.Heading>
-                    Comment from Admin
-                  </Alert.Heading>
-                  {this.state.reviewComment}
-                </Alert>
-                : null
-              }
-            </Col>
-          </Row>
-          <hr />
-        </Form>
+          { isReviewMode ?
+            <React.Fragment>
+              <Form onSubmit={this.handleReviewComment}>
+                <Row>
+                  <Col xs={12} md={6}>
+                    { this.renderReviewCommentInput(isReviewMode) }
+                  </Col>
+                  <Col xs={12} md={6}>
+                    { this.props.isReviewMode && this.state.reviewComment ?
+                      <Alert variant="warning">
+                        <Alert.Heading>
+                          Comment from Admin
+                        </Alert.Heading>
+                        {this.state.reviewComment}
+                      </Alert>
+                      : null
+                    }
+                  </Col>
+                </Row>
+              </Form>
+              <hr />
+            </React.Fragment>
+            : null
+          }
         <Form onSubmit={this.handleSubmit}>
           <Row>
             <Col xs={12} md={6}>
