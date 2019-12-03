@@ -117,7 +117,7 @@ async function generateSitemap() {
   let authorMap = [];
   let authorPageMap = [];
   //author pages
-  for(author in authorList) {
+  for(let author in authorList) {
     if(authorList.hasOwnProperty(author)) {
       authorMap.push({ userName: author });
       let authorPaginationResult = await generateAuthorPagination(author);
@@ -126,7 +126,7 @@ async function generateSitemap() {
   }
 
   let albumMap = [];
-  for(album in albumList) {
+  for(let album in albumList) {
     if(albumList.hasOwnProperty(album)) {
       albumMap.push({ album: slugify(album) });
     }

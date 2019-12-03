@@ -11,17 +11,12 @@ async function getTop10Posts(items) {
       topPosts[items[i].postId] = 1;
     }
   }
-
   let topPostsResult = await appendPostDetails(topPosts);
   return topPostsResult;
 }
 
 function compare(a,b) {
-  if (a.views < b.views)
-    return 1;
-  if (a.views > b.views)
-    return -1;
-  return 0;
+  return b[1] - a[1];
 }
 
 async function appendPostDetails(topPosts) {
@@ -30,11 +25,19 @@ async function appendPostDetails(topPosts) {
   var filterExpression = "";
   var expressionAttributeValues = {};
 
+  let topPostsArray = [];
   for(postId in topPosts) {
     if(topPosts.hasOwnProperty(postId)) {
-      postIds.push(postId)
+      topPostsArray.push([postId, topPosts[postId]]);
     }
   }
+
+  topPostsArray.sort(compare);
+  topPostsArray = topPostsArray.slice(0, 10);
+
+  topPostsArray.forEach((item) => {
+    postIds.push(item[0]);
+  });
 
   for(let i = 0; i < postIds.length; i++) {
     let postId = postIds[i];
@@ -65,9 +68,7 @@ async function appendPostDetails(topPosts) {
         views: topPosts[post.postId]
       });
     }
-    
-    resultArray.sort(compare);
-    resultArray = resultArray.slice(0, 10);
+
     let saveResult = await saveTop10Posts(resultArray);
     return success({ status: true, message: saveResult });
   } catch(e) {
@@ -147,13 +148,22 @@ export async function main(event, context, callback) {
     },
     ExpressionAttributeNames: {
       "#timestamp": "timestamp"
-    }
+    },
+    Limit: 3000
   };
 
+  await clearTable();
   try {
     await clearTable();
+    let resultItems = [];
     let result = await dynamoDbLib.call("scan", params);
-    return getTop10Posts(result.Items);
+    resultItems = resultItems.concat(result.Items);
+    while(result.hasOwnProperty("LastEvaluatedKey")) {
+      params.ExclusiveStartKey = result.LastEvaluatedKey;
+      result = await dynamoDbLib.call("scan", params);
+      resultItems = resultItems.concat(result.Items);
+    }
+    return getTop10Posts(resultItems);
   } catch (e) {
     return failure({ status: false, error: e });
   }
