@@ -351,7 +351,11 @@ export default class NewPost extends SearchComponent {
   renderPreviewContent = () => {
     if(this.state.postType === "PAGE") {
       return (
-        <ReactMarkdown source={ this.state.content } />
+        <ReactMarkdown source={ this.state.content } renderers={{
+          table: (props) => {
+              return <table className="table">{props.children}</table>
+          }
+        }} />
       );
     } else {
       return (

@@ -71,7 +71,7 @@ export async function main(event, context, callback) {
       postId: slugify(data.title),
       title: data.title,
       song: data.song || null,
-      album: data.album || null,
+      album: data.album || "PAGE",
       singers: data.singers || null,
       music: data.music || null,
       category: data.category || "MALAYALAM",
@@ -92,6 +92,6 @@ export async function main(event, context, callback) {
     }
     return success(params.Item);
   } catch (e) {
-    return failure({ status: false });
+    return failure({ status: false, error: e });
   }
 }

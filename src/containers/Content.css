@@ -115,6 +115,10 @@
   white-space: pre-wrap;
 }
 
+.Content .post table.table td {
+  min-width: 125px;
+}
+
 .Content .post .matchedContent h6 {
   color: #777777;
 }

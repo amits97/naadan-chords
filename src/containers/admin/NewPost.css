@@ -65,6 +65,10 @@
   margin-top: 15px;
 }
 
+.NewPost .preview-pane table.table td {
+  min-width: 125px;
+}
+
 .NewPost nav {
   font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
   margin-top: 25px;
