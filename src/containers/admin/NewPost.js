@@ -7,6 +7,7 @@ import LoaderButton from "../../components/LoaderButton";
 import { Auth, API, Storage } from "aws-amplify";
 import ReactMarkdown from "react-markdown";
 import Moment from "react-moment";
+import { Helmet } from "react-helmet";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton from "react-loading-skeleton";
@@ -659,11 +660,24 @@ export default class NewPost extends SearchComponent {
     );
   }
 
+  renderSEOTags() {
+    return (
+      <Helmet>
+        <title>Admin - Editor | Naadan Chords</title>
+        <meta name="description" content="" />
+        <meta name="twitter:card" content="summary" />
+        <meta property="og:title" content="Admin - Editor | Naadan Chords" />
+        <meta property="og:description" content="" />
+      </Helmet>
+    );
+  }
+
   render() {
     let { isEditMode, isDraft, isReviewMode } = this.props;
 
     return (
       <div className="container NewPost">
+        { this.renderSEOTags() }
         <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted && !isReviewMode} message="Are you sure? Any unsaved changes will be lost" />
         <h1>
           <LinkContainer exact to="/admin">

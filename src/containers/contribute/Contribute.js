@@ -6,6 +6,7 @@ import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../../components/LoaderButton";
 import { API } from "aws-amplify";
 import Moment from "react-moment";
+import { Helmet } from "react-helmet";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton from "react-loading-skeleton";
@@ -437,11 +438,24 @@ export default class Contribute extends SearchComponent {
     );
   }
 
+  renderSEOTags() {
+    return (
+      <Helmet>
+        <title>Contributions - Editor | Naadan Chords</title>
+        <meta name="description" content="" />
+        <meta name="twitter:card" content="summary" />
+        <meta property="og:title" content="Contributions - Editor | Naadan Chords" />
+        <meta property="og:description" content="" />
+      </Helmet>
+    );
+  }
+
   render() {
     let { isEditMode, isDraft, isViewMode } = this.props;
 
     return (
       <div className="container Contribute">
+        { this.renderSEOTags() }
         <PromptWrapper when={this.anyDetailsEntered() && !this.state.submitted && !isViewMode} message="Are you sure? Any unsaved changes will be lost" />
 
         <div className="header border-bottom">
