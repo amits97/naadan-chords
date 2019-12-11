@@ -23,7 +23,8 @@ export default class Signup extends SearchComponent {
       timeRemaining: 5,
       errorMessage: "",
       signedUp: false,
-      verified: false
+      verified: false,
+      codeResent: false
     };
   }
 
@@ -145,6 +146,20 @@ export default class Signup extends SearchComponent {
     }
   }
 
+  resendAuthCode = (e) => {
+    e.preventDefault();
+    Auth.resendSignUp(this.state.username).then(() => {
+      this.setState({
+        codeResent: true
+      });
+    }).catch(e => {
+      this.setState({
+        isErrorState: true,
+        errorMessage: e.message
+      });
+    });
+  }
+
   renderError = () => {
     if(this.state.isErrorState) {
       return(
@@ -189,6 +204,11 @@ export default class Signup extends SearchComponent {
               value={this.state.code}
               onChange={this.handleChange}
             />
+            <small className="text-muted d-block mb-3">
+              <a href="#/" onClick={this.resendAuthCode}>
+                Click here to resend verification code.
+              </a>
+            </small>
           </FormGroup>
           <LoaderButton
             block
@@ -204,7 +224,7 @@ export default class Signup extends SearchComponent {
   }
 
   render() {
-    let {signedUp,verified} = this.state;
+    let { signedUp, verified, codeResent} = this.state;
 
     if(verified) {
       return (
@@ -292,7 +312,11 @@ export default class Signup extends SearchComponent {
         </div>
 
         <div className={signedUp ? 'd-block' : 'd-none'}>
-          <h2>Thank you for Signing up!</h2>
+          { this.renderError() }
+          { codeResent ? <Alert variant="success">
+            Code resent successfully.
+          </Alert> : null}
+          <h2>Verify Account</h2>
           <p>Please check your email for a verification code. If you can't find the email, it could be in the Spam folder.</p>
           {this.renderVerificationForm()}
         </div>
