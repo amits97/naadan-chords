@@ -23,6 +23,7 @@ export default class Contribute extends SearchComponent {
 
     this.parseHtml = htmlParser();
     this.chordsEditor = React.createRef();
+    this.tabsEditor = React.createRef();
     this.fileUploader = React.createRef();
     this.autoWriteDraft = null;
 
@@ -54,28 +55,45 @@ export default class Contribute extends SearchComponent {
     return url.substring(url.lastIndexOf('/') + 1);
   }
 
-  insertAtCursor = (myValue, addNewLines) => {
-    var myField = this.chordsEditor.current;
+  insertAtCursor = (myValue, addNewLines, insertRef) => {
+    var myField = insertRef.current;
     myField.focus();
-    var contentValue = this.state.content ? this.state.content : "";
+    const contentState = insertRef.current.getAttribute("id");
+    var contentValue = this.state[contentState] ? this.state[contentState] : "";
     var selection = inputSelectionLib.getInputSelection(myField);
 
-    if(selection.start === selection.end) {
+    let tabs = `\ne|---------------------------------------------|`;
+    tabs += `\nB|---------------------------------------------|`;
+    tabs += `\nG|---------------------------------------------|`;
+    tabs += `\nD|---------------------------------------------|`;
+    tabs += `\nA|---------------------------------------------|`;
+    tabs += `\nE|---------------------------------------------|\n`;
+
+    let strumming = 'D DU DUDU';
+
+    if(myValue === "separator") {
       contentValue = contentValue.substring(0, selection.start)
       + `{${myValue}}`
       + contentValue.substring(selection.end, contentValue.length);
     } else {
-      contentValue = contentValue.substring(0, selection.start)
-      + `{start_${myValue}}`
-      + `${addNewLines ? "\n" : ""}`
-      + contentValue.substring(selection.start, selection.end)
-      + `${addNewLines ? "\n" : ""}`
-      + `{end_${myValue}}`
-      + contentValue.substring(selection.end, contentValue.length);
+      if(selection.start === selection.end) {
+        contentValue = contentValue.substring(0, selection.start)
+        + `{start_${myValue}}${myValue === "tab" ? tabs : myValue === "strumming" ? strumming : ''}`
+        + `{end_${myValue}}`
+        + contentValue.substring(selection.end, contentValue.length);
+      } else {
+        contentValue = contentValue.substring(0, selection.start)
+        + `{start_${myValue}}`
+        + `${addNewLines ? "\n" : ""}`
+        + contentValue.substring(selection.start, selection.end)
+        + `${addNewLines ? "\n" : ""}`
+        + `{end_${myValue}}`
+        + contentValue.substring(selection.end, contentValue.length);
+      }
     }
 
     this.setState({
-      content: contentValue
+      [contentState]: contentValue
     });
   }
 
@@ -328,14 +346,14 @@ export default class Contribute extends SearchComponent {
       <Tabs defaultActiveKey="chords">
         <Tab eventKey="chords" title="CHORDS">
           <div className="mt-3">
-            <EditorPanel insertAtCursor={this.insertAtCursor} readOnly={isViewMode} />
+            <EditorPanel insertAtCursor={this.insertAtCursor} readOnly={isViewMode} insertRef={this.chordsEditor} />
             <TextareaAutosize ref={this.chordsEditor} placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} readOnly={isViewMode} />
           </div>
         </Tab>
         <Tab eventKey="tabs" title="LEAD TABS">
           <div className="mt-3">
-            <EditorPanel />
-            <TextareaAutosize placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} readOnly={isViewMode} />
+            <EditorPanel insertAtCursor={this.insertAtCursor} insertRef={this.tabsEditor} />
+            <TextareaAutosize ref={this.tabsEditor} placeholder="Lead tabs (Optional)" onChange={this.handleChange} value={this.state.leadTabs ? this.state.leadTabs : "" } id="leadTabs" className={`form-control post`} style={{ minHeight: 250 }} readOnly={isViewMode} />
           </div>
         </Tab>
         <Tab eventKey="video" title="VIDEO">

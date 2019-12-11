@@ -6,7 +6,7 @@ import "./EditorPanel.css";
 
 export default class EditorPanel extends Component {
   handleClick = (text, addNewLines) => {
-    this.props.insertAtCursor(text, addNewLines);
+    this.props.insertAtCursor(text, addNewLines, this.props.insertRef);
   }
 
   render() {
