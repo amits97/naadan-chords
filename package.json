@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.35.7",
+  "version": "0.35.8",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
@@ -27,6 +27,7 @@
     "react-scripts": "^3.1.1",
     "react-star-ratings": "^2.3.0",
     "remove-markdown": "^0.3.0",
+    "serialize-javascript": "^2.1.2",
     "vexchords": "^1.2.0"
   },
   "scripts": {
