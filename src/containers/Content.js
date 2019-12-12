@@ -363,7 +363,7 @@ export default class Content extends Component {
       return (
         <ReactMarkdown source={ post.content } renderers={{
           table: (props) => {
-              return <table className="table table-striped table-bordered table-hover">{props.children}</table>
+              return <table className="table table-bordered table-hover">{props.children}</table>
           }
         }} />
       );

@@ -372,7 +372,7 @@ export default class NewPost extends SearchComponent {
       return (
         <ReactMarkdown source={ this.state.content } renderers={{
           table: (props) => {
-              return <table className="table table-striped table-bordered table-hover">{props.children}</table>
+              return <table className="table table-bordered table-hover">{props.children}</table>
           }
         }} />
       );
