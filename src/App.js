@@ -110,6 +110,13 @@ class App extends Component {
           let session = await Auth.currentSession();
           await this.getUserPrevileges(session);
           this.userHasAuthenticated(true);
+          if(typeof Storage !== "undefined") {
+            let redirectUrl = localStorage.getItem("redirectUrl");
+            if(redirectUrl) {
+              localStorage.removeItem("redirectUrl");
+              this.props.history.push(redirectUrl);
+            }
+          }
           break;
         default:
           break;

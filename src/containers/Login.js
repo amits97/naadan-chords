@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
+import { querystring } from "../libs/utils";
 import "./Login.css";
 
 export default class Login extends SearchComponent {
@@ -41,7 +42,7 @@ export default class Login extends SearchComponent {
 
   handleSubmit = async event => {
     event.preventDefault();
-  
+
     this.setState({ isLoading: true });
 
     try {
@@ -61,6 +62,13 @@ export default class Login extends SearchComponent {
         errorType: e.code
       });
     }
+  }
+
+  handleSocialLogin = (provider) => {
+    if(typeof Storage !== "undefined") {
+      localStorage.setItem("redirectUrl", querystring("redirect"));
+    }
+    Auth.federatedSignIn({provider});
   }
 
   renderError = () => {
@@ -103,7 +111,7 @@ export default class Login extends SearchComponent {
           <h2>Login</h2>
         </div>
         {this.renderError()}
-        <Button className="social-login" onClick={() => Auth.federatedSignIn({provider: 'Facebook'})} block>
+        <Button className="social-login" onClick={() => this.handleSocialLogin('Facebook')} block>
           <span className="social-icon">
             <FontAwesomeIcon icon={faFacebook} />
           </span>
