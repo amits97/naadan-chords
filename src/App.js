@@ -39,6 +39,10 @@ class App extends Component {
           this.setState({
             isAdmin: true
           }, resolve);
+        } else {
+          this.setState({
+            isAdmin: false
+          }, resolve);
         }
       }
       resolve();
@@ -108,7 +112,7 @@ class App extends Component {
       switch (data.payload.event) {
         case 'signIn':
           let session = await Auth.currentSession();
-          await this.getUserPrevileges(session);
+          await this.getUserDetails(session);
           this.userHasAuthenticated(true);
           if(typeof Storage !== "undefined") {
             let redirectUrl = localStorage.getItem("redirectUrl");
