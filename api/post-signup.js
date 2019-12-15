@@ -6,8 +6,8 @@ exports.handler = (event, context, callback) => {
   
     const title = `Naadan Chords - Congratulations on your new account`;
     const message = `
-      <p>Hey ${event.userName},</p>
-      <p>We are writing to let you know that you have been confirmed. Congratulations on your new Naadan Chords account.</p>
+      <p>Hey ${event.request.userAttributes.name},</p>
+      <p>We are writing to let you know that your account has been created. Congratulations on your new Naadan Chords account.</p>
       <p>Thanks for signing up!</p>
     `;
     const textMessage = `Naadan Chords - Congratulations on your new account`;
