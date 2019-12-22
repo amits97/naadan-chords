@@ -557,7 +557,7 @@ export default class Content extends Component {
               </Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Login {...loginChildProps} {...this.props} />
+                <Login {...loginChildProps} {...this.props} setRedirect={this.props.match.params.id} />
               </Modal.Body>
             </Modal>
             { this.renderPostMeta(post) }

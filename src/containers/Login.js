@@ -8,6 +8,7 @@ import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import { querystring } from "../libs/utils";
+import { insertUrlParam } from "../libs/url-lib";
 import "./Login.css";
 
 export default class Login extends SearchComponent {
@@ -27,6 +28,8 @@ export default class Login extends SearchComponent {
   componentDidMount() {
     if(!this.props.isDialog) {
       window.scrollTo(0, 0);
+    } else if(this.props.setRedirect) {
+      insertUrlParam("redirect", this.props.setRedirect);
     }
   }
 

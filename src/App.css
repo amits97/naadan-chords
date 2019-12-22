@@ -137,6 +137,17 @@
   min-height: calc(100vh - 356px);
 }
 
+.loading-modal-contents .spinning {
+  margin-right: 7px;
+  top: 2px;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from { transform: scale(1) rotate(0deg); }
+  to { transform: scale(1) rotate(360deg); }
+}
+
 /* Tiny devices (mobiles, less than 350px) */
 @media (max-width: 350px) {
   .App .navbar .search-button {

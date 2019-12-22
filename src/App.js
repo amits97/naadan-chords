@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth, Hub } from "aws-amplify";
-import { Navbar, Nav, Form, FormControl, NavDropdown } from "react-bootstrap";
+import { Modal, Navbar, Nav, Form, FormControl, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSearch, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
 import Routes from "./Routes";
 import logo from './logo.svg';
@@ -118,7 +118,7 @@ class App extends Component {
             let redirectUrl = localStorage.getItem("redirectUrl");
             if(redirectUrl) {
               localStorage.removeItem("redirectUrl");
-              this.props.history.push(redirectUrl);
+              window.location.href = redirectUrl;
             }
           }
           break;
@@ -309,7 +309,19 @@ class App extends Component {
           </div>
         </Navbar>
         <div className="contents bg-white" onTouchStart={this.onNavBlur}>
-          <Routes childProps={childProps} />
+          <React.Fragment>
+            <Modal
+              style={{top: "20px"}}
+              show={urlLib.getUrlParameter("code")}
+            >
+              <Modal.Body>
+                <span className="loading-modal-contents">
+                  <FontAwesomeIcon icon={faSyncAlt} className="spinning" /> Loading...
+                </span>
+              </Modal.Body>
+            </Modal>
+            <Routes childProps={childProps} />
+          </React.Fragment>
         </div>
         <Footer />
       </div>
