@@ -53,7 +53,7 @@
 
 .ContentParser .tabs {
   white-space: pre;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .ContentParser h4 {
