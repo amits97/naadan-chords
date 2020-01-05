@@ -148,16 +148,18 @@ async function saveRatings(ratingMap) {
     }
   }
 
-  const params = {
-    RequestItems: {
-      "NaadanChordsRatings": itemsArray
-    },
-    ReturnItemCollectionMetrics: "SIZE",
-    ConsumedCapacity: "INDEXES"
-  };
-
   try {
-    let result = await dynamoDbLib.batchCall(params);
+    let result = [];
+    while (itemsArray.length) {
+      const params = {
+        RequestItems: {
+          "NaadanChordsRatings": itemsArray.splice(0,25)
+        },
+        ReturnItemCollectionMetrics: "SIZE",
+        ConsumedCapacity: "INDEXES"
+      };
+      result.push(await dynamoDbLib.batchCall(params));
+    }
     return result;
   } catch(e) {
     return e;
@@ -182,7 +184,7 @@ async function generateRatings() {
     let saveRatingsResponse = await saveRatings(ratingMap);
     return saveRatingsResponse;
   } catch(e) {
-    return false;
+    return { status: false, error: e };
   }
 }
 
@@ -210,8 +212,8 @@ export async function main(event, context, callback) {
   try {
     await dynamoDbLib.call("put", params);
     await sendEmailToAuthor(data.postId, rating);
-    await generateRatings();
-    return success(params.Item);
+    const result = await generateRatings();
+    return success(result);
   } catch (e) {
     return failure({ status: false, error: e });
   }
