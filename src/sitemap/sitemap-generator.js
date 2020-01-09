@@ -90,7 +90,7 @@ async function generateSitemap() {
   let authorList = {};
   let albumList = {};
 
-  while(postsResult.hasOwnProperty("LastEvaluatedKey")) {
+  while(true) {
     for(var i = 0; i < postsResult.Items.length; i++) {
       idMap.push({ id: postsResult.Items[i].postId });
 
@@ -102,6 +102,8 @@ async function generateSitemap() {
         albumList[postsResult.Items[i].album] = 1;
       }
     }
+
+    if(!postsResult.hasOwnProperty("LastEvaluatedKey")) break;
 
     postsResult = await loadPosts(prepareLastEvaluatedPostRequest(postsResult.LastEvaluatedKey));
   }
