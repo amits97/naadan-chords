@@ -312,7 +312,7 @@ class App extends Component {
           <React.Fragment>
             <Modal
               style={{top: "20px"}}
-              show={urlLib.getUrlParameter("code")}
+              show={urlLib.getUrlParameter("code") || false}
             >
               <Modal.Body>
                 <span className="loading-modal-contents">

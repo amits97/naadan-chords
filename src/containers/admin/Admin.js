@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
+import * as urlLib from "../../libs/url-lib";
 import "./Admin.css";
 
 export default class Admin extends SearchComponent {
@@ -21,7 +22,7 @@ export default class Admin extends SearchComponent {
       posts: [],
       pages: [],
       drafts: [],
-      contributions: [],
+      review: [],
       isLoading: true,
       isPaginationLoading: false,
       activeTab: "posts",
@@ -36,21 +37,31 @@ export default class Admin extends SearchComponent {
       posts: [],
       pages: [],
       drafts: [],
-      contributions: []
+      review: []
     });
 
     try {
-      const posts = await this.posts();
-      const pages = await this.pages();
-      const drafts = await this.drafts();
-      const contributions = await this.contributions();
+      const { activeTab } = this.state;
+      const activeTabData = await this[activeTab]();
+      this.setState({
+        [activeTab]: activeTabData,
+        isLoading: false
+      });
 
       this.setState({
-        posts,
-        pages,
-        drafts,
-        contributions,
-        isLoading: false
+        posts: activeTab === "posts" ? activeTabData : await this.posts()
+      });
+
+      this.setState({
+        pages: activeTab === "pages" ? activeTabData : await this.pages(),
+      });
+
+      this.setState({
+        drafts: activeTab === "drafts" ? activeTabData : await this.drafts(),
+      });
+
+      this.setState({
+        review: activeTab === "review" ? activeTabData : await this.review(),
       });
     } catch (e) {
       console.log(e);
@@ -65,6 +76,17 @@ export default class Admin extends SearchComponent {
     if(!this.props.isAdmin) {
       this.props.history.push("/");
     }
+
+    let activeTabInUrl = urlLib.getUrlParameter("tab");
+    let activeTab = activeTabInUrl ? activeTabInUrl : "posts";
+
+    this.setState({
+      activeTab
+    }, () => {
+      if(!activeTabInUrl) {
+        urlLib.insertUrlParam("tab", activeTab);
+      }
+    });
 
     this.loadData();
   }
@@ -85,7 +107,7 @@ export default class Admin extends SearchComponent {
     return API.get("posts", `/drafts/?${search ? "s=" + search : ""}`);
   }
 
-  contributions() {
+  review() {
     let { search } = this.state;
     return API.get("posts", `/contributions/list?${search ? "s=" + search : ""}`);
   }
@@ -176,6 +198,7 @@ export default class Admin extends SearchComponent {
     this.setState({
       activeTab: tab
     });
+    urlLib.insertUrlParam("tab", tab);
   }
 
   loadMorePosts = async (exclusiveStartKey) => {
@@ -227,7 +250,7 @@ export default class Admin extends SearchComponent {
       );
     }
 
-    if(posts.Items.length > 0) {
+    if(posts.Items && posts.Items.length > 0) {
       return (
         <div>
           <ListGroup variant="flush">
@@ -248,9 +271,13 @@ export default class Admin extends SearchComponent {
           { this.loadPagination(posts.LastEvaluatedKey) }
         </div>
       );
-    } else {
+    } else if(posts.Items) {
       return (
         <p>No posts</p>
+      );
+    } else {
+      return (
+        <Skeleton count={10}></Skeleton>
       );
     }
   }
@@ -283,9 +310,9 @@ export default class Admin extends SearchComponent {
   }
 
   render() {
-    let { posts, pages, drafts, contributions } = this.state;
+    let { posts, pages, drafts, review, activeTab } = this.state;
     let draftCount = (drafts && drafts.Items) ? this.state.drafts.Items.length : 0;
-    let contributionsCount = (contributions && contributions.Items) ? contributions.Items.length : 0;
+    let reviewCount = (review && review.Items) ? review.Items.length : 0;
 
     return (
       <div className="container Admin">
@@ -297,7 +324,7 @@ export default class Admin extends SearchComponent {
           </LinkContainer>
         </div>
 
-        <Tab.Container defaultActiveKey="posts">
+        <Tab.Container activeKey={activeTab}>
           <Row>
             <Col sm={2}>
               <Nav variant="pills" className="flex-column">
@@ -311,7 +338,7 @@ export default class Admin extends SearchComponent {
                   <Nav.Link eventKey="drafts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("drafts"); }}>Drafts <span className={`${draftCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{draftCount}</Badge></span></Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Nav.Link eventKey="review" onClick={() => { this.clearCheckboxes(); this.setActiveTab("review"); }}>Review <span className={`${contributionsCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{contributionsCount}</Badge></span></Nav.Link>
+                <Nav.Link eventKey="review" onClick={() => { this.clearCheckboxes(); this.setActiveTab("review"); }}>Review <span className={`${reviewCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{reviewCount}</Badge></span></Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
@@ -342,7 +369,7 @@ export default class Admin extends SearchComponent {
                   { this.renderPosts(drafts, true) }
                   </Tab.Pane>
                   <Tab.Pane eventKey="review">
-                  { this.renderPosts(contributions, null, true) }
+                  { this.renderPosts(review, null, true) }
                   </Tab.Pane>
                 </Tab.Content>
               </Form>
