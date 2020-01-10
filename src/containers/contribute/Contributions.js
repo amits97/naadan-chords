@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
+import * as urlLib from "../../libs/url-lib";
 import "./Contributions.css";
 
 export default class Contributions extends SearchComponent {
@@ -19,6 +20,7 @@ export default class Contributions extends SearchComponent {
 
     this.state = {
       posts: [],
+      drafts: [],
       isLoading: true,
       isPaginationLoading: false,
       activeTab: "posts",
@@ -35,13 +37,18 @@ export default class Contributions extends SearchComponent {
     });
 
     try {
-      const posts = await this.posts();
-      const drafts = await this.drafts();
+      const { activeTab } = this.state;
+      const activeTabData = await this[activeTab]();
+      this.setState({
+        [activeTab]: activeTabData,
+        isLoading: false
+      });
 
       this.setState({
-        posts: posts,
-        drafts: drafts,
-        isLoading: false
+        posts: activeTab === "posts" ? activeTabData : await this.posts()
+      });
+      this.setState({
+        drafts: activeTab === "drafts" ? activeTabData : await this.drafts(),
       });
     } catch (e) {
       console.log(e);
@@ -51,7 +58,16 @@ export default class Contributions extends SearchComponent {
   async componentDidMount() {
     window.scrollTo(0, 0);
 
-    this.loadData();
+    let activeTabInUrl = urlLib.getUrlParameter("tab");
+    let activeTab = activeTabInUrl ? activeTabInUrl : "posts";
+    this.setState({
+      activeTab
+    }, () => {
+      if(!activeTabInUrl) {
+        urlLib.insertUrlParam("tab", activeTab);
+      }
+      this.loadData();
+    });
   }
 
   posts() {
@@ -151,6 +167,7 @@ export default class Contributions extends SearchComponent {
     this.setState({
       activeTab: tab
     });
+    urlLib.insertUrlParam("tab", tab);
   }
 
   loadMorePosts = async (exclusiveStartKey) => {
@@ -202,7 +219,7 @@ export default class Contributions extends SearchComponent {
       );
     }
 
-    if(posts.Items.length > 0) {
+    if(posts.Items && posts.Items.length > 0) {
       return (
         <div>
           <ListGroup variant="flush">
@@ -223,9 +240,13 @@ export default class Contributions extends SearchComponent {
           { this.loadPagination(posts.LastEvaluatedKey) }
         </div>
       );
-    } else {
+    } else if(posts.Items) {
       return (
         <p>No posts</p>
+      );
+    } else {
+      return (
+        <Skeleton count={10}></Skeleton>
       );
     }
   }
@@ -258,7 +279,7 @@ export default class Contributions extends SearchComponent {
   }
 
   render() {
-    let { posts, drafts } = this.state;
+    let { posts, drafts, activeTab } = this.state;
     let draftCount = (drafts && drafts.Items) ? this.state.drafts.Items.length : 0;
 
     return (
@@ -271,7 +292,7 @@ export default class Contributions extends SearchComponent {
           </LinkContainer>
         </div>
 
-        <Tab.Container defaultActiveKey="posts">
+        <Tab.Container activeKey={activeTab}>
           <Row>
             <Col sm={2}>
               <Nav variant="pills" className="flex-column">

@@ -86,9 +86,8 @@ export default class Admin extends SearchComponent {
       if(!activeTabInUrl) {
         urlLib.insertUrlParam("tab", activeTab);
       }
+      this.loadData();
     });
-
-    this.loadData();
   }
 
   posts() {
