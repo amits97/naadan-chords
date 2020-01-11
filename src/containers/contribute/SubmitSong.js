@@ -14,11 +14,11 @@ import SearchComponent from "../../components/SearchComponent";
 import PromptWrapper from "../../components/PromptWrapper";
 import * as inputSelectionLib from "../../libs/input-selection-lib";
 import { slugify } from "../../libs/utils";
-import EditorPanel from "../admin/EditorPanel";
+import EditorPanel from "../account/EditorPanel";
 import ContentParser from "../ContentParser";
-import "./Contribute.css";
+import "./SubmitSong.css";
 
-export default class Contribute extends SearchComponent {
+export default class SubmitSong extends SearchComponent {
   constructor(props) {
     super(props);
 
@@ -161,12 +161,13 @@ export default class Contribute extends SearchComponent {
 
   handleDraft = async () => {
     this.autoWriteDraft = setInterval(async () => {
-      if(this.state.inputUpdated) {
+      let { inputUpdated, title, singers, music } = this.state;
+      if(inputUpdated) {
         this.setState({
           isAutoSaving: true,
           inputUpdated: false
         });
-        if(this.state.title) {
+        if(title && singers && music) {
           await this.writeDraft(this.preparePostObject());
           this.setState({
             isAutoSaving: false,
@@ -410,8 +411,8 @@ export default class Contribute extends SearchComponent {
               disabled={!this.validateForm()}
               type="submit"
               isLoading={this.state.isLoading}
-              text={isEditMode ? (isDraft ? "Publish" : "Update") : "Submit"}
-              loadingText={isEditMode ? (isDraft ? "Publishing…" : "Updating…") : "Submitting…"}
+              text={isEditMode ? (isDraft ? "Submit Song" : "Update Song") : "Submit Song"}
+              loadingText={isEditMode ? (isDraft ? "Submitting…" : "Updating…") : "Submitting…"}
             />}
 
             <a href="#/" className={`text-primary pt-1 ${isViewMode ? '' : 'ml-3'}`} onClick={this.cancelPost}>Cancel</a>
@@ -463,9 +464,9 @@ export default class Contribute extends SearchComponent {
             <LinkContainer exact to="/contributions">
               <a href="#/" className="text-primary">Contributions</a>
             </LinkContainer>
-            <span> <small>&raquo;</small> {`${isEditMode? (isDraft ? "Edit Draft" : "Edit Post") : isViewMode ? "View Post" : "New Post"}`}</span>
+            <span> <small>&raquo;</small> {`${isEditMode? (isDraft ? "Edit Draft" : "Edit Song") : isViewMode ? "View Song" : "Submit Song"}`}</span>
           </h1>
-          {isViewMode ? <Button href={`/${this.state.postId}`} target="_blank" variant="primary" className="float-right">View Post <span><FontAwesomeIcon icon={faExternalLinkAlt} /></span></Button> : null}
+          {isViewMode ? <Button href={`/${this.state.postId}`} target="_blank" variant="primary" className="float-right">Open Song <span><FontAwesomeIcon icon={faExternalLinkAlt} /></span></Button> : null}
         </div>
 
         { isViewMode ? <small className="text-muted">Published posts cannot be edited.</small> : <small className="text-muted">All submissions will be published only after an Admin approval process.</small> }

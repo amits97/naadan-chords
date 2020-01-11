@@ -90,7 +90,7 @@ export default class Footer extends Component {
                   <h6>CONTRIBUTE</h6>
                   <ul className="list-unstyled">
                     <li>
-                      <LinkContainer exact to="/contributions/new-post">
+                      <LinkContainer exact to="/contributions/submit-song">
                         <a href="#/">
                           Submit Song
                         </a>

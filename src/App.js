@@ -296,8 +296,8 @@ class App extends Component {
                 <LinkContainer exact to="/">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>Home</a>
                 </LinkContainer>
-                <LinkContainer exact to="/contributions/new-post">
-                  <a href="#/" className="nav-link" onClick={this.closeNav}>Contribute</a>
+                <LinkContainer exact to="/contributions/submit-song">
+                  <a href="#/" className="nav-link" onClick={this.closeNav}>Submit Song</a>
                 </LinkContainer>
                 <LinkContainer exact to="/request">
                   <a href="#/" className="nav-link" onClick={this.closeNav}>Request</a>

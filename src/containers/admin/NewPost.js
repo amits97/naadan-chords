@@ -15,7 +15,7 @@ import SearchComponent from "../../components/SearchComponent";
 import PromptWrapper from "../../components/PromptWrapper";
 import * as inputSelectionLib from "../../libs/input-selection-lib";
 import { slugify } from "../../libs/utils";
-import EditorPanel from "./EditorPanel";
+import EditorPanel from "../account/EditorPanel";
 import ContentParser from "../ContentParser";
 import "./NewPost.css";
 

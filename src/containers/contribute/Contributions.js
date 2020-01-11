@@ -98,7 +98,7 @@ export default class Contributions extends SearchComponent {
   }
 
   handleNewPostClick = () => {
-    this.props.history.push("/contributions/new-post");
+    this.props.history.push("/contributions/submit-song");
   }
 
   validateDeletes() {
@@ -229,7 +229,7 @@ export default class Contributions extends SearchComponent {
                   <ListGroup.Item key={i}>
                     <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
                     { post.status ? <Badge variant="primary">{post.status}</Badge> : null }
-                    <LinkContainer exact to={`/contributions/${isDraft ? 'edit-draft' : post.status ? 'edit-post' : 'view-post'}/${post.postId}`}>
+                    <LinkContainer exact to={`/contributions/${isDraft ? 'edit-draft' : post.status ? 'edit-song' : 'view-song'}/${post.postId}`}>
                       <a href="#/" className="text-primary">{ post.title }</a>
                     </LinkContainer>
                   </ListGroup.Item>
@@ -287,8 +287,8 @@ export default class Contributions extends SearchComponent {
         { this.renderSEOTags() }
         <div className="header border-bottom">
           <h1 className="float-left">Contributions</h1>
-          <LinkContainer exact to="/contributions/new-post">
-            <Button variant="primary" className="float-right"><span><FontAwesomeIcon icon={ faPlus } /></span>New Post</Button>
+          <LinkContainer exact to="/contributions/submit-song">
+            <Button variant="primary" className="float-right"><span><FontAwesomeIcon icon={ faPlus } /></span>Submit Song</Button>
           </LinkContainer>
         </div>
 
