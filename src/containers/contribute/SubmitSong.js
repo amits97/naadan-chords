@@ -4,6 +4,10 @@ import Editor from "../account/Editor";
 import SearchComponent from "../../components/SearchComponent";
 
 export default class SubmitSong extends SearchComponent {
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   createPost = (post) => {
     return API.post("posts", "/contributions", {
       body: post
