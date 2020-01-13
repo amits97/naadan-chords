@@ -1,93 +1,107 @@
-.Contribute {
+.Editor {
   padding-top: 50px;
   margin-top: -50px;
   padding-bottom: 50px;
 }
 
-.Contribute h3 a:hover {
+.Editor h3 a:hover {
   text-decoration: underline;
 }
 
-.Contribute form {
+.Editor form {
   padding: 15px 0;
 }
 
-.Contribute .title {
+.Editor .title {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.Contribute .header {
+.Editor .header {
   overflow: auto;
   margin-bottom: 15px;
 }
 
-.Contribute .header h3 {
+.Editor .header h3 {
   margin-top: 30px;
 }
 
-.Contribute .header .btn {
+.Editor .header .btn {
   margin-top: 30px;
   padding-top: 8px;
 }
 
-.Contribute .header .btn span {
+.Editor .header .btn span {
   margin-left: 5px;
   font-size: 14px;
 }
 
-.Contribute form textarea {
+.Editor form textarea {
   border-top: 0;
   padding-top: 50px;
   border: 1px solid #dee2e6;
 }
 
-.Contribute form textarea.form-control, .Contribute form select.form-control {
+.Editor form textarea.review-comment {
+  padding: .375rem .75rem;
+  white-space: unset;
+}
+
+.Editor .alert .h4.alert-heading {
+  font-family: "DINNextLTPro-Heavy", sans-serif;
+  font-size: 1.25rem;
+}
+
+.Editor form textarea.form-control, .Editor form select.form-control {
   margin-bottom: 20px;
   line-height: 1.5;
 }
 
-.Contribute form textarea.form-control {
+.Editor form textarea.form-control {
   overflow-x: scroll !important;
 }
 
-.Contribute form textarea.form-control, .Contribute .preview {
+.Editor form textarea.form-control, .Editor .preview {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 87.5%;
   white-space: pre;
 }
 
-.Contribute .preview {
+.Editor .preview {
   white-space: pre-wrap;
 }
 
-.Contribute form textarea.form-control.page {
+.Editor form textarea.form-control.page {
   white-space: pre-wrap;
   padding-top: 10px;
 }
 
-.Contribute .preview-pane {
+.Editor .preview-pane {
   margin-top: 15px;
 }
 
-.Contribute nav {
+.Editor .preview-pane table.table td {
+  min-width: 125px;
+}
+
+.Editor nav {
   font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
   margin-top: 25px;
   margin-bottom: 10px;
 }
 
-.Contribute nav a {
+.Editor nav a {
   font-size: 14px;
   transition: none;
   padding-top: 10px;
   color: #888888;
 }
 
-.Contribute nav a:hover {
+.Editor nav a:hover {
   color: inherit;
 }
 
-.Contribute nav .nav-link.active {
+.Editor nav .nav-link.active {
   background-color: inherit;
   color: inherit;
   font-weight: bold;
@@ -96,47 +110,42 @@
   border-top: 0;
 }
 
-.Contribute .alert .h4.alert-heading {
-  font-family: "DINNextLTPro-Heavy", sans-serif;
-  font-size: 1.25rem;
-}
-
-.Contribute .preview-placeholder {
+.Editor .preview-placeholder {
   text-align: center;
   color: #888888;
   padding-top: 80px;
 }
 
-.Contribute .preview-placeholder p {
+.Editor .preview-placeholder p {
   color: #888888;
   margin-top: 10px;
   margin-bottom: 0;
 }
 
-.Contribute .preview-placeholder small {
+.Editor .preview-placeholder small {
   font-style: italic;
 }
 
-.Contribute .preview-placeholder .preview-icon {
+.Editor .preview-placeholder .preview-icon {
   font-size: 40px;
 }
 
-.Contribute .image-uploader {
+.Editor .image-uploader {
   position: relative;
   padding-top: 5px;
 }
 
-.Contribute .image-viewer {
+.Editor .image-viewer {
   padding-top: 7.5px;
 }
 
-.Contribute .image-viewer .external-icon {
+.Editor .image-viewer .external-icon {
   font-size: 0.9em;
   padding-bottom: 2px;
   margin-left: 2px;
 }
 
-.Contribute .image-viewer .edit {
+.Editor .image-viewer .edit {
   float: right;
   margin-right: 5px;
   border-left: 1px solid #ddd;
@@ -144,11 +153,11 @@
   opacity: 0.8;
 }
 
-.Contribute .image-viewer .edit:hover {
+.Editor .image-viewer .edit:hover {
   opacity: 1;
 }
 
-.Contribute .image-viewer .image-link {
+.Editor .image-viewer .image-link {
   max-width: 175px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -156,32 +165,32 @@
   float: left;
 }
 
-.Contribute .image-viewer .image-icon {
+.Editor .image-viewer .image-icon {
   font-size: 20px;
   padding-top: 2px;
   margin-bottom: -1.5px;
 }
 
-.Contribute .spinning {
+.Editor .spinning {
   position: absolute;
   left: 5px;
   top: 10px;
   animation: spin 1s infinite linear;
 }
 
-.Contribute .auto-save {
+.Editor .auto-save {
   color: #999999;
   position: relative;
   overflow: auto;
   width: 200px;
 }
 
-.Contribute .auto-save .auto-saving {
+.Editor .auto-save .auto-saving {
   position: relative;
   width: 85px;
 }
 
-.Contribute .auto-save .auto-saving-icon {
+.Editor .auto-save .auto-saving-icon {
   margin-top: -8px;
 }
 
@@ -190,9 +199,20 @@
   to { transform: scale(1) rotate(360deg); }
 }
 
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .Editor .review-comment-submit {
+    margin-bottom: 30px;
+  }
+
+  .Editor .review-submit-container {
+    margin-bottom: 30px;
+  }
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
-  .Contribute .LoaderButton {
+  .Editor .post-submit {
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -205,11 +225,11 @@
     line-height: 0;
   }
 
-  .Contribute .LoaderButton .spinning {
+  .Editor .post-submit .spinning {
     display: none;
   }
 
-  .Contribute .LoaderButton::after {
+  .Editor .post-submit::after {
     text-indent: 0;
     display: block;
     line-height: initial;

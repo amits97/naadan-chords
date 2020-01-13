@@ -32,3 +32,11 @@ export function querystring(name, url = window.location.href) {
 
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+export function safeStringNullOrEmpty(string, prefix) {
+  if(string === null || string === "") {
+    return "";
+  } else {
+    return prefix ? ` ${prefix} ` + string : string;
+  }
+}

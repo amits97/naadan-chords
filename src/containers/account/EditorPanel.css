@@ -6,6 +6,7 @@
   border-radius: .25rem .25rem 0 0;
   background: #ffffff;
   overflow: auto;
+  z-index: 2;
 }
 
 .EditorPanel .btn-group {
