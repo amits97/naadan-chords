@@ -20,7 +20,7 @@ async function notifyAdmins(data) {
   const message = `
     <p>Hey,</p>
     <p>Someone just submitted a new contribution - <b>${data.title}</b>.</p>
-    <p><a href="https://www.naadanchords.com/admin">Click here</a> to moderate the post</p>
+    <p><a href="https://www.naadanchords.com/admin?tab=review">Click here</a> to moderate the post</p>
     <p>Thanks for being an Admin!</p>
   `;
   const textMessage = `Naadan Chords - New contribution - ${data.title}`;
