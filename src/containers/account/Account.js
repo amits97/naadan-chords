@@ -2,6 +2,7 @@ import React from "react";
 import Skeleton from "react-loading-skeleton";
 import { Auth, API } from "aws-amplify";
 import { Alert, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
+import { Helmet } from "react-helmet";
 import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
 import * as urlLib from "../../libs/url-lib";
@@ -338,11 +339,24 @@ export default class Account extends SearchComponent {
     urlLib.insertUrlParam("tab", tab);
   }
 
+  renderSEOTags() {
+    return (
+      <Helmet>
+        <title>Account | Naadan Chords</title>
+        <meta name="description" content="" />
+        <meta name="twitter:card" content="summary" />
+        <meta property="og:title" content="Account | Naadan Chords" />
+        <meta property="og:description" content="" />
+      </Helmet>
+    );
+  }
+
   render() {
     let { activeTab } = this.state;
 
     return (
       <div className="container Account">
+        { this.renderSEOTags() }
         <div className="header border-bottom">
           <h1>Account</h1>
         </div>

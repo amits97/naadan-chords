@@ -52,3 +52,27 @@
 .Account .tab-content .tab-pane form {
   max-width: 500px;
 }
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+  .Account .col-sm-2 {
+    margin-top: -15px;
+  }
+
+  .Account .nav-pills {
+    display: inline;
+  }
+
+  .Account .nav-item {
+    float: left;
+  }
+
+  .Account .nav-pills .nav-link.active {
+    border-left: 0;
+    border-bottom: 4px solid #ff9700;
+  }
+
+  .Account .tab-content {
+    margin-top: 20px;
+  }
+}
