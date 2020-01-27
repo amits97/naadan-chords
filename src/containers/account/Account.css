@@ -1,7 +1,7 @@
 .Account {
-  padding: 30px 0 60px 0;
-  max-width: 500px;
-  margin: 0 auto;
+  padding-top: 50px;
+  margin-top: -50px;
+  padding-bottom: 50px;
 }
 
 .Account .header {
@@ -10,4 +10,45 @@
 
 .Account .form-group {
   margin-bottom: 20px;
+}
+
+.Account .nav-pills {
+  text-transform: uppercase;
+  margin-left: 5px;
+  position: sticky;
+  top: 80px;
+}
+
+.Account .nav-pills .nav-link.active {
+  background-color: inherit;
+  color: inherit;
+  font-weight: bold;
+  border-left: 3px solid #ff9700;
+  border-radius: 0;
+  margin-left: -5px;
+}
+
+.Account .list-group-item {
+  padding: 10px 5px;
+  border: 0;
+}
+
+.Account .list-group-item span.badge {
+  margin-right: 8px;
+  margin-top: 3px;
+  float: left;
+  height: 16px;
+  text-transform: uppercase;
+}
+
+.Account .list-group-item a:hover {
+  text-decoration: underline;
+}
+
+.Account .list-group-item-light {
+  color: #333;
+}
+
+.Account .tab-content .tab-pane form {
+  max-width: 500px;
 }

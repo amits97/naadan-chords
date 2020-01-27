@@ -1,9 +1,10 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import { Auth, API } from "aws-amplify";
-import { Alert, FormGroup, FormControl, FormLabel } from "react-bootstrap";
+import { Alert, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
 import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
+import * as urlLib from "../../libs/url-lib";
 import "./Account.css";
 
 export default class Account extends SearchComponent {
@@ -11,6 +12,7 @@ export default class Account extends SearchComponent {
     super(props);
 
     this.state = {
+      activeTab: "profile",
       isInitialLoading: false,
       isLoading: false,
       name: "",
@@ -20,7 +22,10 @@ export default class Account extends SearchComponent {
       isErrorState: false,
       errorMessage: "",
       usernameValid: true,
-      usernameMessage: ""
+      usernameMessage: "",
+      previousPassword: "",
+      newPassword: "",
+      newPasswordConfirm: ""
     };
   }
 
@@ -43,11 +48,31 @@ export default class Account extends SearchComponent {
         isInitialLoading: false
       });
     }
+
+    let activeTabInUrl = urlLib.getUrlParameter("tab");
+    let activeTab = activeTabInUrl ? activeTabInUrl : "profile";
+
+    this.setState({
+      activeTab
+    }, () => {
+      if(!activeTabInUrl) {
+        urlLib.insertUrlParam("tab", activeTab);
+      }
+    });
   }
 
   validateForm() {
-    let valid = this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
-    valid = valid && (this.props.name !== this.state.name || (this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username));
+    let { activeTab } = this.state;
+    let valid = true;
+
+    if(activeTab === "profile") {
+      valid = this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
+      valid = valid && (this.props.name !== this.state.name || (this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username));
+    } else if(activeTab === "password") {
+      valid = this.state.previousPassword.length > 0 && this.state.newPassword.length > 0 && this.state.newPasswordConfirm.length > 0;
+      valid = valid && this.validatePassword() && this.validatePasswordConfirm();
+    }
+
     return valid;
   }
 
@@ -60,7 +85,7 @@ export default class Account extends SearchComponent {
   renderError = () => {
     if(this.state.isErrorState) {
       return(
-        <Alert variant="danger">
+        <Alert variant="danger" onClose={() => this.setState({isErrorState: false}) } dismissible>
           {this.state.errorMessage}
         </Alert>
       );
@@ -70,14 +95,14 @@ export default class Account extends SearchComponent {
   renderSuccess = () => {
     if(this.state.isSuccessState) {
       return(
-        <Alert variant="success">
+        <Alert variant="success"  onClose={() => this.setState({isSuccessState: false}) } dismissible>
           Updated!
         </Alert>
       );  
     }
   }
 
-  handleSubmit = async event => {
+  handleSubmit = async (event, type) => {
     event.preventDefault();
 
     this.setState({
@@ -86,41 +111,65 @@ export default class Account extends SearchComponent {
       isErrorState: false
     });
 
-    let valid = await this.validateUserName();
+    if(type === "profile") {
+      let valid = await this.validateUserName();
 
-    if(!valid) {
+      if(!valid) {
+        this.setState({
+          isLoading: false
+        });
+        return;
+      }
+
+      try {
+        let user = await Auth.currentAuthenticatedUser();
+
+        let updateUserAttributes = {};
+
+        if(this.props.name !== this.state.name) {
+          updateUserAttributes.name = this.state.name;
+        }
+
+        if(this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username) {
+          updateUserAttributes.preferred_username = this.state.username;
+        }
+
+        await Auth.updateUserAttributes(user, updateUserAttributes);
+        let session = await Auth.currentSession();
+        await this.props.getUserAttributes(session);
+        this.setState({
+          isLoading: false,
+          isSuccessState: true
+        });
+      } catch(e) {
+        this.setState({
+          isLoading: false,
+          isErrorState: true,
+          errorMessage: e.message,
+          name: this.props.name
+        });
+      }
+    } else if(type === "password") {
+      try {
+        let user = await Auth.currentAuthenticatedUser();
+        let { previousPassword, newPassword } = this.state;
+
+        await Auth.changePassword(user, previousPassword, newPassword);
+        this.setState({
+          isLoading: false,
+          isSuccessState: true
+        });
+      } catch(e) {
+        this.setState({
+          isLoading: false,
+          isErrorState: true,
+          errorMessage: e.message,
+          name: this.props.name
+        });
+      }
+    } else {
       this.setState({
         isLoading: false
-      });
-      return;
-    }
-
-    try {
-      let user = await Auth.currentAuthenticatedUser();
-
-      let updateUserAttributes = {};
-
-      if(this.props.name !== this.state.name) {
-        updateUserAttributes.name = this.state.name;
-      }
-
-      if(this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username) {
-        updateUserAttributes.preferred_username = this.state.username;
-      }
-
-      await Auth.updateUserAttributes(user, updateUserAttributes);
-      let session = await Auth.currentSession();
-      await this.props.getUserAttributes(session);
-      this.setState({
-        isLoading: false,
-        isSuccessState: true
-      });
-    } catch(e) {
-      this.setState({
-        isLoading: false,
-        isErrorState: true,
-        errorMessage: e.message,
-        name: this.props.name
       });
     }
   }
@@ -161,14 +210,79 @@ export default class Account extends SearchComponent {
     }
   }
 
-  renderForm = () => {
+  validatePassword = () => {
+    let { newPassword } = this.state;
+    return newPassword ? newPassword.length > 7 : true;
+  }
+
+  validatePasswordConfirm = () => {
+    let { newPasswordConfirm, newPassword } = this.state;
+    return newPasswordConfirm ? newPasswordConfirm === newPassword : true;
+  }
+
+  renderPasswordForm = () => {
     if(this.state.isInitialLoading) {
       return (
         <Skeleton count={10} />
       );
     } else {
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={(e) => this.handleSubmit(e, "password")}>
+          { this.renderError() }
+          { this.renderSuccess() }
+          <FormGroup controlId="previousPassword">
+            <FormLabel>Current password</FormLabel>
+            <FormControl
+              type="password"
+              value={this.state.previousPassword}
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+          <FormGroup controlId="newPassword">
+            <FormLabel>New password</FormLabel>
+            <FormControl
+              type="password"
+              isInvalid={!this.validatePassword()}
+              value={this.state.newPassword}
+              onChange={this.handleChange}
+            />
+            <FormControl.Feedback type="invalid" className={(this.validatePassword() ? 'd-none' : 'd-block')}>
+              Please enter a password with minimum of 8 characters.
+            </FormControl.Feedback>
+          </FormGroup>
+          <FormGroup controlId="newPasswordConfirm">
+            <FormLabel>Confirm new password</FormLabel>
+            <FormControl
+              type="password"
+              isInvalid={!this.validatePasswordConfirm()}
+              value={this.state.newPasswordConfirm}
+              onChange={this.handleChange}
+            />
+            <FormControl.Feedback type="invalid" className={(this.validatePasswordConfirm() ? 'd-none' : 'd-block')}>
+              Passwords do not match.
+            </FormControl.Feedback>
+          </FormGroup>
+          <LoaderButton
+            block
+            disabled={!this.validateForm()}
+            type="submit"
+            isLoading={this.state.isLoading}
+            text="Update password"
+            loadingText="Updating password…"
+          />
+        </form>
+      );
+    }
+  }
+
+  renderAccountForm = () => {
+    if(this.state.isInitialLoading) {
+      return (
+        <Skeleton count={10} />
+      );
+    } else {
+      return (
+        <form onSubmit={(e) => this.handleSubmit(e, "profile")}>
           {this.renderError()}
           {this.renderSuccess()}
           <FormGroup controlId="name">
@@ -204,22 +318,58 @@ export default class Account extends SearchComponent {
             disabled={!this.validateForm()}
             type="submit"
             isLoading={this.state.isLoading}
-            text="Update"
-            loadingText="Updating…"
+            text="Update profile"
+            loadingText="Updating profile…"
           />
         </form>
       );
     }
   }
 
+  setActiveTab = (tab) => {
+    this.setState({
+      activeTab: tab,
+      isErrorState: false,
+      isSuccessState: false,
+      previousPassword: "",
+      newPassword: "",
+      newPasswordConfirm: ""
+    });
+    urlLib.insertUrlParam("tab", tab);
+  }
+
   render() {
+    let { activeTab } = this.state;
+
     return (
-      <div className="Account">
+      <div className="container Account">
         <div className="header border-bottom">
           <h1>Account</h1>
         </div>
-        <small className="text-muted mb-4 d-block">Stay tuned, more features coming soon!</small>
-        {this.renderForm()}
+        <Tab.Container activeKey={activeTab}>
+          <Row>
+            <Col sm={2}>
+              <Nav variant="pills" className="flex-column">
+                <Nav.Item>
+                  <Nav.Link eventKey="profile" onClick={() => { this.setActiveTab("profile"); }}>Profile</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="password" onClick={() => { this.setActiveTab("password"); }}>Password</Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Col>
+            <Col sm={10}>
+              <Tab.Content>
+                <Tab.Pane eventKey="profile">
+                  { this.renderAccountForm() }
+                </Tab.Pane>
+                <Tab.Pane eventKey="password">
+                  { this.renderPasswordForm() }
+                </Tab.Pane>
+              </Tab.Content>
+            </Col>
+          </Row>
+        </Tab.Container>
       </div>
     );
   }
