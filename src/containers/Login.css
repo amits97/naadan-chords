@@ -1,5 +1,5 @@
 .Login {
-  padding: 60px 0;
+  padding: 50px 0;
   margin: 0 auto;
   max-width: 320px;
 }
@@ -18,4 +18,9 @@
 
 .Login.isDialog {
   padding-top: 0;
+}
+
+.Login .signup-card {
+  border-left: 3px solid #ff9700;
+  padding-left: 15px;
 }

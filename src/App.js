@@ -4,7 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Auth, Hub } from "aws-amplify";
 import { Modal, Navbar, Nav, Form, FormControl, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faSearch, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSearch, faSyncAlt, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
 import Routes from "./Routes";
 import logo from './logo.svg';
@@ -157,19 +157,11 @@ class App extends Component {
   unauthenticatedOptions = () => {
     if(!this.state.isAuthenticated) {
       return (
-        <NavDropdown title="Account" alignRight>
-          <LinkContainer to={`/login?redirect=${this.props.location.pathname}${this.props.location.search}`}>
-            <NavDropdown.Item onClick={this.closeNav} role="button">
-              Login
-            </NavDropdown.Item>
-          </LinkContainer>
-          <NavDropdown.Divider />
-          <LinkContainer to="/signup">
-            <NavDropdown.Item onClick={this.closeNav} role="button">
-              Signup
-            </NavDropdown.Item>
-          </LinkContainer>
-        </NavDropdown>
+        <LinkContainer to={`/login?redirect=${this.props.location.pathname}${this.props.location.search}`}>
+          <a href="#/" className="nav-link user-link">
+            <FontAwesomeIcon className="user-icon" icon={faUserCircle} /> Login
+          </a>
+        </LinkContainer>
       );
     }
   }
@@ -180,10 +172,10 @@ class App extends Component {
         this.getUserDetails();
       }
       return(
-        <NavDropdown title="Account" alignRight>
+        <NavDropdown title={<React.Fragment><FontAwesomeIcon className="user-icon" icon={faUserCircle} /> <span title={this.state.name} className="user-name">{ this.state.name.split(' ')[0] }</span></React.Fragment>} alignRight>
           <LinkContainer to="/account">
             <NavDropdown.Item onClick={this.closeNav} role="button">
-              <b>{ this.state.name }</b>
+              <b>Account</b>
             </NavDropdown.Item>
           </LinkContainer>
           <NavDropdown.Divider />

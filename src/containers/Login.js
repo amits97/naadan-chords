@@ -120,13 +120,26 @@ export default class Login extends SearchComponent {
           </span>
           Login with Facebook
         </Button>
-        <hr className="mt-4 mb-4" />
         <form onSubmit={this.handleSubmit}>
-          <a href="/signup" target="_blank" className="text-secondary">
-            <div className={`${isDialog ? '' : 'd-none'} mb-4`}>
-              Don't have an account yet?
-            </div>
-          </a>
+          <div className="signup-card bg-light p-2 pl-3 mt-4 mb-4">
+            New to Naadan Chords?
+            <br />
+            { isDialog ?
+                (
+                  <a href="/signup" target="_blank" className="font-weight-bold text-primary">
+                    Create an account
+                  </a>
+                )
+              :
+                (
+                  <LinkContainer to="/signup">
+                    <a href="#/" className="font-weight-bold text-primary">
+                      Create an account
+                    </a>
+                  </LinkContainer>
+                )
+             }
+          </div>
           <FormGroup controlId="email">
             <FormLabel>Username or Email</FormLabel>
             <FormControl
@@ -136,13 +149,6 @@ export default class Login extends SearchComponent {
               value={this.state.email}
               onChange={this.handleChange}
             />
-            <FormText className={`text-muted ${isDialog ? 'd-none' : ''}`}>
-              <LinkContainer to="/signup">
-                <a href="#/">
-                  Don't have an account?
-                </a>
-              </LinkContainer>
-            </FormText>
           </FormGroup>
           <FormGroup controlId="password">
             <FormLabel>Password</FormLabel>

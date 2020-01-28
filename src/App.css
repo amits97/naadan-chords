@@ -80,6 +80,25 @@
   color: #ff9700;
 }
 
+.App .navbar .navbar-nav .nav-link .user-icon {
+  margin-right: 2px;
+  padding-top: 2px;
+}
+
+.App .navbar .navbar-nav .dropdown > .nav-link .user-icon {
+  margin-top: 2px;
+  float: left;
+}
+
+.App .navbar .navbar-nav .nav-link .user-name {
+  max-width: 58px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  float: left;
+  margin-left: 2px;
+}
+
 .App .navbar button {
   width: 50px;
 }
@@ -223,6 +242,10 @@
   .App .navbar .navbar-nav .nav-link {
     padding-right: 0.8rem;
     padding-left: 0.8rem;
+  }
+
+  .App .navbar .navbar-nav .nav-link.user-link, .App .navbar .navbar-nav .dropdown > .nav-link {
+    padding-left: 0.4rem;
   }
 
   .App .navbar .navbar-nav {
