@@ -53,6 +53,18 @@
   max-width: 500px;
 }
 
+.Account .social-login {
+  overflow: auto;
+  padding-top: 8px;
+}
+
+.Account .social-icon {
+  margin-top: -2px;
+  float: left;
+  height: 20px;
+  font-size: 20px;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .Account .col-sm-2 {

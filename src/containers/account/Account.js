@@ -1,7 +1,9 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import { Auth, API } from "aws-amplify";
-import { Alert, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
+import { Alert, Button, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { Helmet } from "react-helmet";
 import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
@@ -327,6 +329,27 @@ export default class Account extends SearchComponent {
     }
   }
 
+  handleSocialLogin = async (provider) => {
+    await Auth.signOut({ global: true });
+    if(typeof Storage !== "undefined") {
+      localStorage.setItem("redirectUrl", "/account?tab=facebook");
+    }
+    Auth.federatedSignIn({provider});
+  }
+
+  renderFacebookForm = () => {
+    return (
+      <form>
+        <Button className="social-login" onClick={() => this.handleSocialLogin('Facebook')} block>
+          <span className="social-icon">
+            <FontAwesomeIcon icon={faFacebook} />
+          </span>
+          Connect with Facebook
+        </Button>
+      </form>
+    )
+  }
+
   setActiveTab = (tab) => {
     this.setState({
       activeTab: tab,
@@ -370,6 +393,9 @@ export default class Account extends SearchComponent {
                 <Nav.Item>
                   <Nav.Link eventKey="password" onClick={() => { this.setActiveTab("password"); }}>Password</Nav.Link>
                 </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="facebook" onClick={() => { this.setActiveTab("facebook"); }}>Facebook</Nav.Link>
+                </Nav.Item>
               </Nav>
             </Col>
             <Col sm={10}>
@@ -379,6 +405,9 @@ export default class Account extends SearchComponent {
                 </Tab.Pane>
                 <Tab.Pane eventKey="password">
                   { this.renderPasswordForm() }
+                </Tab.Pane>
+                <Tab.Pane eventKey="facebook">
+                  { this.renderFacebookForm() }
                 </Tab.Pane>
               </Tab.Content>
             </Col>

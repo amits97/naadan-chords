@@ -1,4 +1,4 @@
-import * as emailLib from "./libs/email-lib";
+import * as emailLib from "../libs/email-lib";
 
 exports.handler = (event, context, callback) => {
   try {
