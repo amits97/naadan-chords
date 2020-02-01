@@ -43,8 +43,13 @@ provider:
         - cognito-idp:ListUsers
         - cognito-idp:AdminListGroupsForUser
         - cognito-idp:AdminLinkProviderForUser
+        - cognito-idp:AdminDeleteUser
         - cognito-idp:ListUsersInGroup
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminDisableProviderForUser
+      Resource: "*"
     - Effect: Allow
       Action:
         - ses:SendEmail
@@ -300,9 +305,17 @@ functions:
           cors: true
           authorizer: aws_iam
   post-signup:
-    handler: signup/post-signup.handler
+    handler: account/post-signup.handler
   pre-signup:
-    handler: signup/pre-signup.handler
+    handler: account/pre-signup.handler
+  unlink-provider:
+    handler: account/unlink-provider.main
+    events:
+      - http:
+          path: account/unlink-provider
+          method: get
+          cors: true
+          authorizer: aws_iam
 
 # Create our resources with separate CloudFormation templates
 resources:

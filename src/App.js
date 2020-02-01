@@ -27,7 +27,8 @@ class App extends Component {
       preferredUsername: "",
       name: "",
       email: "",
-      isAdmin: false
+      isAdmin: false,
+      identities: "[]"
     };
   }
 
@@ -58,7 +59,8 @@ class App extends Component {
         this.setState({
           userName: user.username,
           name: user.attributes.name,
-          email: user.attributes.email
+          email: user.attributes.email,
+          identities: user.attributes.identities
         });
         await this.getUserPrevileges(session);
         resolve();
@@ -88,6 +90,12 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    const loginError = urlLib.getUrlParameter("error_description");
+    if (loginError.indexOf('Already found an entry for username') !== -1) {
+      // TODO: Known issue with Cognito merging accounts. Ugly! Clean up if possible.
+      Auth.federatedSignIn({ provider: 'Facebook' });
+    }
+
     try {
       let session = await Auth.currentSession();
       this.getUserDetails(session);
@@ -116,7 +124,7 @@ class App extends Component {
           this.userHasAuthenticated(true);
           if(typeof Storage !== "undefined") {
             let redirectUrl = localStorage.getItem("redirectUrl");
-            if(redirectUrl) {
+            if(redirectUrl && redirectUrl !== "null") {
               localStorage.removeItem("redirectUrl");
               window.location.href = redirectUrl;
             }
@@ -157,7 +165,7 @@ class App extends Component {
   unauthenticatedOptions = () => {
     if(!this.state.isAuthenticated) {
       return (
-        <LinkContainer to={`/login?redirect=${this.props.location.pathname}${this.props.location.search}`}>
+        <LinkContainer to={urlLib.getUrlParameter("redirect") ? `/login?redirect=${urlLib.getUrlParameter("redirect")}` : `/login?redirect=${this.props.location.pathname}${this.props.location.search}`}>
           <a href="#/" className="nav-link user-link">
             <FontAwesomeIcon className="user-icon" icon={faUserCircle} /> Login
           </a>
@@ -262,7 +270,8 @@ class App extends Component {
       username: this.state.userName,
       name: this.state.name,
       email: this.state.email,
-      preferredUsername: this.state.preferredUsername
+      preferredUsername: this.state.preferredUsername,
+      identities: this.state.identities
     };
 
     return (

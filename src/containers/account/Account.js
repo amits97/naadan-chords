@@ -28,7 +28,8 @@ export default class Account extends SearchComponent {
       usernameMessage: "",
       previousPassword: "",
       newPassword: "",
-      newPasswordConfirm: ""
+      newPasswordConfirm: "",
+      identities: []
     };
   }
 
@@ -40,11 +41,20 @@ export default class Account extends SearchComponent {
     try {
       let session = await Auth.currentSession();
       await this.props.getUserAttributes(session);
+      let identities = [];
+
+      try {
+        identities = JSON.parse(this.props.identities);
+      } catch(e) {
+        // Do nothing
+      }
+
       this.setState({
         isInitialLoading: false,
         name: this.props.name,
         username: this.props.preferredUsername ? this.props.preferredUsername: this.props.username,
-        email: this.props.email
+        email: this.props.email,
+        identities
       });
     } catch (e) {
       this.setState({
@@ -329,6 +339,26 @@ export default class Account extends SearchComponent {
     }
   }
 
+  disconnectSocialLogin = async (provider) => {
+    let { identities } = this.state;
+    let providerAttributeValue;
+
+    if (identities && identities.length > 0) {
+      identities.forEach((identity) => {
+        if (identity.providerName === provider) {
+          providerAttributeValue = identity.userId;
+        }
+      });
+    }
+
+    try {
+      await API.get("posts", `/account/unlink-provider?providerName=${provider}&providerAttributeName=Cognito_Subject&providerAttributeValue=${providerAttributeValue}`);
+      window.location.reload();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   handleSocialLogin = async (provider) => {
     await Auth.signOut({ global: true });
     if(typeof Storage !== "undefined") {
@@ -338,16 +368,42 @@ export default class Account extends SearchComponent {
   }
 
   renderFacebookForm = () => {
-    return (
-      <form>
-        <Button className="social-login" onClick={() => this.handleSocialLogin('Facebook')} block>
-          <span className="social-icon">
-            <FontAwesomeIcon icon={faFacebook} />
-          </span>
-          Connect with Facebook
-        </Button>
-      </form>
-    )
+    let { identities } = this.state;
+    let hasFacebookLinked = false;
+
+    if (identities && identities.length > 0) {
+      identities.forEach((identity) => {
+        if (identity.providerName === "Facebook") {
+          hasFacebookLinked = true;
+        }
+      });
+    }
+
+    if (hasFacebookLinked) {
+      return (
+        <form>
+          <p>Sweet! You've already connected your account with Facebook. You can login with Facebook to Naadan Chords.</p>
+          <Button variant="danger" className="social-login" onClick={() => this.disconnectSocialLogin('Facebook')} block>
+            <span className="social-icon">
+              <FontAwesomeIcon icon={faFacebook} />
+            </span>
+            Disconnect Facebook
+          </Button>
+        </form>
+      );
+    } else {
+      return (
+        <form>
+          <p>Connect your Naadan Chords account with Facebook. This allows you to login with Facebook to Naadan Chords.</p>
+          <Button className="social-login" onClick={() => this.handleSocialLogin('Facebook')} block>
+            <span className="social-icon">
+              <FontAwesomeIcon icon={faFacebook} />
+            </span>
+            Connect with Facebook
+          </Button>
+        </form>
+      );
+    }
   }
 
   setActiveTab = (tab) => {
