@@ -28,7 +28,7 @@ exports.handler = (event, context, callback) => {
           };
           cognito.adminLinkProviderForUser(mergeParams, function(err, data) {
             if (err) {
-              context.done(err);
+              context.done(null, event);
             } else {
               // Link successful
               context.done(null, event);
