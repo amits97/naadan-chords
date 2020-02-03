@@ -29,7 +29,8 @@ export default class Account extends SearchComponent {
       previousPassword: "",
       newPassword: "",
       newPasswordConfirm: "",
-      identities: []
+      identities: [],
+      emailVerified: false
     };
   }
 
@@ -54,7 +55,8 @@ export default class Account extends SearchComponent {
         name: this.props.name,
         username: this.props.preferredUsername ? this.props.preferredUsername: this.props.username,
         email: this.props.email,
-        identities
+        identities,
+        emailVerified: this.props.emailVerified
       });
     } catch (e) {
       this.setState({
@@ -368,7 +370,7 @@ export default class Account extends SearchComponent {
   }
 
   renderFacebookForm = () => {
-    let { identities } = this.state;
+    let { identities, emailVerified } = this.state;
     let hasFacebookLinked = false;
 
     if (identities && identities.length > 0) {
@@ -383,12 +385,19 @@ export default class Account extends SearchComponent {
       return (
         <form>
           <p>Sweet! You've already connected your account with Facebook. You can login with Facebook to Naadan Chords.</p>
-          <Button variant="danger" className="social-login" onClick={() => this.disconnectSocialLogin('Facebook')} block>
+          <Button variant="danger" className="social-login" onClick={() => this.disconnectSocialLogin('Facebook')} block disabled={!emailVerified}>
             <span className="social-icon">
               <FontAwesomeIcon icon={faFacebook} />
             </span>
             Disconnect Facebook
           </Button>
+          { !emailVerified ?
+              <small className="text-muted">
+                Disconnect disabled as account is not linked to an email verified account.
+              </small>
+            :
+              null
+          }
         </form>
       );
     } else {
@@ -431,7 +440,7 @@ export default class Account extends SearchComponent {
   }
 
   render() {
-    let { activeTab } = this.state;
+    let { activeTab, emailVerified } = this.state;
 
     return (
       <div className="container Account">
@@ -446,9 +455,14 @@ export default class Account extends SearchComponent {
                 <Nav.Item>
                   <Nav.Link eventKey="profile" onClick={() => { this.setActiveTab("profile"); }}>Profile</Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="password" onClick={() => { this.setActiveTab("password"); }}>Password</Nav.Link>
-                </Nav.Item>
+                {
+                   emailVerified?
+                    <Nav.Item>
+                      <Nav.Link eventKey="password" onClick={() => { this.setActiveTab("password"); }}>Password</Nav.Link>
+                    </Nav.Item>
+                  :
+                    null
+                }
                 <Nav.Item>
                   <Nav.Link eventKey="facebook" onClick={() => { this.setActiveTab("facebook"); }}>Facebook</Nav.Link>
                 </Nav.Item>

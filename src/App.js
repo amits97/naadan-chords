@@ -28,7 +28,8 @@ class App extends Component {
       name: "",
       email: "",
       isAdmin: false,
-      identities: "[]"
+      identities: "[]",
+      emailVerified: false
     };
   }
 
@@ -60,7 +61,8 @@ class App extends Component {
           userName: user.username,
           name: user.attributes.name,
           email: user.attributes.email,
-          identities: user.attributes.identities
+          identities: user.attributes.identities,
+          emailVerified: user.attributes.email_verified
         });
         await this.getUserPrevileges(session);
         resolve();
@@ -283,7 +285,8 @@ class App extends Component {
       name: this.state.name,
       email: this.state.email,
       preferredUsername: this.state.preferredUsername,
-      identities: this.state.identities
+      identities: this.state.identities,
+      emailVerified: this.state.emailVerified
     };
 
     return (
