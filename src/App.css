@@ -148,6 +148,13 @@
   background: #f8f9fa;
 }
 
+.App .navbar .dropdown .account-icon {
+  margin-left: -5px;
+  margin-right: 10px;
+  float: left;
+  margin-top: 3px;
+}
+
 .App .navbar .dropdown-toggle::after {
   margin-left: .55em;
   vertical-align: 0.15em;

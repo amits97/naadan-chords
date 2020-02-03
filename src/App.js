@@ -4,7 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Auth, Hub } from "aws-amplify";
 import { Modal, Navbar, Nav, Form, FormControl, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faSearch, faSyncAlt, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSearch, faSyncAlt, faUserCircle, faCog, faShieldAlt, faFeather, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
 import Routes from "./Routes";
 import logo from './logo.svg';
@@ -183,22 +183,34 @@ class App extends Component {
         <NavDropdown title={<React.Fragment><FontAwesomeIcon className="user-icon" icon={faUserCircle} /> <span title={this.state.name} className="user-name">{ this.state.name.split(' ')[0] }</span></React.Fragment>} alignRight>
           <LinkContainer to="/account">
             <NavDropdown.Item onClick={this.closeNav} role="button">
-              <b>Account</b>
+              <React.Fragment>
+                <FontAwesomeIcon className="account-icon" icon={faCog} />
+                <b>Account</b>
+              </React.Fragment>
             </NavDropdown.Item>
           </LinkContainer>
           <NavDropdown.Divider />
           <LinkContainer to="/admin" className={`${this.state.isAdmin ? '' : 'd-none'}`}>
             <NavDropdown.Item onClick={this.closeNav} role="button">
-              Admin
+              <React.Fragment>
+                <FontAwesomeIcon className="account-icon" icon={faShieldAlt} />
+                Admin
+              </React.Fragment>
             </NavDropdown.Item>
           </LinkContainer>
           <LinkContainer to="/contributions">
             <NavDropdown.Item onClick={this.closeNav} role="button">
-              Contributions
+              <React.Fragment>
+                <FontAwesomeIcon className="account-icon" icon={faFeather} />
+                Contributions
+              </React.Fragment>
             </NavDropdown.Item>
           </LinkContainer>
           <NavDropdown.Item onClick={this.handleLogout}>
-            Logout
+            <React.Fragment>
+              <FontAwesomeIcon className="account-icon" icon={faPowerOff} />
+              Logout
+            </React.Fragment>
           </NavDropdown.Item>
         </NavDropdown>
       );
