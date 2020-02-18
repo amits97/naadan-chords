@@ -380,7 +380,7 @@ export default class Editor extends Component {
       return (
         <ReactMarkdown source={ this.state.content } renderers={{
           table: (props) => {
-              return <table className="table table-bordered table-hover">{props.children}</table>
+              return <table className="table table-striped">{props.children}</table>
           }
         }} />
       );
@@ -696,7 +696,7 @@ export default class Editor extends Component {
               }
 
               { this.renderTitleInputs() }
-              { this.renderScaleInputs() }
+              { (this.state.postType === "POST") ? this.renderScaleInputs() : null }
               { this.renderContentInputs() }
 
               { isAdmin && isReviewMode ?
