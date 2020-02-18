@@ -240,12 +240,13 @@ export default class ContentParser extends Component {
   }
 
   renderSongMeta = () => {
-    let { song, album, singers, music } = this.props.post;
+    let { song, album, singers, music, scale, tempo, timeSignature } = this.props.post;
+    let showScaleInfo = scale || tempo || timeSignature;
 
     if(song) {
       return (
         <div className="meta">
-          <p>
+          <p style={{marginBottom: showScaleInfo ? "0.8rem" : "1.5rem"}}>
             <b>Song: </b>{song}<br />
             <span>
               <b>Album: </b>
@@ -259,6 +260,48 @@ export default class ContentParser extends Component {
             <b>Singers: </b>{singers}<br />
             <b>Music: </b>{music}<br />
           </p>
+
+          {
+            showScaleInfo ?
+              (
+                <div className="scale-info bg-light px-3 py-2 rounded mb-4">
+                  <p className="mb-0">
+                    {
+                      scale ?
+                       (
+                         <React.Fragment>
+                           <span className="text-muted">Scale - </span>{scale}<br />
+                         </React.Fragment>
+                       )
+                      :
+                        null
+                    }
+                    {
+                      tempo ?
+                       (
+                         <React.Fragment>
+                           <span className="text-muted">Tempo - </span>{tempo} bpm<br />
+                         </React.Fragment>
+                       )
+                      :
+                        null
+                    }
+                    {
+                      timeSignature ?
+                       (
+                         <React.Fragment>
+                           <span className="text-muted">Time Signature - </span>{timeSignature}
+                         </React.Fragment>
+                       )
+                      :
+                        null
+                    }
+                  </p>
+                </div>
+              )
+            :
+              null
+          }
         </div>
       );
     }

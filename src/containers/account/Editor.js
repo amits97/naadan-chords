@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Button, Form, Row, Col, Tabs, Tab, Alert } from "react-bootstrap";
+import { Collapse, Button, Form, Row, Col, Tabs, Tab, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faExternalLinkAlt, faSyncAlt, faImage, faTrashAlt, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faExternalLinkAlt, faSyncAlt, faImage, faTrashAlt, faPaperPlane, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../../components/LoaderButton";
 import { API, Storage } from "aws-amplify";
@@ -37,6 +37,10 @@ export default class Editor extends Component {
       music: null,
       category: "MALAYALAM",
       image: null,
+      scaleDetailsExpanded: false,
+      scale: null,
+      tempo: null,
+      timeSignature: null,
       content: null,
       leadTabs: null,
       youtubeId: null,
@@ -158,6 +162,9 @@ export default class Editor extends Component {
       music: this.state.music,
       category: (this.state.postType === "PAGE") ? "PAGE" : this.state.category,
       image: this.state.image,
+      scale: this.state.scale,
+      tempo: this.state.tempo,
+      timeSignature: this.state.timeSignature,
       content: this.state.content,
       leadTabs: this.state.leadTabs,
       youtubeId: this.state.youtubeId
@@ -322,6 +329,9 @@ export default class Editor extends Component {
           music: post.music,
           category: post.category,
           image: post.image,
+          scale: post.scale,
+          tempo: post.tempo,
+          timeSignature: post.timeSignature,
           content: post.content,
           leadTabs: post.leadTabs,
           youtubeId: post.youtubeId,
@@ -333,6 +343,12 @@ export default class Editor extends Component {
           autoSaveTimestamp: post.createdAt,
           isLoading: false
         });
+
+        if(post.scale || post.tempo || post.timeSignature) {
+          this.setState({
+            scaleDetailsExpanded: true
+          });
+        }
 
         if(isDraft) {
           this.handleDraft();
@@ -492,6 +508,66 @@ export default class Editor extends Component {
     }
   }
 
+  handleScaleInputsClick = (e) => {
+    let { scaleDetailsExpanded } = this.state;
+
+    e.preventDefault();
+    this.setState({
+      scaleDetailsExpanded: !scaleDetailsExpanded
+    });
+  }
+
+  renderScaleInputs = () => {
+    let { scaleDetailsExpanded } = this.state;
+    let { isViewMode } = this.props;
+
+    return (
+      <Row>
+        <Col>
+          <div
+            className={`py-2 px-3 bg-light border ${scaleDetailsExpanded ? 'rounded-top' : 'rounded'}`}
+            style={{cursor: "pointer"}}
+            onClick={this.handleScaleInputsClick}
+          >
+            <a
+              href="!#"
+              className="text-dark"
+              style={{textDecoration: "none"}}
+            >
+              <React.Fragment>
+                <small><FontAwesomeIcon className="mr-2 text-primary" icon={scaleDetailsExpanded ? faMinus : faPlus} /></small>
+                Additional Details <small className="text-muted"> - Scale, Tempo and Time Signature</small>
+              </React.Fragment>
+            </a>
+          </div>
+          <Collapse in={scaleDetailsExpanded}>
+            <div className="py-3 px-3 border border-top-0 rounded-bottom">
+              <Row>
+                <Col>
+                  <Form.Group controlId="scale">
+                    <Form.Control autoComplete="off" type="text" placeholder="Scale" onChange={this.handleChange} value={this.state.scale ? this.state.scale : ""} readOnly={isViewMode} />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group controlId="tempo">
+                    <Form.Control autoComplete="off" type="text" placeholder="Tempo (bpm)" onChange={this.handleChange} value={this.state.tempo ? this.state.tempo : ""} readOnly={isViewMode} />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="timeSignature">
+                    <Form.Control autoComplete="off" type="text" placeholder="Time Signature" onChange={this.handleChange} value={this.state.timeSignature ? this.state.timeSignature : ""} readOnly={isViewMode} />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </div>
+          </Collapse>
+        </Col>
+      </Row>
+    );
+  }
+
   renderContentInputs = () => {
     if(this.state.postType === "PAGE") {
       return (
@@ -620,6 +696,7 @@ export default class Editor extends Component {
               }
 
               { this.renderTitleInputs() }
+              { this.renderScaleInputs() }
               { this.renderContentInputs() }
 
               { isAdmin && isReviewMode ?
