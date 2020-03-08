@@ -5,24 +5,10 @@ require("babel-register")({
 const router = require("./sitemap-routes").default;
 const Sitemap = require("react-router-sitemap").default;
 
-const AWSAmplify = require("aws-amplify");
-const Amplify = AWSAmplify.default;
-const API = AWSAmplify.API;
 const config = require("../config").default;
+const axios = require('axios').default;
 
 const slugify = require("../libs/utils").slugify;
-
-Amplify.configure({
-  API: {
-    endpoints: [
-      {
-        name: "posts",
-        endpoint: config.apiGateway.URL,
-        region: config.apiGateway.REGION
-      },
-    ]
-  }
-});
 
 function prepareLastEvaluatedPostRequest(lastEvaluatedPost) {
   return encodeURIComponent(JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"));
@@ -35,8 +21,8 @@ async function loadPosts(exclusiveStartKey) {
       queryRequest = `/posts?exclusiveStartKey=${exclusiveStartKey}`;
     }
   
-    let postsResult = await API.get("posts", queryRequest);
-    return postsResult; 
+    let postsResult = await axios.get(config.apiGateway.URL + queryRequest);
+    return postsResult.data; 
   } catch(e) {
     console.log(e);
   }
@@ -51,8 +37,8 @@ async function loadPages(page, category, author) {
     if(author) {
       queryRequest = `/user-posts?userName=${author}&page=${page}`;
     }
-    let pageResult = await API.get("posts", queryRequest);
-    return pageResult;
+    let pageResult = await axios.get(config.apiGateway.URL + queryRequest);
+    return pageResult.data;
   } catch(e) {
     console.log(e);
   }
