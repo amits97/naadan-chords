@@ -67,13 +67,6 @@ export default class Footer extends Component {
                       </LinkContainer>
                     </li>
                     <li>
-                      <LinkContainer exact to="/whats-new">
-                        <a href="#/">
-                          What's New
-                        </a>
-                      </LinkContainer>
-                    </li>
-                    <li>
                       <LinkContainer exact to="/privacy-policy">
                         <a href="#/">
                           Privacy<span className="trim"> Policy</span>
