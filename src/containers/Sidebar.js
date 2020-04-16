@@ -149,7 +149,9 @@ export default class Sidebar extends Component {
 
   renderSidebarAd1 = () => {
     if(this.props.posts && !Array.isArray(this.props.posts) && config.noAds.includes(this.props.posts.postId)) {
-      return;
+      return (
+        <br />
+      );
     }
 
     return (
