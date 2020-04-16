@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 import ReactGA from "react-ga";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
+import config from "../config";
 import Disqus from "disqus-react";
 import { API } from "aws-amplify";
 import StarRatings from "react-star-ratings";
@@ -378,7 +379,7 @@ export default class Content extends Component {
   }
 
   renderMatchedContentAd = (post) => {
-    if(post.postType === "POST") {
+    if(post.postType === "POST" && !config.noAds.includes(post.postId)) {
       return (
         <div className="matchedContent">
           <br />

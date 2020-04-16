@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faTimes, faFire, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FacebookProvider, Page } from 'react-facebook';
 import { Tabs, Tab } from "react-bootstrap";
+import config from "../config";
 import { LinkContainer } from "react-router-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { API } from "aws-amplify";
@@ -147,6 +148,10 @@ export default class Sidebar extends Component {
   }
 
   renderSidebarAd1 = () => {
+    if(this.props.posts && !Array.isArray(this.props.posts) && config.noAds.includes(this.props.posts.postId)) {
+      return;
+    }
+
     return (
       <div className="ad1">
         <ins className="adsbygoogle"
@@ -160,6 +165,10 @@ export default class Sidebar extends Component {
   }
 
   renderSidebarAd2 = () => {
+    if(this.props.posts && !Array.isArray(this.props.posts) && config.noAds.includes(this.props.posts.postId)) {
+      return;
+    }
+
     return (
       <div className="ad2">
         <ins className="adsbygoogle"

@@ -17,5 +17,8 @@ export default {
     DOMAIN : 'naadan-chords.auth.ap-south-1.amazoncognito.com', 
     REDIRECT_SIGN_IN : 'https://www.naadanchords.com/login',
     REDIRECT_SIGN_OUT : 'https://www.naadanchords.com/login'
-  }
+  },
+  noAds: [
+    "innum-konjam-neram-maryan"
+  ]
 };

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { API } from "aws-amplify";
 import { Helmet } from "react-helmet";
 import ReactGA from "react-ga";
+import config from "../config";
 import * as urlLib from "../libs/url-lib";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Content from "./Content";
@@ -409,6 +410,10 @@ export default class Posts extends Component {
   }
 
   renderTopAd = () => {
+    if(this.state.posts && !Array.isArray(this.state.posts) && config.noAds.includes(this.state.posts.postId)) {
+      return;
+    }
+
     return (
       <div className="ad" style={{maxHeight: "120px"}}>
         <ins className="adsbygoogle"

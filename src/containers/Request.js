@@ -74,7 +74,7 @@ export default class Request extends SearchComponent {
         { this.renderTopAd() }
         <Container>
           <Row className="contentRow">
-            <Col md={8} className="contentColumn">
+            <Col lg={8} className="contentColumn">
               <div>
                 <h1>Request</h1>
                 <hr />
@@ -82,7 +82,7 @@ export default class Request extends SearchComponent {
               <p>Request for the chords of a song that you would really like to see on Naadan Chords.</p>
               <div className="contactForm" ref={this.requestForm}></div>
             </Col>
-            <Col md={4} className="sidebarColumn border-left">
+            <Col lg={4} className="sidebarColumn border-left">
               <Sidebar {...this.props} />
             </Col>
           </Row>
