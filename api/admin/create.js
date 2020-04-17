@@ -21,7 +21,7 @@ async function notifyContributor(item) {
     <p>Hey,</p>
     <p>Thank you for your contribution - <b>${item.title}</b>.</p>
     <p>We are thrilled to let you know that your post was approved!</p>
-    <p><a href="https://www.naadanchords.com/${slugify(item.title)}">Click here</a> to see your post live on Naadan Chords. Feel free to share the link on social media to let your friends know that you are a Naadan Chords contributor :)</p>
+    <p><a href="https://www.naadanchords.com/${slugify(item.title)}">Click here</a> to see your post live on Naadan Chords.</p>
     <p>Thanks for your hard work!</p>
   `;
   const textMessage = `Naadan Chords - Your contribution was approved`;
