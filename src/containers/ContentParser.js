@@ -197,16 +197,22 @@ export default class ContentParser extends Component {
     };
 
     if(leadTabs || youtubeId) {
-      const tabs = [
-        <Tab eventKey="chords" title="CHORDS" key="chords">
-          <div className="tab-contents">
-            <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: fontSize}} />
-            <ChordControls className={`${content ? '':'d-none'}`} {...chordControlsProps} />
-          </div>
-        </Tab>
-      ];
+      const tabs = [];
+      let defaultActiveKey = "chords";
+
+      if(this.props.post.content && this.props.post.content.trim()) {
+        tabs.push(
+          <Tab eventKey="chords" title="CHORDS" key="chords">
+            <div className="tab-contents">
+              <div className="chord-sheet" dangerouslySetInnerHTML={ this.parseContent() } style={{fontSize: fontSize}} />
+              <ChordControls className={`${content ? '':'d-none'}`} {...chordControlsProps} />
+            </div>
+          </Tab>
+        );
+      }
 
       if(leadTabs) {
+        defaultActiveKey = (this.props.post.content && this.props.post.content.trim()) ? defaultActiveKey : "tabs";
         tabs.push(
           <Tab eventKey="tabs" title="LEAD TABS" key="tabs">
             <div className="tab-contents chord-sheet" dangerouslySetInnerHTML={ this.parseContent(leadTabs) } />
@@ -225,7 +231,7 @@ export default class ContentParser extends Component {
       }
 
       return (
-        <Tabs defaultActiveKey="chords">
+        <Tabs defaultActiveKey={defaultActiveKey}>
           { tabs }
         </Tabs>
       );

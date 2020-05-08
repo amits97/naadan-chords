@@ -449,7 +449,7 @@ export default class Content extends Component {
       let album = post.album;
 
       structuredData.push(
-        <script type="application/ld+json">
+        <script key={1} type="application/ld+json">
           {`
             {
               "@context": "http://schema.org",
@@ -488,7 +488,7 @@ export default class Content extends Component {
         let createdAtISOString = new Date(post.createdAt).toISOString();
 
         structuredData.push(
-          <script type="application/ld+json">
+          <script key={2} type="application/ld+json">
             {
               `{
                 "@context":"http://schema.org",

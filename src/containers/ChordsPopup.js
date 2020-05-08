@@ -151,7 +151,7 @@ export default class ChordsPopup extends Component {
     let {chordName} = this.props;
 
     return(
-      <OverlayTrigger trigger="hover" placement="auto" overlay={this.renderchordPopover(chordName)} onEntered={this.openPopover} delay={{show: 0, hide: 100}}>
+      <OverlayTrigger trigger={["hover", "focus"]} placement="auto" overlay={this.renderchordPopover(chordName)} onEntered={this.openPopover} delay={{show: 0, hide: 100}}>
         <span className="chord popup-trigger">
           { chordName }
         </span>
