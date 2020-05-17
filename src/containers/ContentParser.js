@@ -263,7 +263,7 @@ export default class ContentParser extends Component {
               </LinkContainer>
               <br />
             </span>
-            <b>Singers: </b>{singers}<br />
+            { singers ? (<React.Fragment><b>Singers: </b>{singers}<br /></React.Fragment>) : null }
             <b>Music: </b>{music}<br />
           </p>
 
