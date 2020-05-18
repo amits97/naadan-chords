@@ -451,13 +451,13 @@ export default class Account extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col sm={2}>
-              <Nav variant="pills" className="flex-column">
-                <Nav.Item>
+              <Nav variant="pills" className="flex-column border rounded">
+                <Nav.Item className="border-bottom">
                   <Nav.Link eventKey="profile" onClick={() => { this.setActiveTab("profile"); }}>Profile</Nav.Link>
                 </Nav.Item>
                 {
                    emailVerified?
-                    <Nav.Item>
+                    <Nav.Item className="border-bottom">
                       <Nav.Link eventKey="password" onClick={() => { this.setActiveTab("password"); }}>Password</Nav.Link>
                     </Nav.Item>
                   :

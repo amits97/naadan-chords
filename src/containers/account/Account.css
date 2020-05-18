@@ -13,7 +13,6 @@
 }
 
 .Account .nav-pills {
-  text-transform: uppercase;
   margin-left: 5px;
   position: sticky;
   top: 80px;
@@ -23,9 +22,9 @@
   background-color: inherit;
   color: inherit;
   font-weight: bold;
-  border-left: 3px solid #ff9700;
+  border-left: 2px solid #ff9700;
   border-radius: 0;
-  margin-left: -5px;
+  padding-left: 0.9rem;
 }
 
 .Account .list-group-item {

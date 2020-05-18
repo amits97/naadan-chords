@@ -226,7 +226,7 @@ export default class Contributions extends SearchComponent {
             {
               posts.Items.map((post, i) => {
                 return (
-                  <ListGroup.Item key={i}>
+                  <ListGroup.Item key={i} className={(i % 2 === 0) ? "" : "bg-light"}>
                     <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
                     { post.status ? <Badge variant="primary">{post.status}</Badge> : null }
                     <LinkContainer exact to={`/contributions/${isDraft ? 'edit-draft' : post.status ? 'edit-song' : 'view-song'}/${post.postId}`}>
@@ -242,7 +242,7 @@ export default class Contributions extends SearchComponent {
       );
     } else if(posts.Items) {
       return (
-        <p>No posts</p>
+        <p className="list-group-item">No posts</p>
       );
     } else {
       return (
@@ -295,8 +295,8 @@ export default class Contributions extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col sm={2}>
-              <Nav variant="pills" className="flex-column">
-                <Nav.Item>
+            <Nav variant="pills" className="flex-column border rounded">
+                <Nav.Item className="border-bottom">
                   <Nav.Link eventKey="posts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("posts"); }}>Posts</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
