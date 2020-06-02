@@ -450,7 +450,7 @@ export default class Account extends SearchComponent {
         </div>
         <Tab.Container activeKey={activeTab}>
           <Row>
-            <Col sm={2}>
+            <Col lg={2}>
               <Nav variant="pills" className="flex-column border rounded">
                 <Nav.Item className="border-bottom">
                   <Nav.Link eventKey="profile" onClick={() => { this.setActiveTab("profile"); }}>Profile</Nav.Link>
@@ -468,7 +468,7 @@ export default class Account extends SearchComponent {
                 </Nav.Item>
               </Nav>
             </Col>
-            <Col sm={10}>
+            <Col lg={10}>
               <Tab.Content>
                 <Tab.Pane eventKey="profile">
                   { this.renderAccountForm() }

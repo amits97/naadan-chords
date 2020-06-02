@@ -108,8 +108,8 @@
   padding: 4px 5px 2px 6px;
 }
 
-/* Extra small devices (portrait phones, less than 576px) */
-@media (max-width: 576px) {
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
   .Contributions .new-post-button {
     display: block;
   }
@@ -124,10 +124,13 @@
 
   .Contributions .nav-pills {
     display: inline;
+    position: initial;
+    border: 0 !important;
   }
 
   .Contributions .nav-item {
     float: left;
+    border-bottom: 0 !important;
   }
 
   .Contributions .nav-pills .nav-link.active {
@@ -136,7 +139,13 @@
   }
 
   .Contributions .delete-container {
-    margin-top: 20px;
+    margin-top: 5px;
+    position: sticky;
+    top: 60px;
+    z-index: 1;
+    background: #fff;
+    padding-top: 15px;
+    height: 65px;
   }
 
   .Contributions .tab-content {

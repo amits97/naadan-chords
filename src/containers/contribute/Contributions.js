@@ -294,8 +294,8 @@ export default class Contributions extends SearchComponent {
 
         <Tab.Container activeKey={activeTab}>
           <Row>
-            <Col sm={2}>
-            <Nav variant="pills" className="flex-column border rounded">
+            <Col lg={2}>
+              <Nav variant="pills" className="flex-column border rounded">
                 <Nav.Item className="border-bottom">
                   <Nav.Link eventKey="posts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("posts"); }}>Posts</Nav.Link>
                 </Nav.Item>
@@ -304,7 +304,7 @@ export default class Contributions extends SearchComponent {
                 </Nav.Item>
               </Nav>
             </Col>
-            <Col sm={10}>
+            <Col lg={10}>
               <Form onSubmit={this.handleSubmit}>
                 <div className={`delete-container border-bottom`}>
                   <Form.Check type="checkbox" className="checkbox pt-2 pl-4 form-check" onChange={this.toggleCheckboxes} checked={this.validateDeletes()} />

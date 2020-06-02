@@ -64,18 +64,21 @@
   font-size: 20px;
 }
 
-/* Extra small devices (portrait phones, less than 576px) */
-@media (max-width: 576px) {
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
   .Account .col-sm-2 {
     margin-top: -15px;
   }
 
   .Account .nav-pills {
     display: inline;
+    position: initial;
+    border: 0 !important;
   }
 
   .Account .nav-item {
     float: left;
+    border-bottom: 0 !important;
   }
 
   .Account .nav-pills .nav-link.active {
