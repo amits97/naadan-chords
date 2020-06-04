@@ -71,10 +71,10 @@ export default class Request extends SearchComponent {
     return(
       <div className="Request">
         { this.renderSEOTags() }
-        { this.renderTopAd() }
         <Container>
           <Row className="contentRow">
             <Col lg={8} className="contentColumn">
+              { this.renderTopAd() }
               <div>
                 <h1>Request</h1>
                 <hr />

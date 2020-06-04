@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import { API } from "aws-amplify";
 import { Helmet } from "react-helmet";
 import ReactGA from "react-ga";
-import config from "../config";
 import * as urlLib from "../libs/url-lib";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Content from "./Content";
-import "./Posts.css";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -26,8 +24,7 @@ export default class Posts extends Component {
       isPostList: false,
       isRandomPost: false,
       redirect: false,
-      redirectUrl: "",
-      adKey: props.pageKey
+      redirectUrl: ""
     };
   }
 
@@ -344,12 +341,6 @@ export default class Posts extends Component {
   componentDidUpdate(prevProps, prevState) {
     if(this.props.search || prevProps.search) {
       this.componentDidUpdateSearch(prevProps);
-
-      if(!this.props.search) {
-        this.setState({
-          adKey: this.props.pageKey
-        });        
-      }
     } else {
       if(urlLib.getUrlParameter("s")) {
         this.props.setSearch(urlLib.getUrlParameter("s"));
@@ -409,25 +400,6 @@ export default class Posts extends Component {
     }
   }
 
-  renderTopAd = () => {
-    if(this.state.posts && !Array.isArray(this.state.posts) && config.noAds.includes(this.state.posts.postId)) {
-      return;
-    }
-
-    return (
-      <div className="ad" style={{maxHeight: "120px"}}>
-        <ins className="adsbygoogle"
-          style={{display:"block"}}
-          data-ad-client="ca-pub-1783579460797635"
-          data-ad-slot="6826392919"
-          data-ad-format="horizontal"
-          data-full-width-responsive="false"
-          key={this.state.adKey}>
-        </ins>
-      </div>
-    );
-  }
-
   renderRedirect = () => {
     if(this.state.redirect) {
       return(
@@ -473,7 +445,6 @@ export default class Posts extends Component {
 
     return (
       <div className="Posts">
-        { this.renderTopAd() }
         { this.renderRedirect() }
         <div className="container">
           <Content {...childProps} />

@@ -3,7 +3,6 @@
 }
 
 .Request .contentColumn {
-  padding-top: 30px;
   padding-bottom: 50px;
 }
 
@@ -19,8 +18,7 @@
 .Request .ad {
   padding: 15px 0;
   text-align: center;
-  background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+  margin: 10px 0 20px 0;
 }
 
 /* Large devices (desktops, 992px and up) */

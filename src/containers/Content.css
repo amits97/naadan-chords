@@ -11,7 +11,6 @@
 }
 
 .Content .contentColumn {
-  padding-top: 30px;
   padding-bottom: 50px;
 }
 
@@ -150,6 +149,12 @@
   margin-top: 30px;
 }
 
+.Content .ad {
+  padding: 15px 0;
+  text-align: center;
+  margin: 10px 0 20px 0;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
   .Content .post small span.separator {
@@ -179,6 +184,15 @@
 
   .Content .postList small time {
     display: inline-block;
+  }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .Content .ad {
+    overflow: hidden;
+    background: #ffffff;
+    border-bottom: none;
   }
 }
 

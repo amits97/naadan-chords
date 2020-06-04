@@ -626,12 +626,32 @@ export default class Content extends Component {
     }
   }
 
+  renderTopAd = () => {
+    if(this.state.posts && !Array.isArray(this.state.posts) && config.noAds.includes(this.state.posts.postId)) {
+      return;
+    }
+
+    return (
+      <div className="ad" style={{maxHeight: "120px"}}>
+        <ins className="adsbygoogle"
+          style={{display:"block"}}
+          data-ad-client="ca-pub-1783579460797635"
+          data-ad-slot="6826392919"
+          data-ad-format="horizontal"
+          data-full-width-responsive="false"
+          key={this.props.adKey}>
+        </ins>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="Content">
         { this.renderSEOTags() }
         <Row className="contentRow">
           <Col lg={8} className="contentColumn">
+            { this.renderTopAd() }
             { this.renderContent() }
           </Col>
           <Col lg={4} className="sidebarColumn border-left">
