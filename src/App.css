@@ -69,6 +69,9 @@
 
 .App .navbar .navbar-nav .dropdown-item {
   color: #212529;
+  font-weight: bold;
+  font-size: 0.92rem;
+  letter-spacing: 0.4px;
 }
 
 .App .navbar .navbar-nav a:hover {

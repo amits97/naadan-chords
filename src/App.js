@@ -187,7 +187,7 @@ class App extends Component {
             <NavDropdown.Item onClick={this.closeNav} role="button">
               <React.Fragment>
                 <FontAwesomeIcon className="account-icon" icon={faCog} />
-                <b>Account</b>
+                Account
               </React.Fragment>
             </NavDropdown.Item>
           </LinkContainer>
