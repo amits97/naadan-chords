@@ -202,3 +202,11 @@
     padding-right: 25px;
   }
 }
+
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+  .Content .sidebarColumn {
+    padding: 0;
+    margin-left: 0 !important;
+  }
+}

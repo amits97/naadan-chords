@@ -19,6 +19,10 @@
 .Sidebar .sidebar-content h6 {
   color: #777777;
   margin-top: 5px;
+  margin-bottom: 2px;
+}
+
+.Sidebar .sidebar-content .facebook-widget h6 {
   margin-bottom: -5px;
 }
 
