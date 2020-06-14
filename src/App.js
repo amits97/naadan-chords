@@ -1,14 +1,17 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { Auth, Hub } from "aws-amplify";
-import { Modal, Navbar, Nav, Form, FormControl, NavDropdown } from "react-bootstrap";
+import { API, Auth, Hub } from "aws-amplify";
+import { Modal, Navbar, Nav, Form, NavDropdown } from "react-bootstrap";
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faSearch, faSyncAlt, faUserCircle, faCog, faShieldAlt, faFeather, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
+import { slugify } from "./libs/utils";
 import Routes from "./Routes";
 import logo from './logo.svg';
 import Footer from "./containers/Footer";
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./App.css";
 
 class App extends Component {
@@ -22,6 +25,8 @@ class App extends Component {
       isAuthenticated: false,
       isAuthenticating: true,
       search: "",
+      searchLoading: false,
+      searchOptions: [],
       isSearchOpen: false,
       userName: "",
       preferredUsername: "",
@@ -230,9 +235,12 @@ class App extends Component {
   }
 
   handleSearchChange = (event) => {
-    this.setState({
-      search: event.target.value
-    });
+    if (event && event[0]) {
+        let postSlug = slugify(event[0]);
+        this.searchInput.current.clear();
+        this.searchInput.current.blur();
+        this.props.history.push(`/${postSlug}`);
+      }
   }
 
   handleSearchClick = () => {
@@ -251,8 +259,27 @@ class App extends Component {
     });
   }
 
+  onSearch = async (query) => {
+    this.setState({
+      searchLoading: true
+    });
+    let searchOptions = [];
+    let posts = await API.get("posts", `/posts?s=${query}`);
+    if (posts && posts.Items && posts.Items.length > 0) {
+      searchOptions = posts.Items.map((post) => {
+          return post.title;
+      });
+    }
+
+    this.setState({
+      searchOptions,
+      searchLoading: false
+    });
+  }
+
   handleSearchClose = () => {
-    this.setSearch("");
+    this.searchInput.current.clear();
+    this.searchInput.current.blur();
   }
 
   onNavBlur = (e) => {
@@ -303,8 +330,8 @@ class App extends Component {
               <FontAwesomeIcon icon={faSearch} />
             </button>
             <Form inline className={`search-form ${this.state.search || this.state.isSearchOpen ? 'show-search':''}`} onSubmit={this.handleSearchSubmit}>
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.handleSearchChange} value={this.state.search} onBlur={this.onSearchBlur} ref={this.searchInput} />
-              <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} />
+              <AsyncTypeahead id="search" placeholder="Search" isLoading={this.state.searchLoading} className="search-input mr-sm-2" onChange={this.handleSearchChange} onBlur={this.onSearchBlur} onSearch={this.onSearch} ref={this.searchInput} options={this.state.searchOptions} filterBy={(option) => option} useCache={false} />
+              { this.state.searchLoading ? null : <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} /> }
             </Form>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
