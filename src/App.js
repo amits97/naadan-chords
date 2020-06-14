@@ -239,6 +239,9 @@ class App extends Component {
         let postSlug = slugify(event[0]);
         this.searchInput.current.clear();
         this.searchInput.current.blur();
+        this.setState({
+          isSearchOpen: false
+        });
         this.props.history.push(`/${postSlug}`);
       }
   }
@@ -251,12 +254,6 @@ class App extends Component {
     setTimeout(() => {
       this.searchInput.current.focus();
     }, 0);
-  }
-
-  onSearchBlur = () => {
-    this.setState({
-      isSearchOpen: false
-    });
   }
 
   onSearch = async (query) => {
@@ -280,6 +277,9 @@ class App extends Component {
   handleSearchClose = () => {
     this.searchInput.current.clear();
     this.searchInput.current.blur();
+    this.setState({
+      isSearchOpen: false
+    });
   }
 
   onNavBlur = (e) => {
@@ -330,7 +330,7 @@ class App extends Component {
               <FontAwesomeIcon icon={faSearch} />
             </button>
             <Form inline className={`search-form ${this.state.search || this.state.isSearchOpen ? 'show-search':''}`} onSubmit={this.handleSearchSubmit}>
-              <AsyncTypeahead id="search" placeholder="Search" isLoading={this.state.searchLoading} className="search-input mr-sm-2" onChange={this.handleSearchChange} onBlur={this.onSearchBlur} onSearch={this.onSearch} ref={this.searchInput} options={this.state.searchOptions} filterBy={(option) => option} useCache={false} />
+              <AsyncTypeahead id="search" placeholder="Search" isLoading={this.state.searchLoading} className="search-input mr-sm-2" onChange={this.handleSearchChange} onSearch={this.onSearch} ref={this.searchInput} options={this.state.searchOptions} filterBy={(option) => option} useCache={false} />
               { this.state.searchLoading ? null : <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} /> }
             </Form>
             <Navbar.Toggle />
