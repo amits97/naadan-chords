@@ -14,7 +14,7 @@ export default {
     REGION: 'ap-south-1'
   },
   oauth: {
-    DOMAIN : 'naadan-chords.auth.ap-south-1.amazoncognito.com', 
+    DOMAIN : 'auth.naadanchords.com',
     REDIRECT_SIGN_IN : 'https://www.naadanchords.com/login',
     REDIRECT_SIGN_OUT : 'https://www.naadanchords.com/login'
   },
