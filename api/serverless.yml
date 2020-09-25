@@ -44,6 +44,7 @@ provider:
         - cognito-idp:AdminListGroupsForUser
         - cognito-idp:AdminLinkProviderForUser
         - cognito-idp:AdminDeleteUser
+        - cognito-idp:AdminUpdateUserAttributes
         - cognito-idp:ListUsersInGroup
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
     - Effect: Allow
@@ -308,6 +309,8 @@ functions:
     handler: account/post-signup.handler
   pre-signup:
     handler: account/pre-signup.handler
+  post-login:
+    handler: account/post-login.handler
   unlink-provider:
     handler: account/unlink-provider.main
     events:
