@@ -200,18 +200,34 @@ export async function main(event, context, callback) {
     return failure({ status: false, message: "Invalid rating" });
   }
 
-  let params = {
-    TableName: "NaadanChordsRatingsLog",
-    Item: {
-      postId: data.postId,
-      rating: rating,
-      userId: sub
-    }
-  };
+  let params;
+  if (rating === 0) {
+    // Delete rating
+    params = {
+      TableName: "NaadanChordsRatingsLog",
+      Key: {
+        postId: data.postId,
+        userId: sub
+      }
+    };
+  } else {
+    params = {
+      TableName: "NaadanChordsRatingsLog",
+      Item: {
+        postId: data.postId,
+        rating: rating,
+        userId: sub
+      }
+    };
+  }
 
   try {
-    await dynamoDbLib.call("put", params);
-    await sendEmailToAuthor(data.postId, rating);
+    if (rating === 0) {
+      await dynamoDbLib.call("delete", params);
+    } else {
+      await dynamoDbLib.call("put", params);
+      await sendEmailToAuthor(data.postId, rating);
+    }
     const result = await generateRatings();
     return success(result);
   } catch (e) {

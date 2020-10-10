@@ -138,6 +138,15 @@
   position: relative;
 }
 
+.Content .rate-container .rate-inner-container {
+  display: flex;
+}
+
+.Content .rate-container .rate-inner-container button {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
 .Content .rate-container .dummy-anchor {
   position: relative;
   top: -200px;

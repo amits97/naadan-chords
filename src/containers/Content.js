@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, OverlayTrigger, Popover, Modal } from "react-bootstrap";
+import { Button, Row, Col, OverlayTrigger, Popover, Modal } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
@@ -344,16 +344,21 @@ export default class Content extends Component {
       <div className="rate-container">
         <div ref={this.ratingEl} className="dummy-anchor"></div>
         <h6 className="rate-heading">RATE THIS POST</h6>
-        <StarRatings
-          starRatedColor="#FFD700"
-          starHoverColor="#FFD700"
-          starDimension="25px"
-          starSpacing="1px"
-          numberOfStars={5}
-          name="rating"
-          rating={this.props.isAuthenticated ? this.state.rating : undefined}
-          changeRating={this.changeRating}
-        />
+        <div className="rate-inner-container">
+          <StarRatings
+            starRatedColor="#FFD700"
+            starHoverColor="#FFD700"
+            starDimension="25px"
+            starSpacing="1px"
+            numberOfStars={5}
+            name="rating"
+            rating={this.props.isAuthenticated ? this.state.rating : undefined}
+            changeRating={this.changeRating}
+          />
+          <Button variant="light" onClick={() => this.changeRating(0)} className={`border ${this.state.rating && this.props.isAuthenticated ? 'd-block' : 'd-none'}`} size="sm">
+            Clear
+          </Button>
+        </div>
         <small className={`pt-2 ${this.state.rating && this.props.isAuthenticated ? 'd-block' : 'd-none'}`}><i>You've rated this post. You can change your rating at any time.</i></small>
       </div>
     );
