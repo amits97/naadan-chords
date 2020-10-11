@@ -1,9 +1,4 @@
-export function stringEscape(string) {
-  return string ? string.replace(/\n/g,'\\n').replace(/\t/g,'\\t').replace(/\v/g,'\\v').replace(/'/g,"\\'").replace(/"/g,'\\"') : string;
-}
-
 export function getUrlParameter(name) {
-  name = stringEscape(name);
   name = name.replace(/\\/g,'\\\\').replace(/[[]/g, '\\[').replace(/[\]]/g, '\\]');
   let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
   let results = regex.exec(window.location.search);
