@@ -1,6 +1,5 @@
 export function getUrlParameter(name) {
-  name = name.replace(/\\/g, '&#92;');
-  name = name.replace(/[[]/g, '\\[').replace(/[\]]/g, '\\]');
+  name = name.replace(/\\/g, '&#92;').replace(/[[]/g, '\\[').replace(/[\]]/g, '\\]');
   let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
   let results = regex.exec(window.location.search);
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
