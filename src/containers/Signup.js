@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, FormGroup, FormControl, FormLabel, FormText } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { Auth } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 import LoaderButton from "../components/LoaderButton";
 import { LinkContainer } from "react-router-bootstrap";
 import SearchComponent from "../components/SearchComponent";
@@ -16,6 +16,7 @@ export default class Signup extends SearchComponent {
       name: "",
       username: "",
       getUsername: false,
+      isValidUsername: true,
       email: "",
       password: "",
       code: "",
@@ -42,6 +43,12 @@ export default class Signup extends SearchComponent {
     return username ? username.match(regExp) !== null : true;
   }
 
+  validateDuplicateUserName = async () => {
+    let { username } = this.state;
+    let result = await API.get("posts", `/username-check?username=${username}`);
+    return !result.userExists;
+  }
+
   validatePassword = () => {
     let {password} = this.state;
     return password ? password.length > 7 : true;
@@ -49,7 +56,8 @@ export default class Signup extends SearchComponent {
 
   handleChange = event => {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
+      isValidUsername: true,
     });
   }
 
@@ -118,24 +126,33 @@ export default class Signup extends SearchComponent {
       if(this.state.signedUp) {
         this.confirmUser(this.state.username, this.state.code);
       } else {
-        await Auth.signUp({
-          username: this.state.username,
-          password: this.state.password,
-          attributes: {
-            email: this.state.email,
-            name: this.state.name
-          }
-        });
-        window.scrollTo(0, 0);
-        this.setState({
-          isLoading: false,
-          signedUp: true
-        });
+        const isValidUsername = await this.validateDuplicateUserName();
 
-        if(typeof Storage !== "undefined") {
-          localStorage.setItem("username", this.state.username);
+        if (isValidUsername) {
+          await Auth.signUp({
+            username: this.state.username,
+            password: this.state.password,
+            attributes: {
+              email: this.state.email,
+              name: this.state.name
+            }
+          });
+          window.scrollTo(0, 0);
+          this.setState({
+            isLoading: false,
+            signedUp: true
+          });
+
+          if(typeof Storage !== "undefined") {
+            localStorage.setItem("username", this.state.username);
+          }
+          this.props.history.push("/signup/verify");
+        } else {
+          this.setState({
+            isLoading: false,
+            isValidUsername: false
+          });
         }
-        this.props.history.push("/signup/verify");
       }
     } catch(e) {
       this.setState({
@@ -224,7 +241,7 @@ export default class Signup extends SearchComponent {
   }
 
   render() {
-    let { signedUp, verified, codeResent} = this.state;
+    let { signedUp, verified, codeResent, isValidUsername } = this.state;
 
     if(verified) {
       return (
@@ -268,13 +285,16 @@ export default class Signup extends SearchComponent {
             <FormGroup controlId="username">
               <FormLabel>Username</FormLabel>
               <FormControl
-                isInvalid={!this.validateUserName()}
+                isInvalid={!this.validateUserName() || !isValidUsername}
                 type="text"
                 value={this.state.username}
                 onChange={this.handleChange}
               />
               <FormControl.Feedback type="invalid" className={(this.validateUserName() ? 'd-none' : 'd-block')}>
                 Please enter valid username with only letters and numbers.
+              </FormControl.Feedback>
+              <FormControl.Feedback type="invalid" className={(isValidUsername ? 'd-none' : 'd-block')}>
+              Username already exists. Please try a different one.
               </FormControl.Feedback>
             </FormGroup>
             <FormGroup controlId="email">

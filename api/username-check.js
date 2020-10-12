@@ -16,7 +16,13 @@ export async function main(event, context) {
       if(userResults.Users && userResults.Users.length > 0) {
         return success({userExists: true});
       } else {
-        return success({userExists: false});
+        userParams.Filter = "preferred_username=\"" + userName + "\"";
+        userResults = await cognitoLib.call("listUsers", userParams);
+        if(userResults.Users && userResults.Users.length > 0) {
+          return success({userExists: true});
+        } else {
+          return success({userExists: false});
+        }
       }
     } catch(e) {
       return failure({ status: false, error: e });
