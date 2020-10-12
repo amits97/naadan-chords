@@ -1,3 +1,4 @@
+import AWS from "aws-sdk";
 import * as cognitoLib from "./cognito-lib";
 
 export async function getAuthorAttributes(userId) {
@@ -44,4 +45,68 @@ export async function getAdminUsers() {
 
   let userResults = await cognitoLib.call("listUsersInGroup", userParams);
   return userResults.Users;
+}
+
+export function syncRewriteFacebookUsername(email, callback, error) {
+  const cognito = new AWS.CognitoIdentityServiceProvider({apiVersion: "2016-04-19", region: "ap-south-1"});  
+  
+  let allUsersWithEmailParams = {
+    UserPoolId: 'ap-south-1_l5klM91tP',
+    AttributesToGet: ['email'],
+    Filter: "email = \"" + email + "\""
+  };
+
+  cognito.listUsers(allUsersWithEmailParams, (err, data) => {
+    if (err) {
+      error(err);
+    } else if (data != null && data.Users != null) {
+      if (data.Users.length === 1) {
+        let user = data.Users[0];
+        if (user.UserStatus === "EXTERNAL_PROVIDER") {
+          allUsersWithEmailParams.AttributesToGet = ['email', 'preferred_username'];
+          cognito.listUsers(allUsersWithEmailParams, (err, data) => {
+            if (err) {
+              // Preferred_username attribute does not exist
+              if (user.Username.includes("Facebook_")) {
+                let newUsername = email.split('@')[0];
+
+                let dupUserParams = {
+                  UserPoolId: "ap-south-1_l5klM91tP",
+                  AttributesToGet: ["sub"],
+                  Filter: "username=\"" + newUsername + "\""
+                };
+              
+                cognito.listUsers(dupUserParams, (err, data) => {
+                  if (data.Users && data.Users.length > 0) {
+                    newUsername = newUsername + "_" + user.Username.split('_')[1];
+                  }
+                  
+                  // Fix ugly Facebook_ username
+                  var params = {
+                    UserAttributes: [{
+                      Name: "preferred_username",
+                      Value: newUsername
+                    }],
+                    UserPoolId: 'ap-south-1_l5klM91tP',
+                    Username: user.Username
+                  };
+
+                  cognito.adminUpdateUserAttributes(params, function(err, data) {
+                    callback();
+                  });
+                });          
+              } else {
+                callback();
+              }
+            } else {
+              callback();
+            }
+          });
+        }
+      }
+      callback();
+    } else {
+      callback();
+    }
+  });
 }

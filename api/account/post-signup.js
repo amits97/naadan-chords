@@ -1,4 +1,5 @@
 import * as emailLib from "../libs/email-lib";
+import { syncRewriteFacebookUsername } from "../libs/username-lib";
 
 exports.handler = (event, context, callback) => {
   try {
@@ -14,7 +15,12 @@ exports.handler = (event, context, callback) => {
       const textMessage = `Naadan Chords - Congratulations on your new account`;
 
       emailLib.syncSendEmail(title, message, textMessage, email, function(status) {
-        context.done(null, event);
+        syncRewriteFacebookUsername(email, () => {
+          callback(null, event);
+        }, (err) => {
+          event.syncRewriteFacebookUsernameError = err;
+          callback(null, event);
+        });
       });
     } else {
       context.done(null, event);
