@@ -207,7 +207,7 @@ export default class Account extends SearchComponent {
 
       if(this.props.username !== username) {
         try {
-          let result = await API.get("posts", `/username-check?username=${username}`);
+          let result = await API.get("posts", `/account/username-check?username=${username}`);
           if(result.userExists) {
             this.setState({
               usernameValid: false,

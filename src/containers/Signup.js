@@ -45,7 +45,7 @@ export default class Signup extends SearchComponent {
 
   validateDuplicateUserName = async () => {
     let { username } = this.state;
-    let result = await API.get("posts", `/username-check?username=${username}`);
+    let result = await API.get("posts", `/account/username-check?username=${username}`);
     return !result.userExists;
   }
 
@@ -294,7 +294,7 @@ export default class Signup extends SearchComponent {
                 Please enter valid username with only letters and numbers.
               </FormControl.Feedback>
               <FormControl.Feedback type="invalid" className={(isValidUsername ? 'd-none' : 'd-block')}>
-              Username already exists. Please try a different one.
+                Username already exists. Please try a different one.
               </FormControl.Feedback>
             </FormGroup>
             <FormGroup controlId="email">

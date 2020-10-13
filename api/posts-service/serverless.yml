@@ -1,0 +1,158 @@
+service: naadan-chords-posts-api
+
+# Use the serverless-webpack plugin to transpile ES6
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-domain-manager
+
+# serverless-webpack configuration
+# Enable auto-packing of external modules
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  customDomain:
+    domainName: api.naadanchords.com
+    basePath: 'posts'
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: prod
+  region: ap-south-1
+
+  # 'iamRoleStatements' defines the permission policy for the Lambda function.
+  # In this case Lambda functions are granted with permissions to access DynamoDB.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
+      Resource: "arn:aws:dynamodb:ap-south-1:*:*"
+    - Effect: Allow
+      Action:
+        - cognito-idp:ListUsers
+        - cognito-idp:AdminListGroupsForUser
+        - cognito-idp:AdminLinkProviderForUser
+        - cognito-idp:AdminDeleteUser
+        - cognito-idp:AdminUpdateUserAttributes
+        - cognito-idp:ListUsersInGroup
+      Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminDisableProviderForUser
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: "*"
+    - Effect: Deny
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "*"
+
+functions:
+  # Defines an HTTP API endpoint that calls the main function in create.js
+  # - path: url path is /posts
+  # - method: POST request
+  # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
+  #     domain api call
+  # - authorizer: authenticate using the AWS IAM role
+  options:
+    handler: options.main
+    events:
+      - http:
+          path: /
+          method: options
+          cors: true
+  get:
+    # Defines an HTTP API endpoint that calls the main function in get.js
+    # - path: url path is /posts/{id}
+    # - method: GET request
+    handler: get.main
+    events:
+      - http:
+          path: /{id}
+          method: get
+          cors: true
+  random:
+    # Defines an HTTP API endpoint that calls the main function in random.js
+    # - path: url path is /random
+    # - method: GET request
+    handler: random.main
+    events:
+      - http:
+          path: /random
+          method: get
+          cors: true
+  list:
+    # Defines an HTTP API endpoint that calls the main function in list.js
+    # - path: url path is /posts
+    # - method: GET request
+    handler: list.main
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+          integration: lambda
+          request:
+            template:
+              application/json: '{ "postType" : "$input.params(''postType'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "category" : "$input.params(''category'')", "album" : "$input.params(''album'')", "search" : "$input.params(''s'')", "page" : "$input.params(''page'')"  }'
+  user-posts:
+    handler: user-posts.main
+    events:
+      - http:
+          path: /user-posts
+          method: get
+          cors: true
+          integration: lambda
+          request:
+            template:
+              application/json: '{ "userName" : "$input.params(''userName'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "page" : "$input.params(''page'')", "postType" : "$input.params(''postType'')", "search" : "$input.params(''s'')"  }'  
+  create:
+    handler: admin/create.main
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+          authorizer: aws_iam
+  update:
+    # Defines an HTTP API endpoint that calls the main function in update.js
+    # - path: url path is /posts/{id}
+    # - method: PUT request
+    handler: admin/update.main
+    events:
+      - http:
+          path: /{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+  delete:
+    # Defines an HTTP API endpoint that calls the main function in delete.js
+    # - path: url path is /notes/{id}
+    # - method: DELETE request
+    handler: admin/delete.main
+    events:
+      - http:
+          path: /{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+
+# Create our resources with separate CloudFormation templates
+resources:
+  - ${file(../resources/api-gateway-errors.yml)}

@@ -35,7 +35,7 @@ async function loadPages(page, category, author) {
       queryRequest = `/posts?category=${category}&page=${page}`;
     }
     if(author) {
-      queryRequest = `/user-posts?userName=${author}&page=${page}`;
+      queryRequest = `/posts/user-posts?userName=${author}&page=${page}`;
     }
     let pageResult = await axios.get(config.apiGateway.URL + queryRequest);
     return pageResult.data;

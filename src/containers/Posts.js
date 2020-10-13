@@ -57,7 +57,7 @@ export default class Posts extends Component {
     } else if(search) {
       return API.get("posts", `/posts?s=${search}`);
     } else if(user){
-      return API.get("posts", `/user-posts?userName=${user}`);
+      return API.get("posts", `/posts/user-posts?userName=${user}`);
     } else if(album) {
       album = capitalizeFirstLetter(this.makeTitle(album));
       return API.get("posts", `/posts?album=${album}`);
@@ -70,7 +70,7 @@ export default class Posts extends Component {
     if(category) {
       return API.get("posts", `/posts?category=${category.toUpperCase()}&page=${pageNumber}`);
     } else if(userName) {
-      return API.get("posts", `/user-posts?userName=${userName}&page=${pageNumber}`);
+      return API.get("posts", `/posts/user-posts?userName=${userName}&page=${pageNumber}`);
     } else if(album) {
       album = capitalizeFirstLetter(this.makeTitle(album));
       return API.get("posts", `/posts?album=${album}&page=${pageNumber}`);
@@ -92,7 +92,7 @@ export default class Posts extends Component {
       if(localStorageItem === null || !this.lessThanOneHourAgo(localStorageItem)) {
         localStorage.setItem(postId, new Date().getTime());
 
-        return API.post("posts", "/post-visit", {
+        return API.post("posts", "/analytics/post-visit", {
           body: {
             postId: postId
           }
@@ -224,7 +224,7 @@ export default class Posts extends Component {
       }
       let postsResult = [];
       if(this.props.isUserPosts) {
-        postsResult = await API.get("posts",`/user-posts?userName=${this.props.match.params.userName}&exclusiveStartKey=${exclusiveStartKey}`)
+        postsResult = await API.get("posts",`/posts/user-posts?userName=${this.props.match.params.userName}&exclusiveStartKey=${exclusiveStartKey}`)
       } else {
         postsResult = await API.get("posts", queryRequest);
       }
