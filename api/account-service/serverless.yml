@@ -46,6 +46,7 @@ provider:
         - cognito-idp:AdminDeleteUser
         - cognito-idp:AdminUpdateUserAttributes
         - cognito-idp:ListUsersInGroup
+        - cognito-idp:SignUp
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
     - Effect: Allow
       Action:
@@ -71,6 +72,13 @@ functions:
           path: /
           method: options
           cors: true
+  signup:
+    handler: signup.main
+    events:
+      - http:
+          path: /signup
+          method: post
+          cors: true
   username-check:
     handler: username-check.main
     events:
@@ -78,6 +86,7 @@ functions:
           path: /username-check
           method: get
           cors: true
+          authorizer: aws_iam
   post-signup:
     handler: post-signup.handler
   pre-signup:

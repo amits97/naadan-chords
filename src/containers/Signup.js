@@ -33,7 +33,7 @@ export default class Signup extends SearchComponent {
     if(this.state.signedUp) {
       return this.state.code.length > 0;
     } else {
-      return this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0 && this.state.password.length > 0;
+      return this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0 && this.state.password.length > 0 && this.validatePassword() && this.validateUserName();
     }
   }
 
@@ -41,12 +41,6 @@ export default class Signup extends SearchComponent {
     let {username} = this.state;
     const regExp = /^[a-zA-Z0-9]+$/;
     return username ? username.match(regExp) !== null : true;
-  }
-
-  validateDuplicateUserName = async () => {
-    let { username } = this.state;
-    let result = await API.get("posts", `/account/username-check?username=${username}`);
-    return !result.userExists;
   }
 
   validatePassword = () => {
@@ -58,6 +52,7 @@ export default class Signup extends SearchComponent {
     this.setState({
       [event.target.id]: event.target.value,
       isValidUsername: true,
+      isErrorState: false
     });
   }
 
@@ -126,13 +121,11 @@ export default class Signup extends SearchComponent {
       if(this.state.signedUp) {
         this.confirmUser(this.state.username, this.state.code);
       } else {
-        const isValidUsername = await this.validateDuplicateUserName();
-
-        if (isValidUsername) {
-          await Auth.signUp({
-            username: this.state.username,
-            password: this.state.password,
-            attributes: {
+        try {
+          await API.post("posts", "/account/signup", {
+            body: {
+              username: this.state.username,
+              password: this.state.password,
               email: this.state.email,
               name: this.state.name
             }
@@ -147,10 +140,12 @@ export default class Signup extends SearchComponent {
             localStorage.setItem("username", this.state.username);
           }
           this.props.history.push("/signup/verify");
-        } else {
+        } catch(e) {
           this.setState({
             isLoading: false,
-            isValidUsername: false
+            isErrorState: true,
+            isValidUsername: e.response?.data?.code !== "UsernameExistsException",
+            errorMessage: e.response?.data?.message || e.message
           });
         }
       }
