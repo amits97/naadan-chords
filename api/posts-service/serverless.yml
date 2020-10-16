@@ -152,6 +152,12 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+  top-posts:
+    handler: top-posts.main
+    events:
+      - http:
+          path: /top-posts
+          method: get
 
 # Create our resources with separate CloudFormation templates
 resources:

@@ -23,7 +23,7 @@ export default class Sidebar extends Component {
   }
 
   topPosts() {
-    return API.get("posts", "/top-posts");
+    return API.get("posts", "/posts/top-posts");
   }
 
   async componentDidMount() {
@@ -98,7 +98,7 @@ export default class Sidebar extends Component {
   loadTopRatedPosts = async () => {
     if(this.state.topRatedPosts.length === 0) {
       try {
-        let topRatedPosts = await API.get("posts", "/top-rated-posts");
+        let topRatedPosts = await API.get("posts", "/rating/top-rated-posts");
         this.setState({
           isLoading: false,
           topRatedPosts: topRatedPosts
