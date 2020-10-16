@@ -82,7 +82,7 @@ export default class Account extends SearchComponent {
 
     if(activeTab === "profile") {
       valid = this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
-      valid = valid && (this.props.name !== this.state.name || (this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username));
+      valid = valid && (this.props.name !== this.state.name || (this.props.preferredUsername ? this.props.preferredUsername !== this.state.username : this.props.username !== this.state.username));
     } else if(activeTab === "password") {
       valid = this.state.previousPassword.length > 0 && this.state.newPassword.length > 0 && this.state.newPasswordConfirm.length > 0;
       valid = valid && this.validatePassword() && this.validatePasswordConfirm();
@@ -93,7 +93,8 @@ export default class Account extends SearchComponent {
 
   handleChange = event => {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
+      usernameValid: true
     });
   }
 
@@ -127,7 +128,7 @@ export default class Account extends SearchComponent {
     });
 
     if(type === "profile") {
-      let valid = await this.validateUserName();
+      let valid = this.validateUserName();
 
       if(!valid) {
         this.setState({
@@ -137,19 +138,20 @@ export default class Account extends SearchComponent {
       }
 
       try {
-        let user = await Auth.currentAuthenticatedUser();
-
-        let updateUserAttributes = {};
+        let request = {};
 
         if(this.props.name !== this.state.name) {
-          updateUserAttributes.name = this.state.name;
+          request.name = this.state.name;
         }
 
-        if(this.props.username !== this.state.username && this.props.preferredUsername !== this.state.username) {
-          updateUserAttributes.preferred_username = this.state.username;
+        if(this.props.preferredUsername ? this.props.preferredUsername !== this.state.username : this.props.username !== this.state.username) {
+          request.username = this.state.username;
         }
 
-        await Auth.updateUserAttributes(user, updateUserAttributes);
+        await API.post("posts", "/account/update", {
+          body: request
+        });
+
         let session = await Auth.currentSession();
         await this.props.getUserAttributes(session);
         this.setState({
@@ -160,7 +162,9 @@ export default class Account extends SearchComponent {
         this.setState({
           isLoading: false,
           isErrorState: true,
-          errorMessage: e.message,
+          usernameValid: e.response?.data?.code !== "UsernameExistsException",
+          usernameMessage: e.response?.data?.message || e.message,
+          errorMessage: e.response?.data?.message || e.message,
           name: this.props.name
         });
       }
@@ -189,7 +193,7 @@ export default class Account extends SearchComponent {
     }
   }
 
-  validateUserName = async () => {
+  validateUserName = () => {
     let {username} = this.state;
     const regExp = /^[a-zA-Z0-9]+$/;
 
@@ -198,31 +202,9 @@ export default class Account extends SearchComponent {
         usernameValid: false,
         usernameMessage: "Please enter valid username with only letters and numbers."
       });
-
       return false;
-    } else {
-      this.setState({
-        usernameValid: true
-      });
-
-      if(this.props.username !== username) {
-        try {
-          let result = await API.get("posts", `/account/username-check?username=${username}`);
-          if(result.userExists) {
-            this.setState({
-              usernameValid: false,
-              usernameMessage: "Username already exists. Please try a different one."
-            });
-            return false;
-          }
-          return true;
-        } catch(e) {
-          console.log(e);
-        }
-      } else {
-        return true;
-      }
     }
+    return true;
   }
 
   validatePassword = () => {

@@ -79,12 +79,12 @@ functions:
           path: /signup
           method: post
           cors: true
-  username-check:
-    handler: username-check.main
+  update:
+    handler: update.main
     events:
       - http:
-          path: /username-check
-          method: get
+          path: /update
+          method: post
           cors: true
           authorizer: aws_iam
   post-signup:
