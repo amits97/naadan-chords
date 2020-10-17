@@ -6,7 +6,7 @@ export async function checkIfAdmin(userId) {
 
   const userParams = {
     UserPoolId: "ap-south-1_l5klM91tP",
-    Username: authorAttributes.userName
+    Username: authorAttributes.preferredUsername ? authorAttributes.preferredUsername : authorAttributes.userName
   };
 
   try {

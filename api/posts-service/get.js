@@ -55,7 +55,7 @@ async function retryGet(postId) {
         //Get full attributes of author
         let authorAttributes = await userNameLib.getAuthorAttributes(userId);
         finalResult.authorName = authorAttributes.authorName;
-        finalResult.userName = authorAttributes.userName;
+        finalResult.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
 
         //Do not expose userId
         delete(finalResult.userId);
@@ -89,7 +89,7 @@ export async function main(event, context) {
       //Get full attributes of author
       let authorAttributes = await userNameLib.getAuthorAttributes(userId);
       result.Item.authorName = authorAttributes.authorName;
-      result.Item.userName = authorAttributes.userName;
+      result.Item.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
 
       //Do not expose userId
       delete(result.Item.userId);

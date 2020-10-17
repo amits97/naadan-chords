@@ -34,7 +34,7 @@ export async function main(event) {
       //Get full attributes of author
       let authorAttributes = await userNameLib.getAuthorAttributes(userId);
       result.Item.authorName = authorAttributes.authorName;
-      result.Item.userName = authorAttributes.userName;
+      result.Item.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
 
       return success(result.Item);
     } else {

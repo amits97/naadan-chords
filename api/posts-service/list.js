@@ -170,7 +170,7 @@ export async function main(event, context, callback) {
         //Get full attributes of author
         let authorAttributes = await userNameLib.getAuthorAttributes(userId);
         users[userId].authorName = authorAttributes.authorName;
-        users[userId].userName = authorAttributes.userName;
+        users[userId].userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
       }
 
       delete(result.Items[i].userId);

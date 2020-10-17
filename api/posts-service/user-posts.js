@@ -145,7 +145,7 @@ export async function main(event, context, callback) {
 
     if(result.Items.length > 0) {
       for(let i = 0; i < result.Items.length; i++) {
-        result.Items[i].userName = authorAttributes.userName;
+        result.Items[i].userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
         result.Items[i].authorName = authorAttributes.authorName;
         delete(result.Items[i].userId);
       }

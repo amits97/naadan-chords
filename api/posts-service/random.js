@@ -69,7 +69,7 @@ export async function main(event, context) {
     //Get full attributes of author
     let authorAttributes = await userNameLib.getAuthorAttributes(userId);
     result.authorName = authorAttributes.authorName;
-    result.userName = authorAttributes.userName;
+    result.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
 
     //Do not expose userId
     delete(result.userId);

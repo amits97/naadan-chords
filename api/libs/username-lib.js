@@ -11,7 +11,17 @@ export async function getAuthorAttributes(userId) {
   let userResults = await cognitoLib.call("listUsers", userParams);
   let authorName = userResults.Users[0].Attributes[0].Value;
   let userName = userResults.Users[0].Username;
-  return {authorName: authorName, userName: userName};
+  let preferredUsername;
+
+  try {
+    userParams.AttributesToGet = ["preferred_username"];
+    userResults = await cognitoLib.call("listUsers", userParams);
+    preferredUsername = userResults.Users[0].Attributes[0].Value;
+  } catch(e) {
+    // Ignore, preferred_username does not exist.
+  }
+
+  return { authorName, userName, preferredUsername };
 }
 
 export async function getAuthorEmail(userId) {
@@ -30,11 +40,17 @@ export async function getUserId(userName) {
   const userParams = {
     UserPoolId: "ap-south-1_l5klM91tP",
     AttributesToGet: ["sub"],
-    Filter: "username=\"" + userName + "\""
+    Filter: "preferred_username=\"" + userName + "\""
   };
 
   let userResults = await cognitoLib.call("listUsers", userParams);
-  return userResults.Users[0] ? userResults.Users[0].Attributes[0].Value : "";
+  if (userResults.Users[0] && userResults.Users[0].Attributes[0] && userResults.Users[0].Attributes[0].Value) {
+    return userResults.Users[0].Attributes[0].Value;
+  } else {
+    userParams.Filter = "username=\"" + userName + "\"";
+    userResults = await cognitoLib.call("listUsers", userParams);
+    return userResults.Users[0] ? userResults.Users[0].Attributes[0].Value : "";
+  }
 }
 
 export async function getAdminUsers() {
