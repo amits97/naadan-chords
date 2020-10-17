@@ -1,5 +1,6 @@
 const slsw = require("serverless-webpack");
 const nodeExternals = require("webpack-node-externals");
+const path = require("path");
 
 module.exports = {
   entry: slsw.lib.entries,
@@ -24,10 +25,12 @@ module.exports = {
       {
         test: /\.js$/,
         loader: "babel-loader",
-        include: __dirname,
-        exclude: /node_modules/
+        include: [__dirname, path.join(__dirname, '..', 'libs')],
+        exclude: /node_modules/,
+        options: {
+          rootMode: 'upward'
+        }
       }
     ]
   }
 };
-

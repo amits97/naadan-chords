@@ -44,7 +44,7 @@ export async function getUserId(userName) {
   };
 
   let userResults = await cognitoLib.call("listUsers", userParams);
-  if (userResults.Users[0] && userResults.Users[0].Attributes[0] && userResults.Users[0].Attributes[0].Value) {
+  if (userResults.Users[0]?.Attributes[0]?.Value) {
     return userResults.Users[0].Attributes[0].Value;
   } else {
     userParams.Filter = "username=\"" + userName + "\"";
