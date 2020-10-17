@@ -59,13 +59,12 @@
 }
 
 .App .navbar .navbar-nav .dropdown-item:focus {
-  color: #212529;
+  color: #000;
   background: initial;
 }
 
 .App .navbar .navbar-nav .dropdown-item {
-  color: #212529;
-  font-weight: bold;
+  color: #000;
   font-size: 0.92rem;
   letter-spacing: 0.4px;
 }
@@ -178,6 +177,7 @@
   margin-right: 10px;
   float: left;
   margin-top: 3px;
+  font-size: 0.9rem;
 }
 
 .App .navbar .dropdown-toggle::after {
