@@ -337,7 +337,7 @@ export default class Account extends SearchComponent {
                 {
                   (this.props.picture && !this.state.avatarEditMode) ? (
                     <div className="picture-container">
-                      <img src={this.props.picture} alt="Preview" width="200" height="200" />
+                      <img src={`${this.props.picture}?${Date.now()}`} alt="Preview" width="200" height="200" />
                       <a href="!#" onClick={(e) => this.setEditAvatarMode(e, true)}><FontAwesomeIcon icon={faPencilAlt} /> Edit</a>
                     </div>
                   ) : (
