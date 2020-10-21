@@ -1,12 +1,15 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
-import { Auth, API } from "aws-amplify";
+import { Auth, API, Storage } from "aws-amplify";
 import { Alert, Button, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Helmet } from "react-helmet";
+import Avatar from 'react-avatar-edit'
 import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
+import { base64toBlob } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
 import "./Account.css";
 
@@ -25,6 +28,8 @@ export default class Account extends SearchComponent {
       isErrorState: false,
       errorMessage: "",
       usernameValid: true,
+      avatarPreview: null,
+      avatarEditMode: false,
       usernameMessage: "",
       previousPassword: "",
       newPassword: "",
@@ -81,8 +86,8 @@ export default class Account extends SearchComponent {
     let valid = true;
 
     if(activeTab === "profile") {
-      valid = this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
-      valid = valid && (this.props.name !== this.state.name || (this.props.preferredUsername ? this.props.preferredUsername !== this.state.username : this.props.username !== this.state.username));
+      valid = this.state.avatarPreview && this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
+      valid = valid && (this.props.name !== this.state.name || (this.props.preferredUsername ? this.props.preferredUsername !== this.state.username : this.props.username !== this.state.username) || this.state.avatarPreview);
     } else if(activeTab === "password") {
       valid = this.state.previousPassword.length > 0 && this.state.newPassword.length > 0 && this.state.newPasswordConfirm.length > 0;
       valid = valid && this.validatePassword() && this.validatePasswordConfirm();
@@ -140,6 +145,18 @@ export default class Account extends SearchComponent {
       try {
         let request = {};
 
+        if (this.state.avatarPreview) {
+          const blobData = base64toBlob(this.state.avatarPreview.replace(/^data:image\/(png);base64,/, ''));
+          const fileName = `${this.props.preferredUsername ?? this.props.username}.png`;
+
+          await Storage.put(fileName, blobData, {
+            contentType: 'image/png',
+            bucket: "naadanchords-avatars"
+          });
+
+          request.picture = `https://s3.ap-south-1.amazonaws.com/naadanchords-avatars/public/${fileName}`;
+        }
+
         if(this.props.name !== this.state.name) {
           request.name = this.state.name;
         }
@@ -154,9 +171,12 @@ export default class Account extends SearchComponent {
 
         let session = await Auth.currentSession();
         await this.props.getUserAttributes(session);
+
         this.setState({
           isLoading: false,
-          isSuccessState: true
+          isSuccessState: true,
+          avatarPreview: null,
+          avatarEditMode: false
         });
       } catch(e) {
         this.setState({
@@ -225,51 +245,79 @@ export default class Account extends SearchComponent {
     } else {
       return (
         <form onSubmit={(e) => this.handleSubmit(e, "password")}>
-          { this.renderError() }
-          { this.renderSuccess() }
-          <FormGroup controlId="previousPassword">
-            <FormLabel>Current password</FormLabel>
-            <FormControl
-              type="password"
-              value={this.state.previousPassword}
-              onChange={this.handleChange}
+          <div className="account-form-wrapper">
+            { this.renderError() }
+            { this.renderSuccess() }
+            <FormGroup controlId="previousPassword">
+              <FormLabel>Current password</FormLabel>
+              <FormControl
+                type="password"
+                value={this.state.previousPassword}
+                onChange={this.handleChange}
+              />
+            </FormGroup>
+            <FormGroup controlId="newPassword">
+              <FormLabel>New password</FormLabel>
+              <FormControl
+                type="password"
+                isInvalid={!this.validatePassword()}
+                value={this.state.newPassword}
+                onChange={this.handleChange}
+              />
+              <FormControl.Feedback type="invalid" className={(this.validatePassword() ? 'd-none' : 'd-block')}>
+                Please enter a password with minimum of 8 characters.
+              </FormControl.Feedback>
+            </FormGroup>
+            <FormGroup controlId="newPasswordConfirm">
+              <FormLabel>Confirm new password</FormLabel>
+              <FormControl
+                type="password"
+                isInvalid={!this.validatePasswordConfirm()}
+                value={this.state.newPasswordConfirm}
+                onChange={this.handleChange}
+              />
+              <FormControl.Feedback type="invalid" className={(this.validatePasswordConfirm() ? 'd-none' : 'd-block')}>
+                Passwords do not match.
+              </FormControl.Feedback>
+            </FormGroup>
+            <LoaderButton
+              block
+              disabled={!this.validateForm()}
+              type="submit"
+              isLoading={this.state.isLoading}
+              text="Update password"
+              loadingText="Updating password…"
             />
-          </FormGroup>
-          <FormGroup controlId="newPassword">
-            <FormLabel>New password</FormLabel>
-            <FormControl
-              type="password"
-              isInvalid={!this.validatePassword()}
-              value={this.state.newPassword}
-              onChange={this.handleChange}
-            />
-            <FormControl.Feedback type="invalid" className={(this.validatePassword() ? 'd-none' : 'd-block')}>
-              Please enter a password with minimum of 8 characters.
-            </FormControl.Feedback>
-          </FormGroup>
-          <FormGroup controlId="newPasswordConfirm">
-            <FormLabel>Confirm new password</FormLabel>
-            <FormControl
-              type="password"
-              isInvalid={!this.validatePasswordConfirm()}
-              value={this.state.newPasswordConfirm}
-              onChange={this.handleChange}
-            />
-            <FormControl.Feedback type="invalid" className={(this.validatePasswordConfirm() ? 'd-none' : 'd-block')}>
-              Passwords do not match.
-            </FormControl.Feedback>
-          </FormGroup>
-          <LoaderButton
-            block
-            disabled={!this.validateForm()}
-            type="submit"
-            isLoading={this.state.isLoading}
-            text="Update password"
-            loadingText="Updating password…"
-          />
+          </div>
         </form>
       );
     }
+  }
+
+  onAvatarClose = () => {
+    this.setState({ avatarPreview: null });
+  }
+
+  onAvatarCrop = (preview) => {
+    this.setState({
+      avatarPreview: preview
+    });
+  }
+
+  onBeforeAvatarFileLoad = (elem) => {
+    if(elem.target.files[0].size > 1000000){
+      alert("File is too big!");
+      elem.target.value = "";
+    };
+  }
+
+  setEditAvatarMode = (e, avatarEditMode) => {
+    e.preventDefault();
+
+    this.setState({
+      avatarEditMode,
+      avatarPreview: avatarEditMode ? this.state.avatarPreview : null
+    });
   }
 
   renderAccountForm = () => {
@@ -282,42 +330,84 @@ export default class Account extends SearchComponent {
         <form onSubmit={(e) => this.handleSubmit(e, "profile")}>
           {this.renderError()}
           {this.renderSuccess()}
-          <FormGroup controlId="name">
-            <FormLabel>Name</FormLabel>
-            <FormControl
-              type="text"
-              value={this.state.name}
-              onChange={this.handleChange}
-            />
+          <FormGroup controlId="avatar">
+            <FormLabel>Profile picture</FormLabel>
+            <Row>
+              <Col className="avatar-editor">
+                {
+                  (this.props.picture && !this.state.avatarEditMode) ? (
+                    <div className="picture-container">
+                      <img src={this.props.picture} alt="Preview" width="200" height="200" />
+                      <a href="!#" onClick={(e) => this.setEditAvatarMode(e, true)}><FontAwesomeIcon icon={faPencilAlt} /> Edit</a>
+                    </div>
+                  ) : (
+                    <React.Fragment>
+                      <Avatar
+                        width={150}
+                        height={150}
+                        imageHeight={401}
+                        onCrop={this.onAvatarCrop}
+                        onClose={this.onAvatarClose}
+                        onBeforeFileLoad={this.onBeforeAvatarFileLoad}
+                        borderStyle={{
+                          border: !this.state.avatarPreview ? "1px dashed #ced4da" : null 
+                        }}
+                        labelStyle={{
+                          textAlign: "center",
+                          lineHeight: "150px",
+                          display: "block",
+                          color: "#888888",
+                        }}
+                        label="+ Upload photo"
+                      />
+                      { this.state.avatarEditMode && <a href="!#" onClick={(e) => this.setEditAvatarMode(e, false)} className="d-block mt-2"><FontAwesomeIcon icon={faTimes} /> Cancel</a>}
+                    </React.Fragment>
+                  )
+                }
+              </Col>
+              <Col className="avatar-preview">
+                { this.state.avatarPreview && <img src={this.state.avatarPreview} alt="Preview" width="200" height="200" /> }    
+              </Col>
+            </Row>
           </FormGroup>
-          <FormGroup controlId="username">
-            <FormLabel>Username</FormLabel>
-            <FormControl
-              type="text"
-              isInvalid={!this.state.usernameValid}
-              value={this.state.username}
-              onChange={this.handleChange}
+          <div className="account-form-wrapper">
+            <FormGroup controlId="name">
+              <FormLabel>Name</FormLabel>
+              <FormControl
+                type="text"
+                value={this.state.name}
+                onChange={this.handleChange}
+              />
+            </FormGroup>
+            <FormGroup controlId="username">
+              <FormLabel>Username</FormLabel>
+              <FormControl
+                type="text"
+                isInvalid={!this.state.usernameValid}
+                value={this.state.username}
+                onChange={this.handleChange}
+              />
+              <FormControl.Feedback type="invalid" className={(this.state.usernameValid ? 'd-none' : 'd-block')}>
+                {this.state.usernameMessage}
+              </FormControl.Feedback>
+            </FormGroup>
+            <FormGroup controlId="email">
+              <FormLabel>Email</FormLabel>
+              <FormControl
+                type="text"
+                value={this.state.email}
+                disabled
+              />
+            </FormGroup>
+            <LoaderButton
+              block
+              disabled={!this.validateForm()}
+              type="submit"
+              isLoading={this.state.isLoading}
+              text="Update profile"
+              loadingText="Updating profile…"
             />
-            <FormControl.Feedback type="invalid" className={(this.state.usernameValid ? 'd-none' : 'd-block')}>
-              {this.state.usernameMessage}
-            </FormControl.Feedback>
-          </FormGroup>
-          <FormGroup controlId="email">
-            <FormLabel>Email</FormLabel>
-            <FormControl
-              type="text"
-              value={this.state.email}
-              disabled
-            />
-          </FormGroup>
-          <LoaderButton
-            block
-            disabled={!this.validateForm()}
-            type="submit"
-            isLoading={this.state.isLoading}
-            text="Update profile"
-            loadingText="Updating profile…"
-          />
+          </div>
         </form>
       );
     }
@@ -366,32 +456,36 @@ export default class Account extends SearchComponent {
     if (hasFacebookLinked) {
       return (
         <form>
-          <p>Sweet! You've already connected your account with Facebook. You can login with Facebook to Naadan Chords.</p>
-          <Button variant="danger" className="social-login" onClick={() => this.disconnectSocialLogin('Facebook')} block disabled={!emailVerified}>
-            <span className="social-icon">
-              <FontAwesomeIcon icon={faFacebook} />
-            </span>
-            Disconnect Facebook
-          </Button>
-          { !emailVerified ?
-              <small className="text-muted">
-                Disconnect disabled as account is not linked to an email verified account.
-              </small>
-            :
-              null
-          }
+          <div className="account-form-wrapper">
+            <p>Sweet! You've already connected your account with Facebook. You can login with Facebook to Naadan Chords.</p>
+            <Button variant="danger" className="social-login" onClick={() => this.disconnectSocialLogin('Facebook')} block disabled={!emailVerified}>
+              <span className="social-icon">
+                <FontAwesomeIcon icon={faFacebook} />
+              </span>
+              Disconnect Facebook
+            </Button>
+            { !emailVerified ?
+                <small className="text-muted">
+                  Disconnect disabled as account is not linked to an email verified account.
+                </small>
+              :
+                null
+            }
+          </div>
         </form>
       );
     } else {
       return (
         <form>
-          <p>Connect your Naadan Chords account with Facebook. This allows you to login with Facebook to Naadan Chords.</p>
-          <Button className="social-login" onClick={() => this.handleSocialLogin('Facebook')} block>
-            <span className="social-icon">
-              <FontAwesomeIcon icon={faFacebook} />
-            </span>
-            Connect with Facebook
-          </Button>
+          <div className="account-form-wrapper">
+            <p>Connect your Naadan Chords account with Facebook. This allows you to login with Facebook to Naadan Chords.</p>
+            <Button className="social-login" onClick={() => this.handleSocialLogin('Facebook')} block>
+              <span className="social-icon">
+                <FontAwesomeIcon icon={faFacebook} />
+              </span>
+              Connect with Facebook
+            </Button>
+          </div>
         </form>
       );
     }

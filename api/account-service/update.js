@@ -13,6 +13,14 @@ export async function main(event) {
 
   try {
     const userAttributes = [];
+
+    if (data.picture) {
+      userAttributes.push({
+        Name: "picture",
+        Value: data.picture
+      });
+    }
+
     if (data.username) {
       // Check if username with preferred_username exists
       const userParams = {
@@ -34,7 +42,9 @@ export async function main(event) {
         Name: "preferred_username",
         Value: data.username
       });
-    } else if (data.name) {
+    }
+
+    if (data.name) {
       userAttributes.push({
         Name: "name",
         Value: data.name

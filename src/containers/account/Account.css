@@ -48,7 +48,7 @@
   color: #333;
 }
 
-.Account .tab-content .tab-pane form {
+.Account .account-form-wrapper {
   max-width: 500px;
 }
 
@@ -62,6 +62,23 @@
   float: left;
   height: 20px;
   font-size: 20px;
+}
+
+.Account .avatar-editor > div {
+  border-radius: 0.25rem;
+  position: relative;
+  width: 150px;
+}
+
+.Account .avatar-editor > div > div {
+ justify-content: left !important;
+}
+
+.Account .avatar-editor input {
+  width: 100% !important;
+  height: 99% !important;
+  z-index: 1 !important;
+  cursor: pointer;
 }
 
 /* Medium devices (tablets, less than 992px) */

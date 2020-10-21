@@ -30,6 +30,7 @@ class App extends Component {
       isSearchOpen: false,
       userName: "",
       preferredUsername: "",
+      picture: "",
       name: "",
       email: "",
       isAdmin: false,
@@ -67,7 +68,9 @@ class App extends Component {
           name: user.attributes.name,
           email: user.attributes.email,
           identities: user.attributes.identities,
-          emailVerified: user.attributes.email_verified
+          emailVerified: user.attributes.email_verified,
+          preferredUsername: user.attributes.preferred_username,
+          picture: user.attributes.picture
         });
         await this.getUserPrevileges(session);
         resolve();
@@ -87,6 +90,7 @@ class App extends Component {
       this.setState({
         userName: user.username,
         preferredUsername: user.attributes.preferred_username,
+        picture: user.attributes.picture,
         name: user.attributes.name,
         email: user.attributes.email
       });
@@ -312,6 +316,7 @@ class App extends Component {
       name: this.state.name,
       email: this.state.email,
       preferredUsername: this.state.preferredUsername,
+      picture: this.state.picture,
       identities: this.state.identities,
       emailVerified: this.state.emailVerified
     };
