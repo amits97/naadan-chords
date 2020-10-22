@@ -64,6 +64,21 @@
   font-size: 20px;
 }
 
+.Account .picture-container {
+  position: relative;
+}
+
+.Account .picture-container button, .Account .avatar-editor button.cancel-button {
+  line-height: 1rem;
+  position: absolute;
+  margin-top: -25px;
+}
+
+.Account .avatar-editor button.cancel-button {
+  position: inherit;
+  margin-top: 10px;
+}
+
 .Account .avatar-editor > div {
   border-radius: 0.25rem;
   position: relative;

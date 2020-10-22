@@ -338,7 +338,7 @@ export default class Account extends SearchComponent {
                   (this.props.picture && !this.state.avatarEditMode) ? (
                     <div className="picture-container">
                       <img src={`${this.props.picture}?${Date.now()}`} alt="Preview" width="200" height="200" />
-                      <a href="!#" onClick={(e) => this.setEditAvatarMode(e, true)}><FontAwesomeIcon icon={faPencilAlt} /> Edit</a>
+                      <Button className="border" variant="light" size="sm" onClick={(e) => this.setEditAvatarMode(e, true)}><FontAwesomeIcon icon={faPencilAlt} /> Edit</Button>
                     </div>
                   ) : (
                     <React.Fragment>
@@ -360,7 +360,7 @@ export default class Account extends SearchComponent {
                         }}
                         label="+ Upload photo"
                       />
-                      { this.state.avatarEditMode && <a href="!#" onClick={(e) => this.setEditAvatarMode(e, false)} className="d-block mt-2"><FontAwesomeIcon icon={faTimes} /> Cancel</a>}
+                      { this.state.avatarEditMode && <Button className="cancel-button border" variant="light" size="sm" onClick={(e) => this.setEditAvatarMode(e, false)}><FontAwesomeIcon icon={faTimes} /> Cancel</Button>}
                     </React.Fragment>
                   )
                 }
