@@ -190,8 +190,24 @@ class App extends Component {
       if(this.state.userName === "") {
         this.getUserDetails();
       }
+      const dpFragment = this.state.picture ? (
+        <React.Fragment>
+          <img className="user-dp" src={this.state.picture} alt={this.state.name} />
+          <span title={this.state.name} className="user-name">
+            { this.state.name.split(' ')[0] }
+          </span>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <FontAwesomeIcon className="user-icon" icon={faUserCircle} />
+          <span title={this.state.name} className="user-name">
+            { this.state.name.split(' ')[0] }
+          </span>
+        </React.Fragment>
+      );
+
       return(
-        <NavDropdown title={<React.Fragment><FontAwesomeIcon className="user-icon" icon={faUserCircle} /> <span title={this.state.name} className="user-name">{ this.state.name.split(' ')[0] }</span></React.Fragment>} alignRight>
+        <NavDropdown title={dpFragment} alignRight>
           <LinkContainer to="/account">
             <NavDropdown.Item onClick={this.closeNav} role="button">
               <React.Fragment>

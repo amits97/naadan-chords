@@ -92,6 +92,13 @@
   float: left;
 }
 
+.App .navbar .navbar-nav .nav-link .user-dp {
+  height: 20px;
+  margin-top: 0;
+  margin-right: 2px;
+  float: left;
+}
+
 .App .navbar .navbar-nav .nav-link .user-name {
   max-width: 58px;
   text-overflow: ellipsis;
