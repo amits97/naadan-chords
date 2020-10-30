@@ -68,10 +68,10 @@
   position: relative;
 }
 
-.Account .picture-container button, .Account .avatar-editor button.cancel-button {
+.Account .picture-container .edit-button, .Account .avatar-editor button.cancel-button {
   line-height: 1rem;
   position: absolute;
-  width: 60px;
+  width: 90px;
   left: 0;
   bottom: -2px;
 }

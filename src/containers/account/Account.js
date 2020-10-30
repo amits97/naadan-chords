@@ -1,7 +1,7 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import { Auth, API, Storage } from "aws-amplify";
-import { Alert, Button, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
+import { Alert, Button, Dropdown, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -340,7 +340,15 @@ export default class Account extends SearchComponent {
                   (this.props.picture && !this.state.avatarEditMode) ? (
                     <div className="picture-container">
                       <img src={`${this.props.picture}?${Date.now()}`} alt="Preview" width="200" height="200" />
-                      <Button className="border" variant="light" size="sm" onClick={(e) => this.setEditAvatarMode(e, true)}><FontAwesomeIcon icon={faPencilAlt} /> Edit</Button>
+                      <Dropdown className="edit-button" id="dropdown-basic-button">
+                        <Dropdown.Toggle className="border" variant="light" size="sm">
+                          <FontAwesomeIcon icon={faPencilAlt} /> Edit
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item href="#/" onClick={(e) => this.setEditAvatarMode(e, true)}>Replace</Dropdown.Item>
+                          <Dropdown.Item href="#/" onClick={(e) => this.setEditAvatarMode(e, true)}>Delete</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </div>
                   ) : (
                     <React.Fragment>
