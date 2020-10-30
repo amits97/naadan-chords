@@ -86,8 +86,8 @@ export default class Account extends SearchComponent {
     let valid = true;
 
     if(activeTab === "profile") {
-      valid = this.state.avatarPreview && this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
-      valid = valid && (this.props.name !== this.state.name || (this.props.preferredUsername ? this.props.preferredUsername !== this.state.username : this.props.username !== this.state.username) || this.state.avatarPreview);
+      valid = (this.state.avatarPreview || this.state.avatarEditMode) && this.state.name.length > 0 && this.state.username.length > 0 && this.state.email.length > 0;
+      valid = valid && (this.props.name !== this.state.name || (this.props.preferredUsername ? this.props.preferredUsername !== this.state.username : this.props.username !== this.state.username) || (this.state.avatarPreview || this.state.avatarEditMode));
     } else if(activeTab === "password") {
       valid = this.state.previousPassword.length > 0 && this.state.newPassword.length > 0 && this.state.newPasswordConfirm.length > 0;
       valid = valid && this.validatePassword() && this.validatePasswordConfirm();
@@ -155,6 +155,8 @@ export default class Account extends SearchComponent {
           });
 
           request.picture = `https://s3.ap-south-1.amazonaws.com/naadanchords-avatars/public/${fileName}`;
+        } else if (this.state.avatarEditMode) {
+          request.picture = 'null';
         }
 
         if(this.props.name !== this.state.name) {

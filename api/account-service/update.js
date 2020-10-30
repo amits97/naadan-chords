@@ -15,10 +15,18 @@ export async function main(event) {
     const userAttributes = [];
 
     if (data.picture) {
-      userAttributes.push({
-        Name: "picture",
-        Value: data.picture
-      });
+      if (data.picture === 'null') {
+        // User wants to remove picture
+        userAttributes.push({
+          Name: "picture",
+          Value: ""
+        });
+      } else {
+        userAttributes.push({
+          Name: "picture",
+          Value: data.picture
+        });
+      }
     }
 
     if (data.username) {
