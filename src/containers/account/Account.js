@@ -4,7 +4,7 @@ import { Auth, API, Storage } from "aws-amplify";
 import { Alert, Button, Dropdown, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faPencilAlt, faTimes, faTrashAlt, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Helmet } from "react-helmet";
 import Avatar from 'react-avatar-edit'
 import SearchComponent from "../../components/SearchComponent";
@@ -345,8 +345,8 @@ export default class Account extends SearchComponent {
                           <FontAwesomeIcon icon={faPencilAlt} /> Edit
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                          <Dropdown.Item href="#/" onClick={(e) => this.setEditAvatarMode(e, true)}>Replace</Dropdown.Item>
-                          <Dropdown.Item href="#/" onClick={(e) => this.setEditAvatarMode(e, true)}>Delete</Dropdown.Item>
+                          <Dropdown.Item href="#/" onClick={(e) => this.setEditAvatarMode(e, true)}><FontAwesomeIcon className="edit-icon" icon={faUpload} /> Replace</Dropdown.Item>
+                          <Dropdown.Item href="#/" onClick={(e) => this.setEditAvatarMode(e, true)}><FontAwesomeIcon className="edit-icon" icon={faTrashAlt} /> Delete</Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
                     </div>

@@ -1,6 +1,7 @@
 import { success, failure } from "../libs/response-lib";
 import * as cognitoLib from "../libs/cognito-lib";
 import * as userNameLib from "../libs/username-lib";
+import * as s3Lib from "../libs/s3-lib";
 
 export async function main(event) {
   // Request body is passed in as a JSON encoded string in 'event.body'
@@ -21,6 +22,15 @@ export async function main(event) {
           Name: "picture",
           Value: ""
         });
+
+        // Delete picture from s3
+        const fileName = `public/${usernameAttributes.preferredUsername ?? usernameAttributes.userName}.png`;
+        const s3Params = {
+          Bucket: "naadanchords-avatars",
+          Key: fileName
+        };
+
+        await s3Lib.call("deleteObject", s3Params);
       } else {
         userAttributes.push({
           Name: "picture",

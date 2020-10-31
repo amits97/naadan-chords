@@ -76,10 +76,43 @@
   bottom: -2px;
 }
 
+.Account .picture-container .edit-button button {
+  line-height: 1rem;
+}
+
+.Account .picture-container .edit-button button svg {
+  font-size: 0.75rem;
+  margin-right: 2px;
+}
+
+.Account .picture-container .edit-button button::after {
+  vertical-align: 0.1em;
+}
+
+.Account .picture-container .edit-button .dropdown-menu {
+  font-size: 0.95rem;
+}
+
+.Account .picture-container .edit-button .dropdown-menu a {
+  padding: 0.4rem 1.5rem
+}
+
+.Account .picture-container .edit-button .dropdown-menu a .edit-icon {
+  margin-left: -5px;
+  margin-right: 10px;
+  float: left;
+  font-size: 0.9rem;
+  width: 15px;
+}
+
 .Account .avatar-editor button.cancel-button {
   width: 75px;
   position: inherit;
   margin-top: 10px;
+}
+
+.Account .avatar-editor button.cancel-button svg {
+  margin-right: 2px;
 }
 
 .Account .avatar-editor > div {
