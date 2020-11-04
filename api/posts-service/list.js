@@ -171,11 +171,13 @@ export async function main(event, context, callback) {
         let authorAttributes = await userNameLib.getAuthorAttributes(userId);
         users[userId].authorName = authorAttributes.authorName;
         users[userId].userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
+        users[userId].picture = authorAttributes.picture;
       }
 
       delete(result.Items[i].userId);
       result.Items[i].authorName =  users[userId].authorName;
       result.Items[i].userName =  users[userId].userName;
+      result.Items[i].picture = users[userId].picture;
     }
 
     //append ratings
