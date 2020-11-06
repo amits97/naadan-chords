@@ -223,6 +223,14 @@
   .Content .postList small time {
     display: inline-block;
   }
+
+  .Content .profile-meta-container .profile-picture {
+    float: none;
+  }
+
+  .Content .profile-meta-container {
+    text-align: center;
+  }
 }
 
 /* Small devices (landscape phones, less than 768px) */
