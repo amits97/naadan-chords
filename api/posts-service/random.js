@@ -70,6 +70,7 @@ export async function main(event, context) {
     let authorAttributes = await userNameLib.getAuthorAttributes(userId);
     result.authorName = authorAttributes.authorName;
     result.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
+    result.authorPicture = authorAttributes.picture;
 
     //Do not expose userId
     delete(result.userId);

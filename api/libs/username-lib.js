@@ -13,6 +13,7 @@ export async function getAuthorAttributes(userId) {
   let picture;
   let userName = userResults.Users[0].Username;
   let preferredUsername;
+  let userCreateDate = userResults.Users[0].UserCreateDate;
 
   try {
     userParams.AttributesToGet = ["preferred_username"];
@@ -30,7 +31,7 @@ export async function getAuthorAttributes(userId) {
     // Ignore, picture does not exist.
   }
 
-  return { authorName, userName, preferredUsername, picture };
+  return { authorName, userName, preferredUsername, picture, userCreateDate };
 }
 
 export async function getAuthorEmail(userId) {

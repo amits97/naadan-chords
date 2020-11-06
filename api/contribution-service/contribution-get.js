@@ -35,6 +35,7 @@ export async function main(event) {
       let authorAttributes = await userNameLib.getAuthorAttributes(userId);
       result.Item.authorName = authorAttributes.authorName;
       result.Item.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
+      result.Item.authorPicture = authorAttributes.picture;
 
       return success(result.Item);
     } else {

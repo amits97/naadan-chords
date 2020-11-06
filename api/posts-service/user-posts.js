@@ -147,6 +147,7 @@ export async function main(event, context, callback) {
       for(let i = 0; i < result.Items.length; i++) {
         result.Items[i].userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
         result.Items[i].authorName = authorAttributes.authorName;
+        result.Items[i].authorPicture = authorAttributes.picture;
         delete(result.Items[i].userId);
       }
     }
@@ -154,6 +155,7 @@ export async function main(event, context, callback) {
     //append ratings
     let finalResult = await appendRatings(result);
 
+    finalResult.Items[0].authorCreateDate = authorAttributes.userCreateDate;
     return finalResult;
   } catch (e) {
     return { status: false, error: e };

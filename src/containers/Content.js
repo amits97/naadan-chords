@@ -11,7 +11,7 @@ import Disqus from "disqus-react";
 import { API } from "aws-amplify";
 import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRandom } from "@fortawesome/free-solid-svg-icons";
+import { faRandom, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
@@ -137,14 +137,16 @@ export default class Content extends Component {
         displayTitle += ` - Page ${this.props.match.params.number}`;
       }
     }
-
+    console.log(posts[0]);
     if(isUserPosts) {
       return (
-        <div>
+        <div className="profile-meta-container bg-light px-3 py-1 rounded">
           <Helmet>
             <title>{`${displayTitle} | Naadan Chords`}</title>
           </Helmet>
-          <h6>{displayTitle.toUpperCase()}</h6>
+          { posts[0].authorPicture && <img className="profile-picture" src={posts[0].authorPicture} alt={posts[0].userName} /> }
+          <h4>{displayTitle.toUpperCase()}</h4>
+          <p><FontAwesomeIcon className="history-icon" icon={faHistory} /> Joined on {this.formatDate(posts[0].authorCreateDate)}</p>
         </div>
       );
     } else {
@@ -179,7 +181,7 @@ export default class Content extends Component {
       if(posts && posts.length > 0) {
         return (
           <div className="postList">
-            <div className="title-container border-bottom mb-2">
+            <div className={`title-container ${!isUserPosts && 'border-bottom'} mb-2`}>
               { this.renderTitle(title, isUserPosts, posts) }
               <LinkContainer to="/random">
                 <a href="#/" className={`${title? "d-none":""} random-post text-primary`}>
