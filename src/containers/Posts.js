@@ -24,7 +24,8 @@ export default class Posts extends Component {
       isPostList: false,
       isRandomPost: false,
       redirect: false,
-      redirectUrl: ""
+      redirectUrl: "",
+      authorCreateDate: null,
     };
   }
 
@@ -122,6 +123,7 @@ export default class Posts extends Component {
       let album = this.props.match.params.album;
       let pageNumber = this.props.match.params.number;
       let userName = this.props.match.params.userName;
+      let authorCreateDate;
 
       if(this.props.search) {
         this.setState({
@@ -183,11 +185,13 @@ export default class Posts extends Component {
 
         let postsResult = await this.posts(this.props.isCategory ? category.toUpperCase() : null, null, this.props.isUserPosts ? this.props.match.params.userName : null, this.props.isAlbum ? this.props.match.params.album : null);
         posts = postsResult.Items;
+        authorCreateDate = postsResult.authorCreateDate;
         this.setPagination(postsResult);
       }
 
       this.setState({
         posts: posts,
+        authorCreateDate: this.props.isUserPosts? authorCreateDate : null,
         isLoading: false
       });
     } catch(e) {

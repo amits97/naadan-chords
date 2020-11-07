@@ -155,7 +155,7 @@ export async function main(event, context, callback) {
     //append ratings
     let finalResult = await appendRatings(result);
 
-    finalResult.Items[0].authorCreateDate = authorAttributes.userCreateDate;
+    finalResult.authorCreateDate = authorAttributes.userCreateDate;
     return finalResult;
   } catch (e) {
     return { status: false, error: e };

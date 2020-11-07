@@ -128,25 +128,32 @@ export default class Content extends Component {
     }
   }
 
-  renderTitle = (title, isUserPosts, posts) => {
+  renderTitle = (title, isUserPosts, isCategory, posts, authorCreateDate) => {
     let displayTitle = title ? title : "LATEST POSTS";
     if(isUserPosts) {
-      displayTitle = `Posts by - ${posts[0].authorName}`;
+      displayTitle = posts[0].authorName;
 
       if(this.props.isPageUrl) {
         displayTitle += ` - Page ${this.props.match.params.number}`;
       }
     }
-    console.log(posts[0]);
+
     if(isUserPosts) {
       return (
-        <div className="profile-meta-container bg-light px-3 py-1 rounded">
+        <div className="header-meta-container bg-light px-3 py-1 rounded">
           <Helmet>
             <title>{`${displayTitle} | Naadan Chords`}</title>
           </Helmet>
-          { posts[0].authorPicture && <img className="profile-picture" src={posts[0].authorPicture} alt={posts[0].userName} /> }
+          { posts[0].authorPicture && <img className="header-picture" src={posts[0].authorPicture} alt={posts[0].userName} /> }
           <h4>{displayTitle.toUpperCase()}</h4>
-          <p><FontAwesomeIcon className="history-icon" icon={faHistory} /> Joined on {this.formatDate(posts[0].authorCreateDate)}</p>
+          <p><FontAwesomeIcon className="header-icon" icon={faHistory} /> Joined on {this.formatDate(authorCreateDate)}</p>
+        </div>
+      );
+    } else if (isCategory) {
+      return (
+        <div className="header-meta-container bg-light px-3 rounded">
+          <h4>{displayTitle.split(/-(.+)/)[0].trim().toUpperCase()}</h4>
+          <p>{displayTitle.split(/-(.+)/)[1].trim()}</p>
         </div>
       );
     } else {
@@ -159,7 +166,7 @@ export default class Content extends Component {
   }
 
   renderPosts = () => {
-    let { isLoading, posts, lastEvaluatedPost, title, isUserPosts } = this.props;
+    let { isLoading, posts, lastEvaluatedPost, title, isUserPosts, isCategory, authorCreateDate } = this.props;
 
     if(isLoading) {
       let skeleton = [];
@@ -181,8 +188,8 @@ export default class Content extends Component {
       if(posts && posts.length > 0) {
         return (
           <div className="postList">
-            <div className={`title-container ${!isUserPosts && 'border-bottom'} mb-2`}>
-              { this.renderTitle(title, isUserPosts, posts) }
+            <div className={`title-container ${!isUserPosts && !isCategory && 'border-bottom'} mb-2`}>
+              { this.renderTitle(title, isUserPosts, isCategory, posts, authorCreateDate) }
               <LinkContainer to="/random">
                 <a href="#/" className={`${title? "d-none":""} random-post text-primary`}>
                   <FontAwesomeIcon className="mr-2" icon={ faRandom } />Random
