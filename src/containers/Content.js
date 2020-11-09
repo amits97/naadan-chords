@@ -11,7 +11,7 @@ import Disqus from "disqus-react";
 import { API } from "aws-amplify";
 import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRandom, faHistory } from "@fortawesome/free-solid-svg-icons";
+import { faRandom, faHistory, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
@@ -145,6 +145,9 @@ export default class Content extends Component {
             <title>{`${displayTitle} | Naadan Chords`}</title>
           </Helmet>
           { posts[0].authorPicture && <img className="header-picture" src={posts[0].authorPicture} alt={posts[0].userName} /> }
+          { !posts[0].authorPicture && (
+            <FontAwesomeIcon className="user-icon" icon={faUserCircle} />
+          )}
           <h4>{displayTitle.toUpperCase()}</h4>
           <p><FontAwesomeIcon className="header-icon" icon={faHistory} /> Joined on {this.formatDate(authorCreateDate)}</p>
         </div>
@@ -304,9 +307,17 @@ export default class Content extends Component {
           </a>
           <h1>{ post.title }</h1>
           <small>
-            { this.formatDate( post.createdAt ) }
-            <span className="separator ml-1 mr-1">|</span>
-            Posted by&nbsp;
+            <LinkContainer to={`/author/${ post.userName }`}>
+              <a className="author-picture" href="#/">
+                {
+                  post.authorPicture ? (
+                    <img src={post.authorPicture} alt={post.authorName} />
+                  ) : (
+                    <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faUserCircle} />
+                  )
+                }
+              </a>
+            </LinkContainer>
             <LinkContainer to={`/author/${ post.userName }`}>
               <a href="#/">{ post.authorName }</a>
             </LinkContainer>
@@ -316,6 +327,11 @@ export default class Content extends Component {
                 { capitalizeFirstLetter(post.category) }
               </a>
             </LinkContainer>
+            <span className="separator ml-1 mr-1">|</span>
+            <div className="meta-time-container">
+              <FontAwesomeIcon className="d-inline ml-1 mr-1" icon={faHistory} />
+              { this.formatDate( post.createdAt ) }
+            </div>
             { this.renderRating(post) }
           </small>
           <hr />

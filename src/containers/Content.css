@@ -42,6 +42,14 @@
   margin-right: 20px;
 }
 
+.Content .header-meta-container .user-icon {
+  font-size: 75px;
+  margin-top: 5px;
+  float: left;
+  color: #666666;
+  margin-right: 20px;
+}
+
 .Content .header-meta-container h4 {
   margin-top: 1rem;
   color: #555;
@@ -193,13 +201,27 @@
   margin: 10px 0 20px 0;
 }
 
+.Content .author-picture img {
+  height: 20px;
+  margin-top: -4px;
+  margin-right: 5px;
+}
+
+.Content .author-picture .user-icon {
+  font-size: 15px;
+}
+
+.Content .post small .meta-time-container {
+  display: inline;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
   .Content .post small span.separator {
     display: none;
   }
 
-  .Content .post small time {
+  .Content .post small .meta-time-container {
     display: block;
   }
 
@@ -224,7 +246,12 @@
     display: inline-block;
   }
 
-  .Content .header-meta-container .header-picture {
+  .Content .author-picture img {
+    height: 16px;
+    margin-left: 3px;
+  }
+
+  .Content .header-meta-container .header-picture, .Content .header-meta-container .user-icon {
     float: none;
   }
 
