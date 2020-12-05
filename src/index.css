@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
   font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
