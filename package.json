@@ -9,7 +9,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
     "aws-amplify": "^3.0.23",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chord-fingering": "^1.0.1",
     "disqus-react": "^1.0.9",
     "moment": "^2.27.0",
