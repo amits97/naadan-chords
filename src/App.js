@@ -133,13 +133,6 @@ class App extends Component {
           let session = await Auth.currentSession();
           await this.getUserDetails(session);
           this.userHasAuthenticated(true);
-          if(typeof Storage !== "undefined") {
-            const redirectToSocialAccountTab = localStorage.getItem("redirectToSocialAccountTab");
-            if(redirectToSocialAccountTab) {
-              localStorage.removeItem("redirectToSocialAccountTab");
-              window.location.href = "/account?tab=facebook";
-            }
-          }
           break;
         default:
           break;
