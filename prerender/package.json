@@ -23,7 +23,7 @@
 				"cryptiles": ">=4.1.3",
 				"puppeteer-core": "^5.2.1",
 				"serialize-javascript": "^4.0.0",
-				"serverless": "^1.78.1",
+				"serverless": "^2.18.0",
 				"source-map-support": "^0.5.19"
 		}
 }

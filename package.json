@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.51.6",
+  "version": "0.52.0",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -42,7 +42,7 @@
     "predeploy": "npm run sitemap && npm run clearprerender && npm version patch --no-git-tag-version && npm run build && npm run createprerender",
     "deploy": "aws s3 sync build/ s3://naadanchords-client --delete",
     "postdeploy": "aws cloudfront create-invalidation --distribution-id E204SISB76JUZ1 --paths '/*'",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
