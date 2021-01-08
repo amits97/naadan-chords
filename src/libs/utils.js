@@ -60,3 +60,13 @@ export function base64toBlob(b64Data, contentType='', sliceSize=512) {
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
 }
+
+
+export function isAbsoluteUrl(urlString) {
+  let isAbsolute = false;
+  const pat = /^https?:\/\//i;
+  if (pat.test(urlString)) {
+    isAbsolute = true;
+  }
+  return isAbsolute;
+}
