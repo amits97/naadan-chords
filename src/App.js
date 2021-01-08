@@ -7,7 +7,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faSearch, faSyncAlt, faUserCircle, faCog, faShieldAlt, faFeather, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import * as urlLib from "./libs/url-lib";
-import { isAbsoluteUrl, slugify } from "./libs/utils";
+import { slugify } from "./libs/utils";
 import Routes from "./Routes";
 import logo from './logo.svg';
 import Footer from "./containers/Footer";
@@ -134,10 +134,10 @@ class App extends Component {
           await this.getUserDetails(session);
           this.userHasAuthenticated(true);
           if(typeof Storage !== "undefined") {
-            let redirectUrl = localStorage.getItem("redirectUrl");
-            if(redirectUrl && redirectUrl !== "null" && !isAbsoluteUrl(redirectUrl)) {
-              localStorage.removeItem("redirectUrl");
-              window.location.href = redirectUrl;
+            const redirectToSocialAccountTab = localStorage.getItem("redirectToSocialAccountTab");
+            if(redirectToSocialAccountTab) {
+              localStorage.removeItem("redirectToSocialAccountTab");
+              window.location.href = "/account?tab=facebook";
             }
           }
           break;

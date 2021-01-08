@@ -446,7 +446,7 @@ export default class Account extends SearchComponent {
   handleSocialLogin = async (provider) => {
     await Auth.signOut({ global: true });
     if(typeof Storage !== "undefined") {
-      localStorage.setItem("redirectUrl", "/account?tab=facebook");
+      localStorage.setItem("redirectToSocialAccountTab", true);
     }
     Auth.federatedSignIn({provider});
   }

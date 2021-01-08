@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
-import { querystring } from "../libs/utils";
 import { insertUrlParam } from "../libs/url-lib";
 import "./Login.css";
 
@@ -68,9 +67,6 @@ export default class Login extends SearchComponent {
   }
 
   handleSocialLogin = (provider) => {
-    if(typeof Storage !== "undefined") {
-      localStorage.setItem("redirectUrl", querystring("redirect"));
-    }
     Auth.federatedSignIn({provider});
   }
 
