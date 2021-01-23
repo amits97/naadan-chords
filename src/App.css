@@ -100,7 +100,7 @@
 }
 
 .App .navbar .navbar-nav .nav-link .user-name {
-  max-width: 58px;
+  max-width: 55px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

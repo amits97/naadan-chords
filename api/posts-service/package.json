@@ -12,14 +12,14 @@
     "url": "https://github.com/amits97/naadan-chords.git"
   },
   "dependencies": {
-    "aws-sdk": "^2.771.0",
-    "serverless-domain-manager": "^5.0.0",
+    "aws-sdk": "^2.831.0",
+    "serverless-domain-manager": "^5.1.0",
     "serverless-offline": "^6.8.0",
     "serverless-webpack": "^5.3.5",
     "webpack-node-externals": "^2.5.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.1",
-    "@babel/plugin-proposal-optional-chaining": "^7.12.1"
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7"
   }
 }
