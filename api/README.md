@@ -10,6 +10,7 @@ The API is split into the following microservices which can be deployed independ
 * **draft-service** - Contains APIs to manage post drafts.
 * **posts-service** - The main set of APIs to list and manage posts.
 * **rating-service** - Contains APIs to manage post star ratings and to measure top rated posts.
+* **comments-service** - Contains APIs to list and manage comments.
 
 ## Deploying changes
 Since the microservices have different basePath mappings on the domain https://api.naadanchords.com, they can be deployed and managed independently.
