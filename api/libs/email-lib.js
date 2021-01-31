@@ -361,7 +361,7 @@ export async function sendEmail(title, message, textMessage, emailId) {
   const emailBody = getEmailBody(title, message);
 
   const emailParams = {
-    Source: 'admin@naadanchords.com', // SES SENDING EMAIL
+    Source: 'Naadan Chords <admin@naadanchords.com>', // SES SENDING EMAIL
     ReplyToAddresses: ['naadanchords@gmail.com'],
     Destination: {
       ToAddresses: Array.isArray(emailId) ? emailId : [emailId], // SES RECEIVING EMAIL

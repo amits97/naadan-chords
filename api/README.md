@@ -18,3 +18,11 @@ Since the microservices have different basePath mappings on the domain https://a
 * Change into the required service: `cd posts-service`
 * Install required dependencies: `npm install`
 * `serverless deploy` to deploy new API changes.
+
+## Testing changes
+* If the microservice API to be tested needs input, provide the json in `/mocks` directory.
+* Change into the microservice directory and run the invoke serverless command. Here is an example to run `comment-write` API function with the mock input provided at `../mocks/comment-write-event.json`
+
+```
+serverless invoke local --function comment-write --path ../mocks/comment-write-event.json
+```

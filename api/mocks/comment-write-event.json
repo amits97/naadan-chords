@@ -1,0 +1,8 @@
+{
+  "body": "{\"content\":\"Yet another comment\",\"postId\":\"cherathukal-kumbalangi-nights\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoAuthenticationProvider": "USER-SUB-1234:BLAH:01a30aa0-b880-4dac-a8f7-b612d103f6f6"
+    }
+  }
+}
