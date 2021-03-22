@@ -15,7 +15,7 @@ import AppliedRoute from "./components/AppliedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 
-export default ({ childProps }) =>
+const Routes = ({ childProps }) =>
   <Switch>
     <AppliedRoute path="/" exact component={Posts} props={{pageKey: window.location.href, isHomePage: true, ...childProps}} />
     <AppliedRoute path="/page/:number" exact component={Posts} props={{pageKey: window.location.href, isHomePage: true, isPageUrl: true, ...childProps}} />
@@ -46,3 +46,5 @@ export default ({ childProps }) =>
     { /* Finally, catch all unmatched routes */ }
     <AppliedRoute component={NotFound} props={{...childProps}} />
   </Switch>;
+
+export default Routes;

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import "./LoaderButton.css";
 
-export default ({
+const LoaderButton = ({
   isLoading,
   text,
   loadingText,
@@ -20,3 +20,5 @@ export default ({
     {isLoading && <FontAwesomeIcon icon={faSyncAlt} className="spinning" />}
     {!isLoading ? text : loadingText}
   </Button>;
+
+export default LoaderButton;

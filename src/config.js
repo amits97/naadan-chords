@@ -1,4 +1,4 @@
-export default {
+const config = {
   apiGateway: {
     REGION: "ap-south-1",
     URL: "https://api.naadanchords.com"
@@ -22,3 +22,5 @@ export default {
     "innum-konjam-neram-maryan"
   ]
 };
+
+export default config;

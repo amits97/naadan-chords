@@ -1,7 +1,7 @@
 import React from "react";
 import "./YouTubeEmbed.css";
 
-export default ({ youtubeId, onLoad }) => {
+const YouTubeEmbed = ({ youtubeId, onLoad }) => {
   return (
     <div className="YouTubeEmbed">
       <div className="video-wrapper"> 
@@ -12,3 +12,5 @@ export default ({ youtubeId, onLoad }) => {
     </div>
   );
 };
+
+export default YouTubeEmbed;
