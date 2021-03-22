@@ -13,7 +13,6 @@ export default (
     <Route path='/author/:userName/page/:number' />
     <Route path='/album/:album' />
     <Route path='/about' />
-    <Route path='/whats-new' />
     <Route path='/privacy-policy' />
 	</Route>
 );
