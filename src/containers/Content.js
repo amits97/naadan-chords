@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import { Button, Row, Col, OverlayTrigger, Popover, Modal } from "react-bootstrap";
+import { Button, Row, Col, OverlayTrigger, Popover, Modal, Container, Form } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
 import ReactGA from "react-ga";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
+import TextareaAutosize from "react-autosize-textarea/lib";
 import config from "../config";
-import Disqus from "disqus-react";
 import { API } from "aws-amplify";
 import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRandom, faHistory, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faRandom, faHistory, faUserCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
@@ -29,8 +29,17 @@ export default class Content extends Component {
 
     this.state = {
       showLoginModal: false,
-      rating: undefined
+      rating: undefined,
+      comment: null,
+      comments: [],
+      commentsLoading: true,
+      isCommentFormInFocus: false,
+      addingComment: false
     }
+  }
+
+  componentDidMount = () => {
+    this.getComments();
   }
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -50,6 +59,10 @@ export default class Content extends Component {
     if(this.props.isAuthenticated && !this.props.isLoading && !Array.isArray(this.props.posts) && (this.props.posts.postId !== prevProps.posts.postId)) {
       this.getRating();
     }
+
+    if(!Array.isArray(this.props.posts) && (this.props.posts.postId !== prevProps.posts.postId)) {
+      this.getComments();
+    }
   }
 
   getRating = async () => {
@@ -63,6 +76,25 @@ export default class Content extends Component {
       this.setState({
         rating: undefined
       });   
+    }
+  }
+
+  getComments = async () => {
+    const post = this.props.posts;
+    this.setState({
+      commentsLoading: true
+    });
+    try {
+      const comments = await API.get("posts", `/comments?postId=${post.postId}`);
+      this.setState({
+        comments: comments.Items,
+        commentsLoading: false
+      });
+    } catch(e) {
+      console.log(e);
+      this.setState({
+        commentsLoading: false
+      });
     }
   }
 
@@ -427,21 +459,160 @@ export default class Content extends Component {
     }
   }
 
-  renderDisqusComments = (post) => {
-    if(post.song) {
-      //Disqus comments
-      let disqusShortname = "naadantest";
-      let disqusConfig = {
-        url: `https://www.naadanchords.com/${post.postId}`,
-        identifier: post.postId,
-        title: post.title
-      };
+  handleCommentChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
 
+  deleteComment = async(commentId) => {
+    if(window.confirm('Are you sure you want to delete this comment?')) {
+      let { comments } = this.state;
+      await API.del("posts", `/comments/${commentId}`);
+      comments = comments.filter(comment => {
+        return comment.commentId !== commentId
+      });
+      this.setState({
+        comments
+      });
+    }
+  }
+
+  onCommentSubmit = async (e) => {
+    e.preventDefault();
+    const { comment, comments } = this.state;
+    const post = this.props.posts;
+
+    this.setState({
+      addingComment: true
+    });
+
+    try {
+      const response = await API.post("posts", "/comments", {
+        body: {
+          postId: post.postId,
+          content: comment
+        }
+      });
+      comments.unshift(response);
+      this.setState({
+        comment: null,
+        isCommentFormInFocus: false,
+        comments: comments
+      });
+    } catch(e) {
+      console.log(e);
+    } finally {
+      this.setState({
+        addingComment: false
+      });
+    }
+  }
+
+  renderComments = (post) => {
+    const { commentsLoading, comments, isCommentFormInFocus, comment, addingComment } = this.state;
+    const { isAuthenticated, picture, name, preferredUsername, username } = this.props;
+    const loggedInUser = preferredUsername ?? username;
+
+    if(post.song) {
       return (
-        <div>
+        <div className="comment-section">
           <br />
           <hr />
-          <Disqus.DiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
+          <h6 className="comment-heading">
+            {`COMMENTS${commentsLoading ? '' : ' (' + comments.length + ')'}`}
+          </h6>
+          { commentsLoading ? (
+            <Skeleton count={5} />
+          ) : (
+            <Container>
+              <Row className="comment no-hover px-2 py-2">
+                <div className="pic-col">
+                  {(isAuthenticated && picture) ? (
+                    <img className="author-pic" alt={name} src={picture} />
+                  ) : (
+                    <p className="text-muted">
+                      <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faUserCircle} />
+                    </p>
+                  )}
+                </div>
+                <div className="content-col">
+                  <Form
+                    onFocus={() => {
+                      if (isAuthenticated) {
+                        this.setState({
+                          isCommentFormInFocus: true
+                        });
+                      } else {
+                        this.setState({
+                          showLoginModal: true
+                        });
+                      }
+                    }}
+                    onBlur={(e) => {
+                      // if (e.relatedTarget && e.relatedTarget.classList && e.relatedTarget.classList.contains('comment-submit')) {
+                      //   this.setState({ isCommentFormInFocus: true });
+                      // } else {
+                      //   this.setState({ isCommentFormInFocus: false });
+                      // }
+                    }}
+                    onSubmit={this.onCommentSubmit}
+                  >
+                    <TextareaAutosize
+                      className="form-control"
+                      placeholder="Join the discussion..."
+                      id="comment"
+                      onChange={this.handleCommentChange}
+                      value={comment ? comment : ""}
+                    />
+                    {isCommentFormInFocus && (
+                      <LoaderButton
+                        variant="primary"
+                        className="comment-submit"
+                        type="submit"
+                        isLoading={addingComment}
+                        text={<React.Fragment>Comment <FontAwesomeIcon icon={faPaperPlane} /></React.Fragment>}
+                        loadingText="Submitting…"
+                        disabled={!(comment && comment.length > 0)}
+                      />
+                    )}
+                  </Form>
+                </div>
+              </Row>
+              {comments.map((comment, index) => {
+                return (
+                  <Row
+                    key={index}
+                    className={`comment px-2 pt-3 pb-4 ${(index % 2 === 0) ? "" : "bg-light"} ${(isAuthenticated && comment.userName === loggedInUser) ? "comment-owner" : ""}`}
+                  >
+                    <div className="pic-col">
+                      {comment.authorPicture ? (
+                        <img className="author-pic" alt={`Commented by ${comment.authorName}`} src={comment.authorPicture} />
+                      ) : (
+                        <p className="text-muted">
+                          <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faUserCircle} />
+                        </p>
+                      )}
+                    </div>
+                    <div className="content-col">
+                      <div className="author-meta-row text-muted"><b>{`${comment.authorName}`} </b><small>said  <Moment fromNow>{comment.createdAt}</Moment>:</small></div>
+                      <p>{comment.content}</p>
+                      <a
+                        href="#/"
+                        className="delete-comment text-primary pt-1"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          this.deleteComment(comment.commentId);
+                        }}
+                      >
+                        Delete
+                      </a>
+                    </div>
+                  </Row>
+                );
+              })}
+            </Container>
+          )}
         </div>
       );
     }
@@ -594,7 +765,7 @@ export default class Content extends Component {
             { this.renderPostMeta(post) }
             { this.renderPostContent(post) }
             { this.renderMatchedContentAd(post) }
-            { this.renderDisqusComments(post) }
+            { this.renderComments(post) }
             { this.renderStructuredData(post) }
           </div>
         );

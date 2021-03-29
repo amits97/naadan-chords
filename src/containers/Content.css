@@ -190,7 +190,7 @@
   visibility: hidden;
 }
 
-.Content h6.rate-heading {
+.Content h6.rate-heading, .Content h6.comment-heading {
   color: #777777;
   margin-top: 30px;
 }
@@ -213,6 +213,66 @@
 
 .Content .post small .meta-time-container {
   display: inline;
+}
+
+.Content .comment {
+  display: flex;
+  position: relative;
+}
+
+.Content .comment:hover {
+  background: #efefef !important;
+}
+
+.Content .comment.no-hover:hover {
+  background: initial !important;
+}
+
+.Content .comment .pic-col {
+  flex: 0 0 50px;
+}
+
+.Content .comment .pic-col p {
+  font-size: 36px;
+}
+
+.Content .comment img.author-pic {
+  height: 40px;
+}
+
+.Content .comment .content-col {
+  flex: 1;
+}
+
+.Content .comment .content-col textarea {
+  border: 2px solid #dee2e6;
+  height: 50px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.Content .comment .content-col textarea::placeholder {
+  font-size: 18px;
+}
+
+.Content .comment .author-meta-row {
+  letter-spacing: 0.5px;
+}
+
+.Content .comment p {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.Content .comment .delete-comment {
+  font-size: 13px;
+  display: none;
+}
+
+.Content .comment.comment-owner:hover .delete-comment {
+  display: inline-block;
+  position: absolute;
+  bottom: 3px;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

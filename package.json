@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.53.5",
+  "version": "0.53.7",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -11,7 +11,6 @@
     "aws-amplify": "^3.3.15",
     "axios": "^0.21.1",
     "chord-fingering": "^1.0.1",
-    "disqus-react": "^1.0.11",
     "moment": "^2.29.1",
     "react": "^16.14.0",
     "react-autosize-textarea": "^7.1.0",

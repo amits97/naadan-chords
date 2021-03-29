@@ -86,6 +86,14 @@ functions:
           path: /
           method: get
           cors: true
+  draft-delete:
+    handler: comment-delete.main
+    events:
+      - http:
+          path: /{commentId}
+          method: delete
+          cors: true
+          authorizer: aws_iam
 
 # Create our resources with separate CloudFormation templates
 resources:

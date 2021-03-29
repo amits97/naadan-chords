@@ -71,8 +71,21 @@ export async function main(event) {
       // Send email to author only if new comment
       await sendEmailToAuthor(data.postId, data.content);
     }
-    return success(params.Item);
   } catch (e) {
-    return failure({ status: false });
+    try {
+      // Comment exists, update
+      await dynamoDbLib.call("update", params);
+    } catch (e) {
+      return failure({ status: false });
+    }
   }
+
+  const response = params.Item;
+  // Get full attributes of author
+  let authorAttributes = await userNameLib.getAuthorAttributes(sub);
+  response.authorName = authorAttributes.authorName;
+  response.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
+  response.authorPicture = authorAttributes.picture;
+  delete(response.userId);
+  return success(response);
 }
