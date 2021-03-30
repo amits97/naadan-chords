@@ -35,7 +35,8 @@ export default class Content extends Component {
       comments: [],
       commentsLoading: true,
       isCommentFormInFocus: false,
-      addingComment: false
+      addingComment: false,
+      preventRatingSubmit: false
     }
   }
 
@@ -57,7 +58,7 @@ export default class Content extends Component {
       }
     }
 
-    if(this.props.isAuthenticated && !this.props.isLoading && !Array.isArray(this.props.posts) && (this.props.posts.postId !== prevProps.posts.postId)) {
+    if(this.props.isAuthenticated && !this.props.isLoading && !Array.isArray(this.props.posts) && (this.props.posts.postId !== prevProps.posts.postId || !prevProps.isAuthenticated)) {
       this.getRating();
     }
 
@@ -544,7 +545,8 @@ export default class Content extends Component {
                     onClick={() => {
                       if (!isAuthenticated) {
                         this.setState({
-                          showLoginModal: true
+                          showLoginModal: true,
+                          preventRatingSubmit: true
                         });
                       }
                     }}
@@ -647,15 +649,16 @@ export default class Content extends Component {
   }
 
   closeLoginModal = (retryRatingSubmit) => {
-    const { isCommentFormInFocus } = this.state;
+    const { preventRatingSubmit } = this.state;
 
-    this.setState({
-      showLoginModal: false
-    });
-
-    if(retryRatingSubmit && !isCommentFormInFocus) {
+    if(retryRatingSubmit && !preventRatingSubmit) {
       this.changeRating(this.state.rating, true);
     }
+
+    this.setState({
+      showLoginModal: false,
+      preventRatingSubmit: false
+    });
   }
 
   renderStructuredData = (post) => {
