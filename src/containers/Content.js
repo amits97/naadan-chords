@@ -378,16 +378,18 @@ export default class Content extends Component {
 
     if(this.props.isAuthenticated) {
       if(forceSubmit === true || newRating !== this.state.rating) {
-        this.setState({
-          rating: newRating
-        });
+        if (newRating !== undefined) {
+          this.setState({
+            rating: newRating
+          });
 
-        API.post("posts", "/rating", {
-          body: {
-            rating: newRating,
-            postId: post.postId
-          }
-        });
+          API.post("posts", "/rating", {
+            body: {
+              rating: newRating,
+              postId: post.postId
+            }
+          });
+        }
       }
     } else {
       this.setState({
@@ -645,11 +647,13 @@ export default class Content extends Component {
   }
 
   closeLoginModal = (retryRatingSubmit) => {
+    const { isCommentFormInFocus } = this.state;
+
     this.setState({
       showLoginModal: false
     });
 
-    if(retryRatingSubmit) {
+    if(retryRatingSubmit && !isCommentFormInFocus) {
       this.changeRating(this.state.rating, true);
     }
   }
