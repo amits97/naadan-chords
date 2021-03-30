@@ -19,6 +19,7 @@ import ContentParser from "./ContentParser";
 import LoaderButton from "../components/LoaderButton";
 import Login from "./Login";
 import "./Content.css";
+import { Fragment } from "react";
 
 export default class Content extends Component {
   constructor(props) {
@@ -538,23 +539,19 @@ export default class Content extends Component {
                 </div>
                 <div className="content-col">
                   <Form
-                    onFocus={() => {
-                      if (isAuthenticated) {
-                        this.setState({
-                          isCommentFormInFocus: true
-                        });
-                      } else {
+                    onClick={() => {
+                      if (!isAuthenticated) {
                         this.setState({
                           showLoginModal: true
                         });
                       }
                     }}
-                    onBlur={(e) => {
-                      // if (e.relatedTarget && e.relatedTarget.classList && e.relatedTarget.classList.contains('comment-submit')) {
-                      //   this.setState({ isCommentFormInFocus: true });
-                      // } else {
-                      //   this.setState({ isCommentFormInFocus: false });
-                      // }
+                    onFocus={() => {
+                      if (isAuthenticated) {
+                        this.setState({
+                          isCommentFormInFocus: true
+                        });
+                      }
                     }}
                     onSubmit={this.onCommentSubmit}
                   >
@@ -566,15 +563,29 @@ export default class Content extends Component {
                       value={comment ? comment : ""}
                     />
                     {isCommentFormInFocus && (
-                      <LoaderButton
-                        variant="primary"
-                        className="comment-submit"
-                        type="submit"
-                        isLoading={addingComment}
-                        text={<React.Fragment>Comment <FontAwesomeIcon icon={faPaperPlane} /></React.Fragment>}
-                        loadingText="Submitting…"
-                        disabled={!(comment && comment.length > 0)}
-                      />
+                      <Fragment>
+                        <LoaderButton
+                          variant="primary"
+                          className="comment-submit"
+                          type="submit"
+                          isLoading={addingComment}
+                          text={<React.Fragment>Comment <FontAwesomeIcon icon={faPaperPlane} /></React.Fragment>}
+                          loadingText="Submitting…"
+                          disabled={!(comment && comment.length > 0)}
+                        />
+                        <a
+                          href="#/"
+                          className="text-primary pt-1 ml-3"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            this.setState({
+                              isCommentFormInFocus: false
+                            });
+                          }}
+                        >
+                          Cancel
+                        </a>
+                      </Fragment>
                     )}
                   </Form>
                 </div>
