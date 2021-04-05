@@ -331,7 +331,7 @@ function getEmailBody(title, message) {
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tr>
                           <td>
-                            <header style="height:60px;background:#093579; margin-bottom: 20px;padding:0 10px;">
+                            <header style="height:60px; background:#093579; background: -moz-linear-gradient(top, hsl(216, 86%, 25%) 100%, hsl(216, 86%, 25%) 100%); background: -webkit-linear-gradient(top, hsl(216, 86%, 25%) 100%, hsl(216, 86%, 25%) 100%); background: linear-gradient(to bottom,hsl(216, 86%, 25%) 100%,hsl(216, 86%, 25%) 100%); margin-bottom: 20px; padding:0 10px;">
                               <a href="https://www.naadanchords.com" target="_blank"><img src="https://naadanchords-images.s3.ap-south-1.amazonaws.com/public/logo.png" height="60" /></a>
                             </header>
                             ${message}
