@@ -24,6 +24,7 @@
 				"puppeteer-core": "^5.5.0",
 				"serialize-javascript": "^4.0.0",
 				"serverless": "^2.21.1",
-				"source-map-support": "^0.5.19"
+				"source-map-support": "^0.5.19",
+				"ssri": "^6.0.1"
 		}
 }
