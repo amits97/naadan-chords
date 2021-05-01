@@ -17,8 +17,6 @@
   height: 26px;
   z-index: 2;
   right: -1rem;
-  border: 1px solid #dee2e6;
-  border-bottom: 0;
   border-radius: 5px 5px 0 0;
 }
 
@@ -29,7 +27,7 @@
 }
 
 .ChordControls .controls-tray {
-  font-family: DINNextLTPro-Regular,Helvetica Neue,sans-serif;
+  font-family: 'DINNextLTPro-Regular', 'Helvetica Neue', sans-serif;
   font-size: 15px;
   font-weight: 700;
   margin-top: 25px;
@@ -78,11 +76,6 @@
 .ChordControls .tray-control {
   font-size: 25px;
   padding-top: 5px;
-  color: #343a40;
-}
-
-.ChordControls .tray-control:hover {
-  color: #000000;
 }
 
 /* Small devices (landscape phones, less than 768px) */

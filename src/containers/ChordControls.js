@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {ButtonGroup, Button} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import * as Styles from "./Styles";
 import "./ChordControls.css";
 
 export default class ChordControls extends Component {
@@ -70,26 +71,26 @@ export default class ChordControls extends Component {
   }
 
   render() {
-    let { transposeAmount, fontSize, scrollAmount } = this.props;
+    let { transposeAmount, fontSize, scrollAmount, theme } = this.props;
     let { isTrayMaximized } = this.state;
 
     return (
-      <div className={`ChordControls ${this.props.className} ${isTrayMaximized ? '' : 'minimized'}`}>
-        <div className={`tray-saver bg-light ${isTrayMaximized ? 'd-none' : ''}`}>
+      <Styles.ChordControlsContainer className={`ChordControls ${this.props.className} ${isTrayMaximized ? '' : 'minimized'}`}>
+        <div className={`tray-saver ${isTrayMaximized ? 'd-none' : ''}`}>
           <Button variant="link" className="tray-control" onClick={() => this.toggleTray()}>
             <FontAwesomeIcon icon={faCaretUp} />
           </Button>
         </div>
-        <div className="controls-tray border bg-light">
+        <div className="controls-tray">
           <div className="controls-container transpose-container">
             <span className="feature-label">
               TRANSPOSE <span className="amount text-primary">{transposeAmount ? transposeAmount : ''}</span>
             </span>
             <ButtonGroup className={`${transposeAmount ? 'ml-3' : '' }`}>
-              <Button variant="outline-dark" onClick={() => this.handleTransposeClick(1)}>
+              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleTransposeClick(1)}>
                 <FontAwesomeIcon icon={faPlus} />
               </Button>
-              <Button variant="outline-dark" onClick={() => this.handleTransposeClick(-1)}>
+              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleTransposeClick(-1)}>
                 <FontAwesomeIcon icon={faMinus} />
               </Button>
             </ButtonGroup>
@@ -100,10 +101,10 @@ export default class ChordControls extends Component {
               FONT <span className="amount text-primary" key={fontSize}>{fontSize === 15 ? '' : this.computeFontAmount()}</span>
             </span>
             <ButtonGroup className={`${fontSize === 15 ? '' : 'ml-3' }`}>
-              <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
+              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
                 <FontAwesomeIcon icon={faPlus} />
               </Button>
-              <Button variant="outline-dark" onClick={() => this.handleFontSizeClick(-2)} disabled={this.checkFontSize("down")}>
+              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleFontSizeClick(-2)} disabled={this.checkFontSize("down")}>
                 <FontAwesomeIcon icon={faMinus} />
               </Button>
             </ButtonGroup>
@@ -114,10 +115,10 @@ export default class ChordControls extends Component {
               SCROLL <span className="amount text-primary">{scrollAmount ? scrollAmount : ''}</span>
             </span>
             <ButtonGroup className={`${scrollAmount ? 'ml-3' : '' }`}>
-              <Button variant="outline-dark" onClick={() => this.handleScrollAmountClick(1)} disabled={this.checkScrollAmount("up")}>
+              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleScrollAmountClick(1)} disabled={this.checkScrollAmount("up")}>
                 <FontAwesomeIcon icon={faPlus} />
               </Button>
-              <Button variant="outline-dark" onClick={() => this.handleScrollAmountClick(-1)} disabled={this.checkScrollAmount("down")}>
+              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleScrollAmountClick(-1)} disabled={this.checkScrollAmount("down")}>
                 <FontAwesomeIcon icon={faMinus} />
               </Button>
             </ButtonGroup>
@@ -127,7 +128,7 @@ export default class ChordControls extends Component {
             <FontAwesomeIcon icon={faCaretDown} />
           </Button>
         </div>
-      </div>
+      </Styles.ChordControlsContainer>
     );
   }
 }

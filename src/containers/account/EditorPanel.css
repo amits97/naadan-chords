@@ -1,10 +1,8 @@
 .EditorPanel {
   position: sticky;
   top: 55px;
-  border: 1px solid #dee2e6;
   margin-bottom: -40px;
   border-radius: .25rem .25rem 0 0;
-  background: #ffffff;
   overflow: auto;
   z-index: 2;
 }
@@ -23,7 +21,6 @@
 
 .EditorPanel .btn-group .btn span {
   font-size: 13px;
-  color: #444444;
   margin-left: 5px;
 }
 

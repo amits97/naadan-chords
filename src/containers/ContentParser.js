@@ -6,6 +6,7 @@ import { slugify } from "../libs/utils";
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import ChordControls from "./ChordControls";
 import ChordsPopup from "./ChordsPopup";
+import * as Styles from "./Styles";
 import "./ContentParser.css";
 
 export default class ContentParser extends Component {
@@ -191,6 +192,7 @@ export default class ContentParser extends Component {
 
     let chordControlsProps = {
       ...this.state,
+      ...this.props,
       transposeChords: this.transposeChords,
       changeFontSize: this.changeFontSize,
       changeScrollAmount: this.changeScrollAmount
@@ -270,7 +272,7 @@ export default class ContentParser extends Component {
           {
             showScaleInfo ?
               (
-                <div className="scale-info bg-light px-3 py-2 rounded mb-4">
+                <Styles.ScaleInfoContainer className="px-3 py-2 rounded mb-4">
                   <p className="mb-0">
                     {
                       scale ?
@@ -303,7 +305,7 @@ export default class ContentParser extends Component {
                         null
                     }
                   </p>
-                </div>
+                </Styles.ScaleInfoContainer>
               )
             :
               null
@@ -338,7 +340,7 @@ export default class ContentParser extends Component {
       });
     }
 
-    if(!this.state.hasChordPopupsRendered || this.state.transposeAmount !== prevState.transposeAmount) {
+    if(!this.state.hasChordPopupsRendered || this.state.transposeAmount !== prevState.transposeAmount || this.props.theme.name !== prevProps.theme.name) {
       this.renderChordHelpers();
     }
   }
@@ -357,13 +359,14 @@ export default class ContentParser extends Component {
 
   renderChordHelpers = () => {
     let chordSpans = document.querySelectorAll("span.chord");
+    const { theme } = this.props;
 
     if(chordSpans) {
       for(let i = 0; i < chordSpans.length; i++) {
         let chordName = chordSpans[i].innerText;
         let parentElement = chordSpans[i].parentElement;
         if(parentElement && !this.hasIgnoreChordsParent(5, parentElement)) {
-          ReactDOM.render(<ChordsPopup chordName={chordName} />, chordSpans[i]);
+          ReactDOM.render(<ChordsPopup chordName={chordName} theme={theme} />, chordSpans[i]);
         }
       }
 

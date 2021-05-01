@@ -73,14 +73,6 @@
   display: block !important;
 }
 
-.ContentParser .scale-info {
-  border-left: 3px solid #dddddd;
-}
-
-.ContentParser .scale-info p {
-  font-size: 16px;
-}
-
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .ContentParser .tab-contents {

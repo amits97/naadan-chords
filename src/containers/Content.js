@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Button, Row, Col, OverlayTrigger, Popover, Modal, Container, Form } from "react-bootstrap";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
 import ReactGA from "react-ga";
@@ -18,8 +18,8 @@ import NotFound from "./NotFound";
 import ContentParser from "./ContentParser";
 import LoaderButton from "../components/LoaderButton";
 import Login from "./Login";
+import * as Styles from "./Styles";
 import "./Content.css";
-import { Fragment } from "react";
 
 export default class Content extends Component {
   constructor(props) {
@@ -196,24 +196,26 @@ export default class Content extends Component {
     } else {
       return (
         <div>
-          <h6>{displayTitle.toUpperCase()}</h6>
+          <Styles.PostListH6>{displayTitle.toUpperCase()}</Styles.PostListH6>
         </div>
       );
     }
   }
 
   renderPosts = () => {
-    let { isLoading, posts, lastEvaluatedPost, title, isUserPosts, isCategory, authorCreateDate } = this.props;
+    let { isLoading, theme, posts, lastEvaluatedPost, title, isUserPosts, isCategory, authorCreateDate } = this.props;
 
     if(isLoading) {
       let skeleton = [];
 
       for(var i=0; i<20; i++) {
         skeleton.push(
-          <div key={i} className="post pt-1 pb-1 no-hover">
-            <h5><Skeleton /></h5>
-            <small><Skeleton /></small>
-          </div>
+          <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+            <Styles.PostItemContainer key={i} className="pt-1 pb-1 no-hover">
+              <h5><Skeleton /></h5>
+              <small><Skeleton /></small>
+            </Styles.PostItemContainer>
+          </SkeletonTheme>
         );
       }
       return (
@@ -225,17 +227,17 @@ export default class Content extends Component {
       if(posts && posts.length > 0) {
         return (
           <div className="postList">
-            <div className={`title-container ${!isUserPosts && !isCategory && 'border-bottom'} mb-2`}>
+            <Styles.TitleContainer borderBottom={!isUserPosts && !isCategory} className="mb-2">
               { this.renderTitle(title, isUserPosts, isCategory, posts, authorCreateDate) }
               <LinkContainer to="/random">
-                <a href="#/" className={`${title? "d-none":""} random-post text-primary`}>
+                <a href="#/" className={`${title? "d-none":""} random-post`}>
                   <FontAwesomeIcon className="mr-2" icon={ faRandom } />Random
                 </a>
               </LinkContainer>
-            </div>
+            </Styles.TitleContainer>
             {
               posts.map((post, i) =>
-                <div key={i} className={`post ${ (i % 2 === 0) ? "" : "bg-light"}`}>
+                <Styles.PostItemContainer key={i} alternate={i % 2 !== 0}>
                   <LinkContainer  exact to={`/${ post.postId }`}>
                     <a href="#/" className="post-title">
                       <h5>{ post.title }</h5>
@@ -251,7 +253,7 @@ export default class Content extends Component {
                   <small>
                     { this.renderRating(post, true) }
                   </small>
-                </div>
+                </Styles.PostItemContainer>
               )
             }
             { this.loadPagination(lastEvaluatedPost) }
@@ -401,6 +403,8 @@ export default class Content extends Component {
   }
 
   renderStarRating = (post) => {
+    const { theme } = this.props;
+
     return (
       <div className="rate-container">
         <div ref={this.ratingEl} className="dummy-anchor"></div>
@@ -416,7 +420,7 @@ export default class Content extends Component {
             rating={this.props.isAuthenticated ? this.state.rating : undefined}
             changeRating={this.changeRating}
           />
-          <Button variant="light" onClick={() => this.changeRating(0)} className={`border ${this.state.rating && this.props.isAuthenticated ? 'd-block' : 'd-none'}`} size="sm">
+          <Button variant={theme.name} onClick={() => this.changeRating(0)} className={`border ${this.state.rating && this.props.isAuthenticated ? 'd-block' : 'd-none'}`} size="sm">
             Clear
           </Button>
         </div>
@@ -445,6 +449,8 @@ export default class Content extends Component {
   }
 
   renderMatchedContentAd = (post) => {
+    const { theme } = this.props;
+
     if(post.postType === "POST" && !config.noAds.includes(post.postId)) {
       return (
         <div className="matchedContent">
@@ -455,7 +461,7 @@ export default class Content extends Component {
             style={{display: "block"}}
             data-ad-format="autorelaxed"
             data-ad-client="ca-pub-1783579460797635"
-            data-ad-slot="2717060707"
+            data-ad-slot={theme.name === "light" ? "2717060707" : "5061016497"}
             key={this.props.adKey}>
           </ins>
         </div>
@@ -515,7 +521,7 @@ export default class Content extends Component {
 
   renderComments = (post) => {
     const { commentsLoading, comments, isCommentFormInFocus, comment, addingComment } = this.state;
-    const { isAuthenticated, picture, name, preferredUsername, username } = this.props;
+    const { isAuthenticated, picture, name, preferredUsername, username, theme } = this.props;
     const loggedInUser = preferredUsername ?? username;
 
     if(post.song) {
@@ -527,7 +533,9 @@ export default class Content extends Component {
             {`COMMENTS${commentsLoading ? '' : ' (' + comments.length + ')'}`}
           </h6>
           { commentsLoading ? (
-            <Skeleton count={5} />
+            <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+              <Skeleton count={5} />
+            </SkeletonTheme>
           ) : (
             <Container>
               <Row className="comment no-hover px-2 py-2">
@@ -746,15 +754,17 @@ export default class Content extends Component {
   }
 
   renderPost = () => {
-    let { isLoading, posts } = this.props;
+    let { isLoading, posts, theme } = this.props;
     let post = posts;
 
     if(isLoading) {
       return (
         <div className="post">
-          <h1><Skeleton /></h1>
-          <hr />
-          <Skeleton count={50} />
+          <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+            <h1><Skeleton /></h1>
+            <hr />
+            <Skeleton count={50} />
+          </SkeletonTheme>
         </div>
       );
     } else {
@@ -866,18 +876,18 @@ export default class Content extends Component {
 
   render() {
     return (
-      <div className="Content">
+      <Styles.ContentContainer className="Content">
         { this.renderSEOTags() }
         <Row className="contentRow">
           <Col lg={8} className="contentColumn">
             { this.renderTopAd() }
             { this.renderContent() }
           </Col>
-          <Col lg={4} className="sidebarColumn border-left">
+          <Styles.SidebarCol lg={4} className="sidebarColumn">
             <Sidebar {...this.props} />
-          </Col>
+          </Styles.SidebarCol>
         </Row>
-      </div>
+      </Styles.ContentContainer>
     );
   }
 }

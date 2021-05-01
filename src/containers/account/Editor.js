@@ -10,7 +10,7 @@ import Moment from "react-moment";
 import { Helmet } from "react-helmet";
 import { LinkContainer } from "react-router-bootstrap";
 import TextareaAutosize from "react-autosize-textarea/lib";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import PromptWrapper from "../../components/PromptWrapper";
 import * as inputSelectionLib from "../../libs/input-selection-lib";
 import { safeStringNullOrEmpty, slugify } from "../../libs/utils";
@@ -387,7 +387,7 @@ export default class Editor extends Component {
     } else {
       return (
         <div className="preview">
-          <ContentParser post={this.state}  />
+          <ContentParser post={this.state} {...this.props} />
         </div>
       );
     }
@@ -629,13 +629,15 @@ export default class Editor extends Component {
   }
 
   renderEditor() {
-    let { isAdmin, isContribution, isEditMode, isReviewMode, isViewMode } = this.props;
+    let { isAdmin, isContribution, isEditMode, isReviewMode, isViewMode, theme } = this.props;
 
     if((isEditMode || isReviewMode || isViewMode) && this.state.isLoading && !this.state.submitted) {
       return(
         <Row>
           <Col>
-            <Skeleton count={10} />
+            <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+              <Skeleton count={10} />
+            </SkeletonTheme>
           </Col>
         </Row>
       )

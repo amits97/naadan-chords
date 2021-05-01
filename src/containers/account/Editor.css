@@ -39,7 +39,6 @@
 .Editor form textarea {
   border-top: 0;
   padding-top: 50px;
-  border: 1px solid #dee2e6;
 }
 
 .Editor form textarea.review-comment {

@@ -14,14 +14,21 @@ export default class ChordsPopup extends Component {
     this.renderedChordElements = [];
 
     this.state = {
-      popoverOpen: false,
+      popoverOpen: false
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.theme.name !== prevProps.name) {
+      this.renderedChordElements = [];
+    }
   }
 
   getChordElements = (chordName) => {
     if(this.renderedChordElements.length > 0) {
       return this.renderedChordElements;
     } else {
+      const { theme } = this.props;
       let chord = findGuitarChord(chordName);
       let chordElements = [];
       let chordPositions = [];
@@ -113,7 +120,7 @@ export default class ChordsPopup extends Component {
           width: 120,
           height: 140,
           fontFamily: "'DINNextLTPro-Regular', 'Helvetica Neue', sans-serif",
-          defaultColor: "#212529"
+          defaultColor: theme.text
         });
 
         chordElements.push(chordElement);

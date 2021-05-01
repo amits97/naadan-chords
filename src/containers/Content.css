@@ -1,7 +1,3 @@
-.Content a {
-  color: #777777;
-}
-
 .Content a.load-more:hover {
   text-decoration: none;
 }
@@ -18,21 +14,9 @@
   padding-top: 30px;
 }
 
-.Content .postList .title-container {
-  overflow: auto;
-  padding: 0 15px 3px 15px;
-}
-
-.Content .postList h6 {
-  color: #999999;
-  margin-top: 0;
-  float: left;
-}
-
 .Content .header-meta-container {
   overflow: auto;
   margin: 0 -15px;
-  border-bottom: 2px solid #dee2e6!important;
   margin-bottom: 10px;
 }
 
@@ -52,7 +36,6 @@
 
 .Content .header-meta-container h4 {
   margin-top: 1rem;
-  color: #555;
   margin-bottom: 0.25rem;
 }
 
@@ -71,40 +54,8 @@
   font-weight: normal;
 }
 
-.Content .postList .post {
-  transition: all 0.5s;
-  padding: 12.5px 15px;
-}
-
-.Content .postList .post.no-hover {
-  cursor: initial;
-  transition: none;
-}
-
-.Content .postList .post:hover {
-  background: #efefef !important;
-}
-
-.Content .postList .post.no-hover:hover {
-  background: inherit !important;
-}
-
 .Content .postList a.post-title {
   color: inherit;
-}
-
-.Content .postList .post h5 {
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-.Content .postList .post small {
-  color: #999999;
-  font-size: 80%;
-}
-
-.Content .postList .post small span.separator {
-  margin: 0 2.5px;
 }
 
 .Content .navigate-link:hover {
@@ -155,10 +106,6 @@
   min-width: 125px;
 }
 
-.Content .post .matchedContent h6 {
-  color: #777777;
-}
-
 .Content .post-rating:hover {
   cursor: pointer;
 }
@@ -191,7 +138,6 @@
 }
 
 .Content h6.rate-heading, .Content h6.comment-heading {
-  color: #777777;
   margin-top: 30px;
 }
 
@@ -220,10 +166,6 @@
   position: relative;
 }
 
-.Content .comment:hover {
-  background: #efefef !important;
-}
-
 .Content .comment.no-hover:hover {
   background: initial !important;
 }
@@ -245,7 +187,6 @@
 }
 
 .Content .comment .content-col textarea {
-  border: 2px solid #dee2e6;
   height: 50px;
   width: 100%;
   margin-bottom: 10px;
@@ -330,7 +271,6 @@
 @media (max-width: 767.98px) {
   .Content .ad {
     overflow: hidden;
-    background: #ffffff;
     border-bottom: none;
   }
 }

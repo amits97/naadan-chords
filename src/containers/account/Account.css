@@ -158,3 +158,10 @@
     margin-top: 20px;
   }
 }
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .Account .nav-pills .nav-link {
+    padding: 0.5rem;
+  }
+}

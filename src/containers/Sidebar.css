@@ -2,13 +2,6 @@
   height: 100%;
 }
 
-.Sidebar .sidebar {
-  z-index: 2;
-  margin-top: -30px;
-  transition: all 0.25s;
-  height: 100%;
-}
-
 .Sidebar .sidebar-content {
   min-width: 200px;
   padding-top: 20px;
@@ -17,7 +10,6 @@
 }
 
 .Sidebar .sidebar-content h6 {
-  color: #777777;
   margin-top: 5px;
   margin-bottom: 2px;
 }
@@ -64,13 +56,11 @@
 }
 
 .Sidebar .top-posts a {
-  color: inherit;
   font-size: 1rem;
   font-family: "DINNextLTPro-Heavy", sans-serif;
 }
 
 .Sidebar .top-posts a span {
-  color: #777777;
   margin-right: 10px;
   display: inline-block;
 }
@@ -138,7 +128,7 @@
   }
 
   .Sidebar .sidebar.opened {
-    top: 60px;
+    top: 56px;
     height: calc(100vh - 56px);
     overflow-y: scroll;
   }

@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import { Auth } from "aws-amplify";
 import SearchComponent from "../components/SearchComponent";
 import Sidebar from "./Sidebar";
+import * as Styles from "./Styles";
 import "./Request.css";
 
 export default class Request extends SearchComponent {
@@ -82,9 +83,9 @@ export default class Request extends SearchComponent {
               <p>Request for the chords of a song that you would really like to see on Naadan Chords.</p>
               <div className="contactForm" ref={this.requestForm}></div>
             </Col>
-            <Col lg={4} className="sidebarColumn border-left">
+            <Styles.SidebarCol lg={4} className="sidebarColumn">
               <Sidebar {...this.props} />
-            </Col>
+            </Styles.SidebarCol>
           </Row>
         </Container>
       </div>

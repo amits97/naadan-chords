@@ -1,7 +1,7 @@
 import React from "react";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { Auth, API, Storage } from "aws-amplify";
-import { Alert, Button, Dropdown, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
+import { Alert, Button, Dropdown, Form, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { faPencilAlt, faTimes, faTrashAlt, faUpload } from "@fortawesome/free-solid-svg-icons";
@@ -35,7 +35,8 @@ export default class Account extends SearchComponent {
       newPassword: "",
       newPasswordConfirm: "",
       identities: [],
-      emailVerified: false
+      emailVerified: false,
+      userTheme: "auto"
     };
   }
 
@@ -61,7 +62,8 @@ export default class Account extends SearchComponent {
         username: this.props.preferredUsername ? this.props.preferredUsername: this.props.username,
         email: this.props.email,
         identities,
-        emailVerified: this.props.emailVerified
+        emailVerified: this.props.emailVerified,
+        userTheme: this.props.userTheme
       });
     } catch (e) {
       this.setState({
@@ -132,7 +134,7 @@ export default class Account extends SearchComponent {
       isErrorState: false
     });
 
-    if(type === "profile") {
+    if (type === "profile") {
       let valid = this.validateUserName();
 
       if(!valid) {
@@ -190,7 +192,7 @@ export default class Account extends SearchComponent {
           name: this.props.name
         });
       }
-    } else if(type === "password") {
+    } else if (type === "password") {
       try {
         let user = await Auth.currentAuthenticatedUser();
         let { previousPassword, newPassword } = this.state;
@@ -206,6 +208,25 @@ export default class Account extends SearchComponent {
           isErrorState: true,
           errorMessage: e.message,
           name: this.props.name
+        });
+      }
+    } else if (type === "appearance") {
+      const { userTheme } = this.state;
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        await Auth.updateUserAttributes(user, {
+          'custom:theme': userTheme
+        });
+        this.setState({
+          isLoading: false,
+          isSuccessState: true
+        });
+        await this.props.getUserAttributes();
+      } catch(e) {
+        this.setState({
+          isLoading: false,
+          isErrorState: true,
+          errorMessage: e.message
         });
       }
     } else {
@@ -240,9 +261,13 @@ export default class Account extends SearchComponent {
   }
 
   renderPasswordForm = () => {
+    const { theme } = this.props;
+
     if(this.state.isInitialLoading) {
       return (
-        <Skeleton count={10} />
+        <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+          <Skeleton count={10} />
+        </SkeletonTheme>
       );
     } else {
       return (
@@ -323,9 +348,13 @@ export default class Account extends SearchComponent {
   }
 
   renderAccountForm = () => {
+    const { theme } = this.props;
+
     if(this.state.isInitialLoading) {
       return (
-        <Skeleton count={10} />
+        <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+          <Skeleton count={10} />
+        </SkeletonTheme>
       );
     } else {
       return (
@@ -341,7 +370,7 @@ export default class Account extends SearchComponent {
                     <div className="picture-container">
                       <img src={`${this.props.picture}?${Date.now()}`} alt="Preview" width="200" height="200" />
                       <Dropdown className="edit-button" id="dropdown-basic-button">
-                        <Dropdown.Toggle className="border" variant="light" size="sm">
+                        <Dropdown.Toggle className="border" variant={theme.name} size="sm">
                           <FontAwesomeIcon icon={faPencilAlt} /> Edit
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
@@ -421,6 +450,32 @@ export default class Account extends SearchComponent {
         </form>
       );
     }
+  }
+
+  renderAppearanceForm = () => {
+    let { userTheme = "auto", isLoading } = this.state;
+
+    return (
+      <div className="account-form-wrapper">
+        <Form onSubmit={(e) => this.handleSubmit(e, "appearance")}>
+          <Form.Group>
+            <Form.Label>Theme</Form.Label>
+            <Form.Control as="select" id="userTheme" value={userTheme} onChange={this.handleChange}>
+              <option value="auto">System Setting</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </Form.Control>
+          </Form.Group>
+          <LoaderButton
+            block
+            type="submit"
+            isLoading={isLoading}
+            text="Update"
+            loadingText="Updating…"
+          />
+        </Form>
+      </div>
+    );
   }
 
   disconnectSocialLogin = async (provider) => {
@@ -538,6 +593,9 @@ export default class Account extends SearchComponent {
                 <Nav.Item className="border-bottom">
                   <Nav.Link eventKey="profile" onClick={() => { this.setActiveTab("profile"); }}>Profile</Nav.Link>
                 </Nav.Item>
+                <Nav.Item className="border-bottom">
+                  <Nav.Link eventKey="appearance" onClick={() => { this.setActiveTab("appearance"); }}>Appearance</Nav.Link>
+                </Nav.Item>
                 {
                    emailVerified?
                     <Nav.Item className="border-bottom">
@@ -555,6 +613,9 @@ export default class Account extends SearchComponent {
               <Tab.Content>
                 <Tab.Pane eventKey="profile">
                   { this.renderAccountForm() }
+                </Tab.Pane>
+                <Tab.Pane eventKey="appearance">
+                  { this.renderAppearanceForm() }
                 </Tab.Pane>
                 <Tab.Pane eventKey="password">
                   { this.renderPasswordForm() }

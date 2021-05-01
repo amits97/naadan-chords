@@ -3,7 +3,7 @@ import { API } from "aws-amplify";
 import { Badge, Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import LoaderButton from "../../components/LoaderButton";
@@ -212,10 +212,13 @@ export default class Contributions extends SearchComponent {
 
   renderPosts(posts, isDraft) {
     let { isLoading } = this.state;
+    const { theme } = this.props;
 
     if(isLoading) {
       return (
-        <Skeleton count={10}></Skeleton>
+        <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+          <Skeleton count={10}></Skeleton>
+        </SkeletonTheme>
       );
     }
 
@@ -246,7 +249,9 @@ export default class Contributions extends SearchComponent {
       );
     } else {
       return (
-        <Skeleton count={10}></Skeleton>
+        <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+          <Skeleton count={10}></Skeleton>
+        </SkeletonTheme>
       );
     }
   }

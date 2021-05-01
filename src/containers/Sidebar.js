@@ -5,8 +5,9 @@ import { FacebookProvider, Page } from 'react-facebook';
 import { Tabs, Tab } from "react-bootstrap";
 import config from "../config";
 import { LinkContainer } from "react-router-bootstrap";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { API } from "aws-amplify";
+import * as Styles from "./Styles";
 import "./Sidebar.css";
 
 export default class Sidebar extends Component {
@@ -76,11 +77,15 @@ export default class Sidebar extends Component {
   }
 
   renderTopPostsList = (topRated) => {
+    const { theme } = this.props;
+
     if(this.state.isLoading) {
       return (
         <div className="top-posts loading">
           <ul className="list-unstyled">
-            <Skeleton count={10} />
+            <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+              <Skeleton count={10} />
+            </SkeletonTheme>
           </ul>
         </div>
       );
@@ -188,7 +193,7 @@ export default class Sidebar extends Component {
 
     return (
       <div className="Sidebar">
-        <div className={`sidebar ${mobileSidebarOpened ? 'opened' : ''} bg-white`}>
+        <Styles.SidebarContainer className={`sidebar ${mobileSidebarOpened ? 'opened' : ''}`}>
           <div className="sidebar-content">
             <div className="facebook-widget">
               <h6>FOLLOW NAADAN CHORDS</h6>
@@ -203,7 +208,7 @@ export default class Sidebar extends Component {
               {this.renderSidebarAd2()}
             </div>
           </div>
-        </div>
+        </Styles.SidebarContainer>
         <div className="sidebar-button btn btn-primary" onClick={this.handleMobileSidebarClick}>
           <FontAwesomeIcon icon={mobileSidebarOpened ? faTimes : faEllipsisV} />
         </div>
