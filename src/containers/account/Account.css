@@ -164,4 +164,8 @@
   .Account .nav-pills .nav-link {
     padding: 0.5rem;
   }
+
+  .Account .nav-pills .nav-link.active {
+    padding: 0.5rem;
+  }
 }
