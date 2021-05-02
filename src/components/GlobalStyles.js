@@ -248,6 +248,10 @@ export const GlobalStyles = createGlobalStyle`
     .Content .ad {
       background: ${({ theme }) => theme.body};
     }
+
+    .Request .ad {
+      background: ${({ theme }) => theme.body};
+    }
   }
 
   /* Medium devices (tablets, less than 992px) */
@@ -264,6 +268,10 @@ export const GlobalStyles = createGlobalStyle`
       background: ${({ theme }) => theme.primaryDark};
     }
 
+    .dropdown-item.active {
+      background: ${({ theme }) => theme.primaryDark};
+    }
+
     .App .navbar .navbar-nav .dropdown-menu .dropdown-divider {
       border-top: 1px solid ${({ theme }) => theme.primary};
     }
@@ -275,6 +283,10 @@ export const GlobalStyles = createGlobalStyle`
     .App .navbar .search-form .dropdown-menu {
       background: ${({ theme }) => theme.body};
       border: 1px solid ${({ theme }) => theme.border};
+    }
+
+    .App .navbar .navbar-nav .dropdown-item {
+      color: ${({ theme }) => theme.dropdownText};
     }
   }
 `;

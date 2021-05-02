@@ -19,7 +19,8 @@ export const lightTheme = {
   disabledInput: '#E9ECEF',
   searchFocus: '#FFF',
   searchText: '#FFF',
-  searchTextFocus: '#212529'
+  searchTextFocus: '#212529',
+  dropdownText: '#FFF'
 };
 
 export const darkTheme = {
@@ -43,5 +44,6 @@ export const darkTheme = {
   disabledInput: '#5E5D5F',
   searchFocus: '#111',
   searchText: '#FFF',
-  searchTextFocus: '#FFF'
+  searchTextFocus: '#FFF',
+  dropdownText: '#FAFAFA'
 };
