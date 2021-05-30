@@ -357,12 +357,12 @@ function getEmailBody(title, message) {
   return emailBody;
 }
 
-export async function sendEmail(title, message, textMessage, emailId) {
+export async function sendEmail(title, message, textMessage, emailId, replyToAddresses) {
   const emailBody = getEmailBody(title, message);
 
   const emailParams = {
     Source: 'Naadan Chords <admin@naadanchords.com>', // SES SENDING EMAIL
-    ReplyToAddresses: ['naadanchords@gmail.com'],
+    ReplyToAddresses: replyToAddresses ?? ['naadanchords@gmail.com'],
     Destination: {
       ToAddresses: Array.isArray(emailId) ? emailId : [emailId], // SES RECEIVING EMAIL
     },

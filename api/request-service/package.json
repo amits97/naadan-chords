@@ -1,0 +1,24 @@
+{
+  "name": "naadan-chords-request-api",
+  "version": "1.1.0",
+  "description": "Naadan Chords request APIs built on top of Serverless Framework",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "amits97",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amits97/naadan-chords.git"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.834.0",
+    "serverless-domain-manager": "^5.1.0",
+    "serverless-offline": "^6.8.0",
+    "serverless-webpack": "^5.3.5",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.1"
+  }
+}
