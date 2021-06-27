@@ -1,8 +1,9 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import Sidebar from "./Sidebar";
 import SearchComponent from "../components/SearchComponent";
+import * as Styles from "./Styles";
 import "./NotFound.css";
 
 export default class NotFound extends SearchComponent {
@@ -50,19 +51,19 @@ export default class NotFound extends SearchComponent {
       );
     } else {
       return (
-        <div>
-          { this.renderTopAd() }
-          <Container>
+        <div className="container">
+          <Styles.ContentContainer className="Content">
             <Row className="contentRow">
-              <Col md={8} className="contentColumn">
+              <Col lg={8} className="contentColumn">
+                { this.renderTopAd() }
                 <h3>Page not found!</h3>
-                <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
+                  <p>If you think there is something wrong, please <a href="https://github.com/amits97/naadan-chords/issues" target="_blank" rel="noopener noreferrer">report a bug</a>.</p>
               </Col>
-              <Col md={4} className="sidebarColumn border-left">
-              <Sidebar {...this.props} />
-              </Col>
+              <Styles.SidebarCol lg={4} className="sidebarColumn">
+                <Sidebar {...this.props} />
+              </Styles.SidebarCol>
             </Row>
-          </Container>
+          </Styles.ContentContainer>
         </div>
       );
     }
