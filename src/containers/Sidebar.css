@@ -14,10 +14,6 @@
   margin-bottom: 2px;
 }
 
-.Sidebar .sidebar-content .facebook-widget h6 {
-  margin-bottom: -5px;
-}
-
 .Sidebar .sidebar-content a {
   display: block;
   margin: 0.75rem 0;
@@ -60,11 +56,6 @@
   font-family: "DINNextLTPro-Heavy", sans-serif;
 }
 
-.Sidebar .top-posts a span {
-  margin-right: 10px;
-  display: inline-block;
-}
-
 .Sidebar .top-posts a:hover {
   text-decoration: none;
 }
@@ -73,16 +64,25 @@
   margin: 10px 0;
 }
 
-.Sidebar .top-posts ul {
+.Sidebar .top-posts ol {
   margin-bottom: 20px;
+  counter-reset: item;
 }
 
-.Sidebar .top-posts ul li a {
+.Sidebar ol li:before {
+  margin-right: 10px;
+  float: left;
+  content: counter(item) "  ";
+  counter-increment: item;
+  font-family: "DINNextLTPro-Heavy", sans-serif;
+}
+
+.Sidebar .top-posts ol li a {
   margin: 0.7rem 0;
 }
 
 .Sidebar .ad1 {
-  margin: 25px 0 15px 0;
+  margin: 5px 0 15px 0;
 }
 
 .Sidebar .ad2 {
@@ -123,10 +123,6 @@
     padding-top: 15px;
   }
 
-  .Sidebar .sidebar-content .facebook-widget {
-    display: none;
-  }
-
   .Sidebar .sidebar.opened {
     top: 56px;
     height: calc(100vh - 56px);
@@ -143,7 +139,7 @@
     padding: 0;
   }
 
-  .Sidebar .top-posts ul {
+  .Sidebar .top-posts ol {
     margin-bottom: 5px;
   }
 }

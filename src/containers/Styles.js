@@ -85,7 +85,7 @@ export const SidebarContainer = styled.div`
     color: ${({ theme }) => theme.text};
   }
 
-  .top-posts a span {
+  .top-posts ol li:before {
     color: ${({ theme }) => theme.secondaryText};
   }
 

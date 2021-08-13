@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faTimes, faFire, faStar } from "@fortawesome/free-solid-svg-icons";
-import { FacebookProvider, Page } from 'react-facebook';
 import { Tabs, Tab } from "react-bootstrap";
 import config from "../config";
 import { LinkContainer } from "react-router-bootstrap";
@@ -42,14 +41,6 @@ export default class Sidebar extends Component {
     }
   }
 
-  UNSAFE_componentWillUpdate(nextProps) {
-    if(this.props.pageKey !== nextProps.pageKey) {
-      if(this.state.mobileSidebarOpened) {
-        this.handleMobileSidebarClick();
-      }
-    }
-  }
-
   handleMobileSidebarClick = () => {
     this.setState({
       mobileSidebarOpened: !this.state.mobileSidebarOpened
@@ -65,7 +56,6 @@ export default class Sidebar extends Component {
         <li key={`${i}`}>
           <LinkContainer to={`/${topPosts[i].postId}`}>
             <a href="#/">
-              <span>{ i+1 } </span>
               { topPosts[i].title }
             </a>
           </LinkContainer>
@@ -82,19 +72,19 @@ export default class Sidebar extends Component {
     if(this.state.isLoading) {
       return (
         <div className="top-posts loading">
-          <ul className="list-unstyled">
+          <ol className="list-unstyled">
             <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
               <Skeleton count={10} />
             </SkeletonTheme>
-          </ul>
+          </ol>
         </div>
       );
     } else {
       return (
         <div className="top-posts">
-          <ul className="list-unstyled">
+          <ol className="list-unstyled">
           { this.constructTopPosts(topRated) }
-          </ul>
+          </ol>
         </div>
       );
     }
@@ -143,6 +133,12 @@ export default class Sidebar extends Component {
         this.setState({
           adKey: this.props.pageKey
         });
+      }
+    }
+
+    if(this.props.pageKey !== prevProps.pageKey) {
+      if(this.state.mobileSidebarOpened) {
+        this.handleMobileSidebarClick();
       }
     }
 
@@ -195,13 +191,6 @@ export default class Sidebar extends Component {
       <div className="Sidebar">
         <Styles.SidebarContainer className={`sidebar ${mobileSidebarOpened ? 'opened' : ''}`}>
           <div className="sidebar-content">
-            <div className="facebook-widget">
-              <h6>FOLLOW NAADAN CHORDS</h6>
-              <hr />
-              <FacebookProvider appId="178749152169432">
-                <Page href="https://www.facebook.com/naadanchords/" adaptContainerWidth hideCTA showFacepile="false" />
-              </FacebookProvider>
-            </div>
             {this.renderSidebarAd1()}
             <div className="sticky">
               {this.renderSidebarWidget()}

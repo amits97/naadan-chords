@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.57.1",
+  "version": "0.57.4",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -18,7 +18,6 @@
     "react-bootstrap": "^1.4.3",
     "react-bootstrap-typeahead": "^5.1.4",
     "react-dom": "^16.14.0",
-    "react-facebook": "^8.1.4",
     "react-ga": "^3.3.0",
     "react-helmet": "^6.1.0",
     "react-loading-skeleton": "^2.1.1",
