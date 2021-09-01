@@ -112,6 +112,14 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
+  .alert a {
+    color: ${({ theme }) => theme.alertLink};
+
+    &:hover {
+      color: ${({ theme }) => theme.alertLinkHover};
+    }
+  }
+
   p, ul li {
     color: ${({ theme }) => theme.text};
   }
