@@ -27,7 +27,7 @@ const Routes = ({ childProps }) =>
     <AppliedRoute path="/author/:userName" exact component={Posts} props={{pageKey: window.location.href, isUserPosts: true, ...childProps}} />
     <AppliedRoute path="/author/:userName/page/:number" exact component={Posts} props={{pageKey: window.location.href, isUserPosts: true, isPageUrl: true, ...childProps}} />
     <UnauthenticatedRoute path="/login" exact component={Login} props={childProps} />
-    <UnauthenticatedRoute path="/forgot-password" exact component={ResetPassword} props={childProps} />
+    <AppliedRoute path="/forgot-password" exact component={ResetPassword} props={childProps} />
     <UnauthenticatedRoute path="/signup" exact component={Signup} props={childProps} />
     <UnauthenticatedRoute path="/signup/verify" exact component={Signup} props={{isVerify: true, ...childProps}} />
     <AuthenticatedRoute path="/admin" exact component={Admin} props={childProps} />

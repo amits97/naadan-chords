@@ -45,6 +45,7 @@ provider:
         - cognito-idp:AdminLinkProviderForUser
         - cognito-idp:AdminDeleteUser
         - cognito-idp:AdminUpdateUserAttributes
+        - cognito-idp:AdminConfirmSignUp
         - cognito-idp:ListUsersInGroup
         - cognito-idp:SignUp
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"

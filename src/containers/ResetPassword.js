@@ -24,6 +24,14 @@ export default class ResetPassword extends SearchComponent {
     };
   }
 
+  componentDidMount() {
+    if (this.props.email) {
+      this.setState({
+        username: this.props.email
+      });
+    }
+  }
+
   renderError = () => {
     if(this.state.isErrorState) {
       return(

@@ -1,7 +1,7 @@
 import React from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { Auth, API, Storage } from "aws-amplify";
-import { Alert, Button, Dropdown, Form, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab } from "react-bootstrap";
+import { Alert, Button, Dropdown, Form, FormGroup, FormControl, FormLabel, Row, Col, Nav, Tab, FormText } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { faPencilAlt, faTimes, faTrashAlt, faUpload } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,7 @@ import LoaderButton from "../../components/LoaderButton";
 import { base64toBlob } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
 import "./Account.css";
+import { LinkContainer } from "react-router-bootstrap";
 
 export default class Account extends SearchComponent {
   constructor(props) {
@@ -282,6 +283,13 @@ export default class Account extends SearchComponent {
                 value={this.state.previousPassword}
                 onChange={this.handleChange}
               />
+              <FormText className="text-muted">
+                <LinkContainer to="/forgot-password">
+                  <a href="#/">
+                    Forgot Password?
+                  </a>
+                </LinkContainer>
+            </FormText>
             </FormGroup>
             <FormGroup controlId="newPassword">
               <FormLabel>New password</FormLabel>
