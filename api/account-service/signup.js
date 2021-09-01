@@ -21,6 +21,17 @@ export async function main(event) {
         message: "Username already exists. Please try a different one."
       });
     } else {
+      userParams.Filter = "email=\"" + data.email + "\"";
+      let emailUserResults = await cognitoLib.call("listUsers", userParams);
+
+      if (emailUserResults.Users && emailUserResults.Users.length > 0) {
+        return failure({
+          status: false,
+          code: "EmailExistsException",
+          message: "Email already exists. Please try a different one."
+        });
+      }
+
       const params = {
         ClientId: 'senbvolbdevcqlj220thd1dgo',
         Username: data.username,

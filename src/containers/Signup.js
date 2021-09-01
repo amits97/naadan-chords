@@ -17,6 +17,7 @@ export default class Signup extends SearchComponent {
       username: "",
       getUsername: false,
       isValidUsername: true,
+      emailExists: false,
       email: "",
       password: "",
       code: "",
@@ -52,6 +53,7 @@ export default class Signup extends SearchComponent {
     this.setState({
       [event.target.id]: event.target.value,
       isValidUsername: true,
+      emailExists: false,
       isErrorState: false
     });
   }
@@ -145,6 +147,7 @@ export default class Signup extends SearchComponent {
             isLoading: false,
             isErrorState: true,
             isValidUsername: e.response?.data?.code !== "UsernameExistsException",
+            emailExists: e.response?.data?.code === "EmailExistsException",
             errorMessage: e.response?.data?.message || e.message
           });
         }
@@ -236,7 +239,7 @@ export default class Signup extends SearchComponent {
   }
 
   render() {
-    let { signedUp, verified, codeResent, isValidUsername } = this.state;
+    let { signedUp, verified, codeResent, isValidUsername, emailExists } = this.state;
 
     if(verified) {
       return (
@@ -295,11 +298,15 @@ export default class Signup extends SearchComponent {
             <FormGroup controlId="email">
               <FormLabel>Email</FormLabel>
               <FormControl
+                isInvalid={emailExists}
                 type="email"
                 value={this.state.email}
                 onChange={this.handleChange}
               />
-              <FormText className="text-muted">
+              <FormControl.Feedback type="invalid" className={(emailExists ? 'd-block' : 'd-none')}>
+                An account with that email already exists. <LinkContainer to="/forgot-password"><a href="#/">Reset password</a></LinkContainer>.
+              </FormControl.Feedback>
+              <FormText className={`text-muted ${emailExists ? "d-none" : "d-block"}`}>
                 We'll never share your email with anyone else.
               </FormText>
             </FormGroup>
