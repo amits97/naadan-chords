@@ -1,9 +1,10 @@
 import AWS from "aws-sdk";
+import config from "../config";
 import * as cognitoLib from "./cognito-lib";
 
 export async function getAuthorAttributes(userId) {
   const userParams = {
-    UserPoolId: "ap-south-1_l5klM91tP",
+    UserPoolId: config.cognito.USER_POOL_ID,
     AttributesToGet: ["name"],
     Filter: "sub=\"" + userId + "\""
   };
@@ -36,7 +37,7 @@ export async function getAuthorAttributes(userId) {
 
 export async function getAuthorEmail(userId) {
   const userParams = {
-    UserPoolId: "ap-south-1_l5klM91tP",
+    UserPoolId: config.cognito.USER_POOL_ID,
     AttributesToGet: ["email"],
     Filter: "sub=\"" + userId + "\""
   };
@@ -48,7 +49,7 @@ export async function getAuthorEmail(userId) {
 
 export async function getUserId(userName) {
   const userParams = {
-    UserPoolId: "ap-south-1_l5klM91tP",
+    UserPoolId: config.cognito.USER_POOL_ID,
     AttributesToGet: ["sub"],
     Filter: "preferred_username=\"" + userName + "\""
   };
@@ -65,7 +66,7 @@ export async function getUserId(userName) {
 
 export async function getAdminUsers() {
   const userParams = {
-    UserPoolId: "ap-south-1_l5klM91tP",
+    UserPoolId: config.cognito.USER_POOL_ID,
     GroupName: "admin"
   };
 
@@ -77,7 +78,7 @@ export function syncRewriteFacebookUsername(email, callback, error) {
   const cognito = new AWS.CognitoIdentityServiceProvider({apiVersion: "2016-04-19", region: "ap-south-1"});  
   
   let allUsersWithEmailParams = {
-    UserPoolId: 'ap-south-1_l5klM91tP',
+    UserPoolId: config.cognito.USER_POOL_ID,
     AttributesToGet: ['email'],
     Filter: "email = \"" + email + "\""
   };
@@ -97,7 +98,7 @@ export function syncRewriteFacebookUsername(email, callback, error) {
                 let newUsername = email.split('@')[0];
 
                 let dupUserParams = {
-                  UserPoolId: "ap-south-1_l5klM91tP",
+                  UserPoolId: config.cognito.USER_POOL_ID,
                   AttributesToGet: ["sub"],
                   Filter: "username=\"" + newUsername + "\""
                 };
@@ -113,7 +114,7 @@ export function syncRewriteFacebookUsername(email, callback, error) {
                       Name: "preferred_username",
                       Value: newUsername
                     }],
-                    UserPoolId: 'ap-south-1_l5klM91tP',
+                    UserPoolId: config.cognito.USER_POOL_ID,
                     Username: user.Username
                   };
 

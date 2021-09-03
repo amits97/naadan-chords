@@ -1,4 +1,5 @@
 import AWS from "aws-sdk";
+import config from "../config";
 import { syncRewriteFacebookUsername } from "../libs/username-lib";
 
 exports.handler = (event, context, callback) => {
@@ -7,7 +8,7 @@ exports.handler = (event, context, callback) => {
 
     // Get email
     let params = {
-      UserPoolId: 'ap-south-1_l5klM91tP',
+      UserPoolId: config.cognito.USER_POOL_ID,
       AttributesToGet: ['email'],
       Filter: "username = \"" + event.userName + "\""
     };
@@ -19,7 +20,7 @@ exports.handler = (event, context, callback) => {
           const email = data.Users[0].Attributes[0].Value;
           
           let allUsersWithEmailParams = {
-            UserPoolId: 'ap-south-1_l5klM91tP',
+            UserPoolId: config.cognito.USER_POOL_ID,
             AttributesToGet: ['email'],
             Filter: "email = \"" + email + "\""
           };
@@ -43,7 +44,7 @@ exports.handler = (event, context, callback) => {
                         Name: "email_verified",
                         Value: "true"
                       }],
-                      UserPoolId: 'ap-south-1_l5klM91tP',
+                      UserPoolId: config.cognito.USER_POOL_ID,
                       Username: user.Username
                     };
       

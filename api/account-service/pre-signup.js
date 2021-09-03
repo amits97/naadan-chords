@@ -1,4 +1,5 @@
 import AWS from "aws-sdk";
+import config from "../config";
 
 function generatePassword() {
   var length = 8,
@@ -13,7 +14,7 @@ function generatePassword() {
 function createNativeAccountAndLink(cognito, context, event) {
   if (event.request.userAttributes.hasOwnProperty("email")) {
     const params = {
-      ClientId: 'senbvolbdevcqlj220thd1dgo',
+      ClientId: config.cognito.APP_CLIENT_ID,
       Username: event.request.userAttributes.email.split("@")[0],
       Password: generatePassword(),
       UserAttributes: [{
@@ -31,7 +32,7 @@ function createNativeAccountAndLink(cognito, context, event) {
         return;
       } else {
         let confirmParams = {
-          UserPoolId: 'ap-south-1_l5klM91tP',
+          UserPoolId: config.cognito.USER_POOL_ID,
           Username: event.request.userAttributes.email.split("@")[0],
           UserAttributes: [{
             Name: 'email_verified',
@@ -40,7 +41,7 @@ function createNativeAccountAndLink(cognito, context, event) {
         };
         cognito.adminUpdateUserAttributes(confirmParams, function() {
           let emailConfirmParams = {
-            UserPoolId: 'ap-south-1_l5klM91tP',
+            UserPoolId: config.cognito.USER_POOL_ID,
             Username: event.request.userAttributes.email.split("@")[0]
           };
           cognito.adminConfirmSignUp(emailConfirmParams, function() {
@@ -54,7 +55,7 @@ function createNativeAccountAndLink(cognito, context, event) {
                 ProviderAttributeValue: event.userName.split("_")[1],
                 ProviderName: 'Facebook'
               },
-              UserPoolId: 'ap-south-1_l5klM91tP'
+              UserPoolId: config.cognito.USER_POOL_ID
             };
             cognito.adminLinkProviderForUser(mergeParams, function() {
               event.response.autoConfirmUser = true;
@@ -71,12 +72,15 @@ function createNativeAccountAndLink(cognito, context, event) {
 
 exports.handler = (event, context) => {
   try {
-    const cognito = new AWS.CognitoIdentityServiceProvider({apiVersion: "2016-04-19", region: "ap-south-1"});
+    const cognito = new AWS.CognitoIdentityServiceProvider({
+      apiVersion: "2016-04-19",
+      region: config.cognito.REGION
+    });
 
     if (event.triggerSource.includes('ExternalProvider')) {
       // Social login
       let params = {
-        UserPoolId: 'ap-south-1_l5klM91tP',
+        UserPoolId: config.cognito.USER_POOL_ID,
         AttributesToGet: ['sub', 'email'],
         Filter: "email = \"" + event.request.userAttributes.email + "\""
       };
@@ -95,7 +99,7 @@ exports.handler = (event, context) => {
               ProviderAttributeValue: event.userName.split("_")[1],
               ProviderName: 'Facebook'
             },
-            UserPoolId: 'ap-south-1_l5klM91tP'
+            UserPoolId: config.cognito.USER_POOL_ID
           };
           cognito.adminLinkProviderForUser(mergeParams, function() {
             context.done(null, event);

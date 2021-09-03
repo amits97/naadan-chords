@@ -1,3 +1,4 @@
+import config from "../config";
 import { success, failure } from "../libs/response-lib";
 import * as cognitoLib from "../libs/cognito-lib";
 
@@ -8,7 +9,7 @@ export async function main(event) {
   try {
     // Check if username with preferred_username exists
     const userParams = {
-      UserPoolId: "ap-south-1_l5klM91tP",
+      UserPoolId: config.cognito.USER_POOL_ID,
       AttributesToGet: ["sub"],
       Filter: "preferred_username=\"" + data.username + "\""
     };
@@ -33,7 +34,7 @@ export async function main(event) {
       }
 
       const params = {
-        ClientId: 'senbvolbdevcqlj220thd1dgo',
+        ClientId: config.cognito.APP_CLIENT_ID,
         Username: data.username,
         Password: data.password,
         UserAttributes: [{

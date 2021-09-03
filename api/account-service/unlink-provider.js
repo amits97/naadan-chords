@@ -1,7 +1,8 @@
+import config from "../config";
 import { success, failure } from "../libs/response-lib";
 import * as cognitoLib from "../libs/cognito-lib";
 
-export async function main(event, context) {
+export async function main(event) {
   if(event.queryStringParameters && event.queryStringParameters.providerAttributeName && event.queryStringParameters.providerAttributeValue && event.queryStringParameters.providerName) {
     let ProviderAttributeName = event.queryStringParameters.providerAttributeName,
         ProviderAttributeValue = event.queryStringParameters.providerAttributeValue,
@@ -14,7 +15,7 @@ export async function main(event, context) {
           ProviderAttributeValue,
           ProviderName
         },
-        UserPoolId: 'ap-south-1_l5klM91tP'
+        UserPoolId: config.cognito.USER_POOL_ID
       };
 
       let result = await cognitoLib.call("adminDisableProviderForUser", params);
@@ -22,7 +23,7 @@ export async function main(event, context) {
       // Delete unlinked account
       params = {
         Username: `${ProviderName}_${ProviderAttributeValue}`,
-        UserPoolId: 'ap-south-1_l5klM91tP'
+        UserPoolId: config.cognito.USER_POOL_ID
       }
 
       try {

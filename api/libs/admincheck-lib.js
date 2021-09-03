@@ -1,3 +1,4 @@
+import config from "../config";
 import * as cognitoLib from "./cognito-lib";
 import * as userNameLib from "./username-lib";
 
@@ -5,7 +6,7 @@ export async function checkIfAdmin(userId) {
   let authorAttributes = await userNameLib.getAuthorAttributes(userId);
 
   const userParams = {
-    UserPoolId: "ap-south-1_l5klM91tP",
+    UserPoolId: config.cognito.USER_POOL_ID,
     Username: authorAttributes.preferredUsername ?? authorAttributes.userName
   };
 
