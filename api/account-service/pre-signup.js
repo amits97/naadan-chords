@@ -1,28 +1,21 @@
 import AWS from "aws-sdk";
 import config from "../config";
-
-function generatePassword() {
-  var length = 8,
-      charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-      retVal = "";
-  for (var i = 0, n = charset.length; i < length; ++i) {
-      retVal += charset.charAt(Math.floor(Math.random() * n));
-  }
-  return retVal;
-}
+import { generatePassword } from "../libs/utils";
 
 function createNativeAccountAndLink(cognito, context, event) {
   if (event.request.userAttributes.hasOwnProperty("email")) {
+    const generatedUsername = event.request.userAttributes.email.split("@")[0];
+
     const params = {
       ClientId: config.cognito.APP_CLIENT_ID,
-      Username: event.request.userAttributes.email.split("@")[0],
+      Username: generatedUsername,
       Password: generatePassword(),
       UserAttributes: [{
         Name: 'email',
         Value: event.request.userAttributes.email
       }, {
         Name: 'name',
-        Value: event.request.userAttributes.email.split("@")[0]
+        Value: generatedUsername
       }]
     };
 
@@ -33,7 +26,7 @@ function createNativeAccountAndLink(cognito, context, event) {
       } else {
         let confirmParams = {
           UserPoolId: config.cognito.USER_POOL_ID,
-          Username: event.request.userAttributes.email.split("@")[0],
+          Username: generatedUsername,
           UserAttributes: [{
             Name: 'email_verified',
             Value: 'true'
@@ -42,12 +35,12 @@ function createNativeAccountAndLink(cognito, context, event) {
         cognito.adminUpdateUserAttributes(confirmParams, function() {
           let emailConfirmParams = {
             UserPoolId: config.cognito.USER_POOL_ID,
-            Username: event.request.userAttributes.email.split("@")[0]
+            Username: generatedUsername
           };
           cognito.adminConfirmSignUp(emailConfirmParams, function() {
             let mergeParams = {
               DestinationUser: {
-                ProviderAttributeValue: event.request.userAttributes.email.split("@")[0],
+                ProviderAttributeValue: generatedUsername,
                 ProviderName: 'Cognito'
               },
               SourceUser: {
