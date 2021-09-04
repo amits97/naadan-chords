@@ -106,6 +106,14 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+  delete:
+    handler: delete.main
+    events:
+      - http:
+          path: /delete
+          method: delete
+          cors: true
+          authorizer: aws_iam
 
 # Create our resources with separate CloudFormation templates
 resources:

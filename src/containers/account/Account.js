@@ -37,9 +37,15 @@ export default class Account extends SearchComponent {
       newPasswordConfirm: "",
       identities: [],
       emailVerified: false,
-      userTheme: "auto"
+      userTheme: "auto",
+      userDeletable: false
     };
   }
+
+  getUserPosts = () => {
+    const { username } = this.state;
+    return API.get("posts", `/posts/user-posts?userName=${username}`);
+  };
 
   async componentDidMount() {
     window.scrollTo(0, 0);
@@ -65,6 +71,12 @@ export default class Account extends SearchComponent {
         identities,
         emailVerified: this.props.emailVerified,
         userTheme: this.props.userTheme
+      }, async () => {
+        const result = await this.getUserPosts();
+        const userPostsResult = result.Items ? result.Items : [];
+        this.setState({
+          userDeletable: userPostsResult.length === 0
+        });
       });
     } catch (e) {
       this.setState({
@@ -355,7 +367,7 @@ export default class Account extends SearchComponent {
     });
   }
 
-  renderAccountForm = () => {
+  renderProfileForm = () => {
     const { theme } = this.props;
 
     if(this.state.isInitialLoading) {
@@ -486,6 +498,48 @@ export default class Account extends SearchComponent {
     );
   }
 
+  deleteAccount = async () => {
+    if (window.confirm("Are you sure you want to delete this account?")) {
+      try {
+        // Delete account and all associated social logins and avatars
+        await API.del("posts", `/account/delete`);
+
+        // Log the user out
+        this.props.handleLogout();
+      } catch (e) {
+        this.setState({
+          isErrorState: true,
+          errorMessage: e.message
+        });
+      }
+    }
+  };
+
+  renderAccountForm = () => {
+    const { userDeletable } = this.state;
+
+    return (
+      <form>
+        <div className="account-form-wrapper">
+          <p>Once you delete your account, there is no going back. Please be certain.</p>
+          <Button variant="danger" onClick={() => this.deleteAccount()} block disabled={!userDeletable}>
+              <span className="social-icon">
+                <FontAwesomeIcon icon={faTrashAlt} />
+              </span>
+              Delete Account
+          </Button>
+          { !userDeletable ?
+              <small className="text-muted">
+                Account has published posts. Please <a target="_blank" rel="noopener noreferrer" href="https://github.com/amits97/naadan-chords/issues">raise an issue</a> to delete your account.
+              </small>
+            :
+              null
+          }
+        </div>
+      </form>
+    );
+  };
+
   disconnectSocialLogin = async (provider) => {
     let { identities } = this.state;
     let providerAttributeValue;
@@ -604,6 +658,9 @@ export default class Account extends SearchComponent {
                 <Nav.Item className="border-bottom">
                   <Nav.Link eventKey="appearance" onClick={() => { this.setActiveTab("appearance"); }}>Appearance</Nav.Link>
                 </Nav.Item>
+                <Nav.Item className="border-bottom">
+                  <Nav.Link eventKey="account" onClick={() => { this.setActiveTab("account"); }}>Account</Nav.Link>
+                </Nav.Item>
                 {
                    emailVerified?
                     <Nav.Item className="border-bottom">
@@ -620,10 +677,13 @@ export default class Account extends SearchComponent {
             <Col lg={10}>
               <Tab.Content>
                 <Tab.Pane eventKey="profile">
-                  { this.renderAccountForm() }
+                  { this.renderProfileForm() }
                 </Tab.Pane>
                 <Tab.Pane eventKey="appearance">
                   { this.renderAppearanceForm() }
+                </Tab.Pane>
+                <Tab.Pane eventKey="account">
+                  { this.renderAccountForm() }
                 </Tab.Pane>
                 <Tab.Pane eventKey="password">
                   { this.renderPasswordForm() }

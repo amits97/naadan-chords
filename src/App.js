@@ -185,7 +185,9 @@ class App extends Component {
   }
 
   handleLogout = async event => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     await Auth.signOut();
   
     this.userHasAuthenticated(false);
@@ -358,6 +360,7 @@ class App extends Component {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
+      handleLogout: this.handleLogout,
       getUserDetails: this.getUserDetails,
       getUserPrevileges: this.getUserPrevileges,
       getUserAttributes: this.getUserAttributes,

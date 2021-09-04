@@ -12,6 +12,7 @@ export async function getAuthorAttributes(userId) {
   let userResults = await cognitoLib.call("listUsers", userParams);
   let authorName = userResults.Users[0].Attributes[0].Value;
   let picture;
+  let identities;
   let userName = userResults.Users[0].Username;
   let preferredUsername;
   let userCreateDate = userResults.Users[0].UserCreateDate;
@@ -32,7 +33,15 @@ export async function getAuthorAttributes(userId) {
     // Ignore, picture does not exist.
   }
 
-  return { authorName, userName, preferredUsername, picture, userCreateDate };
+  try {
+    userParams.AttributesToGet = ["identities"];
+    userResults = await cognitoLib.call("listUsers", userParams);
+    identities = userResults.Users[0].Attributes[0].Value;
+  } catch(e) {
+    // Ignore, identities does not exist.
+  }
+
+  return { authorName, userName, preferredUsername, picture, userCreateDate, identities };
 }
 
 export async function getAuthorEmail(userId) {
