@@ -132,6 +132,11 @@
   cursor: pointer;
 }
 
+.Account small.text-muted {
+  display: block;
+  margin-top: 10px;
+}
+
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
   .Account .col-sm-2 {
@@ -139,13 +144,18 @@
   }
 
   .Account .nav-pills {
-    display: inline;
+    display: inline-block;
     position: initial;
     border: 0 !important;
+    margin-left: 0;
+    white-space: nowrap;
+    width: 100%;
+    height: 45px;
+    overflow: scroll;
   }
 
   .Account .nav-item {
-    float: left;
+    display: inline-block;
     border-bottom: 0 !important;
   }
 
