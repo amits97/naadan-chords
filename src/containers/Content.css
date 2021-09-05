@@ -94,6 +94,7 @@
 .Content .post small {
   color: #999999;
   font-size: 90%;
+  display: inline-block;
 }
 
 .Content .post .content {

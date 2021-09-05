@@ -243,14 +243,12 @@ export default class Content extends Component {
                       <h5>{ post.title }</h5>
                     </a>
                   </LinkContainer>
-                  <small>
+                  <small className="post-item-meta">
                     { this.formatDate( post.createdAt ) }
                     <span className="separator"> | </span>
                     <LinkContainer key={i} to={`/author/${ post.userName }`}>
                       <a href="#/">{ post.authorName }</a>
                     </LinkContainer>
-                  </small>
-                  <small>
                     { this.renderRating(post, true) }
                   </small>
                 </Styles.PostItemContainer>

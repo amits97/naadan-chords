@@ -49,6 +49,11 @@ export const PostItemContainer = styled.div`
     font-size: 80%;
   }
 
+  small.post-item-meta {
+    display: inline-block;
+    width: 100%;
+  }
+
   small span.separator {
     margin: 0 2.5px;
   }
