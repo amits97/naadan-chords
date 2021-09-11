@@ -186,6 +186,12 @@ export default class Sidebar extends Component {
 
   render() {
     let { mobileSidebarOpened } = this.state;
+    const { isPostList, isChordControlsTrayMaximized, posts } = this.props;
+    let isPage = false;
+
+    if (posts && !Array.isArray(posts)) {
+      isPage = posts.postType === "PAGE";
+    }
 
     return (
       <div className="Sidebar">
@@ -198,7 +204,7 @@ export default class Sidebar extends Component {
             </div>
           </div>
         </Styles.SidebarContainer>
-        <div className="sidebar-button btn btn-primary" onClick={this.handleMobileSidebarClick}>
+        <div className={`sidebar-button btn btn-primary ${isPostList || isPage ? "" : "post-position"} ${isChordControlsTrayMaximized ? "tray-maximized" : ""}`} onClick={this.handleMobileSidebarClick}>
           <FontAwesomeIcon icon={mobileSidebarOpened ? faTimes : faEllipsisV} />
         </div>
       </div>

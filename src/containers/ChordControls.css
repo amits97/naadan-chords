@@ -38,8 +38,15 @@
   margin-right: -1rem;
 }
 
-.ChordControls .controls-container {
+.ChordControls .controls-container-holder {
+  width: calc(100% - 42px);
   float: left;
+  overflow: hidden;
+  height: 40px;
+}
+
+.ChordControls .controls-container {
+  display: inline-block;
   margin-left: 25px;
 }
 
@@ -80,7 +87,50 @@
 
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 767.98px) {
+  .ChordControls .controls-tray {
+    background: #2E2E2E;
+    border: 1px solid #4D4F50;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
+  .ChordControls .controls-container-holder {
+    width: calc(100% - 32px);
+  }
+
+  .ChordControls .amount {
+    margin-top: -15px;
+    margin-left: -15px;
+  }
+
+  .ChordControls .btn-group {
+    margin-left: 5px;
+  }
+
+  .ChordControls .btn-group.ml-3 {
+    margin-left: 5px !important;
+  }
+
+  .ChordControls .controls-container {
+    margin-left: 12.5px;
+  }
+
+  .ChordControls .tray-control {
+    margin-right: -10px;
+  }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
   .ChordControls {
-    display: none;
+    height: 65px;
+  }
+
+  .ChordControls .controls-tray {
+    height: 65px;
+  }
+
+  .ChordControls .tray-saver {
+    right: 15px;
   }
 }

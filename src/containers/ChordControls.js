@@ -6,26 +6,6 @@ import * as Styles from "./Styles";
 import "./ChordControls.css";
 
 export default class ChordControls extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isTrayMaximized: true
-    };
-  }
-
-  componentDidMount() {
-    if(typeof Storage !== "undefined") {
-      let localStorageItem = localStorage.getItem("isTrayMaximized");
-
-      if(localStorageItem !== null) {
-        this.setState({
-          isTrayMaximized: localStorageItem === "true"
-        });
-      }
-    }
-  }
-
   handleTransposeClick = (transposeAmount) => {
     this.props.transposeChords(transposeAmount);
   }
@@ -59,20 +39,14 @@ export default class ChordControls extends Component {
   }
 
   toggleTray = () => {
-    let newTrayState = !this.state.isTrayMaximized;
+    const { isChordControlsTrayMaximized, setIsChordControlsTrayMaximized } = this.props;
+    let newTrayState = !isChordControlsTrayMaximized;
 
-    this.setState({
-      isTrayMaximized: newTrayState
-    });
-
-    if(typeof Storage !== "undefined") {
-      localStorage.setItem("isTrayMaximized", newTrayState.toString());
-    }
+    setIsChordControlsTrayMaximized(newTrayState);
   }
 
   render() {
-    let { transposeAmount, fontSize, scrollAmount, theme } = this.props;
-    let { isTrayMaximized } = this.state;
+    let { transposeAmount, fontSize, scrollAmount, theme, isChordControlsTrayMaximized: isTrayMaximized } = this.props;
 
     return (
       <Styles.ChordControlsContainer className={`ChordControls ${this.props.className} ${isTrayMaximized ? '' : 'minimized'}`}>
@@ -82,46 +56,48 @@ export default class ChordControls extends Component {
           </Button>
         </div>
         <div className="controls-tray">
-          <div className="controls-container transpose-container">
-            <span className="feature-label">
-              TRANSPOSE <span className="amount text-primary">{transposeAmount ? transposeAmount : ''}</span>
-            </span>
-            <ButtonGroup className={`${transposeAmount ? 'ml-3' : '' }`}>
-              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleTransposeClick(1)}>
-                <FontAwesomeIcon icon={faPlus} />
-              </Button>
-              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleTransposeClick(-1)}>
-                <FontAwesomeIcon icon={faMinus} />
-              </Button>
-            </ButtonGroup>
-          </div>
+          <div className="controls-container-holder">
+            <div className="controls-container transpose-container">
+              <span className="feature-label">
+                TRANSPOSE <span className="amount text-primary">{transposeAmount ? transposeAmount : ''}</span>
+              </span>
+              <ButtonGroup className={`${transposeAmount ? 'ml-3' : '' }`}>
+                <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleTransposeClick(1)}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+                <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleTransposeClick(-1)}>
+                  <FontAwesomeIcon icon={faMinus} />
+                </Button>
+              </ButtonGroup>
+            </div>
 
-          <div className="controls-container font-size-container">
-            <span className="feature-label">
-              FONT <span className="amount text-primary" key={fontSize}>{fontSize === 15 ? '' : this.computeFontAmount()}</span>
-            </span>
-            <ButtonGroup className={`${fontSize === 15 ? '' : 'ml-3' }`}>
-              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
-                <FontAwesomeIcon icon={faPlus} />
-              </Button>
-              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleFontSizeClick(-2)} disabled={this.checkFontSize("down")}>
-                <FontAwesomeIcon icon={faMinus} />
-              </Button>
-            </ButtonGroup>
-          </div>
+            <div className="controls-container scroll-container">
+              <span className="feature-label">
+                SCROLL <span className="amount text-primary">{scrollAmount ? scrollAmount : ''}</span>
+              </span>
+              <ButtonGroup className={`${scrollAmount ? 'ml-3' : '' }`}>
+                <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleScrollAmountClick(1)} disabled={this.checkScrollAmount("up")}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+                <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleScrollAmountClick(-1)} disabled={this.checkScrollAmount("down")}>
+                  <FontAwesomeIcon icon={faMinus} />
+                </Button>
+              </ButtonGroup>
+            </div>
 
-          <div className="controls-container scroll-container">
-            <span className="feature-label">
-              SCROLL <span className="amount text-primary">{scrollAmount ? scrollAmount : ''}</span>
-            </span>
-            <ButtonGroup className={`${scrollAmount ? 'ml-3' : '' }`}>
-              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleScrollAmountClick(1)} disabled={this.checkScrollAmount("up")}>
-                <FontAwesomeIcon icon={faPlus} />
-              </Button>
-              <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleScrollAmountClick(-1)} disabled={this.checkScrollAmount("down")}>
-                <FontAwesomeIcon icon={faMinus} />
-              </Button>
-            </ButtonGroup>
+            <div className="controls-container font-size-container">
+              <span className="feature-label">
+                FONT <span className="amount text-primary" key={fontSize}>{fontSize === 15 ? '' : this.computeFontAmount()}</span>
+              </span>
+              <ButtonGroup className={`${fontSize === 15 ? '' : 'ml-3' }`}>
+                <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleFontSizeClick(2)} disabled={this.checkFontSize("up")}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+                <Button variant={`outline-${theme.name === 'light' ? 'dark' : 'light'}`} onClick={() => this.handleFontSizeClick(-2)} disabled={this.checkFontSize("down")}>
+                  <FontAwesomeIcon icon={faMinus} />
+                </Button>
+              </ButtonGroup>
+            </div>
           </div>
 
           <Button variant="link" className={`float-right tray-control ${isTrayMaximized ? '' : 'd-none'}`} onClick={() => this.toggleTray()}>

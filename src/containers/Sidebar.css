@@ -37,6 +37,14 @@
   font-size: 24px;
 }
 
+.Sidebar .sidebar-button.post-position {
+  bottom: 45px;
+}
+
+.Sidebar .sidebar-button.post-position.tray-maximized {
+  bottom: 75px;
+}
+
 .Sidebar .top-posts {
   margin-top: 15px;
   margin-bottom: 5px;

@@ -26,6 +26,7 @@ export default class Posts extends Component {
       redirect: false,
       redirectUrl: "",
       authorCreateDate: null,
+      isChordControlsTrayMaximized: true
     };
   }
 
@@ -113,6 +114,16 @@ export default class Posts extends Component {
       });
     }
   }
+
+  setIsChordControlsTrayMaximized = (value) => {
+    this.setState({
+      isChordControlsTrayMaximized: value
+    });
+
+    if (typeof Storage !== "undefined") {
+      localStorage.setItem("isChordControlsTrayMaximized", value.toString());
+    }
+  };
 
   loadData = async () => {
     try {
@@ -281,6 +292,16 @@ export default class Posts extends Component {
       }
     }
 
+    if (typeof Storage !== "undefined") {
+      let localStorageItem = localStorage.getItem("isChordControlsTrayMaximized");
+
+      if (localStorageItem !== null) {
+        this.setState({
+          isChordControlsTrayMaximized: localStorageItem === "true"
+        });
+      }
+    }
+
     ReactGA.initialize("UA-34900138-2");
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
@@ -444,8 +465,9 @@ export default class Posts extends Component {
       ...this.props,
       title: title,
       loadPosts: this.loadMorePosts,
-      goBack: this.goBack
-    }
+      goBack: this.goBack,
+      setIsChordControlsTrayMaximized: this.setIsChordControlsTrayMaximized
+    };
 
     return (
       <div className="Posts">
