@@ -35,6 +35,7 @@
   z-index: 1020;
   display: none;
   font-size: 24px;
+  transition: bottom 0.25s;
 }
 
 .Sidebar .sidebar-button.post-position {
