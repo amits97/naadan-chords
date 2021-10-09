@@ -1,9 +1,11 @@
 service: naadan-chords-account-api
 
+# Since resource configs are shared, set project directory one level above
+projectDir: ../
+
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
   - serverless-webpack
-  - serverless-offline
   - serverless-domain-manager
 
 # serverless-webpack configuration

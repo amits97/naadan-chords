@@ -14,7 +14,6 @@
   "dependencies": {
     "aws-sdk": "^2.834.0",
     "serverless-domain-manager": "^5.1.0",
-    "serverless-offline": "^6.8.0",
     "serverless-webpack": "^5.5.1",
     "webpack-node-externals": "^2.5.2"
   },
