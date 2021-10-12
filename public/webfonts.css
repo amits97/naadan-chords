@@ -22,21 +22,30 @@
  * 
  * © 2019 MyFonts Inc
 */
-
-
-
-
   
 @font-face {
   font-family: 'DINNextLTPro-Heavy';
   src: url('webfonts/38F436_0_0.eot');
-  src: url('webfonts/38F436_0_0.eot?#iefix') format('embedded-opentype'),url('webfonts/38F436_0_0.woff') format('woff'),url('webfonts/38F436_0_0.ttf') format('truetype');
+  src: url('webfonts/38F436_0_0.eot?#iefix') format('embedded-opentype'),
+      url('webfonts/38F436_0_0.woff') format('woff'),
+      url('webfonts/38F436_0_0.ttf') format('truetype');
+  font-display: swap;
 }
- 
-  
+
 @font-face {
   font-family: 'DINNextLTPro-Regular';
   src: url('webfonts/38F436_1_0.eot');
-  src: url('webfonts/38F436_1_0.eot?#iefix') format('embedded-opentype'),url('webfonts/38F436_1_0.woff') format('woff'),url('webfonts/38F436_1_0.ttf') format('truetype');
+  src: url('webfonts/38F436_1_0.eot?#iefix') format('embedded-opentype'),
+      url('webfonts/38F436_1_0.woff') format('woff'),
+      url('webfonts/38F436_1_0.ttf') format('truetype');
+  font-display: swap;
 }
- 
+
+@font-face {
+  font-family: 'Minlo';
+  src: url('webfonts/Minlo-Regular.eot');
+  src: url('webfonts/Minlo-Regular.eot?#iefix') format('embedded-opentype'),
+      url('webfonts/Minlo-Regular.woff') format('woff'),
+      url('webfonts/Minlo-Regular.ttf') format('truetype');
+  font-display: swap;
+}

@@ -61,7 +61,7 @@
 }
 
 .Editor form textarea.form-control, .Editor .preview {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: Minlo, Menlo, monospace;
   font-size: 87.5%;
   white-space: pre;
 }
