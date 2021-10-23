@@ -36,7 +36,7 @@
   font-size: 14px;
 }
 
-.Editor form textarea {
+.Editor form textarea#content {
   border-top: 0;
   padding-top: 50px;
 }
@@ -170,7 +170,7 @@
   margin-bottom: -1.5px;
 }
 
-.Editor .spinning {
+.Editor .image-uploader .spinning {
   position: absolute;
   left: 5px;
   top: 10px;

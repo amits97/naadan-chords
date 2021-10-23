@@ -56,7 +56,8 @@ export default class Editor extends Component {
       reviewComment: null,
       addingComment: false,
       autoSaveTimestamp: null,
-      inputUpdated: false
+      inputUpdated: false,
+      isChordControlsTrayMaximized: true
     };
   }
 
@@ -282,7 +283,7 @@ export default class Editor extends Component {
   }
 
   post() {
-    if(this.props.isViewMode || this.props.isAdmin) {
+    if(this.props.isViewMode) {
       return API.get("posts", `/posts/${this.props.match.params.id}`);
     } else {
       return API.get("posts", `/contributions/${this.props.match.params.id}`);
@@ -305,6 +306,17 @@ export default class Editor extends Component {
 
   async componentDidMount() {
     let { isEditMode, isDraft, isReviewMode, isViewMode } = this.props;
+
+    if (typeof Storage !== "undefined") {
+      let localStorageItem = localStorage.getItem("isChordControlsTrayMaximized");
+
+      if (localStorageItem !== null) {
+        this.setState({
+          isChordControlsTrayMaximized: localStorageItem === "true"
+        });
+      }
+    }
+
     if(isEditMode || isReviewMode || isViewMode) {
       this.setState({
         isLoading: true
@@ -375,6 +387,16 @@ export default class Editor extends Component {
     );
   }
 
+  setIsChordControlsTrayMaximized = (value) => {
+    this.setState({
+      isChordControlsTrayMaximized: value
+    });
+
+    if (typeof Storage !== "undefined") {
+      localStorage.setItem("isChordControlsTrayMaximized", value.toString());
+    }
+  };
+
   renderPreviewContent = () => {
     if(this.state.postType === "PAGE") {
       return (
@@ -385,9 +407,15 @@ export default class Editor extends Component {
         }} />
       );
     } else {
+      const childProps = {
+        ...this.props,
+        post: this.state,
+        isChordControlsTrayMaximized: this.state.isChordControlsTrayMaximized,
+        setIsChordControlsTrayMaximized: this.setIsChordControlsTrayMaximized
+      };
       return (
         <div className="preview">
-          <ContentParser post={this.state} {...this.props} />
+          <ContentParser {...childProps} />
         </div>
       );
     }
@@ -572,7 +600,7 @@ export default class Editor extends Component {
     if(this.state.postType === "PAGE") {
       return (
         <div>
-          <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control page`} style={{ minHeight: 250 }} />
+          <TextareaAutosize placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`content-textarea form-control page`} style={{ minHeight: 250 }} />
         </div>
       );
     } else {
@@ -582,7 +610,7 @@ export default class Editor extends Component {
           <Tab eventKey="chords" title="CHORDS">
             <div className="mt-3">
               <EditorPanel insertAtCursor={this.insertAtCursor} insertRef={this.chordsEditor} readOnly={isViewMode} />
-              <TextareaAutosize ref={this.chordsEditor} placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`form-control post`} style={{ minHeight: 250 }} readOnly={isViewMode} />
+              <TextareaAutosize ref={this.chordsEditor} placeholder="Post content" onChange={this.handleChange} value={this.state.content ? this.state.content : "" } id="content" className={`content-textarea form-control post`} style={{ minHeight: 250 }} readOnly={isViewMode} />
             </div>
           </Tab>
           <Tab eventKey="tabs" title="LEAD TABS">
