@@ -283,7 +283,7 @@ export default class Editor extends Component {
   }
 
   post() {
-    if(this.props.isViewMode) {
+    if(this.props.isViewMode || this.props.isAdmin) {
       return API.get("posts", `/posts/${this.props.match.params.id}`);
     } else {
       return API.get("posts", `/contributions/${this.props.match.params.id}`);
