@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.61.3",
+  "version": "0.61.4",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -37,6 +37,7 @@
     "ansi-html": "https://registry.npmjs.org/ansi-html-community/-/ansi-html-community-0.0.8.tgz"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "start": "react-scripts start",
     "sitemap": "babel-node src/sitemap/sitemap-generator.js",
     "clearprerender": "aws dynamodb delete-table --table-name NaadanChordsPrerender || true",
