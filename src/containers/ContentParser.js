@@ -94,6 +94,7 @@ export default class ContentParser extends Component {
     const strummingRegExp = /{start_strumming}([\s\S]*?){end_strumming}/gim;
     const imageRegExp = /{start_image}([\s\S]*?){end_image}/gim;
     const separatorRegExp = /{separator}/gim;
+    const urlRegex = /^[^"]?(https?:\/\/[^\s]+)/gim;
 
     const ignoreChordsRegExp = /<span class="ignore-chords">([\s\S]*?)<\/span>/g;
 
@@ -176,6 +177,11 @@ export default class ContentParser extends Component {
     //replace image
     content = content.replace(imageRegExp, (match, p1) => {
       return (`<img src="${p1}" alt="${this.getFilename(p1)}" />`);
+    });
+
+    // replace URLs
+    content = content.replace(urlRegex, (match, p1) => {
+      return (`<a href="${p1}" target="_blank">${p1}</a>`);
     });
 
     return {__html: content};

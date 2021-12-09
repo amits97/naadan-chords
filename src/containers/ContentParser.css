@@ -73,6 +73,10 @@
   display: block !important;
 }
 
+.ContentParser .chord-sheet a {
+  text-decoration: underline;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 576px) {
   .ContentParser .tab-contents {
