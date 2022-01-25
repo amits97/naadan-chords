@@ -510,23 +510,12 @@ export default class Editor extends Component {
                 <Form.Control autoComplete="off" type="text" placeholder="Music" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} readOnly={isViewMode} />
               </Form.Group>
             </Col>
-            <Col></Col>
-          </Row>
-          <Row>
             <Col>
-              <Form.Group>
-                <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""} readOnly={isViewMode}>
-                <option value="MALAYALAM">Malayalam</option>
-                <option value="TAMIL">Tamil</option>
-                <option value="HINDI">Hindi</option>
-                </Form.Control>
-              </Form.Group>
-            </Col>
             { 
               isContribution ?
                 null
               :
-                <Col>
+                <React.Fragment>
                   <Form.Group controlId="image">
                     <div className={`image-uploader ${this.state.image ? 'd-none' : 'd-block'}`}>
                       <Form.Control type="file" accept='image/jpg' onChange={(e) => this.onImageUploadChange(e)} className={`${this.state.imageLoading ? 'd-none' : 'd-block'}`} ref={this.fileUploader} />
@@ -541,8 +530,20 @@ export default class Editor extends Component {
                       </a>
                     </div>
                   </Form.Group>
-                </Col>
+                </React.Fragment>
               }
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Control as="select" id="category" onChange={this.handleChange} value={this.state.category ? this.state.category : ""} readOnly={isViewMode}>
+                <option value="MALAYALAM">Malayalam</option>
+                <option value="TAMIL">Tamil</option>
+                <option value="HINDI">Hindi</option>
+                </Form.Control>
+              </Form.Group>
+            </Col>
           </Row>
         </div>
       );
