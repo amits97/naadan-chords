@@ -34,6 +34,7 @@ export default class Editor extends Component {
       title: null,
       song: null,
       album: null,
+      lyrics: null,
       music: null,
       category: "MALAYALAM",
       image: null,
@@ -113,6 +114,7 @@ export default class Editor extends Component {
           && this.state.content !== null
           && this.state.song !== null
           && this.state.album !== null
+          && this.state.lyrics !== null
           && this.state.music !== null;
     } else {
       return this.state.title !== null
@@ -125,6 +127,7 @@ export default class Editor extends Component {
         || this.state.content !== null
         || this.state.song !== null
         || this.state.album !== null
+        || this.state.lyrics !== null
         || this.state.music !== null;
   }
 
@@ -160,6 +163,7 @@ export default class Editor extends Component {
       song: this.state.song,
       album: this.state.album,
       singers: this.state.singers,
+      lyrics: this.state.lyrics,
       music: this.state.music,
       category: (this.state.postType === "PAGE") ? "PAGE" : this.state.category,
       image: this.state.image,
@@ -179,8 +183,8 @@ export default class Editor extends Component {
 
   handleDraft = async () => {
     this.autoWriteDraft = setInterval(async () => {
-      let { inputUpdated, title, singers, music, postType } = this.state;
-      const autoSave = (postType === "PAGE") ? inputUpdated && title : inputUpdated && title && singers && music
+      let { inputUpdated, title, singers, lyrics, music, postType } = this.state;
+      const autoSave = (postType === "PAGE") ? inputUpdated && title : inputUpdated && title && singers && lyrics && music;
 
       if(autoSave) {
         this.setState({
@@ -338,6 +342,7 @@ export default class Editor extends Component {
           song: post.song,
           album: post.album,
           singers: post.singers,
+          lyrics: post.lyrics,
           music: post.music,
           category: post.category,
           image: post.image,
@@ -494,10 +499,18 @@ export default class Editor extends Component {
               </Form.Group>
             </Col>
             <Col>
+              <Form.Group controlId="lyrics">
+                <Form.Control autoComplete="off" type="text" placeholder="Lyrics" onChange={this.handleChange} value={this.state.lyrics ? this.state.lyrics : ""} readOnly={isViewMode} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
               <Form.Group controlId="music">
                 <Form.Control autoComplete="off" type="text" placeholder="Music" onChange={this.handleChange} value={this.state.music ? this.state.music : ""} readOnly={isViewMode} />
               </Form.Group>
             </Col>
+            <Col></Col>
           </Row>
           <Row>
             <Col>

@@ -53,6 +53,7 @@ export async function main(event) {
       song: data.song || null,
       album: data.album || null,
       singers: data.singers || null,
+      lyrics: data.lyrics || null,
       music: data.music || null,
       category: data.category || "MALAYALAM",
       scale: data.scale || null,

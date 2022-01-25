@@ -25,6 +25,7 @@ export async function main(event, context, callback) {
       song: data.song || null,
       album: data.album || null,
       singers: data.singers || null,
+      lyrics: data.lyrics || null,
       music: data.music || null,
       category: data.category || "MALAYALAM",
       image: data.image || null,
@@ -50,12 +51,13 @@ export async function main(event, context, callback) {
         Key: {
           postId: slugify(data.title)
         },
-        UpdateExpression: "SET title = :title, song = :song, album = :album, singers = :singers, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType",
+        UpdateExpression: "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType",
         ExpressionAttributeValues: {
           ":title": data.title || null,
           ":song": data.song || null,
           ":album": data.album || null,
           ":singers": data.singers || null,
+          ":lyrics": data.lyrics || null,
           ":music": data.music || null,
           ":category": data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
           ":image": data.image || null,

@@ -73,6 +73,7 @@ export async function main(event, context, callback) {
       song: data.song || null,
       album: data.album || "PAGE",
       singers: data.singers || null,
+      lyrics: data.lyrics || null,
       music: data.music || null,
       category: data.category || "MALAYALAM",
       image: data.image || null,

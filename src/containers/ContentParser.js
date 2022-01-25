@@ -254,7 +254,7 @@ export default class ContentParser extends Component {
   }
 
   renderSongMeta = () => {
-    let { song, album, singers, music, scale, tempo, timeSignature } = this.props.post;
+    let { song, album, singers, lyrics, music, scale, tempo, timeSignature } = this.props.post;
     let showScaleInfo = scale || tempo || timeSignature;
 
     if(song) {
@@ -272,6 +272,7 @@ export default class ContentParser extends Component {
               <br />
             </span>
             { singers ? (<React.Fragment><b>Singers: </b>{singers}<br /></React.Fragment>) : null }
+            { lyrics ? (<React.Fragment><b>Lyrics: </b>{lyrics}<br /></React.Fragment>) : null}
             <b>Music: </b>{music}<br />
           </p>
 
