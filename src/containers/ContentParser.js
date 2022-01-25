@@ -260,21 +260,20 @@ export default class ContentParser extends Component {
     if(song) {
       return (
         <div className="meta">
-          <p style={{marginBottom: showScaleInfo ? "0.8rem" : "1.5rem"}}>
-            <b>Song: </b>{song}<br />
-            <span>
-              <b>Album: </b>
+          <ul style={{marginBottom: showScaleInfo ? "0.8rem" : "1.5rem"}}>
+            <li><span className="text-muted">Song</span>{song}</li>
+            <li>
+              <span className="text-muted">Album</span>
               <LinkContainer to={`/album/${slugify(album)}`}>
                 <a href="#/">
                   {album}
                 </a>
               </LinkContainer>
-              <br />
-            </span>
-            { singers ? (<React.Fragment><b>Singers: </b>{singers}<br /></React.Fragment>) : null }
-            { lyrics ? (<React.Fragment><b>Lyrics: </b>{lyrics}<br /></React.Fragment>) : null}
-            <b>Music: </b>{music}<br />
-          </p>
+            </li>
+            { singers ? (<li><span className="text-muted">Singers</span>{singers}</li>) : null }
+            { lyrics ? (<li><span className="text-muted">Lyrics</span>{lyrics}</li>) : null}
+            <li><span className="text-muted">Music</span>{music}</li>
+          </ul>
 
           {
             showScaleInfo ?

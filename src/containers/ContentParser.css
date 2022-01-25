@@ -2,8 +2,24 @@
   font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
 }
 
-.ContentParser .meta p {
+.ContentParser .meta p, .ContentParser .meta ul li {
   font-size: 17px;
+}
+
+.ContentParser .meta ul {
+  list-style: none;
+  padding-left: 0;
+  display: table;
+}
+
+.ContentParser .meta ul li {
+  display: table-row;
+}
+
+.ContentParser .meta ul li span {
+  display: table-cell;
+  text-align: right;
+  padding-right: 7.5px;
 }
 
 .ContentParser .meta a {
