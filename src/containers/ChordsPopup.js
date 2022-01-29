@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Carousel} from "react-bootstrap";
+import { Carousel, Form} from "react-bootstrap";
 import * as vexchords from "vexchords";
 import { findGuitarChord } from "chord-fingering";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSyncAlt, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { CHORD_FINGERINGS, INSTRUMENTS, STRINGS_COUNT, TUNINGS } from "../libs/constants";
 import PopoverStickOnHover from "../components/PopoverStickOnHover";
 import "./ChordsPopup.css";
 
@@ -14,13 +15,23 @@ export default class ChordsPopup extends Component {
     this.renderedChordElements = [];
 
     this.state = {
-      popoverOpen: false
+      popoverOpen: false,
+      instrument: typeof Storage !== "undefined" ? localStorage.getItem("instrument") || INSTRUMENTS.GUITAR : INSTRUMENTS.GUITAR
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.theme.name !== prevProps.name) {
       this.renderedChordElements = [];
+
+      if (typeof Storage !== "undefined") {
+        const savedInstrument = localStorage.getItem("instrument");
+        if (savedInstrument && this.state.instrument !== savedInstrument) {
+          this.setState({
+            instrument: savedInstrument
+          });
+        }
+      }
     }
   }
 
@@ -29,7 +40,8 @@ export default class ChordsPopup extends Component {
       return this.renderedChordElements;
     } else {
       const { theme } = this.props;
-      let chord = findGuitarChord(chordName);
+      const { instrument } = this.state;
+      let chord = findGuitarChord(chordName, TUNINGS[instrument]);
       let chordElements = [];
       let chordPositions = [];
       let lowestPositions = [];
@@ -37,14 +49,19 @@ export default class ChordsPopup extends Component {
       let validFingeringFound = false;
 
       if(chord) {
+        if (CHORD_FINGERINGS[instrument][chordName]) {
+          chord.fingerings.unshift({
+            positionString: CHORD_FINGERINGS[instrument][chordName]
+          });
+        }
         chord.fingerings.forEach((fingering) => {
           let chordPosition = [];
           let lowestPosition = 12;
           let highestPosition = 0;
           let barre = [];
-          let positionString = fingering.positionString;
+          let positionString = fingering.positionString.replaceAll("-", "");
 
-          if (positionString.length !== 6) {
+          if (positionString.length !== STRINGS_COUNT[instrument]) {
             return;
           } else {
             validFingeringFound = true;
@@ -119,8 +136,9 @@ export default class ChordsPopup extends Component {
         }, {
           width: 120,
           height: 140,
-          fontFamily: "'DINNextLTPro-Regular', 'Helvetica Neue', sans-serif",
-          defaultColor: theme.text
+          fontFamily: "Minlo, Menlo, monospace",
+          defaultColor: theme.text,
+          numStrings: STRINGS_COUNT[instrument]
         });
 
         chordElements.push(chordElement);
@@ -131,6 +149,16 @@ export default class ChordsPopup extends Component {
     }
   }
 
+  handleChange = event => {
+    this.setState({
+      instrument: event.target.value
+    });
+
+    if (typeof Storage !== "undefined") {
+      localStorage.setItem("instrument", event.target.value);
+    }
+  }
+
   renderchordPopover = (chordName) => {
     if(this.state.popoverOpen) {
       let chordElements = this.getChordElements(chordName);
@@ -138,6 +166,12 @@ export default class ChordsPopup extends Component {
       if(chordElements && chordElements.length > 0) {
         return (
           <div className="ChordsPopup">
+            <Form.Group>
+              <Form.Control as="select" id="instrument" onChange={this.handleChange} value={this.state.instrument}>
+              <option value="GUITAR">GUITAR</option>
+              <option value="UKULELE">UKULELE</option>
+              </Form.Control>
+            </Form.Group>
             <Carousel interval={null}>
               {
                 chordElements.map((chordElement, index) => {

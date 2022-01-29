@@ -43,7 +43,7 @@ export const GlobalStyles = createGlobalStyle`
     }   
   }
 
-  .popover.bs-popover-right .arrow {
+  .popover.bs-popover-left .arrow {
     &:after {
       border-left-color: ${({ theme }) => theme.body};
     }

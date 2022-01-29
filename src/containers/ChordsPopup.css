@@ -6,7 +6,7 @@ span.popup-trigger {
 .ChordsPopup {
   padding: 0 5px;
   width: 160px;
-  height: 160px;
+  height: 190px;
 }
 
 .ChordsPopup .carousel-control-next, .ChordsPopup .carousel-control-prev {
@@ -21,9 +21,23 @@ span.popup-trigger {
   margin-right: 5px;
 }
 
+.ChordsPopup .form-group {
+  margin-bottom: -7.5px;
+  margin-top: 5px;
+}
+
+.ChordsPopup .form-group select.form-control {
+  font-size: 14px;
+  height: 35px;
+}
+
 .ChordsPopup .chord-diagram {
   text-align: center;
   padding-right: 5px;
+}
+
+.ChordsPopup .chord-diagram svg text {
+  transform: translateX(-5px);
 }
 
 .ChordsPopup .spinning {
