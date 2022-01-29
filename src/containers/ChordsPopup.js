@@ -172,7 +172,7 @@ export default class ChordsPopup extends Component {
               <option value="UKULELE">UKULELE</option>
               </Form.Control>
             </Form.Group>
-            <Carousel interval={null}>
+            <Carousel interval={null} key={this.state.instrument}>
               {
                 chordElements.map((chordElement, index) => {
                   return (
