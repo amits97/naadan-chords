@@ -28,6 +28,13 @@
   }
 }
 
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+  .Request .sidebarColumn {
+    padding-top: 0;
+  }
+}
+
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 767.98px) {
   .Request .ad {

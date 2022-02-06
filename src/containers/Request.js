@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, FormGroup, FormLabel, FormControl, FormText, Button } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { Auth } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
+import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import Sidebar from "./Sidebar";
 import * as Styles from "./Styles";
@@ -11,31 +12,70 @@ export default class Request extends SearchComponent {
   constructor(props) {
     super(props);
 
-    this.requestForm = React.createRef();
+    this.state = {
+      isLoading: false,
+      isErrorState: false,
+      errorMessage: "",
+      submitted: false,
+      name: "",
+      email: "",
+      message: ""
+    };
+  }
+
+  validateForm() {
+    return this.state.name.length > 0 && this.state.email.length > 0 && this.state.message.length;
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
+
+  handleSubmit = async event => {
+    event.preventDefault();
+    const { name, email, message } = this.state;
+    this.setState({ isLoading: true, isErrorState: false, errorMessage: "" });
+
+    try {
+      await API.post("posts", `/request`, {
+        body: {
+          name,
+          email,
+          message
+        }
+      });
+    } catch (e) {
+      this.setState({
+        isLoading: false,
+        isErrorState: true,
+        errorMessage: e.message,
+        errorType: e.code
+      });
+    } finally {
+      this.setState({
+        isLoading: false,
+        submitted: true
+      });
+    }
   }
 
   async componentDidMount() {
-    const script = document.createElement("script");
-    script.defer = true;
-    script.src = "//www.123formbuilder.com/embed/359128.js";
-    script.type = "text/javascript";
-    script.dataset["role"] = "form";
-    script.dataset["defaultWidth"] = "650px";
-
     try {
       let session = await Auth.currentSession();
       this.props.userHasAuthenticated(true);
       await this.props.getUserAttributes(session);
-      script.dataset["customVars"] = `control2297463=${this.props.name}&control2297464=${this.props.email}`;
+      this.setState({
+        name: this.props.name,
+        email: this.props.email
+      });
     }
     catch(e) {
       if (e !== 'No current user') {
         console.log(e);
       }
     }
-
-    this.requestForm.current.appendChild(script);
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
 
     window.scrollTo(0, 0);
   }
@@ -80,8 +120,62 @@ export default class Request extends SearchComponent {
                 <h1>Request</h1>
                 <hr />
               </div>
-              <p>Request for the chords of a song that you would really like to see on Naadan Chords.</p>
-              <div className="contactForm" ref={this.requestForm}></div>
+
+              { this.state.submitted ? (
+                <React.Fragment>
+                  { this.state.isErrorState ? (
+                    <p>
+                      Failed to submit!<br />
+                      { this.state.errorMessage }
+                    </p>
+                  ) : (
+                    <p>Thank you! Your request has been submitted.<br />We will try our best to publish your request as soon as possible.</p>
+                  )}
+                  <Button variant="secondary" onClick={() => this.setState({ submitted: false, message: this.state.isErrorState ? this.state.message : "" })}>Go back</Button>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <p>Request for the chords of a song that you would really like to see on Naadan Chords.</p>
+                  <form onSubmit={this.handleSubmit}>
+                    <FormGroup controlId="name">
+                      <FormLabel>Name</FormLabel>
+                      <FormControl
+                        type="text"
+                        value={this.state.name}
+                        onChange={this.handleChange}
+                      />
+                    </FormGroup>
+                    <FormGroup controlId="email">
+                      <FormLabel>Email</FormLabel>
+                      <FormControl
+                        type="email"
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                      />
+                      <FormText className="text-muted">
+                        Used only to let you know when the song is posted.
+                      </FormText>
+                    </FormGroup>
+                    <FormGroup controlId="message">
+                      <FormLabel>Message</FormLabel>
+                      <FormControl
+                        as="textarea"
+                        value={this.state.message}
+                        onChange={this.handleChange}
+                        rows={3}
+                      />
+                    </FormGroup>
+                    <LoaderButton
+                      block
+                      disabled={!this.validateForm()}
+                      type="submit"
+                      isLoading={this.state.isLoading}
+                      text="Submit Request"
+                      loadingText="Submitting Request…"
+                    />
+                  </form>
+                </React.Fragment>
+              )}
             </Col>
             <Styles.SidebarCol lg={4} className="sidebarColumn">
               <Sidebar {...this.props} />
