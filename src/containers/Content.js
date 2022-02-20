@@ -430,11 +430,13 @@ export default class Content extends Component {
   renderPostContent = (post) => {
     if(post.postType === "PAGE") {
       return (
-        <ReactMarkdown source={ post.content } renderers={{
+        <ReactMarkdown components={{
           table: (props) => {
               return <table className="table table-striped">{props.children}</table>
           }
-        }} />
+        }}>
+          { post.content }
+        </ReactMarkdown>
       );
     } else {
       return (

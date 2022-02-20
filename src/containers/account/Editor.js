@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Collapse, Button, Form, Row, Col, Tabs, Tab, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faExternalLinkAlt, faSyncAlt, faImage, faTrashAlt, faPaperPlane, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
-import htmlParser from "react-markdown/plugins/html-parser";
 import LoaderButton from "../../components/LoaderButton";
 import { API, Storage } from "aws-amplify";
 import ReactMarkdown from "react-markdown";
@@ -22,7 +21,6 @@ export default class Editor extends Component {
   constructor(props) {
     super(props);
 
-    this.parseHtml = htmlParser();
     this.chordsEditor = React.createRef();
     this.tabsEditor = React.createRef();
     this.fileUploader = React.createRef();
