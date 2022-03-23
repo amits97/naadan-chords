@@ -76,9 +76,7 @@ async function appendTitles(ratingMap) {
   return ratingMap;
 }
 
-function constructRatingMap(result) {
-  let ratingMap = {};
-
+function constructRatingMap(result, ratingMap = {}) {
   for(let i = 0; i < result.Items.length; i++) {
     let item = result.Items[i];
     if(ratingMap.hasOwnProperty(item.postId)) {
@@ -96,6 +94,15 @@ function constructRatingMap(result) {
         count: 1
       }
     }
+  }
+
+  return ratingMap;
+}
+
+function constructAllRatingsMap(result, ratingMap = {}) {
+  for(let i = 0; i < result.Items.length; i++) {
+    let item = result.Items[i];
+    ratingMap[item.postId] = true;
   }
 
   return ratingMap;
@@ -127,6 +134,35 @@ function calculateWeightedRatings(ratingMap) {
   return ratingMap;
 }
 
+async function deleteItems(items) {
+  let deleteRequestArray = [];
+  for(let i = 0; i < items.length; i++) {
+    let deleteItem = {
+      DeleteRequest : {
+        Key : {
+          "postId": items[i]
+        }
+      }
+    };
+    deleteRequestArray.push(deleteItem);
+  }
+
+  const params = {
+    RequestItems: {
+      "NaadanChordsRatings": deleteRequestArray
+    },
+    ReturnItemCollectionMetrics: "SIZE",
+    ConsumedCapacity: "INDEXES"
+  };
+
+  try {
+    let result = await dynamoDbLib.batchCall(params);
+    return result;
+  } catch(e) {
+    return e;
+  }
+}
+
 async function saveRatings(ratingMap) {
   let itemsArray = [];
 
@@ -150,6 +186,35 @@ async function saveRatings(ratingMap) {
 
   try {
     let result = [];
+
+    // Clear invalid items from Ratings table
+    let allRatingsMap;
+    const allRatingsParams = {
+      TableName: "NaadanChordsRatings",
+      ProjectionExpression: "postId"
+    };
+    let allRatingsResult = await dynamoDbLib.call("scan", allRatingsParams);
+    allRatingsMap = constructAllRatingsMap(allRatingsResult);
+    while(allRatingsResult.hasOwnProperty("LastEvaluatedKey")) {
+      allRatingsParams.ExclusiveStartKey = allRatingsResult.LastEvaluatedKey;
+      allRatingsResult = await dynamoDbLib.call("scan", allRatingsParams);
+      allRatingsMap = constructAllRatingsMap(allRatingsResult, allRatingsMap);
+    }
+
+    let postIdsToDelete = [];
+
+    for (let postId in allRatingsMap) {
+      if (allRatingsMap.hasOwnProperty(postId)) {
+        if (!ratingMap.hasOwnProperty(postId)) {
+          postIdsToDelete.push(postId);
+        }
+      }
+    }
+
+    while(postIdsToDelete.length) {
+      await deleteItems(postIdsToDelete.splice(0,25));
+    }
+
     while (itemsArray.length) {
       const params = {
         RequestItems: {
@@ -162,7 +227,7 @@ async function saveRatings(ratingMap) {
     }
     return result;
   } catch(e) {
-    return e;
+    throw e;
   }
 }
 
@@ -179,7 +244,7 @@ async function generateRatings() {
     while(result.hasOwnProperty("LastEvaluatedKey")) {
       params.ExclusiveStartKey = result.LastEvaluatedKey;
       result = await dynamoDbLib.call("scan", params);
-      ratingMap = constructRatingMap(result);
+      ratingMap = constructRatingMap(result, ratingMap);
     }
     let saveRatingsResponse = await saveRatings(ratingMap);
     return saveRatingsResponse;

@@ -58,7 +58,7 @@ export default class Content extends Component {
       }
     }
 
-    if(this.props.isAuthenticated && !this.props.isLoading && !Array.isArray(this.props.posts) && (this.props.posts.postId !== prevProps.posts.postId || !prevProps.isAuthenticated)) {
+    if(this.props.isAuthenticated && !this.props.isLoading && !Array.isArray(this.props.posts) && (this.props.posts.postId !== prevProps.posts.postId)) {
       this.getRating();
     }
 
