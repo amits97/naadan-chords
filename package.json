@@ -1,11 +1,12 @@
 {
   "name": "naadan-chords",
-  "version": "0.66.1",
+  "version": "0.66.2",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-brands-svg-icons": "^5.15.2",
+    "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "ajv": "^7.2.3",

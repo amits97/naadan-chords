@@ -67,3 +67,9 @@ export function parseLinksToHtml(content) {
     return (`<a href="${p1}" target="_blank">${p1}</a>`);
   });
 }
+
+export const ConditionalWrapper = ({
+  condition,
+  wrapper,
+  children,
+}) => (condition ? wrapper(children) : children);

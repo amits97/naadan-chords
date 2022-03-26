@@ -44,6 +44,22 @@ export async function main(event, context) {
         result.Items[i].authorName =  users[userId].authorName;
         result.Items[i].userName =  users[userId].userName;
         result.Items[i].authorPicture = users[userId].authorPicture;
+
+        if (result.Items[i].likes) {
+          result.Items[i].likesList = [];
+          try {
+            await Promise.all(result.Items[i].likes.map(async (likedUserId) => {
+              const likedUserAttributes = await userNameLib.getAuthorAttributes(likedUserId); 
+              result.Items[i].likesList.push({
+                userName: likedUserAttributes.userName,
+                authorName: likedUserAttributes.authorName
+              });
+            }));
+          } catch(e) {
+            // Ignore
+          }
+          delete(result.Items[i].likes);
+        }
       }
       return success(result);
     } else {

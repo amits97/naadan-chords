@@ -88,6 +88,14 @@ functions:
           path: /
           method: get
           cors: true
+  comment-like:
+    handler: comment-like.main
+    events:
+      - http:
+          path: /like
+          method: post
+          cors: true
+          authorizer: aws_iam
   draft-delete:
     handler: comment-delete.main
     events:

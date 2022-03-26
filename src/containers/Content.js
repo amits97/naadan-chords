@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Button, Row, Col, OverlayTrigger, Popover, Modal, Container, Form, DropdownButton, Dropdown } from "react-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
@@ -11,8 +11,9 @@ import config from "../config";
 import { API } from "aws-amplify";
 import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRandom, faHistory, faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import { slugify, capitalizeFirstLetter, parseLinksToHtml } from "../libs/utils";
+import { faRandom, faHistory, faUserCircle, faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { slugify, capitalizeFirstLetter, parseLinksToHtml, ConditionalWrapper } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
 import ContentParser from "./ContentParser";
@@ -81,12 +82,14 @@ export default class Content extends Component {
     }
   }
 
-  getComments = async () => {
+  getComments = async (hideLoad = false) => {
     const post = this.props.posts;
     if (post.postId) {
-      this.setState({
-        commentsLoading: true
-      });
+      if (!hideLoad) {
+        this.setState({
+          commentsLoading: true
+        });
+      }
       try {
         const comments = await API.get("posts", `/comments?postId=${post.postId}`);
         this.setState({
@@ -490,6 +493,47 @@ export default class Content extends Component {
     }
   }
 
+  onCommentLike = async (
+    comment,
+    comments,
+    index,
+    commentLiked,
+    loggedInUser,
+    name
+  ) => {
+    if (this.props.isAuthenticated) {
+      // Instant UI update magic
+      if (commentLiked) {
+        comment.likesList = comment.likesList.filter(like => like.userName !== loggedInUser);
+      } else {
+        comment.likesList = comment.likesList || [];
+        comment.likesList.push({
+          userName: loggedInUser,
+          authorName: name
+        });
+      }
+      comments[index] = comment;
+      this.setState({
+        comments
+      });
+
+      try {
+        await API.post("posts", "/comments/like", {
+          body: {
+            commentId: comment.commentId
+          }
+        });
+        this.getComments(true);
+      } catch(e) {
+        console.log(e);
+      }
+    } else {
+      this.setState({
+        showLoginModal: true
+      });
+    }
+  }
+
   onCommentSubmit = async (e) => {
     e.preventDefault();
     const { comment, comments } = this.state;
@@ -519,6 +563,20 @@ export default class Content extends Component {
         addingComment: false
       });
     }
+  }
+
+  commentLikesPopover = (likesList = []) => {
+    return (
+      <Popover id="popover-basic" className="p-2">
+        {likesList.map(like => {
+          return (
+            <Fragment key={like.userName}>
+              {like.authorName}<br />
+            </Fragment>
+          );
+        })}
+      </Popover>
+    );
   }
 
   renderComments = (post) => {
@@ -606,6 +664,10 @@ export default class Content extends Component {
                 </div>
               </Row>
               {comments.map((comment, index) => {
+                const commentLiked = comment.likesList && comment.likesList.some(like => {
+                  return like && like.userName === loggedInUser;
+                });
+ 
                 return (
                   <Row
                     key={index}
@@ -626,6 +688,7 @@ export default class Content extends Component {
                         <small>• <Moment fromNow>{comment.createdAt}</Moment></small>
                         <DropdownButton
                           variant="link"
+                          title=""
                           className="float-right delete-comment"
                           alignRight
                         >
@@ -640,6 +703,45 @@ export default class Content extends Component {
                         </DropdownButton>
                       </div>
                       <p dangerouslySetInnerHTML={{__html: parseLinksToHtml(comment.content)}}></p>
+                      <div className="comment-actions-row">
+                        <small>
+                          <ConditionalWrapper
+                            key={index}
+                            condition={comment.likesList && comment.likesList.length > 0}
+                            wrapper={children => (
+                              <OverlayTrigger
+                                delay={{ show: 250, hide: 250 }}
+                                overlay={this.commentLikesPopover(comment.likesList)}
+                              >
+                                {children}
+                              </OverlayTrigger>
+                            )}
+                          >
+                            <Button
+                              size="sm"
+                              variant="link"
+                              className="text-decoration-none"
+                              onClick={() => {
+                                this.onCommentLike(
+                                  comment,
+                                  comments,
+                                  index,
+                                  commentLiked,
+                                  loggedInUser,
+                                  name
+                                );
+                              }}
+                            >
+                              {commentLiked ? (
+                                <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeartFilled} />
+                              ): (
+                                <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeart} />
+                              )}
+                              {comment.likesList ? comment.likesList.length : null}
+                            </Button>
+                          </ConditionalWrapper>
+                        </small>
+                      </div>
                     </div>
                   </Row>
                 );
