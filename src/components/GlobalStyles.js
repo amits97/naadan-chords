@@ -240,10 +240,6 @@ export const GlobalStyles = createGlobalStyle`
     border-bottom: 2px solid ${({ theme }) => theme.border} !important;
   }
 
-  .Content .comment:hover {
-    background: ${({ theme }) => theme.backgroundLight};
-  }
-
   /* Large devices (desktops, 992px and up) */
   @media (min-width: 992px) {
     .App .navbar .navbar-nav .nav-link.active {

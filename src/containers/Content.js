@@ -721,14 +721,13 @@ export default class Content extends Component {
                             }}
                           >
                             {commentLiked ? (
-                              <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeartFilled} />
+                              <FontAwesomeIcon className="heartFilled user-icon ml-1 mr-1" icon={faHeartFilled} title="Unlike comment" />
                             ): (
-                              <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeart} />
+                              <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeart} title="Like comment" />
                             )}
                           </Button>
                           { comment.likesList && comment.likesList.length > 0 ? (
                             <OverlayTrigger
-                              delay={{ show: 250, hide: 250 }}
                               overlay={this.commentLikesPopover(comment.likesList)}
                             >
                               <span>

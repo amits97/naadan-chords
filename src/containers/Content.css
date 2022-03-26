@@ -218,15 +218,22 @@
 
 .Content .comment .delete-comment button {
   color: inherit;
+  height: 25px;
 }
 
-.Content .comment.comment-owner:hover .delete-comment {
+.Content .comment.comment-owner:hover .delete-comment,
+.Content .comment .delete-comment.show {
   display: block;
 }
 
 .Content .comment .content-col .comment-actions-row button {
   padding: 0;
   color: inherit;
+}
+
+.Content .comment .content-col .comment-actions-row button .heartFilled {
+  color: #ff9800;
+  opacity: 0.9;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
@@ -294,5 +301,9 @@
   .Content .sidebarColumn {
     padding: 0;
     margin-left: 0 !important;
+  }
+
+  .Content .comment.comment-owner .delete-comment {
+    display: block;
   }
 }
