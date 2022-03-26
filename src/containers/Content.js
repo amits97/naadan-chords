@@ -13,7 +13,7 @@ import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRandom, faHistory, faUserCircle, faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { slugify, capitalizeFirstLetter, parseLinksToHtml, ConditionalWrapper } from "../libs/utils";
+import { slugify, capitalizeFirstLetter, parseLinksToHtml } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
 import ContentParser from "./ContentParser";
@@ -705,41 +705,37 @@ export default class Content extends Component {
                       <p dangerouslySetInnerHTML={{__html: parseLinksToHtml(comment.content)}}></p>
                       <div className="comment-actions-row">
                         <small>
-                          <ConditionalWrapper
-                            key={index}
-                            condition={comment.likesList && comment.likesList.length > 0}
-                            wrapper={children => (
-                              <OverlayTrigger
-                                delay={{ show: 250, hide: 250 }}
-                                overlay={this.commentLikesPopover(comment.likesList)}
-                              >
-                                {children}
-                              </OverlayTrigger>
-                            )}
+                          <Button
+                            size="sm"
+                            variant="link"
+                            className="text-decoration-none"
+                            onClick={() => {
+                              this.onCommentLike(
+                                comment,
+                                comments,
+                                index,
+                                commentLiked,
+                                loggedInUser,
+                                name
+                              );
+                            }}
                           >
-                            <Button
-                              size="sm"
-                              variant="link"
-                              className="text-decoration-none"
-                              onClick={() => {
-                                this.onCommentLike(
-                                  comment,
-                                  comments,
-                                  index,
-                                  commentLiked,
-                                  loggedInUser,
-                                  name
-                                );
-                              }}
+                            {commentLiked ? (
+                              <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeartFilled} />
+                            ): (
+                              <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeart} />
+                            )}
+                          </Button>
+                          { comment.likesList && comment.likesList.length > 0 ? (
+                            <OverlayTrigger
+                              delay={{ show: 250, hide: 250 }}
+                              overlay={this.commentLikesPopover(comment.likesList)}
                             >
-                              {commentLiked ? (
-                                <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeartFilled} />
-                              ): (
-                                <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeart} />
-                              )}
-                              {comment.likesList ? comment.likesList.length : null}
-                            </Button>
-                          </ConditionalWrapper>
+                              <span>
+                                {` • ${comment.likesList.length} like${comment.likesList.length > 1 ? 's' : ''}`}
+                              </span>
+                            </OverlayTrigger>
+                          ): null}
                         </small>
                       </div>
                     </div>
