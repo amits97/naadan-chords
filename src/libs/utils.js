@@ -60,3 +60,10 @@ export function base64toBlob(b64Data, contentType='', sliceSize=512) {
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
 }
+
+export function parseLinksToHtml(content) {
+  const urlRegex = /^[^"]?(https?:\/\/[^\s]+)/gim;
+  return content.replace(urlRegex, (match, p1) => {
+    return (`<a href="${p1}" target="_blank">${p1}</a>`);
+  });
+}

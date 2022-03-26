@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Tabs, Tab } from "react-bootstrap";
-import { slugify } from "../libs/utils";
+import { parseLinksToHtml, slugify } from "../libs/utils";
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import ChordControls from "./ChordControls";
 import ChordsPopup from "./ChordsPopup";
@@ -94,7 +94,6 @@ export default class ContentParser extends Component {
     const strummingRegExp = /{start_strumming}([\s\S]*?){end_strumming}/gim;
     const imageRegExp = /{start_image}([\s\S]*?){end_image}/gim;
     const separatorRegExp = /{separator}/gim;
-    const urlRegex = /^[^"]?(https?:\/\/[^\s]+)/gim;
 
     const ignoreChordsRegExp = /<span class="ignore-chords">([\s\S]*?)<\/span>/g;
 
@@ -180,9 +179,7 @@ export default class ContentParser extends Component {
     });
 
     // replace URLs
-    content = content.replace(urlRegex, (match, p1) => {
-      return (`<a href="${p1}" target="_blank">${p1}</a>`);
-    });
+    content = parseLinksToHtml(content);
 
     return {__html: content};
   }

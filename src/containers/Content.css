@@ -194,8 +194,16 @@
   margin-bottom: 10px;
 }
 
+.Content .comment .content-col textarea.focus {
+  height: 80px;
+}
+
 .Content .comment .content-col textarea::placeholder {
   font-size: 18px;
+}
+
+.Content .comment .content-col button.comment-submit {
+  font-size: 1rem;
 }
 
 .Content .comment .author-meta-row {

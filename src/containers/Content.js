@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { Button, Row, Col, OverlayTrigger, Popover, Modal, Container, Form } from "react-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
@@ -11,8 +11,8 @@ import config from "../config";
 import { API } from "aws-amplify";
 import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRandom, faHistory, faUserCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { slugify, capitalizeFirstLetter } from "../libs/utils";
+import { faRandom, faHistory, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { slugify, capitalizeFirstLetter, parseLinksToHtml } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
 import ContentParser from "./ContentParser";
@@ -210,8 +210,8 @@ export default class Content extends Component {
 
       for(var i=0; i<20; i++) {
         skeleton.push(
-          <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
-            <Styles.PostItemContainer key={i} className="pt-1 pb-1 no-hover">
+          <SkeletonTheme key={i} color={theme.backgroundHighlight} highlightColor={theme.body}>
+            <Styles.PostItemContainer className="pt-1 pb-1 no-hover">
               <h5><Skeleton /></h5>
               <small><Skeleton /></small>
             </Styles.PostItemContainer>
@@ -568,20 +568,21 @@ export default class Content extends Component {
                     onSubmit={this.onCommentSubmit}
                   >
                     <TextareaAutosize
-                      className="form-control"
+                      className={`form-control ${isCommentFormInFocus ? 'focus' : ''}`}
                       placeholder="Join the discussion..."
                       id="comment"
                       onChange={this.handleCommentChange}
                       value={comment ? comment : ""}
                     />
                     {isCommentFormInFocus && isAuthenticated && (
-                      <Fragment>
+                      <div className="mb-2">
                         <LoaderButton
                           variant="primary"
                           className="comment-submit"
                           type="submit"
+                          size="sm"
                           isLoading={addingComment}
-                          text={<React.Fragment>Comment <FontAwesomeIcon icon={faPaperPlane} /></React.Fragment>}
+                          text="Comment"
                           loadingText="Submitting…"
                           disabled={!(comment && comment.length > 0)}
                         />
@@ -597,7 +598,7 @@ export default class Content extends Component {
                         >
                           Cancel
                         </a>
-                      </Fragment>
+                      </div>
                     )}
                   </Form>
                 </div>
@@ -606,7 +607,7 @@ export default class Content extends Component {
                 return (
                   <Row
                     key={index}
-                    className={`comment px-2 pt-3 pb-4 ${(index % 2 === 0) ? "" : "bg-light"} ${(isAuthenticated && comment.userName === loggedInUser) ? "comment-owner" : ""}`}
+                    className={`comment px-2 pt-2 pb-3 ${(isAuthenticated && comment.userName === loggedInUser) ? "comment-owner" : ""}`}
                   >
                     <div className="pic-col">
                       {comment.authorPicture ? (
@@ -618,8 +619,8 @@ export default class Content extends Component {
                       )}
                     </div>
                     <div className="content-col">
-                      <div className="author-meta-row text-muted"><b>{`${comment.authorName}`} </b><small>said  <Moment fromNow>{comment.createdAt}</Moment>:</small></div>
-                      <p>{comment.content}</p>
+                      <div className="author-meta-row text-muted"><b>{`${comment.authorName}`} </b><small>• <Moment fromNow>{comment.createdAt}</Moment></small></div>
+                      <p dangerouslySetInnerHTML={{__html: parseLinksToHtml(comment.content)}}></p>
                       <a
                         href="#/"
                         className="delete-comment text-primary pt-1"
