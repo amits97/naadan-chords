@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Row, Col, OverlayTrigger, Popover, Modal, Container, Form } from "react-bootstrap";
+import { Button, Row, Col, OverlayTrigger, Popover, Modal, Container, Form, DropdownButton, Dropdown } from "react-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
@@ -83,20 +83,22 @@ export default class Content extends Component {
 
   getComments = async () => {
     const post = this.props.posts;
-    this.setState({
-      commentsLoading: true
-    });
-    try {
-      const comments = await API.get("posts", `/comments?postId=${post.postId}`);
+    if (post.postId) {
       this.setState({
-        comments: comments.Items,
-        commentsLoading: false
+        commentsLoading: true
       });
-    } catch(e) {
-      console.log(e);
-      this.setState({
-        commentsLoading: false
-      });
+      try {
+        const comments = await API.get("posts", `/comments?postId=${post.postId}`);
+        this.setState({
+          comments: comments.Items,
+          commentsLoading: false
+        });
+      } catch(e) {
+        console.log(e);
+        this.setState({
+          commentsLoading: false
+        });
+      }
     }
   }
 
@@ -575,7 +577,19 @@ export default class Content extends Component {
                       value={comment ? comment : ""}
                     />
                     {isCommentFormInFocus && isAuthenticated && (
-                      <div className="mb-2">
+                      <div className="mb-2 text-right">
+                        <a
+                          href="#/"
+                          className="text-primary pt-1 mr-3"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            this.setState({
+                              isCommentFormInFocus: false
+                            });
+                          }}
+                        >
+                          Cancel
+                        </a>
                         <LoaderButton
                           variant="primary"
                           className="comment-submit"
@@ -586,18 +600,6 @@ export default class Content extends Component {
                           loadingText="Submitting…"
                           disabled={!(comment && comment.length > 0)}
                         />
-                        <a
-                          href="#/"
-                          className="text-primary pt-1 ml-3"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            this.setState({
-                              isCommentFormInFocus: false
-                            });
-                          }}
-                        >
-                          Cancel
-                        </a>
                       </div>
                     )}
                   </Form>
@@ -607,7 +609,7 @@ export default class Content extends Component {
                 return (
                   <Row
                     key={index}
-                    className={`comment px-2 pt-2 pb-3 ${(isAuthenticated && comment.userName === loggedInUser) ? "comment-owner" : ""}`}
+                    className={`comment px-2 py-2 ${(isAuthenticated && comment.userName === loggedInUser) ? "comment-owner" : ""}`}
                   >
                     <div className="pic-col">
                       {comment.authorPicture ? (
@@ -619,18 +621,25 @@ export default class Content extends Component {
                       )}
                     </div>
                     <div className="content-col">
-                      <div className="author-meta-row text-muted"><b>{`${comment.authorName}`} </b><small>• <Moment fromNow>{comment.createdAt}</Moment></small></div>
+                      <div className="author-meta-row text-muted">
+                        <b>{`${comment.authorName}`} </b>
+                        <small>• <Moment fromNow>{comment.createdAt}</Moment></small>
+                        <DropdownButton
+                          variant="link"
+                          className="float-right delete-comment"
+                          alignRight
+                        >
+                          <Dropdown.Item
+                            href="#"
+                            onClick={() => {
+                              this.deleteComment(comment.commentId);
+                            }}
+                          >
+                            Delete
+                          </Dropdown.Item>
+                        </DropdownButton>
+                      </div>
                       <p dangerouslySetInnerHTML={{__html: parseLinksToHtml(comment.content)}}></p>
-                      <a
-                        href="#/"
-                        className="delete-comment text-primary pt-1"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          this.deleteComment(comment.commentId);
-                        }}
-                      >
-                        Delete
-                      </a>
                     </div>
                   </Row>
                 );

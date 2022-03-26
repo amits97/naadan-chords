@@ -186,6 +186,10 @@
   animation: spin 1s infinite linear;
 }
 
+.App .dropdown-item:focus, .App .dropdown-item:hover, .App .dropdown-item.active:hover {
+  color: inherit;
+}
+
 @keyframes spin {
   from { transform: scale(1) rotate(0deg); }
   to { transform: scale(1) rotate(360deg); }

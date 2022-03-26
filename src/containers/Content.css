@@ -206,10 +206,6 @@
   font-size: 1rem;
 }
 
-.Content .comment .author-meta-row {
-  letter-spacing: 0.5px;
-}
-
 .Content .comment p {
   font-size: 16px;
   margin-bottom: 0;
@@ -220,10 +216,12 @@
   display: none;
 }
 
+.Content .comment .delete-comment button {
+  color: inherit;
+}
+
 .Content .comment.comment-owner:hover .delete-comment {
-  display: inline-block;
-  position: absolute;
-  bottom: 3px;
+  display: block;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
@@ -268,12 +266,6 @@
 
   .Content .header-meta-container {
     text-align: center;
-  }
-
-  .Content .comment .content-col .author-meta-row small {
-    display: block;
-    margin-top: -2px;
-    margin-bottom: 4px;
   }
 }
 
