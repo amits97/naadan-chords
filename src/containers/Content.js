@@ -27,7 +27,7 @@ export default class Content extends Component {
     super(props);
     this.ratingEl = React.createRef();
     this.removeMd = require("remove-markdown");
-    this.matchedContentInitialized = false;
+    this.inArticleAdInitialized = false;
 
     this.state = {
       showLoginModal: false,
@@ -45,13 +45,13 @@ export default class Content extends Component {
     this.getComments();
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = (prevProps) => {
     if(prevProps.adKey !== this.props.adKey) {
-      this.matchedContentInitialized = false;
+      this.inArticleAdInitialized = false;
     }
 
-    if(document.querySelectorAll("div.matchedContent").length > 0 &&!this.matchedContentInitialized) {
-      this.matchedContentInitialized = true;
+    if(document.querySelectorAll("div.inArticle").length > 0 &&!this.inArticleAdInitialized) {
+      this.inArticleAdInitialized = true;
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       } catch(e) {
@@ -453,21 +453,18 @@ export default class Content extends Component {
     }
   }
 
-  renderMatchedContentAd = (post) => {
+  renderInArticleAd = (post) => {
     const { theme } = this.props;
 
     if(post.postType === "POST" && !config.noAds.includes(post.postId)) {
       return (
-        <div className="matchedContent">
-          <br />
-          <hr />
-            <h6>YOU MAY ALSO LIKE</h6>
-            <ins className="adsbygoogle"
-            style={{display: "block"}}
-            data-ad-format="autorelaxed"
+        <div className="ad inArticle">
+          <ins className="adsbygoogle"
+            style={{display:"block", textAlign:"center"}}
             data-ad-client="ca-pub-1783579460797635"
-            data-ad-slot={theme.name === "light" ? "2717060707" : "5061016497"}
-            key={this.props.adKey}>
+            data-ad-slot={theme.name === "light" ? "1204599400" : "1979513076"}
+            data-ad-format="fluid"
+            data-ad-layout="in-article">
           </ins>
         </div>
       );
@@ -587,8 +584,6 @@ export default class Content extends Component {
     if(post.song) {
       return (
         <div className="comment-section">
-          <br />
-          <hr />
           <h6 className="comment-heading">
             {`COMMENTS${commentsLoading ? '' : ' (' + comments.length + ')'}`}
           </h6>
@@ -730,7 +725,7 @@ export default class Content extends Component {
                             <OverlayTrigger
                               overlay={this.commentLikesPopover(comment.likesList)}
                             >
-                              <span>
+                              <span className="like-text">
                                 {` • ${comment.likesList.length} like${comment.likesList.length > 1 ? 's' : ''}`}
                               </span>
                             </OverlayTrigger>
@@ -899,7 +894,7 @@ export default class Content extends Component {
             </Modal>
             { this.renderPostMeta(post) }
             { this.renderPostContent(post) }
-            { this.renderMatchedContentAd(post) }
+            { this.renderInArticleAd(post) }
             { this.renderComments(post) }
             { this.renderStructuredData(post) }
           </div>

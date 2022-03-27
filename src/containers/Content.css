@@ -236,6 +236,10 @@
   opacity: 0.9;
 }
 
+.Content .comment .content-col .comment-actions-row .like-text {
+  cursor: default;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
   .Content .post small span.separator {

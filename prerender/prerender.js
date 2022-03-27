@@ -76,7 +76,7 @@ export async function handler(event, context, callback) {
       await page.goto(targetUrl);
 
       //remove layout breaking ads
-      let elementClassToRemove = ".matchedContent, .ad, .google-auto-placed";
+      let elementClassToRemove = ".ad, .google-auto-placed";
 
       await page.evaluate((sel) => {
         var elements = document.querySelectorAll(sel);
