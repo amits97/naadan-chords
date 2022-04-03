@@ -1,0 +1,83 @@
+.Comments h6.comment-heading {
+  margin-top: 30px;
+}
+
+.Comments .comment {
+  display: flex;
+  position: relative;
+}
+
+.Comments .comment .pic-col {
+  flex: 0 0 50px;
+}
+
+.Comments .comment .pic-col p {
+  font-size: 36px;
+}
+
+.Comments .comment img.author-pic {
+  height: 40px;
+}
+
+.Comments .comment .content-col {
+  flex: 1;
+}
+
+.Comments .comment .content-col textarea {
+  height: 50px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.Comments .comment .content-col textarea.focus {
+  height: 80px;
+}
+
+.Comments .comment .content-col textarea::placeholder {
+  font-size: 18px;
+}
+
+.Comments .comment .content-col button.comment-submit {
+  font-size: 1rem;
+}
+
+.Comments .comment p {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.Comments .comment .delete-comment {
+  font-size: 13px;
+  display: none;
+}
+
+.Comments .comment .delete-comment button {
+  color: inherit;
+  height: 25px;
+}
+
+.Comments .comment.comment-owner:hover .delete-comment,
+.Comments .comment .delete-comment.show {
+  display: block;
+}
+
+.Comments .comment .content-col .comment-actions-row button {
+  padding: 0;
+  color: inherit;
+}
+
+.Comments .comment .content-col .comment-actions-row button .heartFilled {
+  color: #ff9800;
+  opacity: 0.9;
+}
+
+.Comments .comment .content-col .comment-actions-row .like-text {
+  cursor: default;
+}
+
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+  .Comments .comment.comment-owner .delete-comment {
+    display: block;
+  }
+}

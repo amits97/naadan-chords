@@ -138,7 +138,7 @@
   visibility: hidden;
 }
 
-.Content h6.rate-heading, .Content h6.comment-heading {
+.Content h6.rate-heading {
   margin-top: 30px;
 }
 
@@ -161,83 +161,6 @@
 
 .Content .post small .meta-time-container {
   display: inline;
-}
-
-.Content .comment {
-  display: flex;
-  position: relative;
-}
-
-.Content .comment.no-hover:hover {
-  background: initial !important;
-}
-
-.Content .comment .pic-col {
-  flex: 0 0 50px;
-}
-
-.Content .comment .pic-col p {
-  font-size: 36px;
-}
-
-.Content .comment img.author-pic {
-  height: 40px;
-}
-
-.Content .comment .content-col {
-  flex: 1;
-}
-
-.Content .comment .content-col textarea {
-  height: 50px;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.Content .comment .content-col textarea.focus {
-  height: 80px;
-}
-
-.Content .comment .content-col textarea::placeholder {
-  font-size: 18px;
-}
-
-.Content .comment .content-col button.comment-submit {
-  font-size: 1rem;
-}
-
-.Content .comment p {
-  font-size: 16px;
-  margin-bottom: 0;
-}
-
-.Content .comment .delete-comment {
-  font-size: 13px;
-  display: none;
-}
-
-.Content .comment .delete-comment button {
-  color: inherit;
-  height: 25px;
-}
-
-.Content .comment.comment-owner:hover .delete-comment,
-.Content .comment .delete-comment.show {
-  display: block;
-}
-
-.Content .comment .content-col .comment-actions-row button {
-  padding: 0;
-  color: inherit;
-}
-
-.Content .comment .content-col .comment-actions-row button .heartFilled {
-  color: #ff9800;
-  opacity: 0.9;
-}
-
-.Content .comment .content-col .comment-actions-row .like-text {
-  cursor: default;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
@@ -305,9 +228,5 @@
   .Content .sidebarColumn {
     padding: 0;
     margin-left: 0 !important;
-  }
-
-  .Content .comment.comment-owner .delete-comment {
-    display: block;
   }
 }
