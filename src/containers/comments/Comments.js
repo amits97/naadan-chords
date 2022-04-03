@@ -183,8 +183,10 @@ export default class Comments extends Component {
       setPreventRatingSubmitState,
       setShowLoginModalState
     } = this.props;
-    const loggedInUser = preferredUsername ?? username;
-
+    let loggedInUser = "";
+    if (isAuthenticated) {
+      loggedInUser = preferredUsername ?? username;
+    }
     if(post.song) {
       return (
         <div className="Comments">
