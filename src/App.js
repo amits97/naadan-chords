@@ -22,12 +22,14 @@ class App extends Component {
     super(props);
 
     this.searchInput = React.createRef();
+    this.activeSearchIndex = -1;
 
     this.state = {
       navExpanded: false,
       isAuthenticated: false,
       isAuthenticating: true,
       search: "",
+      searchText: "",
       searchLoading: false,
       searchOptions: [],
       isSearchOpen: false,
@@ -294,14 +296,20 @@ class App extends Component {
 
   handleSearchChange = (event) => {
     if (event && event[0]) {
-        let postSlug = slugify(event[0]);
-        this.searchInput.current.clear();
-        this.searchInput.current.blur();
-        this.setState({
-          isSearchOpen: false
-        });
-        this.props.history.push(`/${postSlug}`);
-      }
+      let postSlug = slugify(event[0]);
+      this.searchInput.current.clear();
+      this.searchInput.current.blur();
+      this.setState({
+        isSearchOpen: false
+      });
+      this.props.history.push(`/${postSlug}`);
+    }
+  }
+
+  handleSearchInputChange = (text) => {
+    this.setState({
+      searchText: text
+    });
   }
 
   handleSearchClick = () => {
@@ -355,6 +363,13 @@ class App extends Component {
     }
   }
 
+  updateFromTypeaheadState = (state) => {
+    const { activeIndex } = state;
+    if (this.activeSearchIndex !== activeIndex) {
+      this.activeSearchIndex = activeIndex;
+    }
+  }
+
   render() {
     const { theme } = this.state;
     const childProps = {
@@ -396,7 +411,29 @@ class App extends Component {
                   <FontAwesomeIcon icon={faSearch} />
                 </button>
                 <Form inline className={`search-form ${this.state.search || this.state.isSearchOpen ? 'show-search':''}`} onSubmit={this.handleSearchSubmit}>
-                  <AsyncTypeahead id="search" placeholder="Search" isLoading={this.state.searchLoading} className="search-input mr-sm-2" onChange={this.handleSearchChange} onSearch={this.onSearch} ref={this.searchInput} options={this.state.searchOptions} filterBy={(option) => option} useCache={false} />
+                  <AsyncTypeahead
+                    id="search"
+                    placeholder="Search"
+                    isLoading={this.state.searchLoading}
+                    className="search-input mr-sm-2"
+                    onChange={this.handleSearchChange}
+                    onInputChange={this.handleSearchInputChange}
+                    onSearch={this.onSearch}
+                    ref={this.searchInput}
+                    options={this.state.searchOptions}
+                    filterBy={(option) => option}
+                    useCache={false}
+                    onKeyDown={(e) => {
+                      // Check whether the 'enter' key was pressed, and also make sure that
+                      // no menu items are highlighted.
+                      if (e.keyCode === 13 && this.activeSearchIndex === -1) {
+                        this.setSearch(this.state.searchText);
+                        this.handleSearchClose();
+                      }
+                    }}
+                  >
+                    {(state) => this.updateFromTypeaheadState(state)}
+                  </AsyncTypeahead>
                   { this.state.searchLoading ? null : <FontAwesomeIcon className="clear-search" onClick={this.handleSearchClose} icon={faTimes} /> }
                 </Form>
                 <Navbar.Toggle />
