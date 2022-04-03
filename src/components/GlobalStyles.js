@@ -240,13 +240,6 @@ export const GlobalStyles = createGlobalStyle`
     border-bottom: 2px solid ${({ theme }) => theme.border} !important;
   }
 
-  /* Large devices (desktops, 992px and up) */
-  @media (min-width: 992px) {
-    .App .navbar .navbar-nav .nav-link.active {
-      background: ${({ theme }) => theme.secondary};
-    }
-  }
-
   /* Small devices (landscape phones, less than 768px) */
   @media (max-width: 767.98px) {
     .Content .ad {

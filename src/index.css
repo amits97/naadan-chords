@@ -42,6 +42,7 @@ select.form-control,
 textarea.form-control,
 input.form-control {
   font-size: 16px;
+  padding-top: 0.5rem;
 }
 input[type=file] {
   width: 100%;
