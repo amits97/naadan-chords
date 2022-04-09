@@ -3,6 +3,8 @@ import * as dynamoDbLib from "./libs/dynamodb-lib";
 
 const chromium = require('chrome-aws-lambda');
 const puppeteer = require('puppeteer-core');
+const axios = require('axios').default;
+const { XMLParser } = require('fast-xml-parser');
 
 async function dynamoDbCache(targetUrl) {
   const params = {
@@ -85,9 +87,29 @@ export async function handler(event) {
       headless: chromium.headless
     });
 
+    // Allow only URLs from sitemap
+    let whitelistedURL;
+    try {
+      let sitemapResult = await axios.get(`${HOSTNAME}/sitemap.xml`);
+      const parser = new XMLParser();
+      const jObj = parser.parse(sitemapResult.data);
+      const urlArray = jObj.urlset.url.map(item => item.loc);
+      whitelistedURL = urlArray[urlArray.indexOf(targetUrl)];
+      if (!whitelistedURL) {
+        // Try appending trailing slash
+        whitelistedURL = urlArray[urlArray.indexOf(`${targetUrl}/`)];
+      }
+    } catch(e) {
+      return failure(e);
+    }
+
+    if (!whitelistedURL) {
+      whitelistedURL = `${HOSTNAME}/page/not/found`;
+    }
+
     try {
       let page = await browser.newPage();
-      await page.goto(`${HOSTNAME}${parsedUrl.pathname}`);
+      await page.goto(whitelistedURL);
 
       //remove layout breaking ads
       let elementClassToRemove = ".ad, .google-auto-placed";
@@ -129,7 +151,7 @@ export async function handler(event) {
       await writeDynamoDbCache(targetUrl, result);
       return success(result);
     } catch(e) {
-      return failure(elementFetched);
+      return failure(e);
     }
   } else {
     return failure(ERROR_MESSAGE);
