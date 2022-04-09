@@ -16,7 +16,7 @@
     "aws-amplify": "^4.3.14",
     "axios": "^0.21.4",
     "chord-fingering": "^1.0.2",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "path-browserify": "^1.0.1",
     "react": "^16.14.0",
     "react-autosize-textarea": "^7.1.0",
