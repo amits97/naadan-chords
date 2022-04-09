@@ -48,14 +48,28 @@ function trimUrl(targetUrl) {
   return cleanUrl.replace(/\/$/, "");
 }
 
-export async function handler(event, context, callback) {
+export async function handler(event) {
   const ERROR_MESSAGE = 'No query parameter given!';
+  const INVALID_URL = 'Invalid URL!';
+  const ALLOWED_HOSTNAMES = [
+    'www.naadanchords.com',
+    'naadanchords.com',
+    'www.nadanchords.com',
+    'nadanchords.com',
+  ];
+  const HOSTNAME = 'https://www.naadanchords.com';
 
   if (event.queryStringParameters) {
     const targetUrl = trimUrl(event.queryStringParameters.url);
+    let parsedUrl;
 
     if (!targetUrl) {
       return failure(ERROR_MESSAGE);
+    } else {
+      parsedUrl = new URL(targetUrl);
+      if (!ALLOWED_HOSTNAMES.includes(parsedUrl.hostname)) {
+        return failure(INVALID_URL);
+      }
     }
 
     //Check if cache present in DynamoDB
@@ -73,7 +87,7 @@ export async function handler(event, context, callback) {
 
     try {
       let page = await browser.newPage();
-      await page.goto(targetUrl);
+      await page.goto(`${HOSTNAME}${parsedUrl.pathname}`);
 
       //remove layout breaking ads
       let elementClassToRemove = ".ad, .google-auto-placed";
