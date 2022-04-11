@@ -410,7 +410,7 @@ class App extends Component {
                 <button className={`navbar-toggler search-button ${this.state.navExpanded ? "d-none": ""}`} onClick={this.handleSearchClick}>
                   <FontAwesomeIcon icon={faSearch} />
                 </button>
-                <Form inline className={`search-form ${this.state.search || this.state.isSearchOpen ? 'show-search':''}`} onSubmit={this.handleSearchSubmit}>
+                <Form inline className={`search-form ${this.state.isSearchOpen ? 'show-search':''}`} onSubmit={this.handleSearchSubmit}>
                   <AsyncTypeahead
                     id="search"
                     placeholder="Search"
