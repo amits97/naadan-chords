@@ -1,8 +1,5 @@
-import AWS from "aws-sdk";
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import { success, failure } from "../libs/response-lib";
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 function getTimestamp3WeeksAgo() {
   var ourDate = new Date();
@@ -44,7 +41,7 @@ async function deleteItems(items) {
   }
 }
 
-export async function main(event, context, callback) {
+export async function main() {
   const params = {
     TableName: "NaadanChordsAnalytics",
     FilterExpression: "#timestamp < :timestamp",
@@ -58,10 +55,20 @@ export async function main(event, context, callback) {
 
   try {
     let result = await dynamoDbLib.call("scan", params);
+    let deleteCount = 0;
     let resultArray = result.Items;
-    let deleteCount = resultArray.length;
+    deleteCount += resultArray.length;
     while(resultArray.length) {
       await deleteItems(resultArray.splice(0,25));
+    }
+    while(result.hasOwnProperty("LastEvaluatedKey")) {
+      params.ExclusiveStartKey = result.LastEvaluatedKey;
+      result = await dynamoDbLib.call("scan", params);
+      let resultArray = result.Items;
+      deleteCount += resultArray.length;
+      while(resultArray.length) {
+        await deleteItems(resultArray.splice(0,25));
+      }
     }
     return success({ status: true, message: `Deleted ${deleteCount} items`});
   } catch (e) {

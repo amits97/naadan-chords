@@ -81,26 +81,12 @@ export default class Posts extends Component {
     }
   }
 
-  lessThanOneHourAgo = (date) => {
-    date = parseInt(date);
-    const HOUR = 1000 * 60 * 60;
-    const anHourAgo = Date.now() - HOUR;
-    return date > anHourAgo;
-  }
-
   postVisit(postId) {
-    if(typeof Storage !== "undefined") {
-      let localStorageItem = localStorage.getItem(postId);
-      if(localStorageItem === null || !this.lessThanOneHourAgo(localStorageItem)) {
-        localStorage.setItem(postId, new Date().getTime());
-
-        return API.post("posts", "/analytics/post-visit", {
-          body: {
-            postId: postId
-          }
-        });
+    return API.post("posts", "/analytics/post-visit", {
+      body: {
+        postId: postId
       }
-    }
+    });
   }
 
   setPagination = (postsResult) => {
