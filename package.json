@@ -42,6 +42,9 @@
   "resolutions": {
     "ansi-html": "https://registry.npmjs.org/ansi-html-community/-/ansi-html-community-0.0.8.tgz"
   },
+  "overrides": {
+    "async": "3.2.3"
+  },
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
     "start": "react-app-rewired start",
