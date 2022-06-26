@@ -27,5 +27,8 @@
     "serialize-javascript": "^4.0.0",
     "serverless": "^2.48.0",
     "source-map-support": "^0.5.19"
+  },
+  "overrides": {
+    "simple-git": ">=3.3.0"
   }
 }
