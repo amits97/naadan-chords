@@ -1,29 +1,32 @@
 require("babel-register")({
-  presets: ["es2015", "react"]
+  presets: ["es2015", "react"],
 });
- 
+
+const { generateDelayPromise } = require("../libs/utils");
 const router = require("./sitemap-routes").default;
 const Sitemap = require("react-router-sitemap").default;
 
 const config = require("../config").default;
-const axios = require('axios').default;
+const axios = require("axios").default;
 
 const slugify = require("../libs/utils").slugify;
 
 function prepareLastEvaluatedPostRequest(lastEvaluatedPost) {
-  return encodeURIComponent(JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"));
+  return encodeURIComponent(
+    JSON.stringify(lastEvaluatedPost).replace(/"/g, "'")
+  );
 }
 
 async function loadPosts(exclusiveStartKey) {
   try {
     let queryRequest = "/posts";
-    if(exclusiveStartKey) {
+    if (exclusiveStartKey) {
       queryRequest = `/posts?exclusiveStartKey=${exclusiveStartKey}`;
     }
-  
+
     let postsResult = await axios.get(config.apiGateway.URL + queryRequest);
-    return postsResult.data; 
-  } catch(e) {
+    return postsResult.data;
+  } catch (e) {
     console.log(e);
   }
 }
@@ -31,15 +34,15 @@ async function loadPosts(exclusiveStartKey) {
 async function loadPages(page, category, author) {
   try {
     let queryRequest = `/posts?page=${page}`;
-    if(category) {
+    if (category) {
       queryRequest = `/posts?category=${category}&page=${page}`;
     }
-    if(author) {
+    if (author) {
       queryRequest = `/posts/user-posts?userName=${author}&page=${page}`;
     }
     let pageResult = await axios.get(config.apiGateway.URL + queryRequest);
     return pageResult.data;
-  } catch(e) {
+  } catch (e) {
     console.log(e);
   }
 }
@@ -47,25 +50,51 @@ async function loadPages(page, category, author) {
 async function generatePagination(category) {
   let page = 0;
   let pageMap = [];
-  let pagesResult = await loadPages(page+1, category ? category : null);
-  while(pagesResult.hasOwnProperty("LastEvaluatedKey")) {
-    pageMap.push({ number: page+1 });
-    page++;
-    pagesResult = await loadPages(page, category ? category : null);
-  }
+  let pagesResult;
+  do {
+    pagesResult = await loadPages(page + 1, category ? category : null);
+    if (pagesResult.Items && pagesResult.Items.length > 0) {
+      pageMap.push({ number: page + 1 });
+      page++;
+    } else {
+      if (
+        pagesResult.error &&
+        pagesResult.error.code === "TooManyRequestsException"
+      ) {
+        pagesResult.LastEvaluatedKey = {};
+        // Delay next call by 1 sec to prevent Lambda throttle error.
+        await generateDelayPromise(1000);
+      }
+    }
+  } while (pagesResult.hasOwnProperty("LastEvaluatedKey"));
   return pageMap;
 }
 
 async function generateAuthorPagination(author) {
   let page = 0;
   let pageMap = [];
+  let pagesResult;
 
-  let pagesResult = await loadPages(page+1, null, author);
-  while(pagesResult.hasOwnProperty("LastEvaluatedKey")) {
-    pageMap.push({ userName: author, number: page+1});
-    page++;
-    pagesResult = await loadPages(page, null, author);
-  }
+  do {
+    pagesResult = await loadPages(page + 1, null, author);
+    if (pagesResult.Items && pagesResult.Items.length > 0) {
+      if (page === 0 && !pagesResult.hasOwnProperty("LastEvaluatedKey")) {
+        // Add author pagination only if minimum 2 pages are present
+        break;
+      }
+      pageMap.push({ userName: author, number: page + 1 });
+      page++;
+    } else {
+      if (
+        pagesResult.error &&
+        pagesResult.error.code === "TooManyRequestsException"
+      ) {
+        pagesResult.LastEvaluatedKey = {};
+        // Delay next call by 1 sec to prevent Lambda throttle error.
+        await generateDelayPromise(1000);
+      }
+    }
+  } while (pagesResult.hasOwnProperty("LastEvaluatedKey"));
   return pageMap;
 }
 
@@ -76,22 +105,24 @@ async function generateSitemap() {
   let authorList = {};
   let albumList = {};
 
-  while(true) {
-    for(var i = 0; i < postsResult.Items.length; i++) {
+  while (true) {
+    for (var i = 0; i < postsResult.Items.length; i++) {
       idMap.push({ id: postsResult.Items[i].postId });
 
-      if(!authorList.hasOwnProperty(postsResult.Items[i].userName)) {
+      if (!authorList.hasOwnProperty(postsResult.Items[i].userName)) {
         authorList[postsResult.Items[i].userName] = 1;
       }
 
-      if(!albumList.hasOwnProperty(postsResult.Items[i].album)) {
+      if (!albumList.hasOwnProperty(postsResult.Items[i].album)) {
         albumList[postsResult.Items[i].album] = 1;
       }
     }
 
-    if(!postsResult.hasOwnProperty("LastEvaluatedKey")) break;
+    if (!postsResult.hasOwnProperty("LastEvaluatedKey")) break;
 
-    postsResult = await loadPosts(prepareLastEvaluatedPostRequest(postsResult.LastEvaluatedKey));
+    postsResult = await loadPosts(
+      prepareLastEvaluatedPostRequest(postsResult.LastEvaluatedKey)
+    );
   }
 
   //posts pages
@@ -101,8 +132,8 @@ async function generateSitemap() {
   let authorMap = [];
   let authorPageMap = [];
   //author pages
-  for(let author in authorList) {
-    if(authorList.hasOwnProperty(author)) {
+  for (let author in authorList) {
+    if (authorList.hasOwnProperty(author)) {
       authorMap.push({ userName: author });
       let authorPaginationResult = await generateAuthorPagination(author);
       authorPageMap.push(...authorPaginationResult);
@@ -110,8 +141,8 @@ async function generateSitemap() {
   }
 
   let albumMap = [];
-  for(let album in albumList) {
-    if(albumList.hasOwnProperty(album)) {
+  for (let album in albumList) {
+    if (albumList.hasOwnProperty(album)) {
       albumMap.push({ album: slugify(album) });
     }
   }
@@ -122,15 +153,13 @@ async function generateSitemap() {
     "/category/malayalam/page/:number": malayalamPageMap,
     "/album/:album": albumMap,
     "/author/:userName": authorMap,
-    "/author/:userName/page/:number": authorPageMap
+    "/author/:userName/page/:number": authorPageMap,
   };
 
-  return (
-    new Sitemap(router)
-        .applyParams(paramsConfig)
-        .build("https://www.naadanchords.com")
-        .save("./public/sitemap.xml")
-  );
+  return new Sitemap(router)
+    .applyParams(paramsConfig)
+    .build("https://www.naadanchords.com")
+    .save("./public/sitemap.xml");
 }
 
 generateSitemap();

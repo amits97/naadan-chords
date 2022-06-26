@@ -3,18 +3,24 @@
  **/
 
 export function slugify(text) {
-  if(text) {
-    return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // Replace spaces with -
-    .replace(/[^\w-]+/g, '')       // Remove all non-word chars
-    .replace(/--+/g, '-')         // Replace multiple - with single -
-    .replace(/^-+/, '')             // Trim - from start of text
-    .replace(/-+$/, '');            // Trim - from end of text
+  if (text) {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/[^\w-]+/g, "") // Remove all non-word chars
+      .replace(/--+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start of text
+      .replace(/-+$/, ""); // Trim - from end of text
   }
 }
 
 export function capitalizeFirstLetter(string) {
-  return string.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+  return string
+    .toLowerCase()
+    .split(" ")
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(" ");
 }
 
 export function querystring(name, url = window.location.href) {
@@ -34,14 +40,14 @@ export function querystring(name, url = window.location.href) {
 }
 
 export function safeStringNullOrEmpty(string, prefix) {
-  if(string === null || string === "") {
+  if (string === null || string === "") {
     return "";
   } else {
     return prefix ? ` ${prefix} ` + string : string;
   }
 }
 
-export function base64toBlob(b64Data, contentType='', sliceSize=512) {
+export function base64toBlob(b64Data, contentType = "", sliceSize = 512) {
   const byteCharacters = atob(b64Data);
   const byteArrays = [];
 
@@ -57,13 +63,19 @@ export function base64toBlob(b64Data, contentType='', sliceSize=512) {
     byteArrays.push(byteArray);
   }
 
-  const blob = new Blob(byteArrays, {type: contentType});
+  const blob = new Blob(byteArrays, { type: contentType });
   return blob;
 }
 
 export function parseLinksToHtml(content) {
   const urlRegex = /^[^"]?(https?:\/\/[^\s]+)/gim;
   return content.replace(urlRegex, (match, p1) => {
-    return (`<a href="${p1}" target="_blank">${p1}</a>`);
+    return `<a href="${p1}" target="_blank">${p1}</a>`;
+  });
+}
+
+export function generateDelayPromise(timeout, callback) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve.bind(null, callback), timeout);
   });
 }
