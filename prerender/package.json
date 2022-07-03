@@ -13,7 +13,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "jest": "^26.6.3",
     "serverless-domain-manager": "^4.2.3",
-    "serverless-webpack": "^5.5.3",
+    "serverless-webpack": "^5.7.1",
     "webpack": "^4.46.0",
     "webpack-node-externals": "^2.5.2"
   },
@@ -25,7 +25,7 @@
     "fast-xml-parser": "^4.0.7",
     "puppeteer-core": "^5.5.0",
     "serialize-javascript": "^4.0.0",
-    "serverless": "^2.48.0",
+    "serverless": "^3.19.0",
     "source-map-support": "^0.5.19"
   },
   "overrides": {
