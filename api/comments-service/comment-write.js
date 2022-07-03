@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
@@ -10,14 +10,14 @@ async function fetchPostDetails(postId) {
   const params = {
     TableName: "NaadanChords",
     Key: {
-      postId: postId
-    }
+      postId: postId,
+    },
   };
 
   try {
     let postResult = await dynamoDbLib.call("get", params);
     item = postResult.Item;
-  } catch(e) {
+  } catch (e) {
     //do nothing
   }
 
@@ -43,13 +43,13 @@ export async function main(event) {
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
-  const sub = provider.split(':')[2];
+  const sub = provider.split(":")[2];
   const commentId = data.commentId ?? uuidv4();
   const createdAt = data.createdAt ?? Date.now();
 
   // Basic validation
   const content = data.content;
-  if(!content) {
+  if (!content) {
     return failure({ status: false, message: "Invalid comment" });
   }
 
@@ -61,20 +61,44 @@ export async function main(event) {
       postId: data.postId,
       content,
       createdAt,
-      modifiedAt: Date.now()
-    }
+      modifiedAt: Date.now(),
+    },
   };
 
-  try {
-    await dynamoDbLib.call("put", params);
-    if (!data.commentId) {
+  if (data.commentId) {
+    try {
+      let existingCommentResult = await dynamoDbLib.call("get", {
+        TableName: "NaadanChordsComments",
+        Key: {
+          commentId: data.commentId,
+          userId: sub,
+        },
+      });
+
+      if (existingCommentResult.Item.userId === sub) {
+        // Comment exists, update
+        await dynamoDbLib.call("update", {
+          ...params,
+          Key: {
+            commentId: data.commentId,
+            userId: existingCommentResult.Item.userId,
+          },
+          UpdateExpression: "SET content = :content",
+          ExpressionAttributeValues: {
+            ":content": content,
+          },
+        });
+      } else {
+        return failure({ status: "Not authorized" });
+      }
+    } catch (e) {
+      return failure({ status: false, error: e });
+    }
+  } else {
+    try {
+      await dynamoDbLib.call("put", params);
       // Send email to author only if new comment
       await sendEmailToAuthor(data.postId, data.content);
-    }
-  } catch (e) {
-    try {
-      // Comment exists, update
-      await dynamoDbLib.call("update", params);
     } catch (e) {
       return failure({ status: false });
     }
@@ -84,8 +108,9 @@ export async function main(event) {
   // Get full attributes of author
   let authorAttributes = await userNameLib.getAuthorAttributes(sub);
   response.authorName = authorAttributes.authorName;
-  response.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
+  response.userName =
+    authorAttributes.preferredUsername ?? authorAttributes.userName;
   response.authorPicture = authorAttributes.picture;
-  delete(response.userId);
+  delete response.userId;
   return success(response);
 }
