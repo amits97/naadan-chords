@@ -1,3 +1,9 @@
+.Content .spacer {
+  display: block;
+  content: " ";
+  margin-top: 3rem;
+}
+
 .Content a.load-more:hover {
   text-decoration: none;
 }
@@ -199,7 +205,8 @@
     margin-left: 3px;
   }
 
-  .Content .header-meta-container .header-picture, .Content .header-meta-container .user-icon {
+  .Content .header-meta-container .header-picture,
+  .Content .header-meta-container .user-icon {
     float: none;
   }
 

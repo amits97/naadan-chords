@@ -435,6 +435,7 @@ class App extends Component {
       emailVerified: this.state.emailVerified,
       userTheme: this.state.userTheme,
       theme: theme === "light" ? lightTheme : darkTheme,
+      isLocalhost: window.location.hostname === "localhost",
     };
 
     return (
