@@ -1,9 +1,21 @@
 import React, { Component, Fragment } from "react";
 import Moment from "react-moment";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import { Button, Container, Dropdown, DropdownButton, Form, OverlayTrigger, Popover, Row } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Dropdown,
+  DropdownButton,
+  Form,
+  OverlayTrigger,
+  Popover,
+  Row,
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle, faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUserCircle,
+  faHeart as faHeartFilled,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import TextareaAutosize from "react-autosize-textarea/lib";
 import { API } from "aws-amplify";
@@ -14,12 +26,14 @@ import "./Comments.css";
 export default class Comments extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       commentsLoading: true,
       comments: [],
+      commentBeingEdited: {},
       isCommentFormInFocus: false,
       comment: null,
-      addingComment: false
+      addingComment: false,
     };
   }
 
@@ -28,52 +42,76 @@ export default class Comments extends Component {
     if (post.postId) {
       if (!hideLoad) {
         this.setState({
-          commentsLoading: true
+          commentsLoading: true,
         });
       }
       try {
-        const comments = await API.get("posts", `/comments?postId=${post.postId}`);
+        const comments = await API.get(
+          "posts",
+          `/comments?postId=${post.postId}`
+        );
         this.setState({
           comments: comments.Items,
-          commentsLoading: false
+          commentsLoading: false,
         });
-      } catch(e) {
+      } catch (e) {
         console.log(e);
         this.setState({
-          commentsLoading: false
+          commentsLoading: false,
         });
       }
     }
-  }
+  };
 
   componentDidMount = () => {
     this.getComments();
-  }
+  };
 
   componentDidUpdate = (prevProps) => {
-    if (!Array.isArray(this.props.posts) && (this.props.posts.postId !== prevProps.posts.postId)) {
+    if (
+      !Array.isArray(this.props.posts) &&
+      this.props.posts.postId !== prevProps.posts.postId
+    ) {
       this.getComments();
     }
-  }
+  };
 
-  handleCommentChange = event => {
+  handleEditCommentClick = (comment) => {
     this.setState({
-      [event.target.id]: event.target.value
+      commentBeingEdited: comment,
+      isCommentFormInFocus: false,
     });
-  }
+  };
 
-  deleteComment = async(commentId) => {
-    if(window.confirm('Are you sure you want to delete this comment?')) {
+  handleCommentChange = (event) => {
+    this.setState({
+      [event.target.id]: event.target.value,
+    });
+  };
+
+  handleCommentBeingEditedChange = (event) => {
+    const { commentBeingEdited } = this.state;
+
+    this.setState({
+      commentBeingEdited: {
+        ...commentBeingEdited,
+        content: event.target.value,
+      },
+    });
+  };
+
+  deleteComment = async (commentId) => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
       let { comments } = this.state;
       await API.del("posts", `/comments/${commentId}`);
-      comments = comments.filter(comment => {
-        return comment.commentId !== commentId
+      comments = comments.filter((comment) => {
+        return comment.commentId !== commentId;
       });
       this.setState({
-        comments
+        comments,
       });
     }
-  }
+  };
 
   onCommentLike = async (
     comment,
@@ -86,83 +124,99 @@ export default class Comments extends Component {
     if (this.props.isAuthenticated) {
       // Instant UI update magic
       if (commentLiked) {
-        comment.likesList = comment.likesList.filter(like => like.userName !== loggedInUser);
+        comment.likesList = comment.likesList.filter(
+          (like) => like.userName !== loggedInUser
+        );
       } else {
         comment.likesList = comment.likesList || [];
         comment.likesList.push({
           userName: loggedInUser,
-          authorName: name
+          authorName: name,
         });
       }
       comments[index] = comment;
       this.setState({
-        comments
+        comments,
       });
 
       try {
         await API.post("posts", "/comments/like", {
           body: {
-            commentId: comment.commentId
-          }
+            commentId: comment.commentId,
+          },
         });
         this.getComments(true);
-      } catch(e) {
+      } catch (e) {
         console.log(e);
       }
     } else {
-      const {
-        setShowLoginModalState,
-        setPreventRatingSubmitState
-      } = this.props;
+      const { setShowLoginModalState, setPreventRatingSubmitState } =
+        this.props;
       setShowLoginModalState(true);
       setPreventRatingSubmitState(true);
     }
-  }
+  };
 
   onCommentSubmit = async (e) => {
     e.preventDefault();
-    const { comment, comments } = this.state;
+    let { comment, comments, commentBeingEdited } = this.state;
     const post = this.props.posts;
 
     this.setState({
-      addingComment: true
+      addingComment: true,
     });
 
     try {
       const response = await API.post("posts", "/comments", {
         body: {
           postId: post.postId,
-          content: comment
-        }
+          content: commentBeingEdited.commentId
+            ? commentBeingEdited.content
+            : comment,
+          commentId: commentBeingEdited.commentId,
+        },
       });
-      comments.unshift(response);
+
+      if (commentBeingEdited.commentId) {
+        comments = comments.map((comment) => {
+          if (comment.commentId === commentBeingEdited.commentId) {
+            return commentBeingEdited;
+          }
+          return comment;
+        });
+      } else {
+        comments.unshift(response);
+      }
+
       this.setState({
         comment: null,
         isCommentFormInFocus: false,
-        comments: comments
+        comments: comments,
+        commentBeingEdited: {},
       });
-    } catch(e) {
+    } catch (e) {
       console.log(e);
     } finally {
       this.setState({
-        addingComment: false
+        addingComment: false,
       });
     }
-  }
+  };
 
   commentLikesPopover = (likesList = []) => {
     return (
       <Popover id="popover-basic" className="p-2">
-        {likesList.map(like => {
+        {likesList.map((like) => {
           return (
             <Fragment key={like.userName}>
-              {like.authorName}<br />
+              {like.authorName}
+              <br />
             </Fragment>
           );
         })}
       </Popover>
     );
-  }
+  };
 
   render() {
     const {
@@ -170,7 +224,8 @@ export default class Comments extends Component {
       comments,
       isCommentFormInFocus,
       comment,
-      addingComment
+      addingComment,
+      commentBeingEdited,
     } = this.state;
     const {
       isAuthenticated,
@@ -181,31 +236,39 @@ export default class Comments extends Component {
       theme,
       post,
       setPreventRatingSubmitState,
-      setShowLoginModalState
+      setShowLoginModalState,
     } = this.props;
     let loggedInUser = "";
+
     if (isAuthenticated) {
       loggedInUser = preferredUsername ?? username;
     }
-    if(post.song) {
+
+    if (post.song) {
       return (
         <div className="Comments">
           <h6 className="comment-heading">
-            {`COMMENTS${commentsLoading ? '' : ' (' + comments.length + ')'}`}
+            {`COMMENTS${commentsLoading ? "" : " (" + comments.length + ")"}`}
           </h6>
-          { commentsLoading ? (
-            <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+          {commentsLoading ? (
+            <SkeletonTheme
+              color={theme.backgroundHighlight}
+              highlightColor={theme.body}
+            >
               <Skeleton count={5} />
             </SkeletonTheme>
           ) : (
             <Container>
               <Row className="comment no-hover px-2 py-2">
                 <div className="pic-col">
-                  {(isAuthenticated && picture) ? (
+                  {isAuthenticated && picture ? (
                     <img className="author-pic" alt={name} src={picture} />
                   ) : (
                     <p className="text-muted">
-                      <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faUserCircle} />
+                      <FontAwesomeIcon
+                        className="user-icon ml-1 mr-1"
+                        icon={faUserCircle}
+                      />
                     </p>
                   )}
                 </div>
@@ -220,14 +283,17 @@ export default class Comments extends Component {
                     onFocus={() => {
                       if (isAuthenticated) {
                         this.setState({
-                          isCommentFormInFocus: true
+                          isCommentFormInFocus: true,
+                          commentBeingEdited: {},
                         });
                       }
                     }}
                     onSubmit={this.onCommentSubmit}
                   >
                     <TextareaAutosize
-                      className={`form-control ${isCommentFormInFocus ? 'focus' : ''}`}
+                      className={`form-control ${
+                        isCommentFormInFocus ? "focus" : ""
+                      }`}
                       placeholder="Join the discussion..."
                       id="comment"
                       onChange={this.handleCommentChange}
@@ -241,7 +307,7 @@ export default class Comments extends Component {
                           onClick={(e) => {
                             e.preventDefault();
                             this.setState({
-                              isCommentFormInFocus: false
+                              isCommentFormInFocus: false,
                             });
                           }}
                         >
@@ -263,34 +329,57 @@ export default class Comments extends Component {
                 </div>
               </Row>
               {comments.map((comment, index) => {
-                const commentLiked = comment.likesList && comment.likesList.some(like => {
-                  return like && like.userName === loggedInUser;
-                });
- 
+                const commentLiked =
+                  comment.likesList &&
+                  comment.likesList.some((like) => {
+                    return like && like.userName === loggedInUser;
+                  });
+
                 return (
                   <Row
                     key={index}
-                    className={`comment px-2 py-2 ${(isAuthenticated && comment.userName === loggedInUser) ? "comment-owner" : ""}`}
+                    className={`comment px-2 py-2 ${
+                      isAuthenticated && comment.userName === loggedInUser
+                        ? "comment-owner"
+                        : ""
+                    }`}
                   >
                     <div className="pic-col">
                       {comment.authorPicture ? (
-                        <img className="author-pic" alt={`Commented by ${comment.authorName}`} src={comment.authorPicture} />
+                        <img
+                          className="author-pic"
+                          alt={`Commented by ${comment.authorName}`}
+                          src={comment.authorPicture}
+                        />
                       ) : (
                         <p className="text-muted">
-                          <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faUserCircle} />
+                          <FontAwesomeIcon
+                            className="user-icon ml-1 mr-1"
+                            icon={faUserCircle}
+                          />
                         </p>
                       )}
                     </div>
                     <div className="content-col">
                       <div className="author-meta-row text-muted">
                         <b>{`${comment.authorName}`} </b>
-                        <small>• <Moment fromNow>{comment.createdAt}</Moment></small>
+                        <small>
+                          • <Moment fromNow>{comment.createdAt}</Moment>
+                        </small>
                         <DropdownButton
                           variant="link"
                           title=""
                           className="float-right delete-comment"
                           alignRight
                         >
+                          <Dropdown.Item
+                            href="#"
+                            onClick={() => {
+                              this.handleEditCommentClick(comment);
+                            }}
+                          >
+                            Edit
+                          </Dropdown.Item>
                           <Dropdown.Item
                             href="#"
                             onClick={() => {
@@ -301,13 +390,29 @@ export default class Comments extends Component {
                           </Dropdown.Item>
                         </DropdownButton>
                       </div>
-                      <p dangerouslySetInnerHTML={{__html: parseLinksToHtml(comment.content)}}></p>
+                      {commentBeingEdited.commentId === comment.commentId ? (
+                        <TextareaAutosize
+                          className="form-control"
+                          onChange={this.handleCommentBeingEditedChange}
+                          value={
+                            commentBeingEdited.content
+                              ? commentBeingEdited.content
+                              : ""
+                          }
+                        />
+                      ) : (
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: parseLinksToHtml(comment.content),
+                          }}
+                        ></p>
+                      )}
                       <div className="comment-actions-row">
                         <small>
                           <Button
                             size="sm"
                             variant="link"
-                            className="text-decoration-none"
+                            className="comment-like-btn"
                             onClick={() => {
                               this.onCommentLike(
                                 comment,
@@ -320,21 +425,66 @@ export default class Comments extends Component {
                             }}
                           >
                             {commentLiked ? (
-                              <FontAwesomeIcon className="heartFilled user-icon ml-1 mr-1" icon={faHeartFilled} title="Unlike comment" />
-                            ): (
-                              <FontAwesomeIcon className="user-icon ml-1 mr-1" icon={faHeart} title="Like comment" />
+                              <FontAwesomeIcon
+                                className="heartFilled user-icon ml-1 mr-1"
+                                icon={faHeartFilled}
+                                title="Unlike comment"
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                className="user-icon ml-1 mr-1"
+                                icon={faHeart}
+                                title="Like comment"
+                              />
                             )}
                           </Button>
-                          { comment.likesList && comment.likesList.length > 0 ? (
+                          {comment.likesList && comment.likesList.length > 0 ? (
                             <OverlayTrigger
-                              overlay={this.commentLikesPopover(comment.likesList)}
+                              overlay={this.commentLikesPopover(
+                                comment.likesList
+                              )}
                             >
                               <span className="like-text">
-                                {` • ${comment.likesList.length} like${comment.likesList.length > 1 ? 's' : ''}`}
+                                {` • ${comment.likesList.length} like${
+                                  comment.likesList.length > 1 ? "s" : ""
+                                }`}
                               </span>
                             </OverlayTrigger>
-                          ): null}
+                          ) : null}
                         </small>
+                        {commentBeingEdited.commentId === comment.commentId && (
+                          <div className="float-right">
+                            <a
+                              href="#/"
+                              className="text-primary pt-1 mr-3"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                this.setState({
+                                  commentBeingEdited: {},
+                                });
+                              }}
+                            >
+                              Cancel
+                            </a>
+                            <LoaderButton
+                              variant="primary"
+                              className="comment-submit"
+                              type="submit"
+                              size="sm"
+                              isLoading={addingComment}
+                              text="Update"
+                              loadingText="Updating…"
+                              onClick={this.onCommentSubmit}
+                              disabled={
+                                !(
+                                  commentBeingEdited.content &&
+                                  commentBeingEdited.content.length > 0 &&
+                                  commentBeingEdited.content !== comment.content
+                                )
+                              }
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </Row>
