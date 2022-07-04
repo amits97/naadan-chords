@@ -54,7 +54,8 @@ export default class Content extends Component {
     if (!this.props.isLocalhost) {
       if (
         document.querySelectorAll("div.inArticle").length > 0 &&
-        !this.inArticleAdInitialized
+        !this.inArticleAdInitialized &&
+        !config.noAds.includes(this.props.match.params.id)
       ) {
         this.inArticleAdInitialized = true;
         try {
@@ -791,9 +792,9 @@ export default class Content extends Component {
 
   renderTopAd = () => {
     if (
-      (this.state.posts &&
-        !Array.isArray(this.state.posts) &&
-        config.noAds.includes(this.state.posts.postId)) ||
+      (this.props.posts &&
+        !Array.isArray(this.props.posts) &&
+        config.noAds.includes(this.props.posts.postId)) ||
       this.props.isLocalhost
     ) {
       return <br className="spacer" />;

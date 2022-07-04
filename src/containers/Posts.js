@@ -5,6 +5,7 @@ import ReactGA from "react-ga";
 import * as urlLib from "../libs/url-lib";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Content from "./Content";
+import config from "../config";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -261,7 +262,10 @@ export default class Posts extends Component {
   };
 
   async componentDidMount() {
-    if (!this.props.isLocalhost) {
+    if (
+      !this.props.isLocalhost &&
+      !config.noAds.includes(this.props.match.params.id)
+    ) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       } catch (e) {
@@ -436,7 +440,11 @@ export default class Posts extends Component {
       }
     }
 
-    if (prevState.adKey !== this.state.adKey && !this.props.isLocalhost) {
+    if (
+      prevState.adKey !== this.state.adKey &&
+      !this.props.isLocalhost &&
+      !config.noAds.includes(this.props.match.params.id)
+    ) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       } catch (e) {

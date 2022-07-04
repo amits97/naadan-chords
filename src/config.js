@@ -25,4 +25,8 @@ const config = {
   noAds: ["innum-konjam-neram-maryan"],
 };
 
+if (typeof window !== "undefined") {
+  window.noAds = config.noAds;
+}
+
 export default config;

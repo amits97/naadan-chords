@@ -79,7 +79,12 @@
       src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
     ></script>
     <script>
-      if (window.location.hostname !== "localhost") {
+      if (
+        window.location.hostname !== "localhost" &&
+        !(window.noAds || []).includes(
+          window.location.pathname.replace(/\//, "")
+        )
+      ) {
         (adsbygoogle = window.adsbygoogle || []).push({
           google_ad_client: "ca-pub-1783579460797635",
           enable_page_level_ads: true,

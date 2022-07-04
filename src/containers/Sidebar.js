@@ -32,7 +32,10 @@ export default class Sidebar extends Component {
   }
 
   async componentDidMount() {
-    if (!this.props.isLocalhost) {
+    if (
+      !this.props.isLocalhost &&
+      !config.noAds.includes(this.props.posts.postId)
+    ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
@@ -172,7 +175,11 @@ export default class Sidebar extends Component {
       }
     }
 
-    if (this.state.adKey !== prevState.adKey && !this.props.isLocalhost) {
+    if (
+      this.state.adKey !== prevState.adKey &&
+      !this.props.isLocalhost &&
+      !config.noAds.includes(this.props.posts.postId)
+    ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
