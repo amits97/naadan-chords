@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUserCircle,
   faHeart as faHeartFilled,
+  faReply,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import TextareaAutosize from "react-autosize-textarea/lib";
@@ -31,9 +32,12 @@ export default class Comments extends Component {
       commentsLoading: true,
       comments: [],
       commentBeingEdited: {},
+      commentBeingReplied: {},
       isCommentFormInFocus: false,
       comment: null,
       addingComment: false,
+      replyComment: null,
+      addingReplyComment: false,
     };
   }
 
@@ -83,6 +87,22 @@ export default class Comments extends Component {
     });
   };
 
+  handleReplyClick = (comment) => {
+    const { commentBeingReplied } = this.state;
+
+    if (commentBeingReplied.commentId === comment.commentId) {
+      this.setState({ commentBeingReplied: {} });
+    } else {
+      this.setState({
+        commentBeingReplied: comment,
+      });
+    }
+
+    this.setState({
+      replyComment: "",
+    });
+  };
+
   handleCommentChange = (event) => {
     this.setState({
       [event.target.id]: event.target.value,
@@ -100,28 +120,35 @@ export default class Comments extends Component {
     });
   };
 
+  filterDeletedComment = (comments, deletedCommentId) => {
+    let filteredComments = [];
+    filteredComments = comments.filter((comment, index) => {
+      if (comment.repliesList) {
+        comments[index].repliesList = this.filterDeletedComment(
+          comment.repliesList,
+          deletedCommentId
+        );
+      }
+      return comment.commentId !== deletedCommentId;
+    });
+    return filteredComments;
+  };
+
   deleteComment = async (commentId) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
       let { comments } = this.state;
       await API.del("posts", `/comments/${commentId}`);
-      comments = comments.filter((comment) => {
-        return comment.commentId !== commentId;
-      });
+      comments = this.filterDeletedComment(comments, commentId);
       this.setState({
         comments,
       });
     }
   };
 
-  onCommentLike = async (
-    comment,
-    comments,
-    index,
-    commentLiked,
-    loggedInUser,
-    name
-  ) => {
+  onCommentLike = async (comment, commentLiked, loggedInUser, name) => {
     if (this.props.isAuthenticated) {
+      const { comments } = this.state;
+
       // Instant UI update magic
       if (commentLiked) {
         comment.likesList = comment.likesList.filter(
@@ -134,9 +161,8 @@ export default class Comments extends Component {
           authorName: name,
         });
       }
-      comments[index] = comment;
       this.setState({
-        comments,
+        comments: this.updateEditedComment(comments, comment),
       });
 
       try {
@@ -155,6 +181,77 @@ export default class Comments extends Component {
       setShowLoginModalState(true);
       setPreventRatingSubmitState(true);
     }
+  };
+
+  addRepliedComment = (comments, commentBeingReplied, newComment) => {
+    let updatedComments;
+    updatedComments = comments.map((comment, index) => {
+      if (comment.commentId === commentBeingReplied.commentId) {
+        comments[index].repliesList = comments[index].repliesList || [];
+        comments[index].repliesList.push(newComment);
+      } else if (comment.repliesList) {
+        comments[index].repliesList = this.addRepliedComment(
+          comments[index].repliesList,
+          commentBeingReplied,
+          newComment
+        );
+      }
+      return comment;
+    });
+    return updatedComments;
+  };
+
+  onCommentReplySubmit = async (e) => {
+    e.preventDefault();
+    const { replyComment, commentBeingReplied } = this.state;
+    let { comments } = this.state;
+
+    this.setState({
+      addingReplyComment: true,
+    });
+
+    try {
+      const response = await API.post("posts", "/comments", {
+        body: {
+          content: replyComment,
+          parentCommentId: commentBeingReplied.commentId,
+        },
+      });
+
+      let updatedComments = this.addRepliedComment(
+        comments,
+        commentBeingReplied,
+        response
+      );
+
+      this.setState({
+        comments: updatedComments,
+        replyComment: null,
+        commentBeingReplied: {},
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      this.setState({
+        addingReplyComment: false,
+      });
+    }
+  };
+
+  updateEditedComment = (comments, commentBeingEdited) => {
+    let updatedComments;
+    updatedComments = comments.map((comment, index) => {
+      if (comment.commentId === commentBeingEdited.commentId) {
+        return commentBeingEdited;
+      } else if (comment.repliesList) {
+        comments[index].repliesList = this.updateEditedComment(
+          comments[index].repliesList,
+          commentBeingEdited
+        );
+      }
+      return comment;
+    });
+    return updatedComments;
   };
 
   onCommentSubmit = async (e) => {
@@ -178,12 +275,7 @@ export default class Comments extends Component {
       });
 
       if (commentBeingEdited.commentId) {
-        comments = comments.map((comment) => {
-          if (comment.commentId === commentBeingEdited.commentId) {
-            return commentBeingEdited;
-          }
-          return comment;
-        });
+        comments = this.updateEditedComment(comments, commentBeingEdited);
       } else {
         comments.unshift(response);
       }
@@ -218,6 +310,318 @@ export default class Comments extends Component {
     );
   };
 
+  userPicColFragment = ({ picture, name, renderBlankSpace = false }) => {
+    if (renderBlankSpace) {
+      return <div className="pic-col"></div>;
+    }
+
+    return (
+      <div className="pic-col">
+        {picture ? (
+          <img className="author-pic" alt={name} src={picture} />
+        ) : (
+          <p className="text-muted">
+            <FontAwesomeIcon
+              className="user-icon ml-1 mr-1"
+              icon={faUserCircle}
+            />
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  commentContentColFragment = ({
+    formOnClick,
+    formOnFocus,
+    formOnSubmit,
+    placeholder = "",
+    id = "",
+    onCommentChange,
+    commentValue = "",
+    textAreaAdditionalClass = "",
+    shouldShowActions = true,
+    onCancel,
+    isAddingComment = false,
+  }) => {
+    return (
+      <div className="content-col">
+        <Form
+          onClick={formOnClick}
+          onFocus={formOnFocus}
+          onSubmit={formOnSubmit}
+        >
+          <TextareaAutosize
+            className={`form-control ${textAreaAdditionalClass}`}
+            placeholder={placeholder}
+            id={id}
+            onChange={onCommentChange}
+            value={commentValue || ""}
+          />
+          {shouldShowActions && (
+            <div className="mb-2 text-right">
+              <a
+                href="#/"
+                className="text-primary pt-1 mr-3"
+                onClick={onCancel}
+              >
+                Cancel
+              </a>
+              <LoaderButton
+                variant="primary"
+                className="comment-submit"
+                type="submit"
+                size="sm"
+                isLoading={isAddingComment}
+                text="Comment"
+                loadingText="Submitting…"
+                disabled={!(commentValue && commentValue.length > 0)}
+              />
+            </div>
+          )}
+        </Form>
+      </div>
+    );
+  };
+
+  renderComments = (comments) => {
+    const {
+      replyComment,
+      addingReplyComment,
+      commentBeingEdited,
+      commentBeingReplied,
+      addingComment,
+    } = this.state;
+    const {
+      preferredUsername,
+      username,
+      isAuthenticated,
+      name,
+      picture,
+      setShowLoginModalState,
+      setPreventRatingSubmitState,
+    } = this.props;
+
+    let loggedInUser = "";
+
+    if (isAuthenticated) {
+      loggedInUser = preferredUsername ?? username;
+    }
+
+    return comments.map((comment, index) => {
+      const commentLiked =
+        comment.likesList &&
+        comment.likesList.some((like) => {
+          return like && like.userName === loggedInUser;
+        });
+
+      return (
+        <React.Fragment key={index}>
+          <Row
+            className={`comment ${
+              isAuthenticated && comment.userName === loggedInUser
+                ? "comment-owner"
+                : ""
+            }`}
+          >
+            {this.userPicColFragment({
+              picture: comment.authorPicture,
+              name: comment.authorName,
+            })}
+            <div className="content-col">
+              <div className="author-meta-row text-muted">
+                <b>{`${comment.authorName}`} </b>
+                <small>
+                  • <Moment fromNow>{comment.createdAt}</Moment>
+                </small>
+                {isAuthenticated && comment.userName === loggedInUser && (
+                  <DropdownButton
+                    variant="link"
+                    title=""
+                    className="float-right delete-comment"
+                    alignRight
+                  >
+                    <Dropdown.Item
+                      href="#"
+                      onClick={() => {
+                        this.handleEditCommentClick(comment);
+                      }}
+                    >
+                      Edit
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href="#"
+                      onClick={() => {
+                        this.deleteComment(comment.commentId);
+                      }}
+                    >
+                      Delete
+                    </Dropdown.Item>
+                  </DropdownButton>
+                )}
+              </div>
+              {commentBeingEdited.commentId === comment.commentId ? (
+                <TextareaAutosize
+                  className="form-control"
+                  onChange={this.handleCommentBeingEditedChange}
+                  value={
+                    commentBeingEdited.content ? commentBeingEdited.content : ""
+                  }
+                />
+              ) : (
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: parseLinksToHtml(comment.content),
+                  }}
+                ></p>
+              )}
+              <div className="comment-actions-row">
+                <small>
+                  <Button
+                    size="sm"
+                    variant="link"
+                    className="comment-action-btn"
+                    onClick={() => {
+                      this.onCommentLike(
+                        comment,
+                        commentLiked,
+                        loggedInUser,
+                        name
+                      );
+                    }}
+                  >
+                    {commentLiked ? (
+                      <FontAwesomeIcon
+                        className="heartFilled user-icon ml-1 mr-1"
+                        icon={faHeartFilled}
+                        title="Unlike comment"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        className="user-icon ml-1 mr-1"
+                        icon={faHeart}
+                        title="Like comment"
+                      />
+                    )}
+                  </Button>
+                  {comment.likesList && comment.likesList.length > 0 ? (
+                    <>
+                      {` • `}
+                      <OverlayTrigger
+                        overlay={this.commentLikesPopover(comment.likesList)}
+                      >
+                        <span className="like-text">
+                          {`${comment.likesList.length} like${
+                            comment.likesList.length > 1 ? "s" : ""
+                          }`}
+                        </span>
+                      </OverlayTrigger>
+                    </>
+                  ) : null}
+                  {` • `}
+                  <Button
+                    size="sm"
+                    variant="link"
+                    className={`${
+                      commentBeingReplied.commentId === comment.commentId
+                        ? "is-active"
+                        : ""
+                    } comment-action-btn`}
+                    onClick={() => {
+                      this.handleReplyClick(comment);
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      className="user-icon ml-1 mr-1"
+                      icon={faReply}
+                      title="Reply to comment"
+                    />
+                    {` Reply`}
+                  </Button>
+                </small>
+                {commentBeingEdited.commentId === comment.commentId && (
+                  <div className="float-right">
+                    <a
+                      href="#/"
+                      className="text-primary pt-1 mr-3"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        this.setState({
+                          commentBeingEdited: {},
+                        });
+                      }}
+                    >
+                      Cancel
+                    </a>
+                    <LoaderButton
+                      variant="primary"
+                      className="comment-submit"
+                      type="submit"
+                      size="sm"
+                      isLoading={addingComment}
+                      text="Update"
+                      loadingText="Updating…"
+                      onClick={this.onCommentSubmit}
+                      disabled={
+                        !(
+                          commentBeingEdited.content &&
+                          commentBeingEdited.content.length > 0 &&
+                          commentBeingEdited.content !== comment.content
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+              {comment.repliesList && this.renderComments(comment.repliesList)}
+            </div>
+          </Row>
+          {commentBeingReplied.commentId === comment.commentId && (
+            <Row key={index} className={`comment px-2 py-2`}>
+              {this.userPicColFragment({ renderBlankSpace: true })}
+              {this.userPicColFragment({
+                picture: isAuthenticated && picture,
+                name,
+              })}
+              {this.commentContentColFragment({
+                formOnClick: () => {
+                  if (!isAuthenticated) {
+                    setShowLoginModalState(true);
+                    setPreventRatingSubmitState(true);
+                  }
+                },
+                formOnSubmit: this.onCommentReplySubmit,
+                placeholder: `Reply to ${commentBeingReplied.authorName}`,
+                id: "replyComment",
+                onCommentChange: this.handleCommentChange,
+                commentValue: replyComment,
+                textAreaAdditionalClass: "reply-area",
+                shouldShowActions: isAuthenticated,
+                onCancel: (e) => {
+                  e.preventDefault();
+                  this.handleReplyClick(comment);
+                },
+                isAddingComment: addingReplyComment,
+              })}
+            </Row>
+          )}
+        </React.Fragment>
+      );
+    });
+  };
+
+  commentsCount = (comments) => {
+    let count = 0;
+
+    for (let i = 0; i < comments.length; i++) {
+      count++;
+      if (comments[i].repliesList) {
+        count += this.commentsCount(comments[i].repliesList);
+      }
+    }
+    return count;
+  };
+
   render() {
     const {
       commentsLoading,
@@ -225,30 +629,24 @@ export default class Comments extends Component {
       isCommentFormInFocus,
       comment,
       addingComment,
-      commentBeingEdited,
     } = this.state;
     const {
       isAuthenticated,
       picture,
       name,
-      preferredUsername,
-      username,
       theme,
       post,
       setPreventRatingSubmitState,
       setShowLoginModalState,
     } = this.props;
-    let loggedInUser = "";
-
-    if (isAuthenticated) {
-      loggedInUser = preferredUsername ?? username;
-    }
 
     if (post.song) {
       return (
         <div className="Comments">
           <h6 className="comment-heading">
-            {`COMMENTS${commentsLoading ? "" : " (" + comments.length + ")"}`}
+            {`COMMENTS${
+              commentsLoading ? "" : " (" + this.commentsCount(comments) + ")"
+            }`}
           </h6>
           {commentsLoading ? (
             <SkeletonTheme
@@ -260,236 +658,42 @@ export default class Comments extends Component {
           ) : (
             <Container>
               <Row className="comment no-hover px-2 py-2">
-                <div className="pic-col">
-                  {isAuthenticated && picture ? (
-                    <img className="author-pic" alt={name} src={picture} />
-                  ) : (
-                    <p className="text-muted">
-                      <FontAwesomeIcon
-                        className="user-icon ml-1 mr-1"
-                        icon={faUserCircle}
-                      />
-                    </p>
-                  )}
-                </div>
-                <div className="content-col">
-                  <Form
-                    onClick={() => {
-                      if (!isAuthenticated) {
-                        setShowLoginModalState(true);
-                        setPreventRatingSubmitState(true);
-                      }
-                    }}
-                    onFocus={() => {
-                      if (isAuthenticated) {
-                        this.setState({
-                          isCommentFormInFocus: true,
-                          commentBeingEdited: {},
-                        });
-                      }
-                    }}
-                    onSubmit={this.onCommentSubmit}
-                  >
-                    <TextareaAutosize
-                      className={`form-control ${
-                        isCommentFormInFocus ? "focus" : ""
-                      }`}
-                      placeholder="Join the discussion..."
-                      id="comment"
-                      onChange={this.handleCommentChange}
-                      value={comment ? comment : ""}
-                    />
-                    {isCommentFormInFocus && isAuthenticated && (
-                      <div className="mb-2 text-right">
-                        <a
-                          href="#/"
-                          className="text-primary pt-1 mr-3"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            this.setState({
-                              isCommentFormInFocus: false,
-                            });
-                          }}
-                        >
-                          Cancel
-                        </a>
-                        <LoaderButton
-                          variant="primary"
-                          className="comment-submit"
-                          type="submit"
-                          size="sm"
-                          isLoading={addingComment}
-                          text="Comment"
-                          loadingText="Submitting…"
-                          disabled={!(comment && comment.length > 0)}
-                        />
-                      </div>
-                    )}
-                  </Form>
-                </div>
+                {this.userPicColFragment({
+                  picture: isAuthenticated && picture,
+                  name,
+                })}
+                {this.commentContentColFragment({
+                  formOnClick: () => {
+                    if (!isAuthenticated) {
+                      setShowLoginModalState(true);
+                      setPreventRatingSubmitState(true);
+                    }
+                  },
+                  formOnFocus: () => {
+                    if (isAuthenticated) {
+                      this.setState({
+                        isCommentFormInFocus: true,
+                        commentBeingEdited: {},
+                      });
+                    }
+                  },
+                  formOnSubmit: this.onCommentSubmit,
+                  placeholder: "Join the discussion...",
+                  id: "comment",
+                  onCommentChange: this.handleCommentChange,
+                  commentValue: comment,
+                  textAreaAdditionalClass: isCommentFormInFocus ? "focus" : "",
+                  shouldShowActions: isCommentFormInFocus && isAuthenticated,
+                  onCancel: (e) => {
+                    e.preventDefault();
+                    this.setState({
+                      isCommentFormInFocus: false,
+                    });
+                  },
+                  isAddingComment: addingComment,
+                })}
               </Row>
-              {comments.map((comment, index) => {
-                const commentLiked =
-                  comment.likesList &&
-                  comment.likesList.some((like) => {
-                    return like && like.userName === loggedInUser;
-                  });
-
-                return (
-                  <Row
-                    key={index}
-                    className={`comment px-2 py-2 ${
-                      isAuthenticated && comment.userName === loggedInUser
-                        ? "comment-owner"
-                        : ""
-                    }`}
-                  >
-                    <div className="pic-col">
-                      {comment.authorPicture ? (
-                        <img
-                          className="author-pic"
-                          alt={`Commented by ${comment.authorName}`}
-                          src={comment.authorPicture}
-                        />
-                      ) : (
-                        <p className="text-muted">
-                          <FontAwesomeIcon
-                            className="user-icon ml-1 mr-1"
-                            icon={faUserCircle}
-                          />
-                        </p>
-                      )}
-                    </div>
-                    <div className="content-col">
-                      <div className="author-meta-row text-muted">
-                        <b>{`${comment.authorName}`} </b>
-                        <small>
-                          • <Moment fromNow>{comment.createdAt}</Moment>
-                        </small>
-                        <DropdownButton
-                          variant="link"
-                          title=""
-                          className="float-right delete-comment"
-                          alignRight
-                        >
-                          <Dropdown.Item
-                            href="#"
-                            onClick={() => {
-                              this.handleEditCommentClick(comment);
-                            }}
-                          >
-                            Edit
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            href="#"
-                            onClick={() => {
-                              this.deleteComment(comment.commentId);
-                            }}
-                          >
-                            Delete
-                          </Dropdown.Item>
-                        </DropdownButton>
-                      </div>
-                      {commentBeingEdited.commentId === comment.commentId ? (
-                        <TextareaAutosize
-                          className="form-control"
-                          onChange={this.handleCommentBeingEditedChange}
-                          value={
-                            commentBeingEdited.content
-                              ? commentBeingEdited.content
-                              : ""
-                          }
-                        />
-                      ) : (
-                        <p
-                          dangerouslySetInnerHTML={{
-                            __html: parseLinksToHtml(comment.content),
-                          }}
-                        ></p>
-                      )}
-                      <div className="comment-actions-row">
-                        <small>
-                          <Button
-                            size="sm"
-                            variant="link"
-                            className="comment-like-btn"
-                            onClick={() => {
-                              this.onCommentLike(
-                                comment,
-                                comments,
-                                index,
-                                commentLiked,
-                                loggedInUser,
-                                name
-                              );
-                            }}
-                          >
-                            {commentLiked ? (
-                              <FontAwesomeIcon
-                                className="heartFilled user-icon ml-1 mr-1"
-                                icon={faHeartFilled}
-                                title="Unlike comment"
-                              />
-                            ) : (
-                              <FontAwesomeIcon
-                                className="user-icon ml-1 mr-1"
-                                icon={faHeart}
-                                title="Like comment"
-                              />
-                            )}
-                          </Button>
-                          {comment.likesList && comment.likesList.length > 0 ? (
-                            <OverlayTrigger
-                              overlay={this.commentLikesPopover(
-                                comment.likesList
-                              )}
-                            >
-                              <span className="like-text">
-                                {` • ${comment.likesList.length} like${
-                                  comment.likesList.length > 1 ? "s" : ""
-                                }`}
-                              </span>
-                            </OverlayTrigger>
-                          ) : null}
-                        </small>
-                        {commentBeingEdited.commentId === comment.commentId && (
-                          <div className="float-right">
-                            <a
-                              href="#/"
-                              className="text-primary pt-1 mr-3"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                this.setState({
-                                  commentBeingEdited: {},
-                                });
-                              }}
-                            >
-                              Cancel
-                            </a>
-                            <LoaderButton
-                              variant="primary"
-                              className="comment-submit"
-                              type="submit"
-                              size="sm"
-                              isLoading={addingComment}
-                              text="Update"
-                              loadingText="Updating…"
-                              onClick={this.onCommentSubmit}
-                              disabled={
-                                !(
-                                  commentBeingEdited.content &&
-                                  commentBeingEdited.content.length > 0 &&
-                                  commentBeingEdited.content !== comment.content
-                                )
-                              }
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </Row>
-                );
-              })}
+              {this.renderComments(comments)}
             </Container>
           )}
         </div>

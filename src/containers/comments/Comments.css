@@ -5,6 +5,13 @@
 .Comments .comment {
   display: flex;
   position: relative;
+  padding: 0.5rem;
+}
+
+.Comments .comment .comment {
+  padding: 1rem 0 0 0;
+  margin: 0;
+  clear: both;
 }
 
 .Comments .comment .pic-col {
@@ -37,6 +44,10 @@
   font-size: 18px;
 }
 
+.Comments .comment .content-col textarea.reply-area::placeholder {
+  font-size: inherit;
+}
+
 .Comments .comment .content-col button.comment-submit {
   font-size: 1rem;
 }
@@ -61,10 +72,18 @@
   display: block;
 }
 
-.Comments .comment .content-col .comment-actions-row button.comment-like-btn {
+.Comments .comment .content-col .comment-actions-row button.comment-action-btn {
   padding: 0;
   color: inherit;
   text-decoration: none;
+}
+
+.Comments
+  .comment
+  .content-col
+  .comment-actions-row
+  button.comment-action-btn.is-active {
+  font-weight: bold;
 }
 
 .Comments .comment .content-col .comment-actions-row button .heartFilled {
@@ -73,6 +92,7 @@
 }
 
 .Comments .comment .content-col .comment-actions-row .like-text {
+  margin: 0 4px;
   cursor: default;
 }
 
