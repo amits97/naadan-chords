@@ -17,27 +17,33 @@ Amplify.configure({
     userPoolWebClientId: config.cognito.APP_CLIENT_ID,
     oauth: {
       domain: config.oauth.DOMAIN,
-      scope: ['phone', 'email', 'profile', 'openid','aws.cognito.signin.user.admin'],
+      scope: [
+        "phone",
+        "email",
+        "profile",
+        "openid",
+        "aws.cognito.signin.user.admin",
+      ],
       redirectSignIn: config.oauth.REDIRECT_SIGN_IN,
       redirectSignOut: config.oauth.REDIRECT_SIGN_OUT,
-      responseType: 'code'
-    }
+      responseType: "code",
+    },
   },
   API: {
     endpoints: [
       {
         name: "posts",
         endpoint: config.apiGateway.URL,
-        region: config.apiGateway.REGION
+        region: config.apiGateway.REGION,
       },
-    ]
+    ],
   },
   Storage: {
     AWSS3: {
-        bucket: config.storage.BUCKET,
-        region: config.storage.REGION
-    }
-  }
+      bucket: config.storage.BUCKET,
+      region: config.storage.REGION,
+    },
+  },
 });
 
 const rootElement = document.getElementById("root");
