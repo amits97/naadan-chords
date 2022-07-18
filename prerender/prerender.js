@@ -109,7 +109,11 @@ export async function handler(event) {
 
     try {
       let page = await browser.newPage();
-      await page.goto(whitelistedURL);
+
+      // Set flag to disable speedy mode
+      let url = new URL(whitelistedURL);
+      url.searchParams.append("isPrerendered", true);
+      await page.goto(url.href);
 
       //remove layout breaking ads
       let elementClassToRemove = ".ad, .google-auto-placed";
