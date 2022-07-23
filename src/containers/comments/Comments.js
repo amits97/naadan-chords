@@ -384,7 +384,7 @@ export default class Comments extends Component {
     );
   };
 
-  renderComments = (comments) => {
+  renderComments = (comments, nestLevel = 1) => {
     const {
       replyComment,
       addingReplyComment,
@@ -518,26 +518,28 @@ export default class Comments extends Component {
                       </OverlayTrigger>
                     </>
                   ) : null}
-                  {` • `}
-                  <Button
-                    size="sm"
-                    variant="link"
-                    className={`${
-                      commentBeingReplied.commentId === comment.commentId
-                        ? "is-active"
-                        : ""
-                    } comment-action-btn`}
-                    onClick={() => {
-                      this.handleReplyClick(comment);
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      className="user-icon ml-1 mr-1"
-                      icon={faReply}
-                      title="Reply to comment"
-                    />
-                    {` Reply`}
-                  </Button>
+                  <span className={`${nestLevel >= 4 ? "d-none" : ""}`}>
+                    {` • `}
+                    <Button
+                      size="sm"
+                      variant="link"
+                      className={`${
+                        commentBeingReplied.commentId === comment.commentId
+                          ? "is-active"
+                          : ""
+                      } comment-action-btn`}
+                      onClick={() => {
+                        this.handleReplyClick(comment);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        className="user-icon ml-1 mr-1"
+                        icon={faReply}
+                        title="Reply to comment"
+                      />
+                      {` Reply`}
+                    </Button>
+                  </span>
                 </small>
                 {commentBeingEdited.commentId === comment.commentId && (
                   <div className="float-right">
@@ -573,7 +575,8 @@ export default class Comments extends Component {
                   </div>
                 )}
               </div>
-              {comment.repliesList && this.renderComments(comment.repliesList)}
+              {comment.repliesList &&
+                this.renderComments(comment.repliesList, nestLevel + 1)}
             </div>
           </Row>
           {commentBeingReplied.commentId === comment.commentId && (
