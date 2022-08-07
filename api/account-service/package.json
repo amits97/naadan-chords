@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "aws-sdk": "^2.834.0",
-    "serverless-domain-manager": "^5.1.0",
-    "serverless-webpack": "^5.6.1",
+    "serverless-domain-manager": "^6.0.4",
+    "serverless-webpack": "^5.8.0",
     "webpack-node-externals": "^2.5.2"
   }
 }
