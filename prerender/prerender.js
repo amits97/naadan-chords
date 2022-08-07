@@ -6,6 +6,13 @@ const puppeteer = require("puppeteer-core");
 const axios = require("axios").default;
 const { XMLParser } = require("fast-xml-parser");
 
+function lessThanOneDayAgo(date) {
+  date = parseInt(date);
+  const DAY = 1000 * 60 * 60 * 24;
+  const aDayAgo = Date.now() - DAY;
+  return date > aDayAgo;
+}
+
 async function dynamoDbCache(targetUrl) {
   const params = {
     TableName: "NaadanChordsPrerender",
@@ -17,7 +24,10 @@ async function dynamoDbCache(targetUrl) {
   try {
     let result = await dynamoDbLib.call("get", params);
     if (result.Item) {
-      return result.Item.html;
+      if (lessThanOneDayAgo(result.Item.timestamp)) {
+        // Return cache only if fresh
+        return result.Item.html;
+      }
     }
   } catch (e) {
     // Do nothing for now
