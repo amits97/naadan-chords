@@ -455,9 +455,9 @@ class App extends Component {
                 <Navbar.Brand>
                   <Link to="/">
                     <img src={logo} alt="logo" />
-                    <p>
+                    <h1>
                       NAADAN<span>CHORDS</span>
-                    </p>
+                    </h1>
                   </Link>
                 </Navbar.Brand>
                 <button

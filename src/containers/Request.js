@@ -1,5 +1,14 @@
 import React from "react";
-import { Container, Row, Col, FormGroup, FormLabel, FormControl, FormText, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  FormText,
+  Button,
+} from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { API, Auth } from "aws-amplify";
 import LoaderButton from "../components/LoaderButton";
@@ -19,21 +28,25 @@ export default class Request extends SearchComponent {
       submitted: false,
       name: "",
       email: "",
-      message: ""
+      message: "",
     };
   }
 
   validateForm() {
-    return this.state.name.length > 0 && this.state.email.length > 0 && this.state.message.length;
+    return (
+      this.state.name.length > 0 &&
+      this.state.email.length > 0 &&
+      this.state.message.length
+    );
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
     });
-  }
+  };
 
-  handleSubmit = async event => {
+  handleSubmit = async (event) => {
     event.preventDefault();
     const { name, email, message } = this.state;
     this.setState({ isLoading: true, isErrorState: false, errorMessage: "" });
@@ -43,23 +56,23 @@ export default class Request extends SearchComponent {
         body: {
           name,
           email,
-          message
-        }
+          message,
+        },
       });
     } catch (e) {
       this.setState({
         isLoading: false,
         isErrorState: true,
         errorMessage: e.message,
-        errorType: e.code
+        errorType: e.code,
       });
     } finally {
       this.setState({
         isLoading: false,
-        submitted: true
+        submitted: true,
       });
     }
-  }
+  };
 
   async componentDidMount() {
     try {
@@ -68,11 +81,10 @@ export default class Request extends SearchComponent {
       await this.props.getUserAttributes(session);
       this.setState({
         name: this.props.name,
-        email: this.props.email
+        email: this.props.email,
       });
-    }
-    catch(e) {
-      if (e !== 'No current user') {
+    } catch (e) {
+      if (e !== "No current user") {
         console.log(e);
       }
     }
@@ -81,7 +93,8 @@ export default class Request extends SearchComponent {
   }
 
   renderSEOTags = () => {
-    let description = "Contact form to request for the chords of a song that you would really like to see on Naadan Chords.";
+    let description =
+      "Contact form to request for the chords of a song that you would really like to see on Naadan Chords.";
 
     return (
       <Helmet>
@@ -92,50 +105,72 @@ export default class Request extends SearchComponent {
         <meta property="og:description" content={description} />
       </Helmet>
     );
-  }
+  };
 
   renderTopAd = () => {
     return (
-      <div className="ad" style={{maxHeight: "120px"}}>
-        <ins className="adsbygoogle"
-          style={{display:"block"}}
+      <div className="ad" style={{ maxHeight: "120px" }}>
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
           data-ad-client="ca-pub-1783579460797635"
           data-ad-slot="6826392919"
           data-ad-format="horizontal"
-          data-full-width-responsive="false">
-        </ins>
+          data-full-width-responsive="false"
+        ></ins>
       </div>
     );
-  }
+  };
 
   render() {
-    return(
+    return (
       <div className="Request">
-        { this.renderSEOTags() }
+        {this.renderSEOTags()}
         <Container>
           <Row className="contentRow">
             <Col lg={8} className="contentColumn">
-              { this.renderTopAd() }
+              {this.renderTopAd()}
               <div>
-                <h1>Request</h1>
+                <h2>Request</h2>
                 <hr />
               </div>
 
-              { this.state.submitted ? (
+              {this.state.submitted ? (
                 <React.Fragment>
-                  { this.state.isErrorState ? (
+                  {this.state.isErrorState ? (
                     <p>
-                      Failed to submit!<br />
-                      { this.state.errorMessage }
+                      Failed to submit!
+                      <br />
+                      {this.state.errorMessage}
                     </p>
                   ) : (
-                    <p>Thank you! Your request has been submitted.<br />We will try our best to publish your request as soon as possible.</p>
+                    <p>
+                      Thank you! Your request has been submitted.
+                      <br />
+                      We will try our best to publish your request as soon as
+                      possible.
+                    </p>
                   )}
-                  <Button variant="secondary" onClick={() => this.setState({ submitted: false, message: this.state.isErrorState ? this.state.message : "" })}>Go back</Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      this.setState({
+                        submitted: false,
+                        message: this.state.isErrorState
+                          ? this.state.message
+                          : "",
+                      })
+                    }
+                  >
+                    Go back
+                  </Button>
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <p>Request for the chords of a song that you would really like to see on Naadan Chords.</p>
+                  <p>
+                    Request for the chords of a song that you would really like
+                    to see on Naadan Chords.
+                  </p>
                   <form onSubmit={this.handleSubmit}>
                     <FormGroup controlId="name">
                       <FormLabel>Name</FormLabel>

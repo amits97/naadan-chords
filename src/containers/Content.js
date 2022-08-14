@@ -378,7 +378,7 @@ export default class Content extends Component {
     if (post.postType === "PAGE") {
       return (
         <div>
-          <h1 className="page">{post.title}</h1>
+          <h2 className="page">{post.title}</h2>
           <hr />
         </div>
       );
@@ -388,7 +388,7 @@ export default class Content extends Component {
           <a href="#/" className="navigate-link" onClick={this.props.goBack}>
             <small>← Go back</small>
           </a>
-          <h1>{post.title}</h1>
+          <h2>{post.title}</h2>
           <small>
             <LinkContainer to={`/author/${post.userName}`}>
               <a className="author-picture" href="#/">
@@ -667,9 +667,9 @@ export default class Content extends Component {
             color={theme.backgroundHighlight}
             highlightColor={theme.body}
           >
-            <h1>
+            <h2>
               <Skeleton />
-            </h1>
+            </h2>
             <hr />
             <Skeleton count={50} />
           </SkeletonTheme>
@@ -744,10 +744,6 @@ export default class Content extends Component {
       } else {
         description = `Guitar chords and tabs of ${posts.song} - ${posts.album} with lyrics`;
         description += `. Music by ${posts.music} and Sung by ${posts.singers}.`;
-        if (posts.lyrics) {
-          description += ` Lyrics penned by ${posts.lyrics}.`;
-        }
-        description += ` Transpose chords to any scale or pitch.`;
         imageURL = posts.image ? posts.image : "";
       }
 
@@ -774,7 +770,7 @@ export default class Content extends Component {
           </title>
           <meta
             name="description"
-            content="Naadan Chords is the best place to get the chords for your favorite Malayalam and Tamil songs. Transpose chords to any scale or pitch, autoscroll chord sheet to play hassle free and adjust font size of lyrics."
+            content="Naadan Chords is the best place to get the chords for your favorite Malayalam and Tamil songs. Transpose, autoscroll chord sheet and adjust font size of lyrics."
           />
           <meta name="twitter:card" content="summary" />
           <meta
@@ -783,7 +779,7 @@ export default class Content extends Component {
           />
           <meta
             property="og:description"
-            content="Naadan Chords is the best place to get the chords for your favorite Malayalam and Tamil songs. Transpose chords to any scale or pitch, autoscroll chord sheet to play hassle free and adjust font size of lyrics."
+            content="Naadan Chords is the best place to get the chords for your favorite Malayalam and Tamil songs. Transpose, autoscroll chord sheet and adjust font size of lyrics."
           />
         </Helmet>
       );

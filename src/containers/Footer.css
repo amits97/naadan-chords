@@ -5,12 +5,13 @@
   background: #222222;
 }
 
-.Footer h1 {
+.Footer span.footer-logo {
+  display: block;
   margin-top: 5px;
   margin-bottom: 3px;
 }
 
-.Footer h1 img {
+.Footer span.footer-logo img {
   width: 80px;
 }
 

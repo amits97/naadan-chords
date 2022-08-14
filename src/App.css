@@ -26,11 +26,14 @@
   font-family: "DINNextLTPro-Heavy", sans-serif;
 }
 
-.App .navbar .navbar-brand a p {
+.App .navbar .navbar-brand a h1 {
   padding-top: 13px;
   display: inline-block;
   margin-bottom: 0;
   color: #ffffff;
+  font-size: 18px;
+  line-height: 1.4;
+  margin-top: 0;
 }
 
 .App .navbar .navbar-brand a span {
@@ -172,12 +175,16 @@
 }
 
 .App .navbar .dropdown-toggle::after {
-  margin-left: .55em;
+  margin-left: 0.55em;
   vertical-align: 0.15em;
 }
 
 .App .contents {
   min-height: calc(100vh - 356px);
+}
+
+.App .contents h2 {
+  font-size: 2.5rem;
 }
 
 .loading-modal-contents .spinning {
@@ -186,13 +193,19 @@
   animation: spin 1s infinite linear;
 }
 
-.App .dropdown-item:focus, .App .dropdown-item:hover, .App .dropdown-item.active:hover {
+.App .dropdown-item:focus,
+.App .dropdown-item:hover,
+.App .dropdown-item.active:hover {
   color: inherit;
 }
 
 @keyframes spin {
-  from { transform: scale(1) rotate(0deg); }
-  to { transform: scale(1) rotate(360deg); }
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(360deg);
+  }
 }
 
 /* Tiny devices (mobiles, less than 350px) */
@@ -247,7 +260,7 @@
   }
 
   .App .navbar .search-form .dropdown-menu {
-    border-radius: .25rem;
+    border-radius: 0.25rem;
   }
 
   .App .navbar .navbar-nav .dropdown-item {
@@ -270,7 +283,8 @@
     padding-left: 0.8rem;
   }
 
-  .App .navbar .navbar-nav .nav-link.user-link, .App .navbar .navbar-nav .dropdown > .nav-link {
+  .App .navbar .navbar-nav .nav-link.user-link,
+  .App .navbar .navbar-nav .dropdown > .nav-link {
     padding-left: 0.4rem;
   }
 
