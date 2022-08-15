@@ -790,7 +790,7 @@ export default class Content extends Component {
     if (
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
-        config.noAds.includes(this.props.posts.postId)) ||
+        config.noAds.includes(this.props.posts?.postId)) ||
       this.props.isLocalhost
     ) {
       return <br className="spacer" />;
