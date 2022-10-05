@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.72.8",
+  "version": "0.72.9",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
