@@ -455,7 +455,12 @@ export default class Content extends Component {
   };
 
   renderStarRating = (post) => {
-    const { theme } = this.props;
+    const { theme, isAuthenticated, preferredUsername, username } = this.props;
+    let loggedInUser = "";
+
+    if (isAuthenticated) {
+      loggedInUser = preferredUsername ?? username;
+    }
 
     return (
       <div className="rate-container">
@@ -469,16 +474,16 @@ export default class Content extends Component {
             starSpacing="1px"
             numberOfStars={5}
             name="rating"
-            rating={this.props.isAuthenticated ? this.state.rating : undefined}
-            changeRating={this.changeRating}
+            rating={isAuthenticated ? this.state.rating : undefined}
+            changeRating={
+              loggedInUser !== post.userName ? this.changeRating : undefined
+            }
           />
           <Button
             variant={theme.name}
             onClick={() => this.changeRating(0)}
             className={`border ${
-              this.state.rating && this.props.isAuthenticated
-                ? "d-block"
-                : "d-none"
+              this.state.rating && isAuthenticated ? "d-block" : "d-none"
             }`}
             size="sm"
           >
@@ -487,13 +492,16 @@ export default class Content extends Component {
         </div>
         <small
           className={`pt-2 ${
-            this.state.rating && this.props.isAuthenticated
-              ? "d-block"
-              : "d-none"
+            this.state.rating && isAuthenticated ? "d-block" : "d-none"
           }`}
         >
           <i>You've rated this post. You can change your rating at any time.</i>
         </small>
+        {!this.state.rating && loggedInUser === post.userName && (
+          <small className="pt-2">
+            <i>You cannot rate your own post.</i>
+          </small>
+        )}
       </div>
     );
   };
