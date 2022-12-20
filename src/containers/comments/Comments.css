@@ -59,17 +59,11 @@
 
 .Comments .comment .delete-comment {
   font-size: 13px;
-  display: none;
 }
 
 .Comments .comment .delete-comment button {
   color: inherit;
   height: 25px;
-}
-
-.Comments .comment.comment-owner:hover .delete-comment,
-.Comments .comment .delete-comment.show {
-  display: block;
 }
 
 .Comments .comment .content-col .comment-actions-row button.comment-action-btn {
@@ -94,11 +88,4 @@
 .Comments .comment .content-col .comment-actions-row .like-text {
   margin: 0 4px;
   cursor: default;
-}
-
-/* Medium devices (tablets, less than 992px) */
-@media (max-width: 991.98px) {
-  .Comments .comment.comment-owner .delete-comment {
-    display: block;
-  }
 }
