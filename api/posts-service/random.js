@@ -6,17 +6,17 @@ async function appendRating(item) {
   const params = {
     TableName: "NaadanChordsRatings",
     Key: {
-      postId: item.postId
-    }
+      postId: item.postId,
+    },
   };
 
   try {
     let ratingResult = await dynamoDbLib.call("get", params);
-    if(ratingResult && ratingResult.hasOwnProperty("Item")) {
+    if (ratingResult && ratingResult.hasOwnProperty("Item")) {
       item.rating = ratingResult.Item.rating;
       item.ratingCount = ratingResult.Item.count;
     }
-  } catch(e) {
+  } catch (e) {
     item.ratingError = e;
   }
 
@@ -29,10 +29,10 @@ async function getItemCount() {
     IndexName: "postType-createdAt-index",
     KeyConditionExpression: "postType = :postType",
     ExpressionAttributeValues: {
-      ":postType": "POST"
+      ":postType": "POST",
     },
     ProjectionExpression: "postId",
-    ScanIndexForward: false
+    ScanIndexForward: false,
   };
 
   let itemsResult = await dynamoDbLib.call("query", itemCountParams);
@@ -50,8 +50,8 @@ export async function main(event, context) {
     const params = {
       TableName: "NaadanChords",
       Key: {
-        postId: postId
-      }
+        postId: postId,
+      },
     };
 
     let result = await dynamoDbLib.call("get", params);
@@ -69,11 +69,12 @@ export async function main(event, context) {
     //Get full attributes of author
     let authorAttributes = await userNameLib.getAuthorAttributes(userId);
     result.authorName = authorAttributes.authorName;
-    result.userName = authorAttributes.preferredUsername ?? authorAttributes.userName;
+    result.userName =
+      authorAttributes.preferredUsername ?? authorAttributes.userName;
     result.authorPicture = authorAttributes.picture;
 
     //Do not expose userId
-    delete(result.userId);
+    delete result.userId;
 
     //Append rating
     let finalResult = await appendRating(result);
