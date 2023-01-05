@@ -1,10 +1,12 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import { Col } from "react-bootstrap";
 
 export const TitleContainer = styled.div`
   overflow: auto;
   padding: 0 15px 3px 15px;
-  border-bottom: 1px solid ${({ theme, borderBottom }) => borderBottom ? theme.border : 'transparent'};
+  border-bottom: 1px solid
+    ${({ theme, borderBottom }) =>
+      borderBottom ? theme.border : "transparent"};
 
   a.random-post {
     color: ${({ theme }) => theme.linkPrimary};
@@ -24,7 +26,8 @@ export const PostListH6 = styled.h6`
 export const PostItemContainer = styled.div`
   transition: all 0.5s;
   padding: 12.5px 15px;
-  background: ${({ alternate, theme }) => alternate ? theme.backgroundLight : 'none'};
+  background: ${({ alternate, theme }) =>
+    alternate ? theme.backgroundLight : "none"};
 
   &:hover {
     background: ${({ theme }) => theme.backgroundHighlight};
@@ -34,7 +37,7 @@ export const PostItemContainer = styled.div`
     cursor: initial;
     transition: none;
   }
-  
+
   &.no-hover:hover {
     background: inherit !important;
   }
@@ -132,5 +135,12 @@ export const ChordControlsContainer = styled.div`
     :hover {
       color: ${({ theme }) => theme.linkHover};
     }
+  }
+`;
+
+export const CommentAuthorName = styled.small`
+  &&& {
+    color: ${({ theme }) => theme.link};
+    padding-right: 4px;
   }
 `;

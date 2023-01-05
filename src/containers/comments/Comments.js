@@ -22,6 +22,7 @@ import TextareaAutosize from "react-autosize-textarea/lib";
 import { API } from "aws-amplify";
 import LoaderButton from "../../components/LoaderButton";
 import { parseLinksToHtml } from "../../libs/utils";
+import * as Styles from "../Styles";
 import "./Comments.css";
 
 export default class Comments extends Component {
@@ -429,8 +430,10 @@ export default class Comments extends Component {
               name: comment.authorName,
             })}
             <div className="content-col">
-              <div className="author-meta-row text-muted">
-                <b>{`${comment.authorName}`} </b>
+              <div className="author-meta-row">
+                <Styles.CommentAuthorName>
+                  {comment.authorName}
+                </Styles.CommentAuthorName>
                 <small>
                   • <Moment fromNow>{comment.createdAt}</Moment>
                 </small>

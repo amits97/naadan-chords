@@ -16,18 +16,23 @@
 
 .Comments .comment .pic-col {
   flex: 0 0 50px;
+  padding-top: 2px;
 }
 
 .Comments .comment .pic-col p {
-  font-size: 36px;
+  font-size: 34px;
 }
 
 .Comments .comment img.author-pic {
-  height: 40px;
+  height: 36px;
 }
 
 .Comments .comment .content-col {
   flex: 1;
+}
+
+.Comments .comment .author-meta-row {
+  margin-bottom: 1px;
 }
 
 .Comments .comment .content-col textarea {

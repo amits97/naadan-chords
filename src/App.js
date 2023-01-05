@@ -451,7 +451,7 @@ class App extends Component {
               onToggle={this.setNavExpanded}
               expanded={this.state.navExpanded}
             >
-              <div className="container-fluid">
+              <div className="container">
                 <Navbar.Brand>
                   <Link to="/">
                     <img src={logo} alt="logo" />
