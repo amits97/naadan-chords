@@ -122,7 +122,7 @@
   display: none;
   height: 40px;
   position: absolute;
-  right: 75px;
+  right: 60px;
   color: #bbbbbb;
   top: 8px;
 }
@@ -234,8 +234,8 @@
     position: absolute;
     top: 0;
     z-index: 2000;
-    width: calc(100% - 2rem);
-    height: 58px;
+    width: 100%;
+    height: 57px;
     padding-top: 9px;
     overflow: visible;
   }
