@@ -10,7 +10,7 @@ import {
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import config from "../config";

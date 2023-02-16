@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
 import { Helmet } from "react-helmet";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import * as urlLib from "../libs/url-lib";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Content from "./Content";
@@ -316,8 +316,8 @@ export default class Posts extends Component {
       }
     }
 
-    ReactGA.initialize("UA-34900138-2");
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.initialize("G-010SJNDMCP");
+    ReactGA.send({ hitType: "pageview", page: `${window.location.pathname}${window.location.search}` });
   }
 
   setLoadingAndLoadData = () => {
@@ -369,7 +369,7 @@ export default class Posts extends Component {
       this.props.setSearch("");
     }
 
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.send({ hitType: "pageview", page: `${window.location.pathname}${window.location.search}` });
   };
 
   logPostVisit = async () => {
@@ -436,7 +436,7 @@ export default class Posts extends Component {
             adKey: this.props.pageKey,
           });
         }
-        ReactGA.pageview(window.location.pathname + window.location.search);
+        ReactGA.send({ hitType: "pageview", page: `${window.location.pathname}${window.location.search}` });
       }
     }
 
