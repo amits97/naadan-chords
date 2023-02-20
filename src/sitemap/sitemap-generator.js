@@ -128,6 +128,7 @@ async function generateSitemap() {
   //posts pages
   let pageMap = await generatePagination();
   let malayalamPageMap = await generatePagination("MALAYALAM");
+  let tamilPageMap = await generatePagination("TAMIL");
 
   let authorMap = [];
   let authorPageMap = [];
@@ -151,6 +152,7 @@ async function generateSitemap() {
     "/:id": idMap,
     "/page/:number": pageMap,
     "/category/malayalam/page/:number": malayalamPageMap,
+    "/category/tamil/page/:number": tamilPageMap,
     "/album/:album": albumMap,
     "/author/:userName": authorMap,
     "/author/:userName/page/:number": authorPageMap,

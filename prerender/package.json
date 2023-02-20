@@ -30,6 +30,7 @@
   },
   "overrides": {
     "simple-git": ">=3.3.0",
-    "terser": ">=4.8.1"
+    "terser": ">=4.8.1",
+    "json5": ">=2.2.2"
   }
 }
