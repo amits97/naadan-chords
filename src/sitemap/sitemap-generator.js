@@ -6,7 +6,7 @@ const { generateDelayPromise } = require("../libs/utils");
 const router = require("./sitemap-routes").default;
 const Sitemap = require("react-router-sitemap").default;
 
-const config = require("../config").default;
+const config = require("../config");
 const axios = require("axios").default;
 
 const slugify = require("../libs/utils").slugify;

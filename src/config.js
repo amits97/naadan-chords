@@ -29,4 +29,4 @@ if (typeof window !== "undefined") {
   window.noAds = config.noAds;
 }
 
-export default config;
+module.exports = config;

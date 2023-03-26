@@ -264,7 +264,7 @@ export default class Posts extends Component {
   async componentDidMount() {
     if (
       !this.props.isLocalhost &&
-      !config.noAds.includes(this.props.match.params.id)
+      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
     ) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -317,7 +317,10 @@ export default class Posts extends Component {
     }
 
     ReactGA.initialize("G-010SJNDMCP");
-    ReactGA.send({ hitType: "pageview", page: `${window.location.pathname}${window.location.search}` });
+    ReactGA.send({
+      hitType: "pageview",
+      page: `${window.location.pathname}${window.location.search}`,
+    });
   }
 
   setLoadingAndLoadData = () => {
@@ -369,7 +372,10 @@ export default class Posts extends Component {
       this.props.setSearch("");
     }
 
-    ReactGA.send({ hitType: "pageview", page: `${window.location.pathname}${window.location.search}` });
+    ReactGA.send({
+      hitType: "pageview",
+      page: `${window.location.pathname}${window.location.search}`,
+    });
   };
 
   logPostVisit = async () => {
@@ -436,14 +442,17 @@ export default class Posts extends Component {
             adKey: this.props.pageKey,
           });
         }
-        ReactGA.send({ hitType: "pageview", page: `${window.location.pathname}${window.location.search}` });
+        ReactGA.send({
+          hitType: "pageview",
+          page: `${window.location.pathname}${window.location.search}`,
+        });
       }
     }
 
     if (
       prevState.adKey !== this.state.adKey &&
       !this.props.isLocalhost &&
-      !config.noAds.includes(this.props.match.params.id)
+      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
     ) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
