@@ -80,7 +80,7 @@
     ></script>
     <script>
       const noAds = JSON.parse(
-        `<%= JSON.stringify(htmlWebpackPlugin.options.noAds) %>` || []
+        `<%= JSON.stringify(htmlWebpackPlugin.options.noAds) %>` || "[]"
       );
       if (
         window.location.hostname !== "localhost" &&
