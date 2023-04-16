@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "aws-sdk": "^2.834.0",
+    "aws-sdk": "^2.1359.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-source-map-support": "^2.1.3",
