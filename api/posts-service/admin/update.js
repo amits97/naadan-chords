@@ -5,19 +5,20 @@ import { success, failure } from "../../libs/response-lib";
 export async function main(event, context) {
   const data = JSON.parse(event.body);
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
-  const sub = provider.split(':')[2];
+  const sub = provider.split(":")[2];
 
   let isAdminUser = await adminCheckLib.checkIfAdmin(sub);
-  if(!isAdminUser) {
+  if (!isAdminUser) {
     return failure({ status: false, message: "No write permissions" });
   }
 
   const params = {
     TableName: "NaadanChords",
     Key: {
-      postId: event.pathParameters.id
+      postId: event.pathParameters.id,
     },
-    UpdateExpression: "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType",
+    UpdateExpression:
+      "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType, updatedAt = :updatedAt",
     ExpressionAttributeValues: {
       ":title": data.title || null,
       ":song": data.song || null,
@@ -25,7 +26,8 @@ export async function main(event, context) {
       ":singers": data.singers || null,
       ":lyrics": data.lyrics || null,
       ":music": data.music || null,
-      ":category": data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
+      ":category":
+        data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
       ":image": data.image || null,
       ":scale": data.scale || null,
       ":tempo": data.tempo || null,
@@ -33,9 +35,10 @@ export async function main(event, context) {
       ":content": data.content || null,
       ":leadTabs": data.leadTabs || null,
       ":youtubeId": data.youtubeId || null,
-      ":postType": data.postType || "POST"
+      ":postType": data.postType || "POST",
+      ":updatedAt": Date.now(),
     },
-    ReturnValues: "ALL_NEW"
+    ReturnValues: "ALL_NEW",
   };
 
   try {

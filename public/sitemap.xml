@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 <url> <loc>https://www.naadanchords.com/</loc> </url>
+<url> <loc>https://www.naadanchords.com/theeye-theeye-chaappa-kurishu</loc> </url>
 <url> <loc>https://www.naadanchords.com/akaleyo-nee-grandmaster</loc> </url>
 <url> <loc>https://www.naadanchords.com/paalmanam-christy</loc> </url>
 <url> <loc>https://www.naadanchords.com/premikkumbol-salt-n-pepper</loc> </url>
@@ -154,7 +155,6 @@
 <url> <loc>https://www.naadanchords.com/swapname-vannu-njan-parthan-mohan</loc> </url>
 <url> <loc>https://www.naadanchords.com/podi-penne-thakara</loc> </url>
 <url> <loc>https://www.naadanchords.com/alliyambal-loudspeaker</loc> </url>
-<url> <loc>https://www.naadanchords.com/theeye-theeye-chaappa-kurishu</loc> </url>
 <url> <loc>https://www.naadanchords.com/ee-puzhayum-indian-rupee</loc> </url>
 <url> <loc>https://www.naadanchords.com/aayiram-kannumai-thattathin-marayathu</loc> </url>
 <url> <loc>https://www.naadanchords.com/mazhaneer-thullikal-beautiful</loc> </url>
@@ -201,8 +201,8 @@
 <url> <loc>https://www.naadanchords.com/category/tamil/page/1</loc> </url>
 <url> <loc>https://www.naadanchords.com/category/tamil/page/2</loc> </url>
 <url> <loc>https://www.naadanchords.com/category/hindi</loc> </url>
-<url> <loc>https://www.naadanchords.com/author/AbhijithOR</loc> </url>
 <url> <loc>https://www.naadanchords.com/author/amitsn</loc> </url>
+<url> <loc>https://www.naadanchords.com/author/AbhijithOR</loc> </url>
 <url> <loc>https://www.naadanchords.com/author/Mishaal</loc> </url>
 <url> <loc>https://www.naadanchords.com/author/Sidharth</loc> </url>
 <url> <loc>https://www.naadanchords.com/author/ajmalbinnizam</loc> </url>
@@ -230,6 +230,7 @@
 <url> <loc>https://www.naadanchords.com/author/amitsn/page/11</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/96</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/1983</loc> </url>
+<url> <loc>https://www.naadanchords.com/album/chaappa-kurishu</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/grandmaster</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/christy</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/salt-n-pepper</loc> </url>
@@ -345,7 +346,6 @@
 <url> <loc>https://www.naadanchords.com/album/anwar</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/parthan-mohan</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/loudspeaker</loc> </url>
-<url> <loc>https://www.naadanchords.com/album/chaappa-kurishu</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/indian-rupee</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/thattathin-marayathu</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/beautiful</loc> </url>

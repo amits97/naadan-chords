@@ -192,6 +192,11 @@ export const GlobalStyles = createGlobalStyle`
     z-index: 2000;
   }
 
+  .App input.rbt-input-hint {
+    color: ${({ theme }) => theme.searchTextFocus} !important;
+    opacity: 0.75;
+  }
+
   .App .navbar .search-form input {
     background: ${({ theme }) => theme.secondary};
     color: ${({ theme }) => theme.searchText};
@@ -207,20 +212,24 @@ export const GlobalStyles = createGlobalStyle`
 
     .nav-link.active {
       background-color: ${({ theme }) => theme.body};
-      border-color: ${({ theme }) => theme.border} ${({ theme }) => theme.border} ${({ theme }) => theme.body};
+      border-color: ${({ theme }) => theme.border} ${({ theme }) =>
+  theme.border} ${({ theme }) => theme.body};
     }
 
     .nav-link:hover {
-      border-color: ${({ theme }) => theme.border} ${({ theme }) => theme.border} ${({ theme }) => theme.body};
+      border-color: ${({ theme }) => theme.border} ${({ theme }) =>
+  theme.border} ${({ theme }) => theme.body};
     }
   }
 
   .ChordsPopup .carousel-control-next, .ChordsPopup .carousel-control-prev {
-    filter: ${({ theme }) => theme.name === 'light' ? 'invert(100%)' : 'none' };
+    filter: ${({ theme }) =>
+      theme.name === "light" ? "invert(100%)" : "none"};
   }
 
   .ChordsPopup .carousel-indicators {
-    filter: ${({ theme }) => theme.name === 'light' ? 'invert(100%)' : 'none' };
+    filter: ${({ theme }) =>
+      theme.name === "light" ? "invert(100%)" : "none"};
   }
 
   .EditorPanel {

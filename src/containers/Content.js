@@ -6,6 +6,7 @@ import {
   OverlayTrigger,
   Popover,
   Modal,
+  Badge,
 } from "react-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { LinkContainer } from "react-router-bootstrap";
@@ -281,6 +282,23 @@ export default class Content extends Component {
                 <small className="post-item-meta">
                   {this.formatDate(post.createdAt)}
                   <span className="separator"> | </span>
+                  {post.updatedAt > post.createdAt && (
+                    <>
+                      <OverlayTrigger
+                        trigger={["click", "hover"]}
+                        placement="bottom"
+                        overlay={
+                          <Popover id="popover-basic" className="p-2">
+                            Updated on {this.formatDate(post.updatedAt)}
+                          </Popover>
+                        }
+                        rootClose
+                      >
+                        <Badge variant="primary">UPDATED</Badge>
+                      </OverlayTrigger>
+                      <span className="separator"> | </span>
+                    </>
+                  )}
                   <LinkContainer key={i} to={`/author/${post.userName}`}>
                     <a href="#/">{post.authorName}</a>
                   </LinkContainer>
@@ -350,7 +368,7 @@ export default class Content extends Component {
       <span className={`post-rating ${isPostList ? "post-list" : ""}`}>
         <span className="separator ml-1 mr-1">|</span>
         <OverlayTrigger
-          trigger="click"
+          trigger={["click", "hover"]}
           placement="bottom"
           overlay={this.ratingPopover(post, isPostList)}
           rootClose
@@ -420,6 +438,23 @@ export default class Content extends Component {
               />
               {this.formatDate(post.createdAt)}
             </div>
+            {post.updatedAt > post.createdAt && (
+              <>
+                <span className="separator ml-1 mr-1">|</span>
+                <OverlayTrigger
+                  trigger={["click", "hover"]}
+                  placement="bottom"
+                  overlay={
+                    <Popover id="popover-basic" className="p-2">
+                      Updated on {this.formatDate(post.updatedAt)}
+                    </Popover>
+                  }
+                  rootClose
+                >
+                  <Badge variant="primary">UPDATED</Badge>
+                </OverlayTrigger>
+              </>
+            )}
             {this.renderRating(post)}
           </small>
           <hr />

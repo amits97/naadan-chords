@@ -5,12 +5,14 @@ import * as emailLib from "../../libs/email-lib";
 import { success, failure } from "../../libs/response-lib";
 
 function slugify(text) {
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // Replace spaces with -
-    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-    .replace(/^-+/, '')             // Trim - from start of text
-    .replace(/-+$/, '');            // Trim - from end of text
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+    .replace(/\-\-+/g, "-") // Replace multiple - with single -
+    .replace(/^-+/, "") // Trim - from start of text
+    .replace(/-+$/, ""); // Trim - from end of text
 }
 
 async function notifyContributor(item) {
@@ -21,7 +23,9 @@ async function notifyContributor(item) {
     <p>Hey,</p>
     <p>Thank you for your contribution - <b>${item.title}</b>.</p>
     <p>We are thrilled to let you know that your post was approved!</p>
-    <p><a href="https://www.naadanchords.com/${slugify(item.title)}">Click here</a> to see your post live on Naadan Chords.</p>
+    <p><a href="https://www.naadanchords.com/${slugify(
+      item.title
+    )}">Click here</a> to see your post live on Naadan Chords.</p>
     <p>Thanks for your hard work!</p>
   `;
   const textMessage = `Naadan Chords - Your contribution was approved`;
@@ -33,8 +37,8 @@ async function deleteContribution(postId) {
   const params = {
     TableName: "NaadanChordsContributions",
     Key: {
-      postId: postId
-    }
+      postId: postId,
+    },
   };
 
   try {
@@ -49,10 +53,10 @@ export async function main(event, context, callback) {
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
-  const sub = provider.split(':')[2];
+  const sub = provider.split(":")[2];
 
   let isAdminUser = await adminCheckLib.checkIfAdmin(sub);
-  if(!isAdminUser) {
+  if (!isAdminUser) {
     return failure({ status: false, message: "No write permissions" });
   }
 
@@ -84,13 +88,14 @@ export async function main(event, context, callback) {
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
       postType: data.postType || "POST",
-      createdAt: Date.now()
-    }
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    },
   };
 
   try {
     await dynamoDbLib.call("put", params);
-    if(data.userId) {
+    if (data.userId) {
       await deleteContribution(slugify(data.title));
       await notifyContributor(data);
     }

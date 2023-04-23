@@ -26,6 +26,19 @@
   margin-bottom: 10px;
 }
 
+.Content .post-item-meta .badge,
+.Content .post small .badge {
+  padding: 0.35em 0.4em 0.15em 0.4em;
+  vertical-align: text-bottom;
+  cursor: pointer;
+}
+
+.Content .post small .badge {
+  padding: 0.45em 0.4em 0.15em 0.4em;
+  vertical-align: initial;
+  margin: 0 2px;
+}
+
 .Content .header-meta-container .header-picture {
   max-width: 80px;
   float: left;

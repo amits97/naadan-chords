@@ -16,7 +16,7 @@ custom:
     includeModules: true
   customDomain:
     domainName: api.naadanchords.com
-    basePath: 'posts'
+    basePath: "posts"
     stage: ${self:provider.stage}
     createRoute53Record: true
 
@@ -123,7 +123,7 @@ functions:
           integration: lambda
           request:
             template:
-              application/json: '{ "userName" : "$input.params(''userName'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "page" : "$input.params(''page'')", "postType" : "$input.params(''postType'')", "search" : "$input.params(''s'')"  }'  
+              application/json: '{ "userName" : "$input.params(''userName'')", "exclusiveStartKey" : "$input.params(''exclusiveStartKey'')", "page" : "$input.params(''page'')", "postType" : "$input.params(''postType'')", "search" : "$input.params(''s'')"  }'
   create:
     handler: admin/create.main
     events:
