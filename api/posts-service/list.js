@@ -71,7 +71,7 @@ export async function main(event, context, callback) {
 
       if (event.category) {
         //filter by category
-        skipParams.IndexName = "category-createdAt-index";
+        skipParams.IndexName = "category-updatedAt-index";
         skipParams.KeyConditionExpression = "category = :category";
         skipParams.ExpressionAttributeValues = {
           ":category": event.category,
@@ -128,7 +128,7 @@ export async function main(event, context, callback) {
 
   if (event.category) {
     //filter by category
-    params.IndexName = "category-createdAt-index";
+    params.IndexName = "category-updatedAt-index";
     params.KeyConditionExpression = "category = :category";
     params.ExpressionAttributeValues = {
       ":category": event.category,

@@ -37,7 +37,7 @@ async function sendEmailToAuthor(post, rating) {
   await emailLib.sendEmail(title, message, textMessage, emailId);
 }
 
-async function appendTitles(ratingMap) {
+async function appendPostDetails(ratingMap) {
   let filterExpression = "";
   let expressionAttributeValues = {};
   let i = 0;
@@ -58,7 +58,7 @@ async function appendTitles(ratingMap) {
     TableName: "NaadanChords",
     FilterExpression: filterExpression,
     ExpressionAttributeValues: expressionAttributeValues,
-    ProjectionExpression: "postId, title",
+    ProjectionExpression: "postId, title, userId, createdAt, updatedAt",
   };
 
   try {
@@ -67,6 +67,9 @@ async function appendTitles(ratingMap) {
 
     for (let i = 0; i < items.length; i++) {
       ratingMap[items[i].postId].title = items[i].title;
+      ratingMap[items[i].postId].userId = items[i].userId;
+      ratingMap[items[i].postId].createdAt = items[i].createdAt;
+      ratingMap[items[i].postId].updatedAt = items[i].updatedAt;
     }
   } catch (e) {
     //Do nothing
@@ -171,7 +174,7 @@ async function saveRatings(ratingMap) {
   let itemsArray = [];
 
   ratingMap = calculateWeightedRatings(ratingMap);
-  ratingMap = await appendTitles(ratingMap);
+  ratingMap = await appendPostDetails(ratingMap);
 
   for (let postId in ratingMap) {
     if (ratingMap.hasOwnProperty(postId)) {

@@ -285,7 +285,7 @@ export default class Content extends Component {
                   {post.updatedAt > post.createdAt && (
                     <>
                       <OverlayTrigger
-                        trigger={["click", "hover"]}
+                        trigger="click"
                         placement="bottom"
                         overlay={
                           <Popover id="popover-basic" className="p-2">
@@ -368,7 +368,7 @@ export default class Content extends Component {
       <span className={`post-rating ${isPostList ? "post-list" : ""}`}>
         <span className="separator ml-1 mr-1">|</span>
         <OverlayTrigger
-          trigger={["click", "hover"]}
+          trigger="click"
           placement="bottom"
           overlay={this.ratingPopover(post, isPostList)}
           rootClose
@@ -437,24 +437,24 @@ export default class Content extends Component {
                 icon={faHistory}
               />
               {this.formatDate(post.createdAt)}
+              {post.updatedAt > post.createdAt && (
+                <>
+                  <span className="separator ml-1 mr-1">|</span>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={
+                      <Popover id="popover-basic" className="p-2">
+                        Updated on {this.formatDate(post.updatedAt)}
+                      </Popover>
+                    }
+                    rootClose
+                  >
+                    <Badge variant="primary">UPDATED</Badge>
+                  </OverlayTrigger>
+                </>
+              )}
             </div>
-            {post.updatedAt > post.createdAt && (
-              <>
-                <span className="separator ml-1 mr-1">|</span>
-                <OverlayTrigger
-                  trigger={["click", "hover"]}
-                  placement="bottom"
-                  overlay={
-                    <Popover id="popover-basic" className="p-2">
-                      Updated on {this.formatDate(post.updatedAt)}
-                    </Popover>
-                  }
-                  rootClose
-                >
-                  <Badge variant="primary">UPDATED</Badge>
-                </OverlayTrigger>
-              </>
-            )}
             {this.renderRating(post)}
           </small>
           <hr />

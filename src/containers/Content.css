@@ -31,6 +31,7 @@
   padding: 0.35em 0.4em 0.15em 0.4em;
   vertical-align: text-bottom;
   cursor: pointer;
+  line-height: 9.6px;
 }
 
 .Content .post small .badge {
@@ -190,6 +191,16 @@
 
   .Content .post small .meta-time-container {
     display: block;
+    position: relative;
+  }
+
+  .Content .post small .meta-time-container span.separator {
+    display: inline-block;
+  }
+
+  .Content .post small .meta-time-container .badge {
+    position: absolute;
+    top: 2px;
   }
 
   .Content .post-rating {
