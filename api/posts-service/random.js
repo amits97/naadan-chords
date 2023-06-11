@@ -26,7 +26,7 @@ async function appendRating(item) {
 async function getItemCount() {
   const itemCountParams = {
     TableName: "NaadanChords",
-    IndexName: "postType-createdAt-index",
+    IndexName: "postType-updatedAt-index",
     KeyConditionExpression: "postType = :postType",
     ExpressionAttributeValues: {
       ":postType": "POST",
