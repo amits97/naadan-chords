@@ -32,7 +32,7 @@
   position: fixed;
   right: 20px;
   bottom: 20px;
-  z-index: 1020;
+  z-index: 2020;
   display: none;
   font-size: 24px;
   transition: bottom 0.25s;
@@ -91,6 +91,9 @@
 
 .Sidebar .sidebar-content ol li a {
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .Sidebar ol li:before {
@@ -110,7 +113,7 @@
 
 .Sidebar .sticky {
   position: sticky;
-  top: 72px;
+  top: 10px;
 }
 
 /* Medium devices (tablets, less than 992px) */
@@ -135,16 +138,16 @@
 
   .Sidebar .sidebar-content {
     padding-left: 0;
-    max-width: 400px;
+    max-width: min(80%, 400px);
     margin: auto;
-    padding-right: 20px;
     padding-top: 15px;
   }
 
   .Sidebar .sidebar.opened {
-    top: 56px;
-    height: calc(100vh - 56px);
+    top: 0;
+    height: 100vh;
     overflow-y: scroll;
+    z-index: 2001;
   }
 
   .Sidebar .sticky {
@@ -154,7 +157,6 @@
   .Sidebar .top-posts {
     margin-bottom: 10px;
     padding: 0;
-    width: fit-content;
     margin-left: auto;
     margin-right: auto;
   }

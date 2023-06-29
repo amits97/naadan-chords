@@ -28,7 +28,7 @@
 
 .Content .post-item-meta .badge,
 .Content .post small .badge {
-  padding: 0.25em 0.4em 0.09em 0.4em;
+  padding: 0.1em 0.4em 0.02em 0.4em;
   vertical-align: text-bottom;
   cursor: pointer;
   line-height: 0.93rem;

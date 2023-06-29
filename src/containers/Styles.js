@@ -42,7 +42,7 @@ export const PostItemContainer = styled.div`
   }
 
   h5 {
-    margin-bottom: 0;
+    margin-bottom: 0.25rem;
     margin-top: 0;
   }
 
@@ -54,6 +54,7 @@ export const PostItemContainer = styled.div`
   small.post-item-meta {
     display: inline-block;
     width: 100%;
+    line-height: 1.65;
   }
 
   small span.separator {

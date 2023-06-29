@@ -34,11 +34,15 @@ export default class Footer extends Component {
     }
 
     if (
-      this.state.adKey !== prevState.adKey &&
+      this.props.adKey !== prevState.adKey &&
       !this.props.isLocalhost &&
       !config.noAds.includes(window.location.pathname.replace(/\//, ""))
     ) {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 

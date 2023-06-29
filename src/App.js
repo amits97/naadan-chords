@@ -446,7 +446,6 @@ class App extends Component {
             <Navbar
               fluid="true"
               expand="lg"
-              sticky="top"
               variant="dark"
               onToggle={this.setNavExpanded}
               expanded={this.state.navExpanded}
