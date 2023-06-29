@@ -360,7 +360,7 @@ export default class Comments extends Component {
             value={commentValue || ""}
           />
           {shouldShowActions && (
-            <div className="mb-2 text-right">
+            <div className="cancel-input mb-2 text-right">
               <a
                 href="#/"
                 className="text-primary pt-1 mr-3"

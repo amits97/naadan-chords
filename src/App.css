@@ -7,6 +7,15 @@
   padding-top: 0;
   padding-bottom: 0;
   width: 100%;
+  min-height: 64px;
+}
+
+.App .navbar-holder {
+  flex-grow: initial;
+}
+
+.App .navbar-nav .dropdown-menu {
+  min-width: 160px;
 }
 
 .App .navbar .container {
@@ -19,6 +28,8 @@
 
 .App .navbar .navbar-brand {
   padding-right: 10px;
+  padding-top: 0.52734rem;
+  padding-bottom: 0.52734rem;
 }
 
 .App .navbar .navbar-brand a {
@@ -27,6 +38,7 @@
 }
 
 .App .navbar .navbar-brand a h1 {
+  font-family: "DINNextLTPro-Heavy", sans-serif;
   padding-top: 13px;
   display: inline-block;
   margin-bottom: 0;
@@ -34,6 +46,8 @@
   font-size: 18px;
   line-height: 1.4;
   margin-top: 0;
+  font-weight: 500;
+  margin-left: -4px;
 }
 
 .App .navbar .navbar-brand a span {
@@ -44,6 +58,7 @@
 .App .navbar .navbar-brand a img {
   height: 50px;
   margin-top: -7px;
+  margin-left: -7px;
 }
 
 .App .navbar .navbar-nav {
@@ -56,8 +71,8 @@
   padding-bottom: 14px;
   margin-bottom: -4px;
   white-space: nowrap;
-  font-size: 0.92rem;
-  letter-spacing: 0.4px;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .App .navbar .navbar-nav .dropdown-item:focus {
@@ -69,6 +84,7 @@
   color: #000;
   font-size: 0.92rem;
   letter-spacing: 0.4px;
+  padding: 0.45rem 1.5rem;
 }
 
 .App .navbar .navbar-nav a:hover {
@@ -87,6 +103,7 @@
   margin-right: 2px;
   margin-left: 2px;
   padding-top: 2px;
+  font-size: 14px;
 }
 
 .App .navbar .navbar-nav .dropdown > .nav-link .user-icon {
@@ -102,7 +119,7 @@
 }
 
 .App .navbar .navbar-nav .nav-link .user-name {
-  max-width: 55px;
+  max-width: 75px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -120,16 +137,16 @@
 
 .App .navbar .search-button {
   display: none;
-  height: 40px;
+  height: 35px;
   position: absolute;
   right: 60px;
   color: #bbbbbb;
-  top: 8px;
+  top: 13.5px;
 }
 
 .App .navbar .search-form {
-  width: 100%;
-  margin-right: 50px;
+  flex-grow: 1;
+  margin-right: 25px;
 }
 
 .App .navbar .search-form .search-input {
@@ -159,7 +176,7 @@
 }
 
 .App .navbar .dropdown.nav-item {
-  width: 100px;
+  min-width: fit-content;
 }
 
 .App .navbar .dropdown-menu .dropdown-item:hover {
@@ -236,7 +253,7 @@
     z-index: 2000;
     width: 100%;
     height: 57px;
-    padding-top: 9px;
+    padding-top: 14px;
     overflow: visible;
   }
 
@@ -246,7 +263,7 @@
     position: absolute;
     right: 10px;
     font-size: 20px;
-    top: 19px;
+    top: 21px;
     color: #3f474e;
   }
 
@@ -293,10 +310,21 @@
   }
 
   .App .navbar .navbar-nav .nav-link.active {
-    border-bottom: 2px solid #ff9700;
-    padding-bottom: 10px;
-    margin-bottom: -6px;
-    margin-top: -12px;
+    padding-bottom: 18px;
+    margin-bottom: -10.5px;
+    margin-top: -13px;
     padding-top: 20px;
+    position: relative;
+  }
+
+  .App .navbar .navbar-nav .nav-link.active:after {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: #ff9700;
+    bottom: -1px;
+    left: 0;
+    content: "";
+    border-radius: 5px 5px 0 0;
   }
 }

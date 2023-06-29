@@ -5,7 +5,6 @@
 .Sidebar .sidebar-content {
   min-width: 200px;
   padding-top: 20px;
-  padding-left: 10px;
   height: 100%;
 }
 
@@ -22,6 +21,7 @@
 .Sidebar .sidebar-content .sidebar-widget a {
   margin: 0;
   margin-bottom: -1px;
+  padding: 1rem;
 }
 
 .Sidebar .sidebar-button {
@@ -47,30 +47,35 @@
 }
 
 .Sidebar .top-posts {
-  margin-top: 15px;
+  margin-top: 20px;
   margin-bottom: 5px;
 }
 
-.Sidebar .sidebar-widget .popular-icon, .Sidebar .sidebar-widget .top-rated-icon {
+.Sidebar .sidebar-widget .popular-icon,
+.Sidebar .sidebar-widget .top-rated-icon {
   margin-right: 5px;
   color: #ff9800;
 }
 
 .Sidebar .sidebar-widget .top-rated-icon {
-  color: #FFD700;
+  color: #ffd700;
 }
 
 .Sidebar .top-posts a {
   font-size: 1rem;
-  font-family: "DINNextLTPro-Heavy", sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
 }
 
 .Sidebar .top-posts a:hover {
   text-decoration: none;
 }
 
-.Sidebar .ad1, .Sidebar .ad2 {
+.Sidebar .ad1,
+.Sidebar .ad2 {
   margin: 10px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .Sidebar .top-posts ol {
@@ -78,16 +83,21 @@
   counter-reset: item;
 }
 
-.Sidebar ol li:before {
-  margin-right: 10px;
-  float: left;
-  content: counter(item) "  ";
-  counter-increment: item;
-  font-family: "DINNextLTPro-Heavy", sans-serif;
+.Sidebar ol li {
+  display: flex;
+  gap: 10px;
+  margin: 0.8rem 0;
 }
 
-.Sidebar .top-posts ol li a {
-  margin: 0.7rem 0;
+.Sidebar .sidebar-content ol li a {
+  margin: 0;
+}
+
+.Sidebar ol li:before {
+  content: counter(item) "  ";
+  counter-increment: item;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
 }
 
 .Sidebar .ad1 {
@@ -100,7 +110,7 @@
 
 .Sidebar .sticky {
   position: sticky;
-  top: 75px;
+  top: 72px;
 }
 
 /* Medium devices (tablets, less than 992px) */
@@ -125,9 +135,8 @@
 
   .Sidebar .sidebar-content {
     padding-left: 0;
-    max-width: 540px;
+    max-width: 400px;
     margin: auto;
-    padding-left: 20px;
     padding-right: 20px;
     padding-top: 15px;
   }
@@ -143,9 +152,11 @@
   }
 
   .Sidebar .top-posts {
-    margin-top: 15px;
     margin-bottom: 10px;
     padding: 0;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .Sidebar .top-posts ol {

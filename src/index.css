@@ -1,3 +1,7 @@
+html {
+  font-size: 14px;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -6,10 +10,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-p, ul li {
+p,
+ul li {
   line-height: 1.4;
-  font-size: 18px;
+  font-size: 1.1rem;
   margin-bottom: 1.5rem;
+}
+
+a {
+  font-size: inherit;
+}
+
+small a {
+  font-size: inherit;
 }
 
 ul {
@@ -20,41 +33,35 @@ ul li {
   margin-bottom: 0.2rem;
 }
 
-small a {
-  letter-spacing: 0.01rem;
-}
-
 code {
   font-family: Minlo, Menlo, monospace;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "DINNextLTPro-Heavy", sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
   line-height: 1.25;
   margin-top: 1.5rem;
-}
-
-h1 span {
-  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+  font-weight: 700;
 }
 
 select.form-control,
 textarea.form-control,
 input.form-control {
-  font-size: 16px;
+  font-size: 14px;
   padding-top: 0.5rem;
+  border-radius: 5px;
+  height: calc(2.5rem + 2px);
 }
-input[type=file] {
+select.form-control::placeholder,
+textarea.form-control::placeholder,
+input.form-control::placeholder {
+  font-size: 15px;
+}
+input[type="file"] {
   width: 100%;
 }
-
-/* .btn-primary {
-  color: #fff;
-  background-color: #093579;
-  border-color: #093579;
-}
-
-.btn-primary:hover {
-  background-color: #082c63;
-  border-color: #082c63;
-} */

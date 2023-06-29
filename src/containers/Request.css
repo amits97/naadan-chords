@@ -1,5 +1,5 @@
 .Request .contentRow {
-  min-height: calc(60vh - 56px);
+  min-height: 600px;
 }
 
 .Request .contentColumn {

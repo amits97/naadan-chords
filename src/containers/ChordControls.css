@@ -27,11 +27,11 @@
 }
 
 .ChordControls .controls-tray {
-  font-family: 'DINNextLTPro-Regular', 'Helvetica Neue', sans-serif;
+  font-family: "Poppins", "Helvetica Neue", sans-serif;
   font-size: 15px;
   font-weight: 700;
   margin-top: 25px;
-  opacity: .97;
+  opacity: 0.97;
   padding: 5px 15px;
   height: 55px;
   margin-left: -1rem;
@@ -88,8 +88,8 @@
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 767.98px) {
   .ChordControls .controls-tray {
-    background: #2E2E2E;
-    border: 1px solid #4D4F50;
+    background: #2e2e2e;
+    border: 1px solid #4d4f50;
     margin-left: -15px;
     margin-right: -15px;
   }

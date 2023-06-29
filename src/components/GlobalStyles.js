@@ -4,10 +4,12 @@ export const GlobalStyles = createGlobalStyle`
   body {
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
-    font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+    font-family: "Poppins", "Helvetica Neue", sans-serif;
   }
 
   .popover {
+    font-family: "Poppins", "Helvetica Neue", sans-serif;
+    font-size: 0.95rem;
     background: ${({ theme }) => theme.body};
     border: 1px solid ${({ theme }) => theme.border};
   }
@@ -209,16 +211,27 @@ export const GlobalStyles = createGlobalStyle`
 
   .nav-tabs {
     border-bottom: 1px solid ${({ theme }) => theme.border};
+    justify-content: center;
 
     .nav-link.active {
       background-color: ${({ theme }) => theme.body};
-      border-color: ${({ theme }) => theme.border} ${({ theme }) =>
-  theme.border} ${({ theme }) => theme.body};
+      border-color: transparent;
+      position: relative;
+
+      &:after {
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        background: #ff9700;
+        bottom: -1px;
+        left: 0;
+        content: "";
+        border-radius: 5px 5px 0 0;
+      }
     }
 
     .nav-link:hover {
-      border-color: ${({ theme }) => theme.border} ${({ theme }) =>
-  theme.border} ${({ theme }) => theme.body};
+      border-color: transparent;
     }
   }
 
@@ -271,6 +284,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .App .navbar .dropdown-menu {
+      border-radius: 10px;
       background: ${({ theme }) => theme.primaryDark};
     }
 

@@ -27,8 +27,8 @@
 }
 
 .Editor .header .btn {
-  margin-top: 30px;
-  padding-top: 8px;
+  margin-top: 25px;
+  padding-top: 6px;
 }
 
 .Editor .header .btn span {
@@ -42,7 +42,7 @@
 }
 
 .Editor form textarea.review-comment {
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   white-space: unset;
 }
 
@@ -51,7 +51,8 @@
   font-size: 1.25rem;
 }
 
-.Editor form textarea.form-control, .Editor form select.form-control {
+.Editor form textarea.form-control,
+.Editor form select.form-control {
   margin-bottom: 20px;
   line-height: 1.5;
 }
@@ -60,10 +61,15 @@
   overflow-x: scroll !important;
 }
 
-.Editor form textarea.form-control, .Editor .preview {
+.Editor form textarea.form-control,
+.Editor .preview {
   font-family: Minlo, Menlo, monospace;
   font-size: 87.5%;
   white-space: pre;
+}
+
+.Editor .editor-additional-details {
+  padding: 9px 15px;
 }
 
 .Editor .preview {
@@ -84,9 +90,12 @@
 }
 
 .Editor nav {
-  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
   margin-top: 25px;
   margin-bottom: 10px;
+}
+
+.Editor .nav-tabs {
+  justify-content: initial;
 }
 
 .Editor nav a {
@@ -94,6 +103,7 @@
   transition: none;
   padding-top: 10px;
   color: #888888;
+  padding: 1.1rem 1rem;
 }
 
 .Editor nav a:hover {
@@ -104,9 +114,6 @@
   background-color: inherit;
   color: inherit;
   font-weight: bold;
-  border-radius: 0;
-  box-shadow: 0 -3px 0 0 #ff9700;
-  border-top: 0;
 }
 
 .Editor .preview-placeholder {
@@ -170,7 +177,8 @@
   margin-bottom: -1.5px;
 }
 
-.Editor .image-uploader .spinning, .Editor .auto-saving .spinning {
+.Editor .image-uploader .spinning,
+.Editor .auto-saving .spinning {
   position: absolute;
   left: 5px;
   top: 10px;
@@ -193,9 +201,17 @@
   margin-top: -8px;
 }
 
+.Editor .editor-panel-container {
+  font-size: 16px;
+}
+
 @keyframes spin {
-  from { transform: scale(1) rotate(0deg); }
-  to { transform: scale(1) rotate(360deg); }
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(360deg);
+  }
 }
 
 /* Small devices (landscape phones, less than 768px) */

@@ -18,6 +18,10 @@
   top: 80px;
 }
 
+.Account .nav-pills .nav-link {
+  padding: 0.75rem 1rem;
+}
+
 .Account .nav-pills .nav-link.active {
   background-color: inherit;
   color: inherit;
@@ -68,7 +72,8 @@
   position: relative;
 }
 
-.Account .picture-container .edit-button, .Account .avatar-editor button.cancel-button {
+.Account .picture-container .edit-button,
+.Account .avatar-editor button.cancel-button {
   line-height: 1rem;
   position: absolute;
   width: 90px;
@@ -94,7 +99,7 @@
 }
 
 .Account .picture-container .edit-button .dropdown-menu a {
-  padding: 0.4rem 1.5rem
+  padding: 0.4rem 1.5rem;
 }
 
 .Account .picture-container .edit-button .dropdown-menu a .edit-icon {
@@ -122,7 +127,7 @@
 }
 
 .Account .avatar-editor > div > div {
- justify-content: left !important;
+  justify-content: left !important;
 }
 
 .Account .avatar-editor input {

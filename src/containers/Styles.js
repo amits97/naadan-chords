@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Col } from "react-bootstrap";
 
 export const TitleContainer = styled.div`
   overflow: auto;
@@ -74,8 +73,10 @@ export const PostItemContainer = styled.div`
   }
 `;
 
-export const SidebarCol = styled(Col)`
-  border-left: 1px solid ${({ theme }) => theme.border};
+export const SidebarWidgetContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 0 15px;
+  border-radius: 15px;
 `;
 
 export const SidebarContainer = styled.div`
@@ -98,7 +99,11 @@ export const SidebarContainer = styled.div`
   }
 
   a h6 {
-    color: ${({ theme }) => theme.link};
+    color: ${({ theme }) => theme.linkMuted};
+  }
+
+  a.active h6 {
+    color: ${({ theme }) => theme.text};
   }
 `;
 

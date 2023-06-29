@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEllipsisV,
-  faTimes,
-  faFire,
-  faStar,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Tabs, Tab } from "react-bootstrap";
 import config from "../config";
 import { LinkContainer } from "react-router-bootstrap";
@@ -128,35 +123,24 @@ export default class Sidebar extends Component {
 
   renderSidebarWidget = () => {
     return (
-      <Tabs
-        className="sidebar-widget"
-        defaultActiveKey="top-posts"
-        onSelect={this.tabChanged}
-      >
-        <Tab
-          eventKey="top-posts"
-          title={
-            <h6>
-              <FontAwesomeIcon className="popular-icon" icon={faFire} /> POPULAR
-            </h6>
-          }
-          key="top-posts"
+      <Styles.SidebarWidgetContainer>
+        <Tabs
+          className="sidebar-widget"
+          defaultActiveKey="top-posts"
+          onSelect={this.tabChanged}
         >
-          {this.renderTopPostsList()}
-        </Tab>
-        <Tab
-          eventKey="top-rated-posts"
-          title={
-            <h6>
-              <FontAwesomeIcon className="top-rated-icon" icon={faStar} /> TOP
-              RATED
-            </h6>
-          }
-          key="top-rated-posts"
-        >
-          {this.renderTopPostsList(true)}
-        </Tab>
-      </Tabs>
+          <Tab eventKey="top-posts" title={<h6>POPULAR</h6>} key="top-posts">
+            {this.renderTopPostsList()}
+          </Tab>
+          <Tab
+            eventKey="top-rated-posts"
+            title={<h6>TOP RATED</h6>}
+            key="top-rated-posts"
+          >
+            {this.renderTopPostsList(true)}
+          </Tab>
+        </Tabs>
+      </Styles.SidebarWidgetContainer>
     );
   };
 

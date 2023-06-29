@@ -1,9 +1,11 @@
 .ContentParser .meta {
-  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
+  font-family: "Poppins", "Helvetica Neue", sans-serif;
 }
 
-.ContentParser .meta p, .ContentParser .meta ul li {
-  font-size: 17px;
+.ContentParser .meta p,
+.ContentParser .meta ul li {
+  font-size: 1.07rem;
+  line-height: 1.55;
 }
 
 .ContentParser .meta ul {
@@ -24,19 +26,25 @@
 
 .ContentParser .meta a {
   color: inherit;
+  font-size: inherit;
 }
 
 .ContentParser nav {
-  font-family: "DINNextLTPro-Regular", "Helvetica Neue", sans-serif;
-  margin-top: 25px;
-  margin-bottom: 30px;
+  font-family: "Poppins", "Helvetica Neue", sans-serif;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.ContentParser .nav-tabs {
+  justify-content: initial;
 }
 
 .ContentParser nav a {
   font-size: 14px;
   transition: none;
-  padding-top: 10px;
+  padding: 1.1rem 1rem;
   color: #888888;
+  font-weight: bold;
 }
 
 .ContentParser nav a:hover {
@@ -44,12 +52,7 @@
 }
 
 .ContentParser nav .nav-link.active {
-  background-color: inherit;
   color: inherit;
-  font-weight: bold;
-  border-radius: 0;
-  box-shadow: 0 -3px 0 0 #ff9700;
-  border-top: 0;
 }
 
 .ContentParser .tab-contents {

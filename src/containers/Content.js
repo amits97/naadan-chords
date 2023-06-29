@@ -866,9 +866,9 @@ export default class Content extends Component {
             {this.renderTopAd()}
             {this.renderContent()}
           </Col>
-          <Styles.SidebarCol lg={4} className="sidebarColumn">
+          <Col lg={4} className="sidebarColumn">
             <Sidebar {...this.props} />
-          </Styles.SidebarCol>
+          </Col>
         </Row>
       </Styles.ContentContainer>
     );

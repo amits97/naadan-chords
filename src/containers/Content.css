@@ -28,14 +28,13 @@
 
 .Content .post-item-meta .badge,
 .Content .post small .badge {
-  padding: 0.35em 0.4em 0.15em 0.4em;
+  padding: 0.25em 0.4em 0.09em 0.4em;
   vertical-align: text-bottom;
   cursor: pointer;
-  line-height: 9.6px;
+  line-height: 0.93rem;
 }
 
 .Content .post small .badge {
-  padding: 0.45em 0.4em 0.15em 0.4em;
   vertical-align: initial;
   margin: 0 2px;
 }
@@ -103,7 +102,6 @@
 }
 
 .Content .post h2 {
-  margin-bottom: 0;
   margin-top: 0;
 }
 
@@ -115,6 +113,10 @@
   color: #999999;
   font-size: 90%;
   display: inline-block;
+}
+
+.Content .post small a {
+  font-size: inherit;
 }
 
 .Content .post .content {
@@ -132,7 +134,7 @@
 }
 
 .Content .post-rating .star-ratings {
-  top: -1.5px;
+  top: -2.5px;
 }
 
 .Content .post-rating.post-list .star-ratings {
@@ -244,13 +246,6 @@
   .Content .ad {
     overflow: hidden;
     border-bottom: none;
-  }
-}
-
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {
-  .Content .contentColumn {
-    padding-right: 25px;
   }
 }
 

@@ -14,7 +14,6 @@ import { API, Auth } from "aws-amplify";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import Sidebar from "./Sidebar";
-import * as Styles from "./Styles";
 import "./Request.css";
 
 export default class Request extends SearchComponent {
@@ -212,9 +211,9 @@ export default class Request extends SearchComponent {
                 </React.Fragment>
               )}
             </Col>
-            <Styles.SidebarCol lg={4} className="sidebarColumn">
+            <Col lg={4} className="sidebarColumn">
               <Sidebar {...this.props} />
-            </Styles.SidebarCol>
+            </Col>
           </Row>
         </Container>
       </div>

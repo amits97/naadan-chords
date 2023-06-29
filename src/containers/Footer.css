@@ -1,5 +1,5 @@
 .Footer {
-  padding: 20px 0;
+  padding: 30px 0;
   position: relative;
   z-index: 2;
   background: #222222;
@@ -29,7 +29,7 @@
 
 .Footer a {
   color: #dddddd;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .Footer small a {
@@ -45,6 +45,11 @@
   font-size: 0.7em;
   padding-bottom: 2px;
   margin-left: 2px;
+}
+
+.Footer .footer-ad {
+  display: flex;
+  justify-content: center;
 }
 
 /* Small devices (landscape phones, less than 768px) */

@@ -5,13 +5,63 @@ import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import logo from "../logo.svg";
+import config from "../config";
 import "./Footer.css";
 
 export default class Footer extends Component {
   constructor(props) {
     super(props);
     this.packageDetails = require("../../package.json");
+    this.state = {
+      adKey: props.pageKey,
+    };
   }
+
+  componentDidMount() {
+    if (
+      !this.props.isLocalhost &&
+      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
+    ) {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.pageKey !== prevProps.pageKey) {
+      this.setState({
+        adKey: this.props.pageKey,
+      });
+    }
+
+    if (
+      this.state.adKey !== prevState.adKey &&
+      !this.props.isLocalhost &&
+      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
+    ) {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  }
+
+  renderFooterAd = () => {
+    if (
+      config.noAds.includes(window.location.pathname.replace(/\//, "")) ||
+      this.props.isLocalhost
+    ) {
+      return <br />;
+    }
+
+    return (
+      <div className="footer-ad">
+        <ins
+          className="adsbygoogle"
+          style={{ display: "inline-block", width: "300px", height: "250px" }}
+          data-ad-client="ca-pub-1783579460797635"
+          data-ad-slot="4869884700"
+          key={this.state.adKey}
+        ></ins>
+      </div>
+    );
+  };
 
   render() {
     return (
@@ -182,7 +232,7 @@ export default class Footer extends Component {
                 </Col>
               </Row>
             </Col>
-            <Col sm={4}></Col>
+            <Col sm={4}>{this.renderFooterAd()}</Col>
           </Row>
         </Container>
       </footer>

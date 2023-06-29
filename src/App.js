@@ -507,7 +507,7 @@ class App extends Component {
                   )}
                 </Form>
                 <Navbar.Toggle />
-                <Navbar.Collapse className="justify-content-end">
+                <Navbar.Collapse className="navbar-holder justify-content-end">
                   <Nav>
                     <LinkContainer exact to="/">
                       <a href="#/" className="nav-link" onClick={this.closeNav}>
@@ -546,7 +546,10 @@ class App extends Component {
                 <Routes childProps={childProps} />
               </React.Fragment>
             </div>
-            <Footer />
+            <Footer
+              pageKey={window.location.href}
+              isLocalhost={childProps.isLocalhost}
+            />
           </div>
         </>
       </ThemeProvider>
