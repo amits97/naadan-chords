@@ -2,7 +2,7 @@ service: naadanchords-prerender
 provider:
   name: aws
   versionFunctions: false
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   stage: ${opt:stage,'prod'}
   region: ap-south-1
   memorySize: 2048
@@ -31,10 +31,10 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
-  objectPrefix: '${self:service}-${self:provider.stage}'
+  objectPrefix: "${self:service}-${self:provider.stage}"
   customDomain:
     domainName: prerender.naadanchords.com
-    basePath: ''
+    basePath: ""
     stage: ${self:provider.stage}
     createRoute53Record: true
 functions:
