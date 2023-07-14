@@ -1,28 +1,17 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
-import { API, Auth, Hub } from "aws-amplify";
-import { Modal, Navbar, Nav, Form, NavDropdown } from "react-bootstrap";
-import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import { withRouter } from "react-router-dom";
+import { Auth, Hub } from "aws-amplify";
+import { Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTimes,
-  faSearch,
-  faSyncAlt,
-  faUserCircle,
-  faCog,
-  faShieldAlt,
-  faFeather,
-  faPowerOff,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { lightTheme, darkTheme } from "./components/Themes";
 import * as urlLib from "./libs/url-lib";
-import { slugify } from "./libs/utils";
 import Routes from "./Routes";
-import logo from "./logo.svg";
 import Footer from "./containers/Footer";
+import Header from "./Header";
+
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "./App.css";
 
@@ -30,18 +19,11 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.searchInput = React.createRef();
-    this.activeSearchIndex = -1;
-
     this.state = {
       navExpanded: false,
       isAuthenticated: false,
       isAuthenticating: true,
       search: "",
-      searchText: "",
-      searchLoading: false,
-      searchOptions: [],
-      isSearchOpen: false,
       userName: "",
       preferredUsername: "",
       picture: "",
@@ -52,6 +34,7 @@ class App extends Component {
       emailVerified: false,
       userTheme: "auto",
       theme: "light",
+      scrollDirection: "",
     };
   }
 
@@ -239,151 +222,15 @@ class App extends Component {
     });
   };
 
-  unauthenticatedOptions = () => {
-    if (!this.state.isAuthenticated) {
-      return (
-        <LinkContainer
-          to={
-            urlLib.getUrlParameter("redirect")
-              ? `/login?redirect=${urlLib.getUrlParameter("redirect")}`
-              : `/login?redirect=${this.props.location.pathname}${this.props.location.search}`
-          }
-        >
-          <a href="#/" className="nav-link user-link">
-            <FontAwesomeIcon className="user-icon" icon={faUserCircle} /> Login
-          </a>
-        </LinkContainer>
-      );
-    }
-  };
-
-  authenticatedOptions = () => {
-    if (this.state.isAuthenticated) {
-      if (this.state.userName === "") {
-        this.getUserDetails();
-      }
-      const dpFragment = this.state.picture ? (
-        <React.Fragment>
-          <img
-            className="user-dp"
-            src={this.state.picture}
-            alt={this.state.name}
-          />
-          <span title={this.state.name} className="user-name">
-            {this.state.name.split(" ")[0]}
-          </span>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <FontAwesomeIcon className="user-icon" icon={faUserCircle} />
-          <span title={this.state.name} className="user-name">
-            {this.state.name.split(" ")[0]}
-          </span>
-        </React.Fragment>
-      );
-
-      return (
-        <NavDropdown title={dpFragment} alignRight>
-          <LinkContainer to="/account">
-            <NavDropdown.Item onClick={this.closeNav} role="button">
-              <React.Fragment>
-                <FontAwesomeIcon className="account-icon" icon={faCog} />
-                Account
-              </React.Fragment>
-            </NavDropdown.Item>
-          </LinkContainer>
-          <NavDropdown.Divider />
-          <LinkContainer
-            to="/admin"
-            className={`${this.state.isAdmin ? "" : "d-none"}`}
-          >
-            <NavDropdown.Item onClick={this.closeNav} role="button">
-              <React.Fragment>
-                <FontAwesomeIcon className="account-icon" icon={faShieldAlt} />
-                Admin
-              </React.Fragment>
-            </NavDropdown.Item>
-          </LinkContainer>
-          <LinkContainer to="/contributions">
-            <NavDropdown.Item onClick={this.closeNav} role="button">
-              <React.Fragment>
-                <FontAwesomeIcon className="account-icon" icon={faFeather} />
-                Contributions
-              </React.Fragment>
-            </NavDropdown.Item>
-          </LinkContainer>
-          <NavDropdown.Item onClick={this.handleLogout}>
-            <React.Fragment>
-              <FontAwesomeIcon className="account-icon" icon={faPowerOff} />
-              Logout
-            </React.Fragment>
-          </NavDropdown.Item>
-        </NavDropdown>
-      );
-    }
-  };
-
   setSearch = (value) => {
     this.setState({
       search: value,
     });
   };
 
-  handleSearchSubmit = (event) => {
-    event.preventDefault();
-  };
-
-  handleSearchChange = (event) => {
-    if (event && event[0]) {
-      let postSlug = slugify(event[0]);
-      this.searchInput.current.clear();
-      this.searchInput.current.blur();
-      this.setState({
-        isSearchOpen: false,
-      });
-      this.props.history.push(`/${postSlug}`);
-    }
-  };
-
-  handleSearchInputChange = (text) => {
+  setScrollDirection = (value) => {
     this.setState({
-      searchText: text,
-    });
-  };
-
-  handleSearchClick = () => {
-    this.setState({
-      isSearchOpen: true,
-    });
-
-    setTimeout(() => {
-      this.searchInput.current.focus();
-    }, 0);
-  };
-
-  onSearch = async (query) => {
-    this.setState({
-      searchLoading: true,
-    });
-    let searchOptions = [];
-    let posts = await API.get("posts", `/posts?s=${query}`);
-    if (posts && posts.Items && posts.Items.length > 0) {
-      searchOptions = posts.Items.map((post) => {
-        return post.title;
-      });
-    }
-
-    this.setState({
-      searchOptions,
-      searchLoading: false,
-    });
-  };
-
-  handleSearchClose = () => {
-    this.searchInput.current.clear();
-    this.searchInput.current.blur();
-    this.setState({
-      isSearchOpen: false,
+      scrollDirection: value,
     });
   };
 
@@ -406,13 +253,6 @@ class App extends Component {
     }
   };
 
-  updateFromTypeaheadState = (state) => {
-    const { activeIndex } = state;
-    if (this.activeSearchIndex !== activeIndex) {
-      this.activeSearchIndex = activeIndex;
-    }
-  };
-
   render() {
     const { theme } = this.state;
     const childProps = {
@@ -425,6 +265,10 @@ class App extends Component {
       isAdmin: this.state.isAdmin,
       search: this.state.search,
       setSearch: this.setSearch,
+      navExpanded: this.state.navExpanded,
+      setNavExpanded: this.setNavExpanded,
+      scrollDirection: this.state.scrollDirection,
+      setScrollDirection: this.setScrollDirection,
       closeNav: this.closeNav,
       username: this.state.userName,
       name: this.state.name,
@@ -443,92 +287,7 @@ class App extends Component {
         <>
           <GlobalStyles />
           <div className="App" onClick={this.onNavBlur}>
-            <Navbar
-              fluid="true"
-              expand="lg"
-              variant="dark"
-              onToggle={this.setNavExpanded}
-              expanded={this.state.navExpanded}
-            >
-              <div className="container">
-                <Navbar.Brand>
-                  <Link to="/">
-                    <img src={logo} alt="logo" />
-                    <h1>
-                      NAADAN<span>CHORDS</span>
-                    </h1>
-                  </Link>
-                </Navbar.Brand>
-                <button
-                  className={`navbar-toggler search-button ${
-                    this.state.navExpanded ? "d-none" : ""
-                  }`}
-                  onClick={this.handleSearchClick}
-                >
-                  <FontAwesomeIcon icon={faSearch} />
-                </button>
-                <Form
-                  inline
-                  className={`search-form ${
-                    this.state.isSearchOpen ? "show-search" : ""
-                  }`}
-                  onSubmit={this.handleSearchSubmit}
-                >
-                  <AsyncTypeahead
-                    id="search"
-                    placeholder="Search"
-                    isLoading={this.state.searchLoading}
-                    className="search-input mr-sm-2"
-                    onChange={this.handleSearchChange}
-                    onInputChange={this.handleSearchInputChange}
-                    onSearch={this.onSearch}
-                    ref={this.searchInput}
-                    options={this.state.searchOptions}
-                    filterBy={(option) => option}
-                    useCache={false}
-                    onKeyDown={(e) => {
-                      // Check whether the 'enter' key was pressed, and also make sure that
-                      // no menu items are highlighted.
-                      if (e.keyCode === 13 && this.activeSearchIndex === -1) {
-                        this.setSearch(this.state.searchText);
-                        this.handleSearchClose();
-                      }
-                    }}
-                  >
-                    {(state) => this.updateFromTypeaheadState(state)}
-                  </AsyncTypeahead>
-                  {this.state.searchLoading ? null : (
-                    <FontAwesomeIcon
-                      className="clear-search"
-                      onClick={this.handleSearchClose}
-                      icon={faTimes}
-                    />
-                  )}
-                </Form>
-                <Navbar.Toggle />
-                <Navbar.Collapse className="navbar-holder justify-content-end">
-                  <Nav>
-                    <LinkContainer exact to="/">
-                      <a href="#/" className="nav-link" onClick={this.closeNav}>
-                        Home
-                      </a>
-                    </LinkContainer>
-                    <LinkContainer exact to="/contributions/submit-song">
-                      <a href="#/" className="nav-link" onClick={this.closeNav}>
-                        Submit Song
-                      </a>
-                    </LinkContainer>
-                    <LinkContainer exact to="/request">
-                      <a href="#/" className="nav-link" onClick={this.closeNav}>
-                        Request
-                      </a>
-                    </LinkContainer>
-                    {this.unauthenticatedOptions()}
-                    {this.authenticatedOptions()}
-                  </Nav>
-                </Navbar.Collapse>
-              </div>
-            </Navbar>
+            <Header {...this.props} {...childProps} />
             <div className="contents" onTouchStart={this.onNavBlur}>
               <React.Fragment>
                 <Modal

@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.77.0",
+  "version": "0.77.2",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -9,6 +9,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "@smakss/react-scroll-direction": "^2.1.1",
     "ajv": "^7.2.3",
     "ajv-errors": "^2.0.1",
     "ajv-formats": "^2.1.1",
@@ -22,7 +23,7 @@
     "react-autosize-textarea": "^7.1.0",
     "react-avatar-edit": "^0.9.0",
     "react-bootstrap": "^1.4.3",
-    "react-bootstrap-typeahead": "^5.1.4",
+    "react-bootstrap-typeahead": "^6.2.3",
     "react-dom": "^16.14.0",
     "react-ga4": "^2.0.0",
     "react-helmet": "^6.1.0",

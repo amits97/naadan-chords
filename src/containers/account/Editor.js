@@ -797,6 +797,7 @@ export default class Editor extends Component {
                 insertAtCursor={this.insertAtCursor}
                 insertRef={this.chordsEditor}
                 readOnly={isViewMode}
+                {...this.props}
               />
               <TextareaAutosize
                 ref={this.chordsEditor}

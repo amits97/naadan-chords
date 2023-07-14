@@ -24,7 +24,12 @@
 .Contributions .nav-pills {
   margin-left: 5px;
   position: sticky;
-  top: 80px;
+  top: 10px;
+  transition: top 0.3s ease-out;
+}
+
+.Contributions .nav-pills.is-header-sticky {
+  top: 75px;
 }
 
 .Contributions .nav-pills .nav-link {
@@ -145,10 +150,15 @@
   .Contributions .delete-container {
     margin-top: 5px;
     position: sticky;
-    top: 55px;
+    top: -1px;
     z-index: 1;
     padding-top: 15px;
     height: 65px;
+    transition: top 0.3s ease-out;
+  }
+
+  .Contributions .delete-container.is-header-sticky {
+    top: 60px;
   }
 
   .Contributions .tab-content {

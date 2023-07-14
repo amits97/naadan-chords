@@ -6,6 +6,7 @@ import config from "../config";
 import { LinkContainer } from "react-router-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { API } from "aws-amplify";
+import { Direction } from "@smakss/react-scroll-direction";
 import * as Styles from "./Styles";
 import "./Sidebar.css";
 
@@ -242,7 +243,14 @@ export default class Sidebar extends Component {
         >
           <div className="sidebar-content">
             {this.renderSidebarAd1()}
-            <div className="sticky">
+            <div
+              className={`sticky ${
+                this.props.scrollDirection === Direction.Up ||
+                this.props.navExpanded
+                  ? "is-header-sticky"
+                  : ""
+              }`}
+            >
               {this.renderSidebarWidget()}
               {this.renderSidebarAd2()}
             </div>

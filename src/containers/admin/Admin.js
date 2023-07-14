@@ -1,11 +1,22 @@
 import React from "react";
 import { Auth, API } from "aws-amplify";
-import { Badge, Button, ListGroup, Tab, Row, Col, Nav, Form, FormControl } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  ListGroup,
+  Tab,
+  Row,
+  Col,
+  Nav,
+  Form,
+  FormControl,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Direction } from "@smakss/react-scroll-direction";
 import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
 import * as urlLib from "../../libs/url-lib";
@@ -27,7 +38,7 @@ export default class Admin extends SearchComponent {
       isPaginationLoading: false,
       activeTab: "posts",
       postsToBeDeleted: [],
-      search: ""
+      search: "",
     };
   }
 
@@ -37,7 +48,7 @@ export default class Admin extends SearchComponent {
       posts: [],
       pages: [],
       drafts: [],
-      review: []
+      review: [],
     });
 
     try {
@@ -45,11 +56,11 @@ export default class Admin extends SearchComponent {
       const activeTabData = await this[activeTab]();
       this.setState({
         [activeTab]: activeTabData,
-        isLoading: false
+        isLoading: false,
       });
 
       this.setState({
-        posts: activeTab === "posts" ? activeTabData : await this.posts()
+        posts: activeTab === "posts" ? activeTabData : await this.posts(),
       });
 
       this.setState({
@@ -66,28 +77,31 @@ export default class Admin extends SearchComponent {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   async componentDidMount() {
     window.scrollTo(0, 0);
 
     let session = await Auth.currentSession();
     await this.props.getUserPrevileges(session);
-    if(!this.props.isAdmin) {
+    if (!this.props.isAdmin) {
       this.props.history.push("/");
     }
 
     let activeTabInUrl = urlLib.getUrlParameter("tab");
     let activeTab = activeTabInUrl ? activeTabInUrl : "posts";
 
-    this.setState({
-      activeTab
-    }, () => {
-      if(!activeTabInUrl) {
-        urlLib.insertUrlParam("tab", activeTab);
+    this.setState(
+      {
+        activeTab,
+      },
+      () => {
+        if (!activeTabInUrl) {
+          urlLib.insertUrlParam("tab", activeTab);
+        }
+        this.loadData();
       }
-      this.loadData();
-    });
+    );
   }
 
   posts() {
@@ -98,7 +112,10 @@ export default class Admin extends SearchComponent {
 
   pages() {
     let { search } = this.state;
-    return API.get("posts", `/posts?postType=PAGE${search ? "&s=" + search : ""}`);
+    return API.get(
+      "posts",
+      `/posts?postType=PAGE${search ? "&s=" + search : ""}`
+    );
   }
 
   drafts() {
@@ -108,28 +125,31 @@ export default class Admin extends SearchComponent {
 
   review() {
     let { search } = this.state;
-    return API.get("posts", `/contributions/list?${search ? "s=" + search : ""}`);
+    return API.get(
+      "posts",
+      `/contributions/list?${search ? "s=" + search : ""}`
+    );
   }
 
   addPostToDelete = (event, postId) => {
     let postsToBeDeleted = this.state.postsToBeDeleted;
 
-    if(event.target.checked) {
+    if (event.target.checked) {
       postsToBeDeleted.push(postId);
     } else {
-      postsToBeDeleted = postsToBeDeleted.filter(function(post){
+      postsToBeDeleted = postsToBeDeleted.filter(function (post) {
         return post !== postId;
       });
     }
 
     this.setState({
-      postsToBeDeleted: postsToBeDeleted
+      postsToBeDeleted: postsToBeDeleted,
     });
-  }
+  };
 
   handleNewPostClick = () => {
     this.props.history.push("/admin/new-post");
-  }
+  };
 
   validateDeletes() {
     return this.state.postsToBeDeleted.length > 0;
@@ -137,56 +157,60 @@ export default class Admin extends SearchComponent {
 
   clearCheckboxes = () => {
     this.setState({
-      postsToBeDeleted: []
+      postsToBeDeleted: [],
     });
-  }
+  };
 
   toggleCheckboxes = () => {
-    if(this.validateDeletes()) {
+    if (this.validateDeletes()) {
       this.clearCheckboxes();
     } else {
       let posts = this.state[this.state.activeTab];
       let postsToBeDeleted = [];
-      for(var i = 0; i < posts.Items.length; i++) {
+      for (var i = 0; i < posts.Items.length; i++) {
         postsToBeDeleted.push(posts.Items[i].postId);
       }
       this.setState({
-        postsToBeDeleted: postsToBeDeleted
+        postsToBeDeleted: postsToBeDeleted,
       });
     }
-  }
+  };
 
   handleSubmit = async (event) => {
     event.preventDefault();
     let { postsToBeDeleted } = this.state;
 
-    if(window.confirm(`Are you sure you want to delete ${postsToBeDeleted.length} posts?`)) {
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${postsToBeDeleted.length} posts?`
+      )
+    ) {
       this.setState({
-        isLoading: true
+        isLoading: true,
       });
-  
+
       try {
-        for(var i = 0; i < postsToBeDeleted.length; i++) {
+        for (var i = 0; i < postsToBeDeleted.length; i++) {
           await this.deletePost(postsToBeDeleted[i]);
         }
-  
+
         this.setState({
-          postsToBeDeleted: []
+          postsToBeDeleted: [],
         });
-  
+
         this.componentDidMount();
       } catch (e) {
         this.setState({
-          isLoading: false
+          isLoading: false,
         });
-  
+
         console.log(e);
       }
     }
-  }
+  };
 
   deletePost(postId) {
-    if(this.state.activeTab === "drafts") {
+    if (this.state.activeTab === "drafts") {
       return API.del("posts", `/drafts/${postId}`);
     } else {
       return API.del("posts", `/posts/${postId}`);
@@ -195,42 +219,52 @@ export default class Admin extends SearchComponent {
 
   setActiveTab = (tab) => {
     this.setState({
-      activeTab: tab
+      activeTab: tab,
     });
     urlLib.insertUrlParam("tab", tab);
-  }
+  };
 
   loadMorePosts = async (exclusiveStartKey) => {
     this.setState({
-      isPaginationLoading: true
+      isPaginationLoading: true,
     });
 
     try {
-      let postsResult = await API.get("posts", `/posts?exclusiveStartKey=${exclusiveStartKey}`);
+      let postsResult = await API.get(
+        "posts",
+        `/posts?exclusiveStartKey=${exclusiveStartKey}`
+      );
       this.setState({
-        posts: { ...postsResult, Items: this.state.posts.Items.concat(postsResult.Items)},
+        posts: {
+          ...postsResult,
+          Items: this.state.posts.Items.concat(postsResult.Items),
+        },
         lastEvaluatedPost: postsResult.LastEvaluatedKey,
-        isPaginationLoading: false
+        isPaginationLoading: false,
       });
-    } catch(e) {
+    } catch (e) {
       this.setState({
-        isPaginationLoading: false
+        isPaginationLoading: false,
       });
       console.log(e);
     }
-  }
+  };
 
   prepareLastEvaluatedPostRequest = (lastEvaluatedPost) => {
-    return encodeURIComponent(JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"));
-  }
+    return encodeURIComponent(
+      JSON.stringify(lastEvaluatedPost).replace(/"/g, "'")
+    );
+  };
 
   loadPagination = (lastEvaluatedPost) => {
-    if(lastEvaluatedPost && lastEvaluatedPost.hasOwnProperty("postId")) {
+    if (lastEvaluatedPost && lastEvaluatedPost.hasOwnProperty("postId")) {
       return (
         <LoaderButton
           isLoading={this.state.isPaginationLoading}
           onClick={() => {
-            this.loadMorePosts(this.prepareLastEvaluatedPostRequest(lastEvaluatedPost));
+            this.loadMorePosts(
+              this.prepareLastEvaluatedPostRequest(lastEvaluatedPost)
+            );
           }}
           text="Load more"
           loadingText="Loading"
@@ -238,48 +272,75 @@ export default class Admin extends SearchComponent {
         />
       );
     }
-  }
+  };
 
   renderPosts(posts, isDraft, isContribution) {
     let { isLoading } = this.state;
     const { theme } = this.props;
 
-    if(isLoading) {
+    if (isLoading) {
       return (
-        <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+        <SkeletonTheme
+          color={theme.backgroundHighlight}
+          highlightColor={theme.body}
+        >
           <Skeleton count={10}></Skeleton>
         </SkeletonTheme>
       );
     }
 
-    if(posts.Items && posts.Items.length > 0) {
+    if (posts.Items && posts.Items.length > 0) {
       return (
         <div>
           <ListGroup variant="flush">
-            {
-              posts.Items.map((post, i) => {
-                return (
-                  <ListGroup.Item key={i} className={(i % 2 === 0) ? "" : "bg-light"}>
-                    <Form.Check type="checkbox" className="checkbox" onChange={(event) => this.addPostToDelete(event, post.postId)} checked={this.state.postsToBeDeleted.indexOf(post.postId) !== -1} />
-                    { post.status ? <Badge variant="primary">{post.status}</Badge> : null }
-                    <LinkContainer exact to={`/admin/${isDraft ? 'edit-draft' : isContribution ? 'review-post' : 'edit-post'}/${post.postId}`}>
-                      <a href="#/" className="text-primary">{ post.title }</a>
-                    </LinkContainer>
-                  </ListGroup.Item>
-                );
-              })
-            }
+            {posts.Items.map((post, i) => {
+              return (
+                <ListGroup.Item
+                  key={i}
+                  className={i % 2 === 0 ? "" : "bg-light"}
+                >
+                  <Form.Check
+                    type="checkbox"
+                    className="checkbox"
+                    onChange={(event) =>
+                      this.addPostToDelete(event, post.postId)
+                    }
+                    checked={
+                      this.state.postsToBeDeleted.indexOf(post.postId) !== -1
+                    }
+                  />
+                  {post.status ? (
+                    <Badge variant="primary">{post.status}</Badge>
+                  ) : null}
+                  <LinkContainer
+                    exact
+                    to={`/admin/${
+                      isDraft
+                        ? "edit-draft"
+                        : isContribution
+                        ? "review-post"
+                        : "edit-post"
+                    }/${post.postId}`}
+                  >
+                    <a href="#/" className="text-primary">
+                      {post.title}
+                    </a>
+                  </LinkContainer>
+                </ListGroup.Item>
+              );
+            })}
           </ListGroup>
-          { this.loadPagination(posts.LastEvaluatedKey) }
+          {this.loadPagination(posts.LastEvaluatedKey)}
         </div>
       );
-    } else if(posts.Items) {
-      return (
-        <p className="list-group-item">No posts</p>
-      );
+    } else if (posts.Items) {
+      return <p className="list-group-item">No posts</p>;
     } else {
       return (
-        <SkeletonTheme color={theme.backgroundHighlight} highlightColor={theme.body}>
+        <SkeletonTheme
+          color={theme.backgroundHighlight}
+          highlightColor={theme.body}
+        >
           <Skeleton count={10}></Skeleton>
         </SkeletonTheme>
       );
@@ -288,7 +349,7 @@ export default class Admin extends SearchComponent {
 
   handleSearchChange = (event) => {
     this.setState({
-      search: event.target.value
+      search: event.target.value,
     });
 
     //clear previous timeouts
@@ -299,7 +360,7 @@ export default class Admin extends SearchComponent {
       this.loadData();
       window.scrollTo(0, 0);
     }, 500);
-  }
+  };
 
   renderSEOTags() {
     return (
@@ -315,42 +376,120 @@ export default class Admin extends SearchComponent {
 
   render() {
     let { posts, pages, drafts, review, activeTab } = this.state;
-    let draftCount = (drafts && drafts.Items) ? this.state.drafts.Items.length : 0;
-    let reviewCount = (review && review.Items) ? review.Items.length : 0;
+    let draftCount =
+      drafts && drafts.Items ? this.state.drafts.Items.length : 0;
+    let reviewCount = review && review.Items ? review.Items.length : 0;
 
     return (
       <div className="container Admin">
-        { this.renderSEOTags() }
+        {this.renderSEOTags()}
         <div className="header border-bottom">
           <h1 className="float-left">Admin</h1>
           <LinkContainer exact to="/admin/new-post">
-            <Button variant="primary" className="float-right"><span><FontAwesomeIcon icon={ faPlus } /></span>New Post</Button>
+            <Button variant="primary" className="float-right">
+              <span>
+                <FontAwesomeIcon icon={faPlus} />
+              </span>
+              New Post
+            </Button>
           </LinkContainer>
         </div>
 
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav variant="pills" className="flex-column border rounded">
+              <Nav
+                variant="pills"
+                className={`flex-column border rounded ${
+                  this.props.scrollDirection === Direction.Up ||
+                  this.props.navExpanded
+                    ? "is-header-sticky"
+                    : ""
+                }`}
+              >
                 <Nav.Item className="border-bottom">
-                  <Nav.Link eventKey="posts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("posts"); }}>Posts</Nav.Link>
+                  <Nav.Link
+                    eventKey="posts"
+                    onClick={() => {
+                      this.clearCheckboxes();
+                      this.setActiveTab("posts");
+                    }}
+                  >
+                    Posts
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item className="border-bottom">
-                  <Nav.Link eventKey="pages" onClick={() => { this.clearCheckboxes(); this.setActiveTab("pages"); }}>Pages</Nav.Link>
+                  <Nav.Link
+                    eventKey="pages"
+                    onClick={() => {
+                      this.clearCheckboxes();
+                      this.setActiveTab("pages");
+                    }}
+                  >
+                    Pages
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item className="border-bottom">
-                  <Nav.Link eventKey="drafts" onClick={() => { this.clearCheckboxes(); this.setActiveTab("drafts"); }}>Drafts <span className={`${draftCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{draftCount}</Badge></span></Nav.Link>
+                  <Nav.Link
+                    eventKey="drafts"
+                    onClick={() => {
+                      this.clearCheckboxes();
+                      this.setActiveTab("drafts");
+                    }}
+                  >
+                    Drafts{" "}
+                    <span
+                      className={`${draftCount > 0 ? "d-inline" : "d-none"}`}
+                    >
+                      <Badge className="draft-count" variant="primary">
+                        {draftCount}
+                      </Badge>
+                    </span>
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Nav.Link eventKey="review" onClick={() => { this.clearCheckboxes(); this.setActiveTab("review"); }}>Review <span className={`${reviewCount > 0 ? 'd-inline' : 'd-none'}`}><Badge className="draft-count" variant="primary">{reviewCount}</Badge></span></Nav.Link>
+                  <Nav.Link
+                    eventKey="review"
+                    onClick={() => {
+                      this.clearCheckboxes();
+                      this.setActiveTab("review");
+                    }}
+                  >
+                    Review{" "}
+                    <span
+                      className={`${reviewCount > 0 ? "d-inline" : "d-none"}`}
+                    >
+                      <Badge className="draft-count" variant="primary">
+                        {reviewCount}
+                      </Badge>
+                    </span>
+                  </Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
             <Col lg={10}>
               <Form onSubmit={this.handleSubmit}>
-                <div className={`delete-container border-bottom`}>
-                  <Form.Check type="checkbox" className="checkbox pt-2 pl-4 form-check" onChange={this.toggleCheckboxes} checked={this.validateDeletes()} />
-                  <FormControl type="text" placeholder="Search" className="admin-search" value={this.state.search} onChange={this.handleSearchChange} />
+                <div
+                  className={`delete-container border-bottom ${
+                    this.props.scrollDirection === Direction.Up ||
+                    this.props.navExpanded
+                      ? "is-header-sticky"
+                      : ""
+                  }`}
+                >
+                  <Form.Check
+                    type="checkbox"
+                    className="checkbox pt-2 pl-4 form-check"
+                    onChange={this.toggleCheckboxes}
+                    checked={this.validateDeletes()}
+                  />
+                  <FormControl
+                    type="text"
+                    placeholder="Search"
+                    className="admin-search"
+                    value={this.state.search}
+                    onChange={this.handleSearchChange}
+                  />
                   <LoaderButton
                     variant="danger"
                     className="mt-1"
@@ -364,16 +503,16 @@ export default class Admin extends SearchComponent {
                 </div>
                 <Tab.Content>
                   <Tab.Pane eventKey="posts">
-                    { this.renderPosts(posts) }
+                    {this.renderPosts(posts)}
                   </Tab.Pane>
                   <Tab.Pane eventKey="pages">
-                  { this.renderPosts(pages) }
+                    {this.renderPosts(pages)}
                   </Tab.Pane>
                   <Tab.Pane eventKey="drafts">
-                  { this.renderPosts(drafts, true) }
+                    {this.renderPosts(drafts, true)}
                   </Tab.Pane>
                   <Tab.Pane eventKey="review">
-                  { this.renderPosts(review, null, true) }
+                    {this.renderPosts(review, null, true)}
                   </Tab.Pane>
                 </Tab.Content>
               </Form>
@@ -381,8 +520,11 @@ export default class Admin extends SearchComponent {
           </Row>
         </Tab.Container>
 
-        <div className="new-post-button btn btn-primary" onClick={this.handleNewPostClick}>
-          <FontAwesomeIcon icon={ faPlus } />
+        <div
+          className="new-post-button btn btn-primary"
+          onClick={this.handleNewPostClick}
+        >
+          <FontAwesomeIcon icon={faPlus} />
         </div>
       </div>
     );
