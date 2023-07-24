@@ -12,36 +12,56 @@ export async function main(event, context) {
     return failure({ status: false, message: "No write permissions" });
   }
 
-  const params = {
+  let params = {
     TableName: "NaadanChords",
     Key: {
       postId: event.pathParameters.id,
     },
-    UpdateExpression:
-      "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType, updatedAt = :updatedAt",
-    ExpressionAttributeValues: {
-      ":title": data.title || null,
-      ":song": data.song || null,
-      ":album": data.album || "PAGE",
-      ":singers": data.singers || null,
-      ":lyrics": data.lyrics || null,
-      ":music": data.music || null,
-      ":category":
-        data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
-      ":image": data.image || null,
-      ":scale": data.scale || null,
-      ":tempo": data.tempo || null,
-      ":timeSignature": data.timeSignature || null,
-      ":content": data.content || null,
-      ":leadTabs": data.leadTabs || null,
-      ":youtubeId": data.youtubeId || null,
-      ":postType": data.postType || "POST",
-      ":updatedAt": Date.now(),
-    },
-    ReturnValues: "ALL_NEW",
+  };
+
+  let updateExpression =
+    "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType";
+  let expressionAttributeValues = {
+    ":title": data.title || null,
+    ":song": data.song || null,
+    ":album": data.album || "PAGE",
+    ":singers": data.singers || null,
+    ":lyrics": data.lyrics || null,
+    ":music": data.music || null,
+    ":category":
+      data.category || (data.postType === "POST" ? "MALAYALAM" : "PAGE"),
+    ":image": data.image || null,
+    ":scale": data.scale || null,
+    ":tempo": data.tempo || null,
+    ":timeSignature": data.timeSignature || null,
+    ":content": data.content || null,
+    ":leadTabs": data.leadTabs || null,
+    ":youtubeId": data.youtubeId || null,
+    ":postType": data.postType || "POST",
   };
 
   try {
+    let result = await dynamoDbLib.call("get", params);
+
+    const createdAt = result.Item.createdAt;
+    const timeNow = Date.now();
+
+    // Set updated at if only 7 days has passed
+    if (timeNow - createdAt > 1000 * 60 * 60 * 24 * 7) {
+      updateExpression += ", updatedAt = :updatedAt";
+      expressionAttributeValues[":updatedAt"] = timeNow;
+    }
+
+    params = {
+      TableName: "NaadanChords",
+      Key: {
+        postId: event.pathParameters.id,
+      },
+      UpdateExpression: updateExpression,
+      ExpressionAttributeValues: expressionAttributeValues,
+      ReturnValues: "ALL_NEW",
+    };
+
     await dynamoDbLib.call("update", params);
     return success({ status: true });
   } catch (e) {
