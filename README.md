@@ -18,8 +18,7 @@ At a high level, this is how the project is split:
 ### Frontend (root `/` folder)
 * `npm start` to run project locally after installing all dependencies using `npm install`.
 * `npm run sitemap` to run sitemap generator which generates updated sitemap.xml in public folder.
-* `npm run deploy` to create new sitemap.xml and deploy all changes to S3 bucket and invalidate CloudFront cache.
-* `npm version minor --no-git-tag-version` to bump version number manually. This number appears in footer for verifying client version deployed.
+* `npm run deploy` to create new sitemap.xml and deploy all changes to S3 bucket and invalidate CloudFront cache. Version number updates are handled automatically.
 
 ### Backend (`api/` folder)
 * Install `serverless` using the command `npm install serverless -g`.
