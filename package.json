@@ -41,11 +41,7 @@
     "vexchords": "^1.2.0"
   },
   "overrides": {
-    "ansi-html": "https://registry.npmjs.org/ansi-html-community/-/ansi-html-community-0.0.8.tgz",
-    "hermes-engine": ">=0.11.0",
-    "shell-quote": ">=1.7.3",
     "json5": ">=2.2.2",
-    "fast-xml-parser": ">=4.2.4",
     "semver": ">=7.5.2"
   },
   "scripts": {
