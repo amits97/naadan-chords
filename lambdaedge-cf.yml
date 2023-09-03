@@ -18,32 +18,29 @@ Resources:
         Ref: S3BucketName
       PolicyDocument:
         Statement:
-          -
-            Action:
+          - Action:
               - "s3:GetObject"
             Effect: "Allow"
             Principal: "*"
-            Resource: 
-              Fn::Join: 
+            Resource:
+              Fn::Join:
                 - ""
-                - 
-                  - "arn:aws:s3:::"
-                  - 
-                    Ref: S3BucketName
+                - - "arn:aws:s3:::"
+                  - Ref: S3BucketName
                   - "/*"
   LambdaEdgeExecutionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - lambda.amazonaws.com
-            - edgelambda.amazonaws.com
-          Action:
-          - sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - edgelambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
       Policies:
         - PolicyName: logging
           PolicyDocument:
@@ -64,27 +61,26 @@ Resources:
           - "LambdaEdgeExecutionRole"
           - "Arn"
       Code:
-        ZipFile:
-          !Sub |
-            'use strict';
-            /* change the version number below whenever this code is modified */
-            exports.handler = (event, context, callback) => {
-                const request = event.Records[0].cf.request;
-                const headers = request.headers;
-                const user_agent = headers['user-agent'];
-                const host = headers['host'];
-                if (user_agent && host) {
-                  var prerender = /googlebot|Mediapartners-Google|AdsBot-Google-Mobile|AdsBot-Google-Mobile|AdsBot-Google|Googlebot-Image|Googlebot-News|FeedFetcher-Google|Google-Read-Aloud|Google-Structured-Data-Testing-Tool|Google Page Speed Insights|Chrome-Lighthouse|bingbot|yandex|baiduspider|Facebot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/i.test(user_agent[0].value);
-                  prerender = prerender || /_escaped_fragment_/.test(request.querystring);
-                  prerender = prerender && ! /\.(js|css|xml|less|png|jpg|jpeg|json|gif|pdf|doc|txt|ico|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent|ttf|woff|svg|eot)$/i.test(request.uri);
-                  if (prerender) {
-                    headers['x-prerender-host'] = [{ key: 'X-Prerender-Host', value: host[0].value}];
-                    headers['x-prerender-cachebuster'] = [{ key: 'X-Prerender-Cachebuster', value: Date.now().toString()}];
-                  }
+        ZipFile: !Sub |
+          'use strict';
+          /* change the version number below whenever this code is modified */
+          exports.handler = (event, context, callback) => {
+              const request = event.Records[0].cf.request;
+              const headers = request.headers;
+              const user_agent = headers['user-agent'];
+              const host = headers['host'];
+              if (user_agent && host) {
+                var prerender = /googlebot|Mediapartners-Google|AdsBot-Google-Mobile|AdsBot-Google-Mobile|AdsBot-Google|Googlebot-Image|Googlebot-News|FeedFetcher-Google|Google-Read-Aloud|Google-Structured-Data-Testing-Tool|Google Page Speed Insights|Chrome-Lighthouse|bingbot|yandex|baiduspider|Facebot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/i.test(user_agent[0].value);
+                prerender = prerender || /_escaped_fragment_/.test(request.querystring);
+                prerender = prerender && ! /\.(js|css|xml|less|png|jpg|jpeg|json|gif|pdf|doc|txt|ico|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent|ttf|woff|svg|eot)$/i.test(request.uri);
+                if (prerender) {
+                  headers['x-prerender-host'] = [{ key: 'X-Prerender-Host', value: host[0].value}];
+                  headers['x-prerender-cachebuster'] = [{ key: 'X-Prerender-Cachebuster', value: Date.now().toString()}];
                 }
-                callback(null, request);
-            };
-      Runtime: "nodejs10.x"
+              }
+              callback(null, request);
+          };
+      Runtime: "nodejs18.x"
   SetCustomHeadersVersion6:
     Type: "AWS::Lambda::Version"
     Properties:
@@ -122,7 +118,7 @@ Resources:
               }
               callback(null, request);
           };
-      Runtime: "nodejs10.x"
+      Runtime: "nodejs18.x"
   RedirectToPrerenderVersion4:
     Type: "AWS::Lambda::Version"
     Properties:
@@ -147,12 +143,26 @@ Resources:
               - "X-Prerender-Host"
               - "X-Prerender-Cachebuster"
           TargetOriginId: origin
-          ViewerProtocolPolicy : redirect-to-https
+          ViewerProtocolPolicy: redirect-to-https
           LambdaFunctionAssociations:
             - EventType: viewer-request
-              LambdaFunctionARN: !Join [ ":", [ !GetAtt [SetCustomHeaders, Arn], !GetAtt [SetCustomHeadersVersion6, Version] ] ]
+              LambdaFunctionARN:
+                !Join [
+                  ":",
+                  [
+                    !GetAtt [SetCustomHeaders, Arn],
+                    !GetAtt [SetCustomHeadersVersion6, Version],
+                  ],
+                ]
             - EventType: origin-request
-              LambdaFunctionARN: !Join [ ":", [ !GetAtt [RedirectToPrerender, Arn], !GetAtt [RedirectToPrerenderVersion4, Version] ] ]
+              LambdaFunctionARN:
+                !Join [
+                  ":",
+                  [
+                    !GetAtt [RedirectToPrerender, Arn],
+                    !GetAtt [RedirectToPrerenderVersion4, Version],
+                  ],
+                ]
         Enabled: true
         CustomErrorResponses:
           - ErrorCode: 404
@@ -165,12 +175,13 @@ Resources:
           - "www.naadanchords.com"
         ViewerCertificate:
           AcmCertificateArn: "arn:aws:acm:us-east-1:608318364761:certificate/2460dc04-8a28-4e30-aa3c-d9e0b63a52e0"
-          MinimumProtocolVersion: 'TLSv1.1_2016'
-          SslSupportMethod: 'sni-only'
+          MinimumProtocolVersion: "TLSv1.1_2016"
+          SslSupportMethod: "sni-only"
         HttpVersion: http2
         Origins:
           - CustomOriginConfig:
               OriginProtocolPolicy: http-only
-            DomainName: !Select [2, !Split [ '/', !GetAtt [WebBucket, WebsiteURL]]]
+            DomainName:
+              !Select [2, !Split ["/", !GetAtt [WebBucket, WebsiteURL]]]
             Id: origin
         PriceClass: PriceClass_All

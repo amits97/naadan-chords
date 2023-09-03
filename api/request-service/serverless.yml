@@ -16,13 +16,13 @@ custom:
     includeModules: true
   customDomain:
     domainName: api.naadanchords.com
-    basePath: 'request'
+    basePath: "request"
     stage: ${self:provider.stage}
     createRoute53Record: true
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs18.x
   stage: prod
   region: ap-south-1
 
