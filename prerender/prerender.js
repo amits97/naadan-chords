@@ -1,7 +1,7 @@
 import { success, failure, redirect, custom } from "./libs/response-lib";
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 
-const chromium = require("chrome-aws-lambda");
+const chromium = require("@sparticuz/chromium");
 const puppeteer = require("puppeteer-core");
 const axios = require("axios").default;
 const { XMLParser } = require("fast-xml-parser");
@@ -93,7 +93,7 @@ export async function handler(event) {
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
+      executablePath: await chromium.executablePath(),
       headless: chromium.headless,
     });
 
