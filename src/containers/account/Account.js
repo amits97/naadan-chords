@@ -14,6 +14,7 @@ import {
   Nav,
   Tab,
   FormText,
+  Modal,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
@@ -31,6 +32,7 @@ import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
 import { base64toBlob } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
+import VerifyEmail from "./VerifyEmail";
 
 import "./Account.css";
 
@@ -59,6 +61,7 @@ export default class Account extends SearchComponent {
       emailVerified: false,
       userTheme: "auto",
       userDeletable: false,
+      showEmailVerifyModal: false,
     };
   }
 
@@ -136,6 +139,7 @@ export default class Account extends SearchComponent {
       valid =
         valid &&
         (this.props.name !== this.state.name ||
+          this.props.email !== this.state.email ||
           (this.props.preferredUsername
             ? this.props.preferredUsername !== this.state.username
             : this.props.username !== this.state.username) ||
@@ -238,6 +242,10 @@ export default class Account extends SearchComponent {
             : this.props.username !== this.state.username
         ) {
           request.username = this.state.username;
+        }
+
+        if (this.props.email !== this.state.email) {
+          request.email = this.state.email;
         }
 
         await API.post("posts", "/account/update", {
@@ -426,6 +434,12 @@ export default class Account extends SearchComponent {
     }
   };
 
+  setEmailVerifyModalState = (value) => {
+    this.setState({
+      showEmailVerifyModal: value,
+    });
+  };
+
   setEditAvatarMode = (e, avatarEditMode) => {
     e.preventDefault();
 
@@ -435,8 +449,14 @@ export default class Account extends SearchComponent {
     });
   };
 
+  triggerVerifyEmailFlow = async () => {
+    let user = await Auth.currentAuthenticatedUser();
+    this.setEmailVerifyModalState(true);
+    await Auth.verifyUserAttribute(user, "email");
+  };
+
   renderProfileForm = () => {
-    const { theme } = this.props;
+    const { theme, emailVerified } = this.props;
 
     if (this.state.isInitialLoading) {
       return (
@@ -572,7 +592,21 @@ export default class Account extends SearchComponent {
             </FormGroup>
             <FormGroup controlId="email">
               <FormLabel>Email</FormLabel>
-              <FormControl type="text" value={this.state.email} disabled />
+              <FormControl
+                type="email"
+                isInvalid={!emailVerified}
+                value={this.state.email}
+                onChange={this.handleChange}
+              />
+              {!emailVerified && (
+                <FormText className="text-muted">
+                  You will not be able to login using this Email.&nbsp;
+                  <a href="#/" onClick={this.triggerVerifyEmailFlow}>
+                    Click here to verify
+                  </a>
+                  .
+                </FormText>
+              )}
             </FormGroup>
             <LoaderButton
               block
@@ -692,9 +726,10 @@ export default class Account extends SearchComponent {
         "posts",
         `/account/unlink-provider?providerName=${provider}&providerAttributeName=Cognito_Subject&providerAttributeValue=${providerAttributeValue}`
       );
-      window.location.reload();
     } catch (e) {
       console.log(e);
+    } finally {
+      window.location.reload();
     }
   };
 
@@ -792,12 +827,35 @@ export default class Account extends SearchComponent {
     );
   }
 
+  handleCloseEmailVerifyModal = async () => {
+    this.setEmailVerifyModalState(false);
+    const session = await Auth.currentSession();
+    await this.props.getUserAttributes(session);
+    this.setState({
+      emailVerified: this.props.emailVerified,
+    });
+  };
+
   render() {
     let { activeTab, emailVerified } = this.state;
 
     return (
       <div className="container Account">
         {this.renderSEOTags()}
+        <Modal
+          style={{ top: "20px" }}
+          show={this.state.showEmailVerifyModal}
+          onHide={this.handleCloseEmailVerifyModal}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Verify Email</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <VerifyEmail
+              handleCloseEmailVerifyModal={this.handleCloseEmailVerifyModal}
+            />
+          </Modal.Body>
+        </Modal>
         <div className="header border-bottom">
           <h1>Account</h1>
         </div>

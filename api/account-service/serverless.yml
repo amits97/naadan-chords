@@ -49,7 +49,8 @@ provider:
         - cognito-idp:AdminUpdateUserAttributes
         - cognito-idp:AdminConfirmSignUp
         - cognito-idp:ListUsersInGroup
-        - cognito-idp:SignUp
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
       Resource: "arn:aws:cognito-idp:ap-south-1:*:*"
     - Effect: Allow
       Action:

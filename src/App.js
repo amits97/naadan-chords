@@ -35,6 +35,7 @@ class App extends Component {
       userTheme: "auto",
       theme: "light",
       scrollDirection: "",
+      loginError: "",
     };
   }
 
@@ -142,6 +143,13 @@ class App extends Component {
       Auth.federatedSignIn({ provider: "Facebook" });
     }
 
+    if (loginError.indexOf("attributes required: [email]") !== -1) {
+      this.setState({
+        loginError:
+          "The email field was not returned. This may be because the email was missing, invalid or hasn't been confirmed with Facebook.",
+      });
+    }
+
     try {
       this.setWebsiteTheme();
       let session = await Auth.currentSession();
@@ -202,6 +210,7 @@ class App extends Component {
     this.setState(
       {
         userTheme: "auto",
+        loginError: "",
       },
       () => {
         this.setWebsiteTheme();
@@ -280,6 +289,7 @@ class App extends Component {
       userTheme: this.state.userTheme,
       theme: theme === "light" ? lightTheme : darkTheme,
       isLocalhost: window.location.hostname === "localhost",
+      loginError: this.state.loginError,
     };
 
     return (

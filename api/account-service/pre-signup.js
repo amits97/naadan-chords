@@ -7,50 +7,52 @@ function createNativeAccountAndLink(cognito, context, event) {
     const generatedUsername = event.request.userAttributes.email.split("@")[0];
 
     const params = {
-      ClientId: config.cognito.APP_CLIENT_ID,
+      UserPoolId: config.cognito.USER_POOL_ID,
+      DesiredDeliveryMediums: [],
+      MessageAction: "SUPPRESS",
       Username: generatedUsername,
-      Password: generatePassword(),
-      UserAttributes: [{
-        Name: 'email',
-        Value: event.request.userAttributes.email
-      }, {
-        Name: 'name',
-        Value: generatedUsername
-      }]
+      UserAttributes: [
+        {
+          Name: "email",
+          Value: event.request.userAttributes.email,
+        },
+        {
+          Name: "name",
+          Value: generatedUsername,
+        },
+      ],
     };
 
-    cognito.signUp(params, (err, data) => {
+    cognito.adminCreateUser(params, (err, data) => {
       if (err) {
         context.done(null, event);
         return;
       } else {
         let confirmParams = {
           UserPoolId: config.cognito.USER_POOL_ID,
+          Password: generatePassword(),
           Username: generatedUsername,
-          UserAttributes: [{
-            Name: 'email_verified',
-            Value: 'true'
-          }]
+          Permanent: true,
         };
-        cognito.adminUpdateUserAttributes(confirmParams, function() {
+        cognito.adminSetUserPassword(confirmParams, function () {
           let emailConfirmParams = {
             UserPoolId: config.cognito.USER_POOL_ID,
-            Username: generatedUsername
+            Username: generatedUsername,
           };
-          cognito.adminConfirmSignUp(emailConfirmParams, function() {
+          cognito.adminConfirmSignUp(emailConfirmParams, function () {
             let mergeParams = {
               DestinationUser: {
                 ProviderAttributeValue: generatedUsername,
-                ProviderName: 'Cognito'
+                ProviderName: "Cognito",
               },
               SourceUser: {
-                ProviderAttributeName: 'Cognito_Subject',
+                ProviderAttributeName: "Cognito_Subject",
                 ProviderAttributeValue: event.userName.split("_")[1],
-                ProviderName: 'Facebook'
+                ProviderName: "Facebook",
               },
-              UserPoolId: config.cognito.USER_POOL_ID
+              UserPoolId: config.cognito.USER_POOL_ID,
             };
-            cognito.adminLinkProviderForUser(mergeParams, function() {
+            cognito.adminLinkProviderForUser(mergeParams, function () {
               event.response.autoConfirmUser = true;
               context.done(null, event);
             });
@@ -67,34 +69,38 @@ exports.handler = (event, context) => {
   try {
     const cognito = new AWS.CognitoIdentityServiceProvider({
       apiVersion: "2016-04-19",
-      region: config.cognito.REGION
+      region: config.cognito.REGION,
     });
 
-    if (event.triggerSource.includes('ExternalProvider')) {
+    if (event.triggerSource.includes("ExternalProvider")) {
       // Social login
       let params = {
         UserPoolId: config.cognito.USER_POOL_ID,
-        AttributesToGet: ['sub', 'email'],
-        Filter: "email = \"" + event.request.userAttributes.email + "\""
+        AttributesToGet: ["sub", "email"],
+        Filter: 'email = "' + event.request.userAttributes.email + '"',
       };
       cognito.listUsers(params, (err, data) => {
         if (err) {
           event.listUsersError = err;
           context.done(null, event);
-        } else if (data != null && data.Users != null && data.Users[0] != null) {
+        } else if (
+          data != null &&
+          data.Users != null &&
+          data.Users[0] != null
+        ) {
           let mergeParams = {
-            DestinationUser: { 
+            DestinationUser: {
               ProviderAttributeValue: data.Users[0].Username,
-              ProviderName: 'Cognito'
+              ProviderName: "Cognito",
             },
-            SourceUser: { 
-              ProviderAttributeName: 'Cognito_Subject',
+            SourceUser: {
+              ProviderAttributeName: "Cognito_Subject",
               ProviderAttributeValue: event.userName.split("_")[1],
-              ProviderName: 'Facebook'
+              ProviderName: "Facebook",
             },
-            UserPoolId: config.cognito.USER_POOL_ID
+            UserPoolId: config.cognito.USER_POOL_ID,
           };
-          cognito.adminLinkProviderForUser(mergeParams, function() {
+          cognito.adminLinkProviderForUser(mergeParams, function () {
             context.done(null, event);
           });
         } else {
@@ -109,4 +115,4 @@ exports.handler = (event, context) => {
     event.error = e;
     context.done(null, event);
   }
-}
+};

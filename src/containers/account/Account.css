@@ -147,6 +147,12 @@
   margin-top: 10px;
 }
 
+.Account .verify-email-modal-contents {
+  padding: 50px 0;
+  margin: 0 auto;
+  max-width: 320px;
+}
+
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
   .Account .col-sm-2 {
