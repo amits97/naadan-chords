@@ -326,7 +326,7 @@ export default class Content extends Component {
             onClick={(e) => {
               e.preventDefault();
               this.ratingEl.current.scrollIntoView({
-                behavior: "smooth",
+                behavior: "instant",
                 block: "start",
               });
               this.ratingEl.current.click();

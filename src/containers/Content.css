@@ -171,6 +171,10 @@
   overflow: hidden;
 }
 
+.Content .ad:has(> ins.adsbygoogle[data-ad-status="unfilled"]) {
+  margin: 12px 0 0;
+}
+
 .Content .author-picture img {
   height: 20px;
   margin-top: -4px;
