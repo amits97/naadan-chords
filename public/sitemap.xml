@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 <url> <loc>https://www.naadanchords.com/</loc> </url>
+<url> <loc>https://www.naadanchords.com/athmave-po-romancham</loc> </url>
 <url> <loc>https://www.naadanchords.com/rathamaarey-jailer</loc> </url>
 <url> <loc>https://www.naadanchords.com/payye-veeshum-aanandam</loc> </url>
 <url> <loc>https://www.naadanchords.com/naan-un-24</loc> </url>
@@ -234,6 +235,7 @@
 <url> <loc>https://www.naadanchords.com/album/24</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/96</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/1983</loc> </url>
+<url> <loc>https://www.naadanchords.com/album/romancham</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/jailer</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/aanandam</loc> </url>
 <url> <loc>https://www.naadanchords.com/album/brahmastra</loc> </url>
