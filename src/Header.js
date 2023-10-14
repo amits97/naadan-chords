@@ -197,9 +197,7 @@ export default function Header({
           <Navbar.Brand>
             <Link to="/">
               <img src={logo} alt="logo" />
-              <h1>
-                NAADAN<span>CHORDS</span>
-              </h1>
+              <h1>Naadan Chords</h1>
             </Link>
           </Navbar.Brand>
           <button

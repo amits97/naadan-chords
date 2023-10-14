@@ -47,8 +47,8 @@
 }
 
 .Editor .alert .h4.alert-heading {
-  font-family: "DINNextLTPro-Heavy", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .Editor form textarea.form-control,

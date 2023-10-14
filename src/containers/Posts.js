@@ -505,7 +505,7 @@ export default class Posts extends Component {
           this.props.match.params.album
         )} - GUITAR CHORDS AND TABS - PAGE ${this.props.match.params.number}`;
       } else {
-        title = `LATEST POSTS - PAGE ${this.props.match.params.number}`;
+        title = `LATEST - PAGE ${this.props.match.params.number}`;
       }
     } else if (this.props.isCategory) {
       title = `${this.getCategoryFromLegacy(

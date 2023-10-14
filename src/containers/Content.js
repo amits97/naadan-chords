@@ -168,7 +168,7 @@ export default class Content extends Component {
   };
 
   renderTitle = (title, isUserPosts, isCategory, posts, authorCreateDate) => {
-    let displayTitle = title ? title : "LATEST POSTS";
+    let displayTitle = title ? title : "LATEST";
     if (isUserPosts) {
       displayTitle = posts[0].authorName;
 
