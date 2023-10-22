@@ -75,6 +75,7 @@ export default class Editor extends Component {
       autoSaveTimestamp: null,
       inputUpdated: false,
       isChordControlsTrayMaximized: true,
+      addUpdatedTag: true,
     };
   }
 
@@ -180,7 +181,7 @@ export default class Editor extends Component {
   };
 
   preparePostObject = (addUserId) => {
-    let { isAdmin } = this.props;
+    let { isAdmin, isEditMode } = this.props;
 
     let postObject = {
       title: this.state.title,
@@ -203,6 +204,11 @@ export default class Editor extends Component {
     if (isAdmin && addUserId) {
       postObject.userId = this.state.userId;
     }
+
+    if (isAdmin && isEditMode) {
+      postObject.addUpdatedTag = this.state.addUpdatedTag;
+    }
+
     return postObject;
   };
 
@@ -972,6 +978,24 @@ export default class Editor extends Component {
               {this.renderTitleInputs()}
               {this.state.postType === "POST" ? this.renderScaleInputs() : null}
               {this.renderContentInputs()}
+
+              {isAdmin && isEditMode ? (
+                <div className="editor-additional-details bg-light border rounded mb-4">
+                  <Form.Check
+                    type="checkbox"
+                    className="checkbox"
+                    onChange={() =>
+                      this.setState({
+                        addUpdatedTag: !this.state.addUpdatedTag,
+                      })
+                    }
+                    checked={this.state.addUpdatedTag}
+                    label={
+                      <span className="ml-2">Add updated tag to post</span>
+                    }
+                  />
+                </div>
+              ) : null}
 
               {isAdmin && isReviewMode ? (
                 <span className="review-submit-container d-inline-block">

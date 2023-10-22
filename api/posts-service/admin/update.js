@@ -46,8 +46,8 @@ export async function main(event, context) {
     const createdAt = result.Item.createdAt;
     const timeNow = Date.now();
 
-    // Set updated at if only 7 days has passed
-    if (timeNow - createdAt > 1000 * 60 * 60 * 24 * 7) {
+    // Set updated at if only 7 days has passed and addUpdatedTag flag is true
+    if (timeNow - createdAt > 1000 * 60 * 60 * 24 * 7 && data.addUpdatedTag) {
       updateExpression += ", updatedAt = :updatedAt";
       expressionAttributeValues[":updatedAt"] = timeNow;
     }
