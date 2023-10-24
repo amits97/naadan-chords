@@ -1,30 +1,19 @@
-.YouTubeEmbed video,
-.YouTubeEmbed embed,
-.YouTubeEmbed iframe,
-.YouTubeEmbed object {
-  max-width: 100%;
-}
-
-.YouTubeEmbed .video-wrapper {
-  width: 1280px;
-  max-width: 100%;
-  margin-bottom: 2em;
-}
-
-.YouTubeEmbed .video-container {
-  position: relative;
-  padding-bottom: 56.25%;
-  padding-top: 30px;
-  height: 0;
-  overflow: hidden;
-}
-
-.YouTubeEmbed .video-container iframe,
-.YouTubeEmbed .video-container object,
-.YouTubeEmbed .video-container embed {
-  position: absolute;
-  top: 0;
-  left: 0;
+.YouTubeEmbed iframe {
+  aspect-ratio: 16 / 9;
   width: 100%;
-  height: 100%;
+}
+
+@supports not (aspect-ratio: 1) {
+  .YouTubeEmbed {
+    position: relative;
+    padding-bottom: 56.25%;
+  }
+
+  .YouTubeEmbed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 }
