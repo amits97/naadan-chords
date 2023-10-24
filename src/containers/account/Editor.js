@@ -76,6 +76,7 @@ export default class Editor extends Component {
       inputUpdated: false,
       isChordControlsTrayMaximized: true,
       addUpdatedTag: true,
+      disableUpdateTagCheckbox: false,
     };
   }
 
@@ -346,7 +347,7 @@ export default class Editor extends Component {
   }
 
   async componentDidMount() {
-    let { isEditMode, isDraft, isReviewMode, isViewMode } = this.props;
+    let { isEditMode, isDraft, isReviewMode, isViewMode, isAdmin } = this.props;
 
     if (typeof Storage !== "undefined") {
       let localStorageItem = localStorage.getItem(
@@ -404,6 +405,17 @@ export default class Editor extends Component {
           this.setState({
             scaleDetailsExpanded: true,
           });
+        }
+
+        if (isEditMode && isAdmin) {
+          const timeNow = Date.now();
+
+          if (timeNow - post.createdAt <= 1000 * 60 * 60 * 24 * 7) {
+            this.setState({
+              addUpdatedTag: false,
+              disableUpdateTagCheckbox: true,
+            });
+          }
         }
 
         if (isDraft) {
@@ -984,6 +996,7 @@ export default class Editor extends Component {
                   <Form.Check
                     type="checkbox"
                     className="checkbox"
+                    disabled={this.state.disableUpdateTagCheckbox}
                     onChange={() =>
                       this.setState({
                         addUpdatedTag: !this.state.addUpdatedTag,
