@@ -60,24 +60,6 @@ function trimUrl(targetUrl) {
   return cleanUrl.replace(/\/$/, "");
 }
 
-function urlWithPreservedTabParam(targetUrl) {
-  let cleanUrl = trimUrl(targetUrl);
-
-  const allowedTabNames = ["chords", "tabs", "video"];
-  let rawUrl = new URL(targetUrl);
-  let rawTabParam = new URLSearchParams(rawUrl.search).get("tab");
-  let whitelistedTabName =
-    allowedTabNames[allowedTabNames.indexOf(rawTabParam)];
-
-  if (whitelistedTabName) {
-    let cleanUrlObj = new URL(cleanUrl);
-    cleanUrlObj.searchParams.append("tab", whitelistedTabName);
-    cleanUrl = cleanUrlObj.href;
-  }
-
-  return cleanUrl;
-}
-
 export async function handler(event) {
   const ERROR_MESSAGE = "No query parameter given!";
   const INVALID_URL = "Invalid URL!";
@@ -87,10 +69,12 @@ export async function handler(event) {
     "www.nadanchords.com",
     "nadanchords.com",
   ];
+  const ALLOWED_TAB_NAMES = ["chords", "tabs", "video"];
   const HOSTNAME = "https://www.naadanchords.com";
 
   if (event.queryStringParameters) {
-    const targetUrl = trimUrl(event.queryStringParameters.url);
+    const rawUrl = event.queryStringParameters.url;
+    const targetUrl = trimUrl(rawUrl);
     let parsedUrl;
 
     if (!targetUrl) {
@@ -102,10 +86,17 @@ export async function handler(event) {
       }
     }
 
+    let rawUrlObj = new URL(rawUrl);
+    let rawTabParam = new URLSearchParams(rawUrlObj.search).get("tab");
+    let whitelistedTabName =
+      ALLOWED_TAB_NAMES[ALLOWED_TAB_NAMES.indexOf(rawTabParam)];
+
+    if (whitelistedTabName) {
+      parsedUrl.searchParams.append("tab", whitelistedTabName);
+    }
+
     //Check if cache present in DynamoDB
-    let cache = await dynamoDbCache(
-      urlWithPreservedTabParam(event.queryStringParameters.url)
-    );
+    let cache = await dynamoDbCache(parsedUrl.href);
     if (cache) {
       return success(cache);
     }
@@ -140,10 +131,14 @@ export async function handler(event) {
     try {
       let page = await browser.newPage();
 
+      let url = new URL(whitelistedURL);
+
+      if (whitelistedTabName) {
+        // Set tab name
+        url.searchParams.append("tab", whitelistedTabName);
+      }
+
       // Set flag to disable speedy mode
-      let url = new URL(
-        urlWithPreservedTabParam(event.queryStringParameters.url)
-      );
       url.searchParams.append("isPrerendered", true);
       await page.goto(url.href);
 
@@ -190,10 +185,8 @@ export async function handler(event) {
         }
       }
       browser.close();
-      await writeDynamoDbCache(
-        urlWithPreservedTabParam(event.queryStringParameters.url),
-        result
-      );
+      url.searchParams.delete("isPrerendered");
+      await writeDynamoDbCache(url.href, result);
       return success(result);
     } catch (e) {
       return failure(e);
