@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tab, Nav } from "react-bootstrap";
 import { parseLinksToHtml, slugify } from "../libs/utils";
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import ChordControls from "./ChordControls";
 import ChordsPopup from "./ChordsPopup";
+import * as urlLib from "../libs/url-lib";
 import * as Styles from "./Styles";
 import "./ContentParser.css";
 
@@ -21,6 +22,7 @@ export default class ContentParser extends Component {
       scrollAmount: 0,
       isVideoReady: false,
       hasChordPopupsRendered: false,
+      activeTab: "chords",
     };
   }
 
@@ -254,6 +256,25 @@ export default class ContentParser extends Component {
     });
   };
 
+  setActiveTab = (tab, e) => {
+    e.nativeEvent.preventDefault();
+    this.setState({
+      activeTab: tab,
+    });
+    if (this.props.post.content && this.props.post.content.trim()) {
+      if (tab === "chords") {
+        urlLib.insertUrlParam("tab");
+        return;
+      }
+    } else {
+      if (tab === "tabs") {
+        urlLib.insertUrlParam("tab");
+        return;
+      }
+    }
+    urlLib.insertUrlParam("tab", tab);
+  };
+
   renderTabs = (leadTabs, youtubeId) => {
     let { content, fontSize } = this.state;
 
@@ -271,19 +292,11 @@ export default class ContentParser extends Component {
 
       if (this.props.post.content && this.props.post.content.trim()) {
         tabs.push(
-          <Tab eventKey="chords" title="CHORDS" key="chords">
-            <div className="tab-contents">
-              <div
-                className="chord-sheet"
-                dangerouslySetInnerHTML={this.parseContent()}
-                style={{ fontSize: fontSize }}
-              />
-              <ChordControls
-                className={`${content ? "" : "d-none"}`}
-                {...chordControlsProps}
-              />
-            </div>
-          </Tab>
+          <Nav.Item key="chords">
+            <Nav.Link eventKey="chords" href={`/${this.props.post.postId}`}>
+              CHORDS
+            </Nav.Link>
+          </Nav.Item>
         );
       }
 
@@ -293,31 +306,68 @@ export default class ContentParser extends Component {
             ? defaultActiveKey
             : "tabs";
         tabs.push(
-          <Tab eventKey="tabs" title="LEAD TABS" key="tabs">
-            <div
-              className="tab-contents chord-sheet"
-              dangerouslySetInnerHTML={this.parseContent(leadTabs)}
-            />
-          </Tab>
+          <Nav.Item key="tabs">
+            <Nav.Link eventKey="tabs" href="?tab=tabs">
+              LEAD TABS
+            </Nav.Link>
+          </Nav.Item>
         );
       }
 
       if (youtubeId) {
         tabs.push(
-          <Tab
-            eventKey="video"
-            title="VIDEO"
-            key="video"
-            className={`${this.state.isVideoReady ? "" : "visible"}`}
-          >
-            <div className="tab-contents chord-sheet">
-              <YouTubeEmbed youtubeId={youtubeId} onLoad={this.hideVideoTab} />
-            </div>
-          </Tab>
+          <Nav.Item key="video">
+            <Nav.Link
+              eventKey="video"
+              className={`${this.state.isVideoReady ? "" : "visible"}`}
+              href="?tab=video"
+            >
+              VIDEO
+            </Nav.Link>
+          </Nav.Item>
         );
       }
 
-      return <Tabs defaultActiveKey={defaultActiveKey}>{tabs}</Tabs>;
+      return (
+        <Tab.Container
+          defaultActiveKey={defaultActiveKey}
+          activeKey={this.state.activeTab}
+          onSelect={this.setActiveTab}
+        >
+          <Nav as="nav" className="nav-tabs">
+            {tabs}
+          </Nav>
+          <Tab.Content>
+            <Tab.Pane eventKey="chords">
+              <div className="tab-contents">
+                <div
+                  className="chord-sheet"
+                  dangerouslySetInnerHTML={this.parseContent()}
+                  style={{ fontSize: fontSize }}
+                />
+                <ChordControls
+                  className={`${content ? "" : "d-none"}`}
+                  {...chordControlsProps}
+                />
+              </div>
+            </Tab.Pane>
+            <Tab.Pane eventKey="tabs">
+              <div
+                className="tab-contents chord-sheet"
+                dangerouslySetInnerHTML={this.parseContent(leadTabs)}
+              />
+            </Tab.Pane>
+            <Tab.Pane eventKey="video">
+              <div className="tab-contents chord-sheet">
+                <YouTubeEmbed
+                  youtubeId={youtubeId}
+                  onLoad={this.hideVideoTab}
+                />
+              </div>
+            </Tab.Pane>
+          </Tab.Content>
+        </Tab.Container>
+      );
     } else {
       return (
         <div>
@@ -410,6 +460,16 @@ export default class ContentParser extends Component {
 
     this.setState({
       content: content,
+    });
+
+    let defaultActiveTab =
+      this.props.post.content && this.props.post.content.trim()
+        ? "chords"
+        : "tabs";
+    let activeTabInUrl = urlLib.getUrlParameter("tab");
+    let activeTab = activeTabInUrl ? activeTabInUrl : defaultActiveTab;
+    this.setState({
+      activeTab,
     });
   }
 
