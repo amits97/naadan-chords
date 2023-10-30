@@ -305,9 +305,13 @@ export default class ContentParser extends Component {
           this.props.post.content && this.props.post.content.trim()
             ? defaultActiveKey
             : "tabs";
+        let tabHref =
+          defaultActiveKey === "tabs"
+            ? `/${this.props.post.postId}`
+            : "?tab=tabs";
         tabs.push(
           <Nav.Item key="tabs">
-            <Nav.Link eventKey="tabs" href="?tab=tabs">
+            <Nav.Link eventKey="tabs" href={tabHref}>
               LEAD TABS
             </Nav.Link>
           </Nav.Item>

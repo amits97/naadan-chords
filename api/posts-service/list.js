@@ -102,6 +102,13 @@ export async function main(event, context, callback) {
     }
   }
 
+  let projectionExpression =
+    "postId, createdAt, updatedAt, postType, title, album, userId";
+
+  if (event.includeContentDetails === "true") {
+    projectionExpression += ", content, leadTabs, youtubeId";
+  }
+
   let params = {
     TableName: "NaadanChords",
     IndexName: "postType-updatedAt-index",
@@ -110,8 +117,7 @@ export async function main(event, context, callback) {
       ":postType": event.postType || "POST",
     },
     ScanIndexForward: false,
-    ProjectionExpression:
-      "postId, createdAt, updatedAt, postType, title, album, userId",
+    ProjectionExpression: projectionExpression,
     Limit: 15,
   };
 
@@ -187,6 +193,21 @@ export async function main(event, context, callback) {
       result.Items[i].authorName = users[userId].authorName;
       result.Items[i].userName = users[userId].userName;
       result.Items[i].authorPicture = users[userId].authorPicture;
+
+      // Append content details for sitemap
+      if (event.includeContentDetails === "true") {
+        result.Items[i].contentDetails = {
+          hasContent:
+            !!result.Items[i].content && !!result.Items[i].content?.trim(),
+          hasTabs:
+            !!result.Items[i].leadTabs && !!result.Items[i].leadTabs?.trim(),
+          hasVideo:
+            !!result.Items[i].youtubeId && !!result.Items[i].youtubeId?.trim(),
+        };
+        delete result.Items[i].content;
+        delete result.Items[i].leadTabs;
+        delete result.Items[i].youtubeId;
+      }
     }
 
     //append ratings

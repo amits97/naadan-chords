@@ -19,9 +19,9 @@ function prepareLastEvaluatedPostRequest(lastEvaluatedPost) {
 
 async function loadPosts(exclusiveStartKey) {
   try {
-    let queryRequest = "/posts";
+    let queryRequest = "/posts?includeContentDetails=true";
     if (exclusiveStartKey) {
-      queryRequest = `/posts?exclusiveStartKey=${exclusiveStartKey}`;
+      queryRequest = `/posts?includeContentDetails=true&exclusiveStartKey=${exclusiveStartKey}`;
     }
 
     let postsResult = await axios.get(config.apiGateway.URL + queryRequest);
@@ -108,6 +108,17 @@ async function generateSitemap() {
   while (true) {
     for (var i = 0; i < postsResult.Items.length; i++) {
       idMap.push({ id: postsResult.Items[i].postId });
+
+      if (
+        postsResult.Items[i].contentDetails.hasContent &&
+        postsResult.Items[i].contentDetails.hasTabs
+      ) {
+        idMap.push({ id: `${postsResult.Items[i].postId}?tab=tabs` });
+      }
+
+      if (postsResult.Items[i].contentDetails.hasVideo) {
+        idMap.push({ id: `${postsResult.Items[i].postId}?tab=video` });
+      }
 
       if (!authorList.hasOwnProperty(postsResult.Items[i].userName)) {
         authorList[postsResult.Items[i].userName] = 1;
