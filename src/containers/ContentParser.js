@@ -363,10 +363,12 @@ export default class ContentParser extends Component {
             </Tab.Pane>
             <Tab.Pane eventKey="video">
               <div className="tab-contents chord-sheet">
-                <YouTubeEmbed
-                  youtubeId={youtubeId}
-                  onLoad={this.hideVideoTab}
-                />
+                {this.state.activeTab === "video" && (
+                  <YouTubeEmbed
+                    youtubeId={youtubeId}
+                    onLoad={this.hideVideoTab}
+                  />
+                )}
               </div>
             </Tab.Pane>
           </Tab.Content>
