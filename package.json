@@ -15,7 +15,7 @@
     "ajv-formats": "^2.1.1",
     "ajv-keywords": "^4.0.1",
     "aws-amplify": "^5.3.6",
-    "axios": "^0.21.4",
+    "axios": "^1.6.0",
     "chord-fingering": "^1.0.2",
     "moment": "^2.29.4",
     "path-browserify": "^1.0.1",
