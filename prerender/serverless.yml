@@ -2,7 +2,7 @@ service: naadanchords-prerender
 provider:
   name: aws
   versionFunctions: false
-  runtime: nodejs16.x
+  runtime: nodejs18.x
   stage: ${opt:stage,'prod'}
   region: ap-south-1
   memorySize: 2048
