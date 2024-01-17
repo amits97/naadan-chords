@@ -133,4 +133,28 @@
   .ChordControls .tray-saver {
     right: 15px;
   }
+
+  .ChordControls .feature-label {
+    font-size: 13px;
+  }
+}
+
+/* Tiny devices (mobiles, less than 361.98px) */
+@media (max-width: 361.98px) {
+  .ChordControls .controls-tray {
+    padding: 5px 10px;
+  }
+
+  .ChordControls .feature-label {
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  .ChordControls .tray-control {
+    font-size: 22px;
+  }
+
+  .ChordControls .controls-container-holder {
+    width: calc(100% - 28px);
+  }
 }
