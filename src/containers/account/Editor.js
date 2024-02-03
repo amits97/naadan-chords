@@ -138,7 +138,6 @@ export default class Editor extends Component {
         this.state.content !== null &&
         this.state.song !== null &&
         this.state.album !== null &&
-        this.state.lyrics !== null &&
         this.state.music !== null
       );
     } else {
