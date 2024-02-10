@@ -253,6 +253,10 @@
     float: none;
   }
 
+  .Content .rating-comments-container.post-list {
+    float: none;
+  }
+
   .Content .postList .post small span.separator {
     display: inline-block;
     margin: 0 5px;
