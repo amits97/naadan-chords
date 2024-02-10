@@ -22,6 +22,7 @@ import {
   faRandom,
   faHistory,
   faUserCircle,
+  faCommentAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { slugify, capitalizeFirstLetter } from "../libs/utils";
 import Sidebar from "./Sidebar";
@@ -302,7 +303,10 @@ export default class Content extends Component {
                   <LinkContainer key={i} to={`/author/${post.userName}`}>
                     <a href="#/">{post.authorName}</a>
                   </LinkContainer>
-                  {this.renderRating(post, true)}
+                  <span className="rating-comments-container post-list">
+                    {this.renderRating(post, true)}
+                    {this.renderCommentCount(post, true)}
+                  </span>
                 </small>
               </Styles.PostItemContainer>
             ))}
@@ -312,6 +316,30 @@ export default class Content extends Component {
       } else {
         return this.render404();
       }
+    }
+  };
+
+  renderCommentLink = (isPostList) => {
+    if (!isPostList) {
+      return (
+        <span>
+          <hr className="mt-2 mb-2" />
+          <a
+            href="#/"
+            className="text-primary"
+            onClick={(e) => {
+              e.preventDefault();
+              this.ratingEl.current.scrollIntoView({
+                behavior: "instant",
+                block: "start",
+              });
+              this.ratingEl.current.click();
+            }}
+          >
+            Click here to add a comment
+          </a>
+        </span>
+      );
     }
   };
 
@@ -366,7 +394,6 @@ export default class Content extends Component {
   renderRating = (post, isPostList) => {
     return (
       <span className={`post-rating ${isPostList ? "post-list" : ""}`}>
-        <span className="separator ml-1 mr-1">|</span>
         <OverlayTrigger
           trigger="click"
           placement="bottom"
@@ -383,9 +410,52 @@ export default class Content extends Component {
               name="rating"
               rating={post.rating}
             />
-            <span className={`ml-1 ${post.ratingCount > 0 ? "" : "d-none"}`}>
-              ({post.ratingCount})
-            </span>
+            {!isPostList && (
+              <span className={`ml-1 ${post.ratingCount > 0 ? "" : "d-none"}`}>
+                ({post.ratingCount})
+              </span>
+            )}
+          </span>
+        </OverlayTrigger>
+      </span>
+    );
+  };
+
+  commentPopover = (post, isPostList) => {
+    if (post.commentsCount) {
+      return (
+        <Popover id="popover-basic" className="p-2">
+          <b>{post.commentsCount}</b> comment{post.commentsCount > 1 ? "s" : ""}
+          .{this.renderCommentLink(isPostList)}
+        </Popover>
+      );
+    } else {
+      return (
+        <Popover id="popover-basic" className="p-2">
+          No comments yet.
+          <br />
+          <span className={`${isPostList ? "d-none" : ""}`}>
+            Why don't you start a discussion? :)
+          </span>
+          {this.renderCommentLink(isPostList)}
+        </Popover>
+      );
+    }
+  };
+
+  renderCommentCount = (post, isPostList) => {
+    return (
+      <span className={`post-comment-count ${isPostList ? "post-list" : ""}`}>
+        {!isPostList && <span className="separator ml-2 mr-2">|</span>}
+        <OverlayTrigger
+          trigger="click"
+          placement="bottom"
+          overlay={this.commentPopover(post, isPostList)}
+          rootClose
+        >
+          <span className="comment-text-container">
+            {post.commentsCount || 0}
+            <FontAwesomeIcon className="comment-icon" icon={faCommentAlt} />
           </span>
         </OverlayTrigger>
       </span>
@@ -430,7 +500,7 @@ export default class Content extends Component {
             >
               <a href="#/">{capitalizeFirstLetter(post.category)}</a>
             </LinkContainer>
-            <span className="separator ml-1 mr-1">|</span>
+            <span className="separator ml-2 mr-1">|</span>
             <div className="meta-time-container">
               <FontAwesomeIcon
                 className="d-inline ml-1 mr-1"
@@ -439,7 +509,7 @@ export default class Content extends Component {
               {this.formatDate(post.createdAt)}
               {post.updatedAt > post.createdAt && (
                 <>
-                  <span className="separator ml-1 mr-1">|</span>
+                  <span className="separator ml-2 mr-2">|</span>
                   <OverlayTrigger
                     trigger="click"
                     placement="bottom"
@@ -455,7 +525,10 @@ export default class Content extends Component {
                 </>
               )}
             </div>
-            {this.renderRating(post)}
+            <div className="rating-comments-container">
+              {this.renderRating(post)}
+              {this.renderCommentCount(post)}
+            </div>
           </small>
           <hr />
         </div>

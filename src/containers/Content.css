@@ -31,7 +31,7 @@
   padding: 0.1em 0.4em 0.02em 0.4em;
   vertical-align: text-bottom;
   cursor: pointer;
-  line-height: 0.93rem;
+  line-height: 1.05rem;
 }
 
 .Content .post small .badge {
@@ -141,6 +141,37 @@
   top: -2px;
 }
 
+.Content .rating-comments-container {
+  margin-top: 7px;
+}
+
+.Content .rating-comments-container.post-list {
+  float: right;
+  margin-top: 0;
+}
+
+.Content .post-comment-count {
+  margin-left: 0;
+  cursor: pointer;
+}
+
+.Content .post-comment-count.post-list {
+  margin-left: 10px;
+}
+
+.Content .post-comment-count .comment-text-container {
+  font-weight: bold;
+}
+
+.Content .post-comment-count .comment-icon {
+  margin-left: 4px;
+  font-size: 11px;
+}
+
+.Content .post-comment-count.post-list .comment-icon {
+  font-size: 9px;
+}
+
 .Content .rate-container {
   position: relative;
 }
@@ -195,6 +226,10 @@
     display: none;
   }
 
+  .Content .post small .post-comment-count span.separator {
+    display: inline-block;
+  }
+
   .Content .post small .meta-time-container {
     display: block;
     position: relative;
@@ -213,8 +248,9 @@
     display: block;
   }
 
-  .Content .post-rating.post-list {
-    display: block;
+  .Content .rating-comments-container {
+    display: flex;
+    float: none;
   }
 
   .Content .postList .post small span.separator {
