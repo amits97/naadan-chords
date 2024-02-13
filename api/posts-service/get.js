@@ -1,84 +1,8 @@
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
 import { success, failure } from "../libs/response-lib";
-
-async function countReplyComments(commentId) {
-  const params = {
-    TableName: "NaadanChordsComments",
-    ScanFilter: {
-      commentId: {
-        ComparisonOperator: "EQ",
-        AttributeValueList: [commentId],
-      },
-    },
-  };
-  const comment = await dynamoDbLib.call("scan", params);
-  if (comment.Items && comment.Items.length === 1) {
-    let count = 1;
-    let commentItem = comment.Items[0];
-    let replies = commentItem.replies || [];
-    for (let i = 0; i < replies.length; i++) {
-      const replyCommentsCount = await countReplyComments(replies[i]);
-      count += replyCommentsCount;
-    }
-    return count;
-  }
-  return 0;
-}
-
-async function appendCommentsCount(item) {
-  let filterExpression = "contains(postId, :postId)";
-  let expressionAttributeValues = {};
-  expressionAttributeValues[`:postId`] = item.postId;
-
-  let params = {
-    TableName: "NaadanChordsComments",
-    FilterExpression: filterExpression,
-    ExpressionAttributeValues: expressionAttributeValues,
-  };
-
-  try {
-    let commentsResult = await dynamoDbLib.call("scan", params);
-    let comments = commentsResult.Items;
-    let commentsCount = 0;
-
-    for (let i = 0; i < comments.length; i++) {
-      let commentItem = comments[i];
-      let replies = commentItem.replies || [];
-      commentsCount += 1;
-      for (let j = 0; j < replies.length; j++) {
-        const replyCommentsCount = await countReplyComments(replies[j]);
-        commentsCount += replyCommentsCount;
-      }
-    }
-    item.commentsCount = commentsCount;
-  } catch (e) {
-    item.commentsError = e;
-  }
-
-  return item;
-}
-
-async function appendRating(item) {
-  const params = {
-    TableName: "NaadanChordsRatings",
-    Key: {
-      postId: item.postId,
-    },
-  };
-
-  try {
-    let ratingResult = await dynamoDbLib.call("get", params);
-    if (ratingResult && ratingResult.hasOwnProperty("Item")) {
-      item.rating = ratingResult.Item.rating;
-      item.ratingCount = ratingResult.Item.count;
-    }
-  } catch (e) {
-    item.ratingError = e;
-  }
-
-  return item;
-}
+import { appendRatings } from "../common/post-ratings";
+import { appendCommentsCount } from "../common/post-comments";
 
 function retryLoop(postId) {
   let keywords = postId.split("-");
@@ -119,8 +43,9 @@ async function retryGet(postId) {
         //Do not expose userId
         delete finalResult.userId;
 
-        finalResult = await appendRating(finalResult);
-        return success(finalResult);
+        finalResult = await appendRatings({ Items: [finalResult] });
+        finalResult = await appendCommentsCount(finalResult);
+        return success(finalResult.Items[0]);
       } else {
         return retryLoop(postId);
       }
@@ -155,9 +80,9 @@ export async function main(event, context) {
       //Do not expose userId
       delete result.Item.userId;
 
-      let finalResult = await appendRating(result.Item);
-      finalResult = await appendCommentsCount(result.Item);
-      return success(finalResult);
+      let finalResult = await appendRatings({ Items: [result.Item] });
+      finalResult = await appendCommentsCount(finalResult);
+      return success(finalResult.Items[0]);
     } else {
       return retryGet(event.pathParameters.id);
     }
