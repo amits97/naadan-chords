@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Tab, Nav } from "react-bootstrap";
-import { parseLinksToHtml, slugify } from "../libs/utils";
+import { getNthOccurenceIndex, parseLinksToHtml, slugify } from "../libs/utils";
 import YouTubeEmbed from "../components/YouTubeEmbed";
 import ChordControls from "./ChordControls";
 import ChordsPopup from "./ChordsPopup";
@@ -130,10 +130,26 @@ export default class ContentParser extends Component {
     //Chords regex
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
+    const fretNumbers = [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+    ];
     const chords =
-      "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|6sus2|7sus4|add9|add4|m|5|6|7|dim)?";
+      "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|6sus2|7sus4|add9|add4|5add14|m|5|6|7|dim)?";
     const flat = "(b)?";
     const sharp = "(#)?";
+    const tabNumbers = "([-/hps])([0-9]+)";
     const chordsPattern =
       "\\b" + notes + flat + chords + "\\b" + sharp + chords;
     const chordsWithSlashPattern =
@@ -148,9 +164,49 @@ export default class ContentParser extends Component {
       chords;
     const chordsRegex = new RegExp(chordsWithSlashPattern + tabBeginning, "g");
     const chordsOnlyRegex = new RegExp(chords, "g");
+    const tabsFretNumbersOnlyRegex = new RegExp(tabNumbers, "g");
 
     //replace tabs
     content = content.replace(tabRegExp, (match, p1) => {
+      const tabLineStrings = p1.split("\n");
+      let longestTabLineLength = 0;
+      for (let i = 0; i < tabLineStrings.length; i++) {
+        let tabLine = tabLineStrings[i].trim();
+        if (tabLine.includes("-") && tabLine.includes("|")) {
+          tabLineStrings[i] = tabLineStrings[i].replace(
+            tabsFretNumbersOnlyRegex,
+            (match, p1, originalFretPosition) => {
+              const i =
+                (Number(originalFretPosition) + this.state.transposeAmount) %
+                fretNumbers.length;
+              let newFretPosition = `${
+                fretNumbers[i < 0 ? i + fretNumbers.length : i]
+              }`;
+              return p1 + newFretPosition;
+            }
+          );
+          tabLine = tabLineStrings[i];
+          let tabLineLength = getNthOccurenceIndex(tabLine, "|", 2) + 1;
+          if (tabLineLength > longestTabLineLength) {
+            longestTabLineLength = tabLineLength;
+          }
+        }
+      }
+      for (let i = 0; i < tabLineStrings.length; i++) {
+        let tabLine = tabLineStrings[i].trim();
+        if (tabLine.includes("-") && tabLine.includes("|")) {
+          let tabLineLength = getNthOccurenceIndex(tabLine, "|", 2) + 1;
+          if (tabLineLength < longestTabLineLength) {
+            const diff = longestTabLineLength - tabLineLength;
+            const filler = "-".repeat(diff);
+            tabLineStrings[i] =
+              tabLine.slice(0, tabLineLength - 2) +
+              filler +
+              tabLine.slice(tabLineLength - 2);
+          }
+        }
+      }
+      p1 = tabLineStrings.join("\n");
       return `<div class="tabs">${p1}</div>`;
     });
 

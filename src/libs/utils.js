@@ -79,3 +79,7 @@ export function generateDelayPromise(timeout, callback) {
     setTimeout(resolve.bind(null, callback), timeout);
   });
 }
+
+export function getNthOccurenceIndex(str, char, n) {
+  return str.split(char).slice(0, n).join(char).length;
+}
