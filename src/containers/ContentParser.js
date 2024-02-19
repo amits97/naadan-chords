@@ -130,21 +130,6 @@ export default class ContentParser extends Component {
     //Chords regex
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
-    const fretNumbers = [
-      "0",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11",
-      "12",
-    ];
     const chords =
       "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|6sus2|7sus4|add9|add4|5add14|m|5|6|7|dim)?";
     const flat = "(b)?";
@@ -176,12 +161,18 @@ export default class ContentParser extends Component {
           tabLineStrings[i] = tabLineStrings[i].replace(
             tabsFretNumbersOnlyRegex,
             (match, p1, originalFretPosition) => {
-              const i =
-                (Number(originalFretPosition) + this.state.transposeAmount) %
-                fretNumbers.length;
-              let newFretPosition = `${
-                fretNumbers[i < 0 ? i + fretNumbers.length : i]
-              }`;
+              let newFretPosition =
+                Number(originalFretPosition) + this.state.transposeAmount;
+
+              if (newFretPosition < 0) {
+                newFretPosition = newFretPosition + 12;
+              }
+
+              if (newFretPosition > 17) {
+                newFretPosition = newFretPosition - 12;
+              }
+
+              newFretPosition = `${newFretPosition}`;
               return p1 + newFretPosition;
             }
           );
