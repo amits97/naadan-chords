@@ -78,6 +78,7 @@
   font-size: 14px;
   padding-left: 10px;
   padding-right: 10px;
+  touch-action: manipulation;
 }
 
 .ChordControls .tray-control {
