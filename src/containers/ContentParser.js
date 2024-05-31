@@ -131,7 +131,7 @@ export default class ContentParser extends Component {
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
     const chords =
-      "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|6sus2|7sus4|add9|add4|5add14|m|5|6|7|dim)?";
+      "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|6sus2|7sus2|7sus4|add9|add4|5add14|m|5|6|7|dim)?";
     const flat = "(b)?";
     const sharp = "(#)?";
     const tabNumbers = "([-/hps])([0-9]+)";
