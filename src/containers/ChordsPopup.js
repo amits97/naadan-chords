@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { Carousel, Form} from "react-bootstrap";
+import { Carousel, Form } from "react-bootstrap";
 import * as vexchords from "vexchords";
 import { findGuitarChord } from "chord-fingering";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSyncAlt, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { CHORD_FINGERINGS, INSTRUMENTS, STRINGS_COUNT, TUNINGS } from "../libs/constants";
+import {
+  faSyncAlt,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
+import { INSTRUMENTS, STRINGS_COUNT, TUNINGS } from "../libs/constants";
 import PopoverStickOnHover from "../components/PopoverStickOnHover";
 import "./ChordsPopup.css";
 
@@ -16,7 +19,10 @@ export default class ChordsPopup extends Component {
 
     this.state = {
       popoverOpen: false,
-      instrument: typeof Storage !== "undefined" ? localStorage.getItem("instrument") || INSTRUMENTS.GUITAR : INSTRUMENTS.GUITAR
+      instrument:
+        typeof Storage !== "undefined"
+          ? localStorage.getItem("instrument") || INSTRUMENTS.GUITAR
+          : INSTRUMENTS.GUITAR,
     };
   }
 
@@ -28,7 +34,7 @@ export default class ChordsPopup extends Component {
         const savedInstrument = localStorage.getItem("instrument");
         if (savedInstrument && this.state.instrument !== savedInstrument) {
           this.setState({
-            instrument: savedInstrument
+            instrument: savedInstrument,
           });
         }
       }
@@ -36,7 +42,7 @@ export default class ChordsPopup extends Component {
   }
 
   getChordElements = (chordName) => {
-    if(this.renderedChordElements.length > 0) {
+    if (this.renderedChordElements.length > 0) {
       return this.renderedChordElements;
     } else {
       const { theme } = this.props;
@@ -48,12 +54,7 @@ export default class ChordsPopup extends Component {
       let barres = [];
       let validFingeringFound = false;
 
-      if(chord) {
-        if (CHORD_FINGERINGS[instrument][chordName]) {
-          chord.fingerings.unshift({
-            positionString: CHORD_FINGERINGS[instrument][chordName]
-          });
-        }
+      if (chord) {
         chord.fingerings.forEach((fingering) => {
           let chordPosition = [];
           let lowestPosition = 12;
@@ -67,14 +68,14 @@ export default class ChordsPopup extends Component {
             validFingeringFound = true;
           }
 
-          for(let i = 0; i < positionString.length; i++) {
+          for (let i = 0; i < positionString.length; i++) {
             let position = positionString[i];
 
-            if(position !== "x" && parseInt(position) > highestPosition) {
+            if (position !== "x" && parseInt(position) > highestPosition) {
               highestPosition = parseInt(position);
             }
 
-            if(position !== "x" && parseInt(position) < lowestPosition) {
+            if (position !== "x" && parseInt(position) < lowestPosition) {
               lowestPosition = parseInt(position) - 1;
             }
           }
@@ -82,34 +83,40 @@ export default class ChordsPopup extends Component {
           if (highestPosition - lowestPosition > 5) {
             return;
           }
-  
+
           lowestPosition = lowestPosition < 0 ? 0 : lowestPosition;
 
-          for(let i = 1; i <= positionString.length; i++) {
-            let reverseIndex = positionString.length-i;
+          for (let i = 1; i <= positionString.length; i++) {
+            let reverseIndex = positionString.length - i;
             let fretPosition = positionString[reverseIndex];
-  
-            if(fretPosition !== "x") {
+
+            if (fretPosition !== "x") {
               fretPosition = parseInt(fretPosition) - lowestPosition;
             }
 
             chordPosition.push([i, fretPosition]);
           }
 
-          if(fingering.barre) {
-            let fromString = 6 - fingering.barre.stringIndices[0];
-            let toString = 6 - (fingering.barre.stringIndices.slice(-1).pop());
-  
-            if(fromString - toString > 2) {
+          if (fingering.barre) {
+            let fromString =
+              STRINGS_COUNT[instrument] - fingering.barre.stringIndices[0];
+            let toString =
+              STRINGS_COUNT[instrument] -
+              fingering.barre.stringIndices.slice(-1).pop();
+
+            if (fromString - toString > 2) {
               barre.push({
                 fromString: fromString,
                 toString: toString,
-                fret: fingering.barre.fret - lowestPosition
+                fret: fingering.barre.fret - lowestPosition,
               });
-  
+
               let i = chordPosition.length;
-              while(i--) {
-                if(chordPosition[i][1] === fingering.barre.fret  - lowestPosition) {
+              while (i--) {
+                if (
+                  chordPosition[i][1] ===
+                  fingering.barre.fret - lowestPosition
+                ) {
                   chordPosition.splice(i, 1);
                 }
               }
@@ -129,17 +136,22 @@ export default class ChordsPopup extends Component {
       for (let i = 0; i < chordPositions.length; i++) {
         let chordElement = document.createElement("div");
 
-        vexchords.draw(chordElement, {
-          chord: chordPositions[i],
-          position: lowestPositions[i] + 1,
-          barres: barres[i]
-        }, {
-          width: 120,
-          height: 140,
-          fontFamily: "Minlo, Menlo, monospace",
-          defaultColor: theme.text,
-          numStrings: STRINGS_COUNT[instrument]
-        });
+        vexchords.draw(
+          chordElement,
+          {
+            chord: chordPositions[i],
+            position: lowestPositions[i] + 1,
+            barres: barres[i],
+            tuning: TUNINGS[instrument].split("-").map((note) => note[0]),
+          },
+          {
+            width: 120,
+            height: 140,
+            fontFamily: "Minlo, Menlo, monospace",
+            defaultColor: theme.text,
+            numStrings: STRINGS_COUNT[instrument],
+          }
+        );
 
         chordElements.push(chordElement);
       }
@@ -147,47 +159,58 @@ export default class ChordsPopup extends Component {
       this.renderedChordElements = chordElements;
       return chordElements;
     }
-  }
+  };
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({
-      instrument: event.target.value
+      instrument: event.target.value,
     });
 
     if (typeof Storage !== "undefined") {
       localStorage.setItem("instrument", event.target.value);
     }
-  }
+  };
 
   renderchordPopover = (chordName) => {
-    if(this.state.popoverOpen) {
+    if (this.state.popoverOpen) {
       let chordElements = this.getChordElements(chordName);
 
-      if(chordElements && chordElements.length > 0) {
+      if (chordElements && chordElements.length > 0) {
         return (
           <div className="ChordsPopup">
             <Form.Group>
-              <Form.Control as="select" id="instrument" onChange={this.handleChange} value={this.state.instrument}>
-              <option value="GUITAR">GUITAR</option>
-              <option value="UKULELE">UKULELE</option>
+              <Form.Control
+                as="select"
+                id="instrument"
+                onChange={this.handleChange}
+                value={this.state.instrument}
+              >
+                <option value="GUITAR">GUITAR</option>
+                <option value="UKULELE">UKULELE</option>
               </Form.Control>
             </Form.Group>
             <Carousel interval={null} key={this.state.instrument}>
-              {
-                chordElements.map((chordElement, index) => {
-                  return (
-                    <Carousel.Item key={index}>
-                      <div className="chord-diagram" dangerouslySetInnerHTML={{__html: chordElement.innerHTML}}></div>
-                    </Carousel.Item>
-                  );
-                })
-              }
+              {chordElements.map((chordElement, index) => {
+                return (
+                  <Carousel.Item key={index}>
+                    <div
+                      className="chord-diagram"
+                      dangerouslySetInnerHTML={{
+                        __html: chordElement.innerHTML,
+                      }}
+                    ></div>
+                  </Carousel.Item>
+                );
+              })}
             </Carousel>
           </div>
         );
       } else {
         return (
-          <div className="ChordsPopup p-2" style={{width: "120px", height: "140px"}}>
+          <div
+            className="ChordsPopup p-2"
+            style={{ width: "120px", height: "140px" }}
+          >
             <span className="error">
               <FontAwesomeIcon icon={faExclamationTriangle} />
             </span>
@@ -196,32 +219,33 @@ export default class ChordsPopup extends Component {
       }
     } else {
       return (
-        <div className="ChordsPopup p-2" style={{width: "120px", height: "140px"}}>
+        <div
+          className="ChordsPopup p-2"
+          style={{ width: "120px", height: "140px" }}
+        >
           <FontAwesomeIcon icon={faSyncAlt} className="spinning" />
         </div>
       );
     }
-  }
+  };
 
   openPopover = () => {
     this.setState({
-      popoverOpen: true
+      popoverOpen: true,
     });
-  }
+  };
 
   render() {
-    let {chordName} = this.props;
+    let { chordName } = this.props;
 
-    return(
+    return (
       <PopoverStickOnHover
-          component={this.renderchordPopover(chordName)}
-          placement="auto"
-          onMouseEnter={this.openPopover}
-          delay={0}
+        component={this.renderchordPopover(chordName)}
+        placement="auto"
+        onMouseEnter={this.openPopover}
+        delay={0}
       >
-        <span className="chord popup-trigger">
-          { chordName }
-        </span>
+        <span className="chord popup-trigger">{chordName}</span>
       </PopoverStickOnHover>
     );
   }
