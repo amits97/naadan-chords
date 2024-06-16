@@ -34,7 +34,6 @@ class App extends Component {
       emailVerified: false,
       userTheme: "auto",
       theme: "light",
-      scrollDirection: "",
       loginError: "",
     };
   }
@@ -237,12 +236,6 @@ class App extends Component {
     });
   };
 
-  setScrollDirection = (value) => {
-    this.setState({
-      scrollDirection: value,
-    });
-  };
-
   onNavBlur = (e) => {
     if (this.state.navExpanded === true) {
       let clickedElement = e.target;
@@ -276,8 +269,6 @@ class App extends Component {
       setSearch: this.setSearch,
       navExpanded: this.state.navExpanded,
       setNavExpanded: this.setNavExpanded,
-      scrollDirection: this.state.scrollDirection,
-      setScrollDirection: this.setScrollDirection,
       closeNav: this.closeNav,
       username: this.state.userName,
       name: this.state.name,

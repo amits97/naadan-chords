@@ -45,10 +45,11 @@ export default class Content extends Component {
       showLoginModal: false,
       rating: undefined,
       preventRatingSubmit: false,
+      scrollToRatingCommentSection: false,
     };
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = async (prevProps) => {
     if (prevProps.adKey !== this.props.adKey) {
       this.inArticleAdInitialized = false;
     }
@@ -69,12 +70,23 @@ export default class Content extends Component {
     }
 
     if (
-      this.props.isAuthenticated &&
       !this.props.isLoading &&
       !Array.isArray(this.props.posts) &&
       this.props.posts.postId !== prevProps.posts.postId
     ) {
-      this.getRating();
+      if (this.props.isAuthenticated) {
+        await this.getRating();
+      }
+      if (this.state.scrollToRatingCommentSection) {
+        await Promise.resolve();
+        this.ratingEl.current?.scrollIntoView({
+          behavior: "instant",
+          block: "start",
+        });
+        this.setState({
+          scrollToRatingCommentSection: false,
+        });
+      }
     }
   };
 
@@ -319,11 +331,25 @@ export default class Content extends Component {
     }
   };
 
-  renderCommentLink = (isPostList) => {
-    if (!isPostList) {
-      return (
-        <span>
-          <hr className="mt-2 mb-2" />
+  renderCommentLink = (isPostList, postId) => {
+    return (
+      <span>
+        <hr className="mt-2 mb-2" />
+        {isPostList ? (
+          <a
+            href="#/"
+            className="text-primary"
+            onClick={(e) => {
+              e.preventDefault();
+              this.setState({
+                scrollToRatingCommentSection: true,
+              });
+              this.props.history.push(`/${postId}`);
+            }}
+          >
+            Click here to add a comment
+          </a>
+        ) : (
           <a
             href="#/"
             className="text-primary"
@@ -338,16 +364,30 @@ export default class Content extends Component {
           >
             Click here to add a comment
           </a>
-        </span>
-      );
-    }
+        )}
+      </span>
+    );
   };
 
-  renderRateLink = (isPostList) => {
-    if (!isPostList) {
-      return (
-        <span>
-          <hr className="mt-2 mb-2" />
+  renderRateLink = (isPostList, postId) => {
+    return (
+      <span>
+        <hr className="mt-2 mb-2" />
+        {isPostList ? (
+          <a
+            href="#/"
+            className="text-primary"
+            onClick={(e) => {
+              e.preventDefault();
+              this.setState({
+                scrollToRatingCommentSection: true,
+              });
+              this.props.history.push(`/${postId}`);
+            }}
+          >
+            Click here to add your rating
+          </a>
+        ) : (
           <a
             href="#/"
             className="text-primary"
@@ -362,9 +402,9 @@ export default class Content extends Component {
           >
             Click here to add your rating
           </a>
-        </span>
-      );
-    }
+        )}
+      </span>
+    );
   };
 
   ratingPopover = (post, isPostList) => {
@@ -374,7 +414,8 @@ export default class Content extends Component {
           Average star rating of <b>{post.rating.toFixed(2)} / 5</b>.
           <br />
           Calculated from ratings by <b>{post.ratingCount}</b> user
-          {post.ratingCount > 1 ? "s" : ""}.{this.renderRateLink(isPostList)}
+          {post.ratingCount > 1 ? "s" : ""}.
+          {this.renderRateLink(isPostList, post.postId)}
         </Popover>
       );
     } else {
@@ -385,7 +426,7 @@ export default class Content extends Component {
           <span className={`${isPostList ? "d-none" : ""}`}>
             Why don't you be the first? :)
           </span>
-          {this.renderRateLink(isPostList)}
+          {this.renderRateLink(isPostList, post.postId)}
         </Popover>
       );
     }
@@ -426,7 +467,7 @@ export default class Content extends Component {
       return (
         <Popover id="popover-basic" className="p-2">
           <b>{post.commentsCount}</b> comment{post.commentsCount > 1 ? "s" : ""}
-          .{this.renderCommentLink(isPostList)}
+          .{this.renderCommentLink(isPostList, post.postId)}
         </Popover>
       );
     } else {
@@ -437,7 +478,7 @@ export default class Content extends Component {
           <span className={`${isPostList ? "d-none" : ""}`}>
             Why don't you start a discussion? :)
           </span>
-          {this.renderCommentLink(isPostList)}
+          {this.renderCommentLink(isPostList, post.postId)}
         </Popover>
       );
     }

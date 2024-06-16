@@ -16,7 +16,6 @@ import { Helmet } from "react-helmet";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { Direction } from "@smakss/react-scroll-direction";
 import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
 import * as urlLib from "../../libs/url-lib";
@@ -400,13 +399,7 @@ export default class Admin extends SearchComponent {
             <Col lg={2}>
               <Nav
                 variant="pills"
-                className={`flex-column border rounded ${
-                  this.props.scrollDirection === Direction.Up ||
-                  this.props.navExpanded
-                    ? "is-header-sticky"
-                    : ""
-                }`}
-              >
+                className="flex-column border rounded">
                 <Nav.Item className="border-bottom">
                   <Nav.Link
                     eventKey="posts"
@@ -469,14 +462,7 @@ export default class Admin extends SearchComponent {
             </Col>
             <Col lg={10}>
               <Form onSubmit={this.handleSubmit}>
-                <div
-                  className={`delete-container border-bottom ${
-                    this.props.scrollDirection === Direction.Up ||
-                    this.props.navExpanded
-                      ? "is-header-sticky"
-                      : ""
-                  }`}
-                >
+                <div className="delete-container border-bottom">
                   <Form.Check
                     type="checkbox"
                     className="checkbox pt-2 pl-4 form-check"

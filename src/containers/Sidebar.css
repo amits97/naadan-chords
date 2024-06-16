@@ -113,12 +113,8 @@
 
 .Sidebar .sticky {
   position: sticky;
-  top: 10px;
-  transition: top 0.3s ease-out;
-}
-
-.Sidebar .sticky.is-header-sticky {
   top: 75px;
+  transition: top 0.3s ease-out;
 }
 
 /* Medium devices (tablets, less than 992px) */

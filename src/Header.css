@@ -6,10 +6,6 @@
   min-height: 64px;
 }
 
-.Header .navbar.is-sticky {
-  animation: slideDown 0.3s ease-out;
-}
-
 .Header .navbar-holder {
   flex-grow: initial;
 }
@@ -290,14 +286,5 @@
     left: 0;
     content: "";
     border-radius: 5px 5px 0 0;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
   }
 }

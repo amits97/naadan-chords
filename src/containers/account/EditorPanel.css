@@ -1,15 +1,11 @@
 .EditorPanel {
   position: sticky;
-  top: 0;
+  top: 62px;
   margin-bottom: -40px;
   border-radius: 0.25rem 0.25rem 0 0;
   overflow: auto;
   z-index: 2;
   transition: top 0.3s ease-out;
-}
-
-.EditorPanel.is-header-sticky {
-  top: 62px;
 }
 
 .EditorPanel .btn-group {

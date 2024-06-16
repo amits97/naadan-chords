@@ -27,7 +27,6 @@ import {
 import { Helmet } from "react-helmet";
 import Avatar from "react-avatar-edit";
 import { LinkContainer } from "react-router-bootstrap";
-import { Direction } from "@smakss/react-scroll-direction";
 import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
 import { base64toBlob } from "../../libs/utils";
@@ -864,12 +863,7 @@ export default class Account extends SearchComponent {
             <Col lg={2}>
               <Nav
                 variant="pills"
-                className={`flex-column border rounded ${
-                  this.props.scrollDirection === Direction.Up ||
-                  this.props.navExpanded
-                    ? "is-header-sticky"
-                    : ""
-                }`}
+                className="flex-column border rounded"
               >
                 <Nav.Item className="border-bottom">
                   <Nav.Link

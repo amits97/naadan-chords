@@ -24,12 +24,8 @@
 .Contributions .nav-pills {
   margin-left: 5px;
   position: sticky;
-  top: 10px;
-  transition: top 0.3s ease-out;
-}
-
-.Contributions .nav-pills.is-header-sticky {
   top: 75px;
+  transition: top 0.3s ease-out;
 }
 
 .Contributions .nav-pills .nav-link {

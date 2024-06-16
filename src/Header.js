@@ -14,7 +14,6 @@ import {
   faPowerOff,
 } from "@fortawesome/free-solid-svg-icons";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
-import useDetectScroll, { Direction } from "@smakss/react-scroll-direction";
 import { slugify } from "./libs/utils";
 import * as urlLib from "./libs/url-lib";
 import logo from "./logo.svg";
@@ -34,7 +33,6 @@ export default function Header({
   navExpanded,
   setNavExpanded,
   setSearch,
-  setScrollDirection,
 }) {
   const searchInput = React.useRef();
   const activeSearchIndex = React.useRef(-1);
@@ -43,8 +41,6 @@ export default function Header({
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [searchLoading, setSearchLoading] = React.useState(false);
   const [searchOptions, setSearchOptions] = React.useState([]);
-
-  const scrollDir = useDetectScroll({ axis: "y" });
 
   const handleSearchClick = () => {
     setIsSearchOpen(true);
@@ -117,10 +113,6 @@ export default function Header({
     }
   };
 
-  React.useEffect(() => {
-    setScrollDirection(scrollDir);
-  }, [scrollDir, setScrollDirection]);
-
   const authenticatedOptions = () => {
     if (isAuthenticated) {
       if (username === "") {
@@ -183,10 +175,7 @@ export default function Header({
   return (
     <span className="Header">
       <Navbar
-        sticky={scrollDir === Direction.Up || navExpanded ? "top" : ""}
-        className={
-          scrollDir === Direction.Up || navExpanded ? "is-sticky" : "is-static"
-        }
+        sticky="top"
         fluid="true"
         expand="lg"
         variant="dark"

@@ -9,7 +9,6 @@ import {
   faGuitar,
   faArrowsAltV,
 } from "@fortawesome/free-solid-svg-icons";
-import { Direction } from "@smakss/react-scroll-direction";
 import "./EditorPanel.css";
 
 export default class EditorPanel extends Component {
@@ -21,13 +20,7 @@ export default class EditorPanel extends Component {
     let { readOnly } = this.props;
 
     return (
-      <div
-        className={`EditorPanel ${
-          this.props.scrollDirection === Direction.Up || this.props.navExpanded
-            ? "is-header-sticky"
-            : ""
-        }`}
-      >
+      <div className="EditorPanel">
         <ButtonGroup>
           <Button
             variant="link"
