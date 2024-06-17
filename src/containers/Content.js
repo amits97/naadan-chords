@@ -337,7 +337,7 @@ export default class Content extends Component {
         <hr className="mt-2 mb-2" />
         {isPostList ? (
           <a
-            href="#/"
+            href={`/${postId}`}
             className="text-primary"
             onClick={(e) => {
               e.preventDefault();
@@ -375,7 +375,7 @@ export default class Content extends Component {
         <hr className="mt-2 mb-2" />
         {isPostList ? (
           <a
-            href="#/"
+            href={`/${postId}`}
             className="text-primary"
             onClick={(e) => {
               e.preventDefault();
