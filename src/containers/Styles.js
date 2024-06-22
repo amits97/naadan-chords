@@ -150,3 +150,13 @@ export const CommentAuthorName = styled.small`
     padding-right: 4px;
   }
 `;
+
+export const LoginDividerText = styled.span`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: -24px;
+  background: ${({ theme }) => theme.body};
+  width: 40px;
+  text-align: center;
+`;

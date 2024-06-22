@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1359.0",
+    "crypto-secure-random-digit": "^1.0.10",
     "serverless-domain-manager": "^6.0.4",
     "serverless-webpack": "^5.8.0",
     "webpack-node-externals": "^2.5.2"

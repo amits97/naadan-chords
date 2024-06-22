@@ -101,6 +101,12 @@ functions:
     handler: pre-signup.handler
   post-login:
     handler: post-login.handler
+  otp-create-auth:
+    handler: otp-create-auth.handler
+  otp-define-auth:
+    handler: otp-define-auth.handler
+  otp-verify-auth:
+    handler: otp-verify-auth.handler
   unlink-provider:
     handler: unlink-provider.main
     events:

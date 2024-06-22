@@ -10,7 +10,7 @@
 }
 
 .Login .social-icon {
-  margin-top: -2px;
+  margin-top: -4px;
   float: left;
   height: 20px;
   font-size: 20px;
@@ -23,4 +23,8 @@
 .Login .signup-card {
   border-left: 3px solid #ff9700;
   padding-left: 15px;
+}
+
+.Login .login-divider-container {
+  position: relative;
 }

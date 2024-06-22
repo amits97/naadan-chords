@@ -15,6 +15,7 @@ import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import { insertUrlParam } from "../libs/url-lib";
+import * as Styles from "./Styles";
 import "./Login.css";
 
 export default class Login extends SearchComponent {
@@ -25,9 +26,13 @@ export default class Login extends SearchComponent {
       isLoading: false,
       email: "",
       password: "",
+      code: "",
       isErrorState: false,
       errorMessage: "",
       errorType: "",
+      isOTPFlow: false,
+      OTPSent: false,
+      cognitoUser: null,
     };
   }
 
@@ -41,6 +46,17 @@ export default class Login extends SearchComponent {
 
   validateForm() {
     return this.state.email.length > 0 && this.state.password.length > 0;
+  }
+
+  validateOTPForm() {
+    const { isOTPFlow, OTPSent } = this.state;
+    if (isOTPFlow) {
+      if (OTPSent) {
+        return this.state.email.length > 0 && this.state.code.length > 0;
+      }
+      return this.state.email.length > 0;
+    }
+    return true;
   }
 
   handleChange = (event) => {
@@ -106,8 +122,62 @@ export default class Login extends SearchComponent {
     }
   }
 
+  handleLoginWithOTP = async (event) => {
+    event?.preventDefault();
+    const { isOTPFlow, OTPSent, code } = this.state;
+    if (isOTPFlow) {
+      // Already in OTP mode, handle submit
+      this.setState({ isLoading: true });
+
+      if (OTPSent) {
+        await Auth.sendCustomChallengeAnswer(this.state.cognitoUser, code);
+        try {
+          // This will throw an error if the user is not yet authenticated:
+          let session = await Auth.currentSession();
+          await this.props.getUserPrevileges(session);
+          this.props.userHasAuthenticated(true);
+          if (this.props.isDialog) {
+            this.props.closeLoginModal(true);
+          }
+        } catch (e) {
+          this.setState({
+            isErrorState: true,
+            errorMessage: e.message || "Please try again",
+            errorType: e.code,
+          });
+        } finally {
+          this.setState({
+            isLoading: false,
+          });
+        }
+      } else {
+        try {
+          let cognitoUser;
+          cognitoUser = await Auth.signIn(this.state.email);
+          this.setState({ OTPSent: true, cognitoUser });
+        } catch (e) {
+          this.setState({
+            isErrorState: true,
+            errorMessage: e.message,
+            errorType: e.code,
+          });
+        } finally {
+          this.setState({
+            isLoading: false,
+          });
+        }
+      }
+    } else {
+      // Enable OTP mode
+      this.setState({
+        isOTPFlow: true,
+      });
+    }
+  };
+
   render() {
     let { isDialog } = this.props;
+    let { isOTPFlow, OTPSent } = this.state;
 
     return (
       <div className={`Login ${isDialog ? "isDialog" : ""}`}>
@@ -116,17 +186,21 @@ export default class Login extends SearchComponent {
           <h2>Login</h2>
         </div>
         {this.renderError()}
-        <Button
-          className="social-login"
-          onClick={() => this.handleSocialLogin("Facebook")}
-          block
+        {!isOTPFlow && (
+          <Button
+            className="social-login"
+            onClick={() => this.handleSocialLogin("Facebook")}
+            block
+          >
+            <span className="social-icon">
+              <FontAwesomeIcon icon={faFacebook} />
+            </span>
+            Login with Facebook
+          </Button>
+        )}
+        <form
+          onSubmit={isOTPFlow ? this.handleLoginWithOTP : this.handleSubmit}
         >
-          <span className="social-icon">
-            <FontAwesomeIcon icon={faFacebook} />
-          </span>
-          Login with Facebook
-        </Button>
-        <form onSubmit={this.handleSubmit}>
           <div className="signup-card bg-light p-2 pl-3 mt-4 mb-4">
             New to Naadan Chords?
             <br />
@@ -156,28 +230,75 @@ export default class Login extends SearchComponent {
               onChange={this.handleChange}
             />
           </FormGroup>
-          <FormGroup controlId="password">
-            <FormLabel>Password</FormLabel>
-            <FormControl
-              value={this.state.password}
-              tabIndex={2}
-              onChange={this.handleChange}
-              type="password"
-            />
-            <FormText className="text-muted">
-              <LinkContainer to="/forgot-password">
-                <a href="#/">Forgot Password?</a>
-              </LinkContainer>
-            </FormText>
-          </FormGroup>
+          {!isOTPFlow && (
+            <>
+              <FormGroup controlId="password">
+                <FormLabel>Password</FormLabel>
+                <FormControl
+                  value={this.state.password}
+                  tabIndex={2}
+                  onChange={this.handleChange}
+                  type="password"
+                />
+                <FormText className="text-muted">
+                  <LinkContainer to="/forgot-password">
+                    <a href="#/">Forgot Password?</a>
+                  </LinkContainer>
+                </FormText>
+              </FormGroup>
+              <LoaderButton
+                block
+                disabled={!this.validateForm()}
+                type="submit"
+                isLoading={this.state.isLoading}
+                text="Login"
+                loadingText="Logging in…"
+              />
+              <div className="login-divider-container my-4">
+                <hr className="login-divider" />
+                <Styles.LoginDividerText className="text-muted">
+                  OR
+                </Styles.LoginDividerText>
+              </div>
+            </>
+          )}
+          {OTPSent && (
+            <FormGroup controlId="code">
+              <FormLabel>Verification Code</FormLabel>
+              <FormControl
+                value={this.state.code}
+                tabIndex={2}
+                onChange={this.handleChange}
+                type="password"
+              />
+            </FormGroup>
+          )}
           <LoaderButton
             block
-            disabled={!this.validateForm()}
-            type="submit"
-            isLoading={this.state.isLoading}
-            text="Login"
+            type="button"
+            text="Login with OTP"
             loadingText="Logging in…"
+            isLoading={this.state.isLoading}
+            disabled={!this.validateOTPForm()}
+            onClick={this.handleLoginWithOTP}
           />
+          {isOTPFlow && (
+            <>
+              <div className="login-divider-container my-4">
+                <hr className="login-divider" />
+                <Styles.LoginDividerText className="text-muted">
+                  OR
+                </Styles.LoginDividerText>
+              </div>
+              <Button
+                block
+                type="button"
+                onClick={() => this.setState({ isOTPFlow: false })}
+              >
+                Login with password
+              </Button>
+            </>
+          )}
         </form>
       </div>
     );
