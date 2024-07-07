@@ -11,7 +11,8 @@ export async function main() {
     ExpressionAttributeValues: {
       ":postType": "POST",
     },
-    ProjectionExpression: "postId, title, userId, createdAt, updatedAt, #views",
+    ProjectionExpression:
+      "postId, title, userId, createdAt, updatedAt, popularityTrend, #views",
     ExpressionAttributeNames: {
       "#views": "views",
     },

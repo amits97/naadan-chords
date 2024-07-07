@@ -84,7 +84,7 @@ functions:
     handler: generate-top.main
     events:
       - schedule:
-          rate: rate(6 hours)
+          rate: rate(1 day)
           enabled: true
   analytics-clean:
     handler: analytics-clean.main

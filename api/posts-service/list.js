@@ -56,7 +56,7 @@ export async function main(event, context, callback) {
   }
 
   let projectionExpression =
-    "postId, createdAt, updatedAt, postType, title, album, userId";
+    "postId, category, createdAt, updatedAt, postType, title, album, userId";
 
   if (event.includeContentDetails === "true") {
     projectionExpression += ", content, leadTabs, youtubeId";
@@ -110,7 +110,7 @@ export async function main(event, context, callback) {
       params = {
         TableName: "NaadanChords",
         ProjectionExpression:
-          "postId, createdAt, updatedAt, postType, title, userId",
+          "postId, category, createdAt, updatedAt, postType, title, userId",
         ...searchFilterLib.getSearchFilter(
           event.search,
           null,

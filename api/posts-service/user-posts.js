@@ -61,7 +61,8 @@ export async function main(event, context, callback) {
       ":postType": event.postType ? event.postType : "POST",
     },
     ScanIndexForward: false,
-    ProjectionExpression: "postId, createdAt, postType, title, userId",
+    ProjectionExpression:
+      "postId, category, createdAt, postType, title, userId",
     Limit: 15,
   };
 
@@ -70,7 +71,8 @@ export async function main(event, context, callback) {
     dynamoDbQueryType = "scan";
     params = {
       TableName: "NaadanChords",
-      ProjectionExpression: "postId, createdAt, postType, title, userId",
+      ProjectionExpression:
+        "postId, category, createdAt, postType, title, userId",
       ...searchFilterLib.getSearchFilter(
         event.search,
         userId,

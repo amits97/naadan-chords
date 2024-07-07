@@ -1,7 +1,7 @@
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import { success, failure } from "../libs/response-lib";
 
-async function getTop10Posts(items) {
+async function getTop10Posts(items, previousTopPositions) {
   let topPosts = {};
 
   for (let i = 0; i < items.length; i++) {
@@ -11,7 +11,7 @@ async function getTop10Posts(items) {
       topPosts[items[i].postId] = 1;
     }
   }
-  let topPostsResult = await appendPostDetails(topPosts);
+  let topPostsResult = await appendPostDetails(topPosts, previousTopPositions);
   return topPostsResult;
 }
 
@@ -19,11 +19,12 @@ function compare(a, b) {
   return b[1] - a[1];
 }
 
-async function appendPostDetails(topPosts) {
+async function appendPostDetails(topPosts, previousTopPositions) {
   let postIds = [];
   var postId;
   var filterExpression = "";
   var expressionAttributeValues = {};
+  let popularityTrend;
 
   let topPostsArray = [];
   for (postId in topPosts) {
@@ -40,6 +41,14 @@ async function appendPostDetails(topPosts) {
   });
 
   for (let i = 0; i < postIds.length; i++) {
+    if (previousTopPositions.indexOf(postIds[i]) === i) {
+      popularityTrend = "NEUTRAL";
+    } else if (previousTopPositions.indexOf(postIds[i]) > i) {
+      popularityTrend = "UP";
+    } else {
+      popularityTrend = "DOWN";
+    }
+
     let postId = postIds[i];
     if (filterExpression) {
       filterExpression += ` OR contains(postId, :postId${i})`;
@@ -69,6 +78,7 @@ async function appendPostDetails(topPosts) {
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         views: topPosts[post.postId],
+        popularityTrend,
       });
     }
 
@@ -110,15 +120,27 @@ async function saveTop10Posts(top10Posts) {
 }
 
 async function clearTable() {
+  const previousPositions = [];
   let params = {
     TableName: "NaadanChordsTop",
+    IndexName: "postType-views-index",
+    KeyConditionExpression: "postType = :postType",
+    ExpressionAttributeValues: {
+      ":postType": "POST",
+    },
+    ProjectionExpression: "postId, #views",
+    ExpressionAttributeNames: {
+      "#views": "views",
+    },
+    ScanIndexForward: false,
   };
 
-  let result = await dynamoDbLib.call("scan", params);
+  let result = await dynamoDbLib.call("query", params);
   let resultArray = result.Items;
 
   let deleteRequestArray = [];
   for (let i = 0; i < resultArray.length; i++) {
+    previousPositions.push(resultArray[i].postId);
     let deleteItem = {
       DeleteRequest: {
         Key: {
@@ -140,6 +162,7 @@ async function clearTable() {
 
     await dynamoDbLib.batchCall(deleteParams);
   }
+  return previousPositions;
 }
 
 export async function main(event, context, callback) {
@@ -155,9 +178,8 @@ export async function main(event, context, callback) {
     Limit: 3000,
   };
 
-  await clearTable();
   try {
-    await clearTable();
+    let previousTopPositions = await clearTable();
     let resultItems = [];
     let result = await dynamoDbLib.call("scan", params);
     resultItems = resultItems.concat(result.Items);
@@ -166,7 +188,7 @@ export async function main(event, context, callback) {
       result = await dynamoDbLib.call("scan", params);
       resultItems = resultItems.concat(result.Items);
     }
-    return getTop10Posts(resultItems);
+    return getTop10Posts(resultItems, previousTopPositions);
   } catch (e) {
     return failure({ status: false, error: e });
   }

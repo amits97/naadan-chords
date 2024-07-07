@@ -117,7 +117,7 @@ export default class Content extends Component {
   };
 
   formatDate(date) {
-    return <Moment format="MMMM D, YYYY">{date}</Moment>;
+    return <Moment format="MMM D, YYYY">{date}</Moment>;
   }
 
   prepareLastEvaluatedPostRequest = (lastEvaluatedPost) => {
@@ -293,8 +293,19 @@ export default class Content extends Component {
                   </a>
                 </LinkContainer>
                 <small className="post-item-meta">
+                  {post.category && (
+                    <>
+                      <LinkContainer
+                        exact
+                        to={`/category/${post.category.toLowerCase()}`}
+                      >
+                        <a href="#/">{capitalizeFirstLetter(post.category)}</a>
+                      </LinkContainer>
+                      <span className="separator"> • </span>
+                    </>
+                  )}
                   {this.formatDate(post.createdAt)}
-                  <span className="separator"> | </span>
+                  <span className="separator"> • </span>
                   {post.updatedAt > post.createdAt && (
                     <>
                       <OverlayTrigger
@@ -309,7 +320,7 @@ export default class Content extends Component {
                       >
                         <Badge variant="primary">UPDATED</Badge>
                       </OverlayTrigger>
-                      <span className="separator"> | </span>
+                      <span className="separator"> • </span>
                     </>
                   )}
                   <LinkContainer key={i} to={`/author/${post.userName}`}>
@@ -487,7 +498,7 @@ export default class Content extends Component {
   renderCommentCount = (post, isPostList) => {
     return (
       <span className={`post-comment-count ${isPostList ? "post-list" : ""}`}>
-        {!isPostList && <span className="separator ml-2 mr-2">|</span>}
+        {!isPostList && <span className="separator ml-2 mr-2">•</span>}
         <OverlayTrigger
           trigger="click"
           placement="bottom"
@@ -541,7 +552,7 @@ export default class Content extends Component {
             >
               <a href="#/">{capitalizeFirstLetter(post.category)}</a>
             </LinkContainer>
-            <span className="separator ml-2 mr-1">|</span>
+            <span className="separator ml-2 mr-1">•</span>
             <div className="meta-time-container">
               <FontAwesomeIcon
                 className="d-inline ml-1 mr-1"
@@ -550,7 +561,7 @@ export default class Content extends Component {
               {this.formatDate(post.createdAt)}
               {post.updatedAt > post.createdAt && (
                 <>
-                  <span className="separator ml-2 mr-2">|</span>
+                  <span className="separator ml-2 mr-2">•</span>
                   <OverlayTrigger
                     trigger="click"
                     placement="bottom"
