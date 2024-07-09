@@ -24,7 +24,7 @@ async function appendPostDetails(topPosts, previousTopPositions) {
   var postId;
   var filterExpression = "";
   var expressionAttributeValues = {};
-  let popularityTrend;
+  let popularityTrends = {};
 
   let topPostsArray = [];
   for (postId in topPosts) {
@@ -42,11 +42,11 @@ async function appendPostDetails(topPosts, previousTopPositions) {
 
   for (let i = 0; i < postIds.length; i++) {
     if (previousTopPositions.indexOf(postIds[i]) === i) {
-      popularityTrend = "NEUTRAL";
+      popularityTrends[postIds[i]] = "NEUTRAL";
     } else if (previousTopPositions.indexOf(postIds[i]) > i) {
-      popularityTrend = "UP";
+      popularityTrends[postIds[i]] = "UP";
     } else {
-      popularityTrend = "DOWN";
+      popularityTrends[postIds[i]] = "DOWN";
     }
 
     let postId = postIds[i];
@@ -78,7 +78,7 @@ async function appendPostDetails(topPosts, previousTopPositions) {
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         views: topPosts[post.postId],
-        popularityTrend,
+        popularityTrend: popularityTrends[post.postId],
       });
     }
 
