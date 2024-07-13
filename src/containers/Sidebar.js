@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { Tabs, Tab } from "react-bootstrap";
+import {
+  faEllipsisV,
+  faTimes,
+  faArrowTrendUp,
+} from "@fortawesome/free-solid-svg-icons";
+import { Tabs, Tab, OverlayTrigger, Popover } from "react-bootstrap";
 import config from "../config";
 import { LinkContainer } from "react-router-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -59,9 +63,27 @@ export default class Sidebar extends Component {
     for (let i = 0; i < topPosts.length; i++) {
       topPostsList.push(
         <li key={`${i}`}>
-          <LinkContainer to={`/${topPosts[i].postId}`}>
-            <a href="#/">{topPosts[i].title}</a>
-          </LinkContainer>
+          <span className="post-row">
+            {topPosts[i].popularityTrend === "UP" && (
+              <OverlayTrigger
+                overlay={
+                  <Popover id="popover-basic" className="p-2">
+                    Trending
+                  </Popover>
+                }
+              >
+                <span className="trend-icon">
+                  <FontAwesomeIcon className="d-inline" icon={faArrowTrendUp} />
+                </span>
+              </OverlayTrigger>
+            )}
+            <LinkContainer
+              to={`/${topPosts[i].postId}`}
+              title={topPosts[i].title}
+            >
+              <a href="#/">{topPosts[i].title}</a>
+            </LinkContainer>
+          </span>
         </li>
       );
     }

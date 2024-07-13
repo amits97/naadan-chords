@@ -85,7 +85,7 @@
 
 .Sidebar ol li {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   margin: 0.8rem 0;
 }
 
@@ -102,6 +102,19 @@
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   width: 11px;
+  text-align: center;
+}
+
+.Sidebar .top-posts .post-row {
+  overflow: hidden;
+  padding-left: 5px;
+}
+
+.Sidebar .top-posts .trend-icon {
+  float: left;
+  margin-right: 5px;
+  color: #ff9700;
+  margin-left: -3px;
 }
 
 .Sidebar .ad1 {
