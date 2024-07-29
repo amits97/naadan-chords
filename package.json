@@ -13,7 +13,7 @@
     "ajv-errors": "^2.0.1",
     "ajv-formats": "^2.1.1",
     "ajv-keywords": "^4.0.1",
-    "aws-amplify": "^5.3.12",
+    "aws-amplify": "^6.4.3",
     "axios": "^1.6.0",
     "chord-fingering": "github:amits97/chord-fingering",
     "moment": "^2.29.4",
