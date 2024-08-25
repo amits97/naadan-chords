@@ -142,7 +142,17 @@ export async function handler(event) {
       url.searchParams.append("isPrerendered", true);
       await page.goto(url.href);
 
-      //remove layout breaking ads
+      // Remove google ads script tags
+      await page.evaluate(() => {
+        var elements = document.querySelectorAll("script");
+        for (let i = 0; i < elements.length; i++) {
+          if (elements[i].src.includes("googlesyndication")) {
+            elements[i].parentNode.removeChild(elements[i]);
+          }
+        }
+      });
+
+      // remove layout breaking ads
       let elementClassToRemove = ".ad, .google-auto-placed";
 
       await page.evaluate((sel) => {
