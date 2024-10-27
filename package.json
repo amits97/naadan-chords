@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.84.4",
+  "version": "0.84.5",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -66,10 +66,12 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.26.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.25.9",
     "react-app-rewired": "^2.1.11",
     "typescript": "^3.9.7"
   }
