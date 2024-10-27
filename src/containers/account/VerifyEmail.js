@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormText,
 } from "react-bootstrap";
-import { Auth } from "aws-amplify";
+import { confirmUserAttribute, updateUserAttributes } from "aws-amplify/auth";
 import LoaderButton from "../../components/LoaderButton";
 
 import "./VerifyEmail.css";
@@ -23,11 +23,15 @@ const VerifyEmail = ({ handleCloseEmailVerifyModal }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    let user = await Auth.currentAuthenticatedUser();
     try {
-      await Auth.verifyUserAttributeSubmit(user, "email", code);
-      await Auth.updateUserAttributes(user, {
-        "custom:email_valid": "true",
+      await confirmUserAttribute({
+        userAttributeKey: "email",
+        confirmationCode: code,
+      });
+      await updateUserAttributes({
+        userAttributes: {
+          "custom:email_valid": "true",
+        },
       });
       setIsErrorState(false);
       setIsSuccessState(true);

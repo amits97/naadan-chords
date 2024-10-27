@@ -1,5 +1,5 @@
 import React from "react";
-import { Auth, API } from "aws-amplify";
+import { fetchAuthSession } from "aws-amplify/auth";
 import {
   Badge,
   Button,
@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
+import { API } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
 import "./Admin.css";
 
@@ -81,7 +82,7 @@ export default class Admin extends SearchComponent {
   async componentDidMount() {
     window.scrollTo(0, 0);
 
-    let session = await Auth.currentSession();
+    let session = await fetchAuthSession();
     await this.props.getUserPrevileges(session);
     if (!this.props.isAdmin) {
       this.props.history.push("/");
@@ -397,9 +398,7 @@ export default class Admin extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav
-                variant="pills"
-                className="flex-column border rounded">
+              <Nav variant="pills" className="flex-column border rounded">
                 <Nav.Item className="border-bottom">
                   <Nav.Link
                     eventKey="posts"

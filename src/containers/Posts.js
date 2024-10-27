@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { API } from "aws-amplify";
 import { Helmet } from "react-helmet";
 import ReactGA from "react-ga4";
 import * as urlLib from "../libs/url-lib";
-import { slugify, capitalizeFirstLetter } from "../libs/utils";
+import { slugify, capitalizeFirstLetter, API } from "../libs/utils";
 import Content from "./Content";
 import config from "../config";
 

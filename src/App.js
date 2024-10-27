@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Auth, Hub } from "aws-amplify";
+import {
+  fetchAuthSession,
+  fetchUserAttributes,
+  getCurrentUser,
+  signInWithRedirect,
+  signOut,
+} from "aws-amplify/auth";
+import { Hub } from "aws-amplify/utils";
 import { Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
@@ -40,8 +47,8 @@ class App extends Component {
 
   getUserPrevileges = (session) => {
     return new Promise((resolve) => {
-      if (session && session.getIdToken) {
-        let sessionPayload = session.getIdToken().decodePayload();
+      if (session && session.tokens && session.tokens.idToken) {
+        let sessionPayload = session.tokens.idToken.payload;
         if (
           sessionPayload["cognito:groups"] &&
           sessionPayload["cognito:groups"].includes("admin")
@@ -65,61 +72,54 @@ class App extends Component {
     });
   };
 
-  getUserAttributes = (session) => {
-    return new Promise((resolve) => {
-      Auth.currentAuthenticatedUser({
-        bypassCache: true,
-      })
-        .then(async (user) => {
-          const currentUserInfo = await Auth.currentUserInfo();
-          this.setState(
-            {
-              userName: user.username,
-              name: user.attributes.name,
-              email: user.attributes.email,
-              identities: user.attributes.identities,
-              emailVerified: user.attributes.email_verified,
-              preferredUsername: user.attributes.preferred_username,
-              picture: user.attributes.picture,
-              userTheme: currentUserInfo.attributes["custom:theme"] ?? "auto",
-            },
-            () => {
-              this.setWebsiteTheme();
-            }
-          );
-          await this.getUserPrevileges(session);
-          resolve();
-        })
-        .catch((err) => {
-          console.log(err);
-          resolve();
-        });
-    });
+  getUserAttributes = async (session) => {
+    try {
+      const { username } = await getCurrentUser();
+      const userAttributes = await fetchUserAttributes();
+      this.setState(
+        {
+          userName: username,
+          name: userAttributes.name,
+          email: userAttributes.email,
+          identities: userAttributes.identities,
+          emailVerified: userAttributes.email_verified === "true",
+          preferredUsername: userAttributes.preferred_username,
+          picture: userAttributes.picture,
+          userTheme: userAttributes["custom:theme"] ?? "auto",
+        },
+        () => {
+          this.setWebsiteTheme();
+        }
+      );
+      await this.getUserPrevileges(session);
+    } catch (e) {
+      // Non logged in user. Do nothing
+    }
   };
 
   getUserDetails = async (session) => {
-    Auth.currentAuthenticatedUser({
-      bypassCache: true,
-    })
-      .then(async (user) => {
-        const currentUserInfo = await Auth.currentUserInfo();
-        this.setState(
-          {
-            userName: user.username,
-            preferredUsername: user.attributes.preferred_username,
-            picture: user.attributes.picture,
-            name: user.attributes.name,
-            email: user.attributes.email,
-            userTheme: currentUserInfo.attributes["custom:theme"] ?? "auto",
-          },
-          () => {
-            this.setWebsiteTheme();
-          }
-        );
-
-        await this.getUserPrevileges(session);
-      })
-      .catch((err) => console.log(err));
+    try {
+      const { username } = await getCurrentUser();
+      const userAttributes = await fetchUserAttributes();
+      this.setState(
+        {
+          userName: username,
+          preferredUsername: userAttributes.preferred_username,
+          picture: userAttributes.picture,
+          name: userAttributes.name,
+          email: userAttributes.email,
+          userTheme: userAttributes["custom:theme"] ?? "auto",
+        },
+        () => {
+          this.setWebsiteTheme();
+        }
+      );
+      await this.getUserPrevileges(session);
+      return true;
+    } catch (e) {
+      // Non logged in user
+      return false;
+    }
   };
 
   setWebsiteTheme = () => {
@@ -139,7 +139,7 @@ class App extends Component {
 
     if (loginError.indexOf("Already found an entry for username") !== -1) {
       // TODO: Known issue with Cognito merging accounts. Ugly! Clean up if possible.
-      Auth.federatedSignIn({ provider: "Facebook" });
+      signInWithRedirect({ provider: "Facebook" });
     }
 
     if (loginError.indexOf("attributes required: [email]") !== -1) {
@@ -151,9 +151,11 @@ class App extends Component {
 
     try {
       this.setWebsiteTheme();
-      let session = await Auth.currentSession();
+      let session = await fetchAuthSession();
+      if (session.tokens) {
+        this.userHasAuthenticated(true);
+      }
       this.getUserDetails(session);
-      this.userHasAuthenticated(true);
     } catch (e) {
       this.setWebsiteTheme();
       if (e !== "No current user") {
@@ -183,9 +185,11 @@ class App extends Component {
     const listener = async (data) => {
       switch (data.payload.event) {
         case "signIn":
-          let session = await Auth.currentSession();
-          await this.getUserDetails(session);
-          this.userHasAuthenticated(true);
+          let session = await fetchAuthSession();
+          if (session.tokens) {
+            this.userHasAuthenticated(true);
+          }
+          this.getUserDetails(session);
           break;
         default:
           break;
@@ -203,7 +207,7 @@ class App extends Component {
     if (event) {
       event.preventDefault();
     }
-    await Auth.signOut();
+    await signOut();
 
     this.userHasAuthenticated(false);
     this.setState(

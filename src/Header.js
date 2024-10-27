@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { API } from "aws-amplify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Navbar, Nav, Form, NavDropdown } from "react-bootstrap";
 import {
@@ -14,7 +13,7 @@ import {
   faPowerOff,
 } from "@fortawesome/free-solid-svg-icons";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
-import { slugify } from "./libs/utils";
+import { API, slugify } from "./libs/utils";
 import * as urlLib from "./libs/url-lib";
 import logo from "./logo.svg";
 

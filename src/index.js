@@ -10,36 +10,39 @@ import "./index.css";
 
 Amplify.configure({
   Auth: {
-    mandatorySignIn: true,
-    region: config.cognito.REGION,
-    userPoolId: config.cognito.USER_POOL_ID,
-    identityPoolId: config.cognito.IDENTITY_POOL_ID,
-    userPoolWebClientId: config.cognito.APP_CLIENT_ID,
-    oauth: {
-      domain: config.oauth.DOMAIN,
-      scope: [
-        "phone",
-        "email",
-        "profile",
-        "openid",
-        "aws.cognito.signin.user.admin",
-      ],
-      redirectSignIn: config.oauth.REDIRECT_SIGN_IN,
-      redirectSignOut: config.oauth.REDIRECT_SIGN_OUT,
-      responseType: "code",
+    Cognito: {
+      mandatorySignIn: true,
+      region: config.cognito.REGION,
+      userPoolId: config.cognito.USER_POOL_ID,
+      identityPoolId: config.cognito.IDENTITY_POOL_ID,
+      userPoolClientId: config.cognito.APP_CLIENT_ID,
+      loginWith: {
+        oauth: {
+          domain: config.oauth.DOMAIN,
+          scopes: [
+            "phone",
+            "email",
+            "profile",
+            "openid",
+            "aws.cognito.signin.user.admin",
+          ],
+          redirectSignIn: [config.oauth.REDIRECT_SIGN_IN],
+          redirectSignOut: [config.oauth.REDIRECT_SIGN_OUT],
+          responseType: "code",
+        },
+      },
     },
   },
   API: {
-    endpoints: [
-      {
-        name: "posts",
+    REST: {
+      posts: {
         endpoint: config.apiGateway.URL,
         region: config.apiGateway.REGION,
       },
-    ],
+    },
   },
   Storage: {
-    AWSS3: {
+    S3: {
       bucket: config.storage.BUCKET,
       region: config.storage.REGION,
     },

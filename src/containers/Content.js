@@ -15,7 +15,6 @@ import ReactGA from "react-ga4";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
 import config from "../config";
-import { API } from "aws-amplify";
 import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -24,7 +23,7 @@ import {
   faUserCircle,
   faCommentAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { slugify, capitalizeFirstLetter } from "../libs/utils";
+import { slugify, capitalizeFirstLetter, API } from "../libs/utils";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
 import ContentParser from "./ContentParser";
@@ -72,7 +71,7 @@ export default class Content extends Component {
     if (
       !this.props.isLoading &&
       !Array.isArray(this.props.posts) &&
-      this.props.posts.postId !== prevProps.posts.postId
+      this.props.posts?.postId !== prevProps.posts?.postId
     ) {
       if (this.props.isAuthenticated) {
         await this.getRating();

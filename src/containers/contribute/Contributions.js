@@ -1,5 +1,4 @@
 import React from "react";
-import { API } from "aws-amplify";
 import {
   Badge,
   Button,
@@ -18,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
+import { API } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
 import "./Contributions.css";
 
@@ -360,10 +360,7 @@ export default class Contributions extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav
-                variant="pills"
-                className="flex-column border rounded"
-              >
+              <Nav variant="pills" className="flex-column border rounded">
                 <Nav.Item className="border-bottom">
                   <Nav.Link
                     eventKey="posts"

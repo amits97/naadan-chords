@@ -8,7 +8,12 @@ import {
   Button,
 } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { Auth } from "aws-amplify";
+import {
+  confirmSignIn,
+  fetchAuthSession,
+  signIn,
+  signInWithRedirect,
+} from "aws-amplify/auth";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
@@ -71,9 +76,13 @@ export default class Login extends SearchComponent {
     this.setState({ isLoading: true });
 
     try {
-      await Auth.signIn(this.state.email, this.state.password);
-      let session = await Auth.currentSession();
+      await signIn({
+        username: this.state.email,
+        password: this.state.password,
+      });
+      let session = await fetchAuthSession();
       await this.props.getUserPrevileges(session);
+      await this.props.getUserAttributes(session);
       this.props.userHasAuthenticated(true);
 
       if (this.props.isDialog) {
@@ -90,7 +99,7 @@ export default class Login extends SearchComponent {
   };
 
   handleSocialLogin = (provider) => {
-    Auth.federatedSignIn({ provider });
+    signInWithRedirect({ provider });
   };
 
   renderError = () => {
@@ -130,10 +139,10 @@ export default class Login extends SearchComponent {
       this.setState({ isLoading: true });
 
       if (OTPSent) {
-        await Auth.sendCustomChallengeAnswer(this.state.cognitoUser, code);
+        await confirmSignIn({ challengeResponse: code });
         try {
           // This will throw an error if the user is not yet authenticated:
-          let session = await Auth.currentSession();
+          let session = await fetchAuthSession();
           await this.props.getUserPrevileges(session);
           this.props.userHasAuthenticated(true);
           if (this.props.isDialog) {
@@ -153,7 +162,12 @@ export default class Login extends SearchComponent {
       } else {
         try {
           let cognitoUser;
-          cognitoUser = await Auth.signIn(this.state.email);
+          cognitoUser = await signIn({
+            username: this.state.email,
+            options: {
+              authFlowType: "CUSTOM_WITHOUT_SRP",
+            },
+          });
           this.setState({ OTPSent: true, cognitoUser });
         } catch (e) {
           this.setState({
@@ -278,24 +292,20 @@ export default class Login extends SearchComponent {
             type="button"
             text="Login with OTP"
             loadingText="Logging in…"
-            isLoading={this.state.isLoading}
+            isLoading={this.state.isOTPFlow && this.state.isLoading}
             disabled={!this.validateOTPForm()}
             onClick={this.handleLoginWithOTP}
           />
           {isOTPFlow && (
             <>
-              <div className="login-divider-container my-4">
-                <hr className="login-divider" />
-                <Styles.LoginDividerText className="text-muted">
-                  OR
-                </Styles.LoginDividerText>
-              </div>
               <Button
                 block
                 type="button"
+                variant="link"
+                className="text-primary"
                 onClick={() => this.setState({ isOTPFlow: false })}
               >
-                Login with password
+                Cancel
               </Button>
             </>
           )}

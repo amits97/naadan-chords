@@ -1,6 +1,14 @@
 import React from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import { Auth, API, Storage } from "aws-amplify";
+import {
+  fetchAuthSession,
+  sendUserAttributeVerificationCode,
+  signInWithRedirect,
+  signOut,
+  updatePassword,
+  updateUserAttributes,
+} from "aws-amplify/auth";
+import { uploadData } from "aws-amplify/storage";
 import {
   Alert,
   Button,
@@ -29,7 +37,7 @@ import Avatar from "react-avatar-edit";
 import { LinkContainer } from "react-router-bootstrap";
 import SearchComponent from "../../components/SearchComponent";
 import LoaderButton from "../../components/LoaderButton";
-import { base64toBlob } from "../../libs/utils";
+import { API, base64toBlob } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
 import VerifyEmail from "./VerifyEmail";
 
@@ -75,7 +83,7 @@ export default class Account extends SearchComponent {
       isInitialLoading: true,
     });
     try {
-      let session = await Auth.currentSession();
+      let session = await fetchAuthSession();
       await this.props.getUserAttributes(session);
       let identities = [];
 
@@ -221,10 +229,16 @@ export default class Account extends SearchComponent {
             this.props.preferredUsername ?? this.props.username
           }.png`;
 
-          await Storage.put(fileName, blobData, {
-            contentType: "image/png",
-            bucket: "naadanchords-avatars",
-          });
+          await uploadData({
+            path: `public/${fileName}`,
+            data: blobData,
+            options: {
+              bucket: {
+                bucketName: "naadanchords-avatars",
+                region: "ap-south-1",
+              },
+            },
+          }).result;
 
           request.picture = `https://s3.ap-south-1.amazonaws.com/naadanchords-avatars/public/${fileName}`;
         } else if (this.state.avatarEditMode) {
@@ -251,7 +265,7 @@ export default class Account extends SearchComponent {
           body: request,
         });
 
-        let session = await Auth.currentSession();
+        let session = await fetchAuthSession();
         await this.props.getUserAttributes(session);
 
         this.setState({
@@ -272,10 +286,12 @@ export default class Account extends SearchComponent {
       }
     } else if (type === "password") {
       try {
-        let user = await Auth.currentAuthenticatedUser();
         let { previousPassword, newPassword } = this.state;
 
-        await Auth.changePassword(user, previousPassword, newPassword);
+        await updatePassword({
+          oldPassword: previousPassword,
+          newPassword,
+        });
         this.setState({
           isLoading: false,
           isSuccessState: true,
@@ -291,9 +307,10 @@ export default class Account extends SearchComponent {
     } else if (type === "appearance") {
       const { userTheme } = this.state;
       try {
-        const user = await Auth.currentAuthenticatedUser();
-        await Auth.updateUserAttributes(user, {
-          "custom:theme": userTheme,
+        await updateUserAttributes({
+          userAttributes: {
+            "custom:theme": userTheme,
+          },
         });
         this.setState({
           isLoading: false,
@@ -449,9 +466,10 @@ export default class Account extends SearchComponent {
   };
 
   triggerVerifyEmailFlow = async () => {
-    let user = await Auth.currentAuthenticatedUser();
     this.setEmailVerifyModalState(true);
-    await Auth.verifyUserAttribute(user, "email");
+    await sendUserAttributeVerificationCode({
+      userAttributeKey: "email",
+    });
   };
 
   renderProfileForm = () => {
@@ -733,8 +751,8 @@ export default class Account extends SearchComponent {
   };
 
   handleSocialLogin = async (provider) => {
-    await Auth.signOut({ global: true });
-    Auth.federatedSignIn({ provider });
+    await signOut({ global: true });
+    signInWithRedirect({ provider });
   };
 
   renderFacebookForm = () => {
@@ -828,7 +846,7 @@ export default class Account extends SearchComponent {
 
   handleCloseEmailVerifyModal = async () => {
     this.setEmailVerifyModalState(false);
-    const session = await Auth.currentSession();
+    const session = await fetchAuthSession();
     await this.props.getUserAttributes(session);
     this.setState({
       emailVerified: this.props.emailVerified,
@@ -861,10 +879,7 @@ export default class Account extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav
-                variant="pills"
-                className="flex-column border rounded"
-              >
+              <Nav variant="pills" className="flex-column border rounded">
                 <Nav.Item className="border-bottom">
                   <Nav.Link
                     eventKey="profile"

@@ -9,7 +9,7 @@ import { Tabs, Tab, OverlayTrigger, Popover } from "react-bootstrap";
 import config from "../config";
 import { LinkContainer } from "react-router-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import { API } from "aws-amplify";
+import { API } from "../libs/utils";
 import * as Styles from "./Styles";
 import "./Sidebar.css";
 

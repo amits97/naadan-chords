@@ -1,7 +1,13 @@
 import React from "react";
-import { Alert, FormGroup, FormControl, FormLabel, FormText } from "react-bootstrap";
+import {
+  Alert,
+  FormGroup,
+  FormControl,
+  FormLabel,
+  FormText,
+} from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { Auth } from "aws-amplify";
+import { confirmResetPassword, resetPassword } from "aws-amplify/auth";
 import SearchComponent from "../components/SearchComponent";
 import LoaderButton from "../components/LoaderButton";
 import { LinkContainer } from "react-router-bootstrap";
@@ -20,27 +26,23 @@ export default class ResetPassword extends SearchComponent {
       timeRemaining: 5,
       errorMessage: "",
       isLoading: false,
-      collectCode: false
+      collectCode: false,
     };
   }
 
   componentDidMount() {
     if (this.props.email) {
       this.setState({
-        username: this.props.email
+        username: this.props.email,
       });
     }
   }
 
   renderError = () => {
-    if(this.state.isErrorState) {
-      return(
-        <Alert variant="danger">
-          {this.state.errorMessage}
-        </Alert>
-      );
+    if (this.state.isErrorState) {
+      return <Alert variant="danger">{this.state.errorMessage}</Alert>;
     }
-  }
+  };
 
   renderSEOTags() {
     return (
@@ -55,80 +57,94 @@ export default class ResetPassword extends SearchComponent {
   }
 
   validateForm() {
-    let {username, code, password, collectCode} = this.state;
+    let { username, code, password, collectCode } = this.state;
 
-    return collectCode ? (code.length > 0 && password.length > 0) : username.length > 0;
+    return collectCode
+      ? code.length > 0 && password.length > 0
+      : username.length > 0;
   }
 
   validatePassword = () => {
-    let {password} = this.state;
+    let { password } = this.state;
     return password ? password.length > 7 : true;
-  }
+  };
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
     });
-  }
+  };
 
-  handleSubmit = async event => {
+  handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     this.setState({ isLoading: true });
 
     try {
-      if(this.state.collectCode) {
-        let {username, code, password} = this.state;
-        await Auth.forgotPasswordSubmit(username, code, password);
+      if (this.state.collectCode) {
+        let { username, code, password } = this.state;
+        await confirmResetPassword({
+          username,
+          confirmationCode: code,
+          newPassword: password,
+        });
         this.autoRedirect();
         this.setState({
           isLoading: false,
           isErrorState: false,
-          complete: true
+          complete: true,
         });
       } else {
-        await Auth.forgotPassword(this.state.username);
+        await resetPassword({
+          username: this.state.username,
+        });
         this.setState({
           isLoading: false,
           isErrorState: false,
-          collectCode: true
+          collectCode: true,
         });
       }
     } catch (e) {
       this.setState({
         isLoading: false,
         isErrorState: true,
-        errorMessage: e.message
+        errorMessage: e.message,
       });
     }
-  }
+  };
 
   autoRedirect() {
     let timer = setInterval(() => {
-      let {timeRemaining} = this.state;
-      if(timeRemaining === 1) {
+      let { timeRemaining } = this.state;
+      if (timeRemaining === 1) {
         clearInterval(timer);
         this.props.history.push("/login");
       } else {
         this.setState({
-          timeRemaining: timeRemaining - 1
+          timeRemaining: timeRemaining - 1,
         });
       }
     }, 1000);
   }
 
   renderForm() {
-    if(this.state.complete) {
+    if (this.state.complete) {
       return (
         <div>
           <h2>Password reset done!</h2>
           <p>Redirecting to login screen in {this.state.timeRemaining}s...</p>
-          <p>Alternatively, <LinkContainer to="/login"><a href="#/">click here</a></LinkContainer> to Login.</p>
+          <p>
+            Alternatively,{" "}
+            <LinkContainer to="/login">
+              <a href="#/">click here</a>
+            </LinkContainer>{" "}
+            to Login.
+          </p>
         </div>
       );
     }
 
-    if(this.state.collectCode) {
+    if (this.state.collectCode) {
       return (
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="code">
@@ -151,7 +167,10 @@ export default class ResetPassword extends SearchComponent {
               onChange={this.handleChange}
               type="password"
             />
-            <FormControl.Feedback type="invalid" className={(this.validatePassword() ? 'd-none' : 'd-block')}>
+            <FormControl.Feedback
+              type="invalid"
+              className={this.validatePassword() ? "d-none" : "d-block"}
+            >
               Please enter a password with minimum of 8 characters.
             </FormControl.Feedback>
           </FormGroup>
@@ -193,13 +212,22 @@ export default class ResetPassword extends SearchComponent {
   render() {
     return (
       <div className="ForgotPassword">
-        { this.renderSEOTags() }
-        <div className={`border-bottom mb-4 ${this.state.complete ? 'd-none' : 'd-block'}`}>
+        {this.renderSEOTags()}
+        <div
+          className={`border-bottom mb-4 ${
+            this.state.complete ? "d-none" : "d-block"
+          }`}
+        >
           <h2>
             <LinkContainer exact to="/login">
-              <a href="#/" className="text-primary">Login</a>
+              <a href="#/" className="text-primary">
+                Login
+              </a>
             </LinkContainer>
-            <span> <small>&raquo;</small> Forgot Password</span>
+            <span>
+              {" "}
+              <small>&raquo;</small> Forgot Password
+            </span>
           </h2>
         </div>
         {this.renderError()}

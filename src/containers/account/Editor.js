@@ -21,7 +21,7 @@ import {
   faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import LoaderButton from "../../components/LoaderButton";
-import { API, Storage } from "aws-amplify";
+import { uploadData } from "aws-amplify/storage";
 import ReactMarkdown from "react-markdown";
 import Moment from "react-moment";
 import { Helmet } from "react-helmet";
@@ -30,7 +30,7 @@ import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import PromptWrapper from "../../components/PromptWrapper";
 import * as inputSelectionLib from "../../libs/input-selection-lib";
-import { safeStringNullOrEmpty, slugify } from "../../libs/utils";
+import { API, safeStringNullOrEmpty, slugify } from "../../libs/utils";
 import EditorPanel from "../account/EditorPanel";
 import ContentParser from "../ContentParser";
 import "./Editor.css";
@@ -481,20 +481,18 @@ export default class Editor extends Component {
     }
   };
 
-  onImageUploadChange = (e) => {
+  onImageUploadChange = async (e) => {
     const file = e.target.files[0];
     this.setState({
       imageLoading: true,
     });
-    Storage.put(`${slugify(this.state.title)}.jpg`, file, {
-      contentType: "image/jpg",
-    })
-      .then((result) => {
-        this.setState({
-          image: `https://s3.ap-south-1.amazonaws.com/naadanchords-images/public/${result.key}`,
-        });
-      })
-      .catch((err) => console.log(err));
+    const result = await uploadData({
+      path: `public/${slugify(this.state.title)}.jpg`,
+      data: file,
+    }).result;
+    this.setState({
+      image: `https://s3.ap-south-1.amazonaws.com/naadanchords-images/${result.path}`,
+    });
   };
 
   resetImage = (e) => {

@@ -10,7 +10,8 @@ import {
   Button,
 } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { API, Auth } from "aws-amplify";
+import { fetchAuthSession } from "aws-amplify/auth";
+import { API } from "../libs/utils";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import Sidebar from "./Sidebar";
@@ -75,7 +76,7 @@ export default class Request extends SearchComponent {
 
   async componentDidMount() {
     try {
-      let session = await Auth.currentSession();
+      let session = await fetchAuthSession();
       this.props.userHasAuthenticated(true);
       await this.props.getUserAttributes(session);
       this.setState({

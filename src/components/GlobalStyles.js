@@ -130,7 +130,7 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.textMuted} !important;
   }
 
-  a.text-primary {
+  a.text-primary, button.text-primary {
     color: ${({ theme }) => theme.linkPrimary} !important;
 
     &:hover {

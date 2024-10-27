@@ -19,9 +19,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import TextareaAutosize from "react-autosize-textarea/lib";
-import { API } from "aws-amplify";
 import LoaderButton from "../../components/LoaderButton";
-import { parseLinksToHtml } from "../../libs/utils";
+import { API, parseLinksToHtml } from "../../libs/utils";
 import * as Styles from "../Styles";
 import "./Comments.css";
 
