@@ -118,6 +118,21 @@ export async function main(event, context, callback) {
         ),
       };
       result = await dynamoDbLib.call("scan", params);
+
+      if (result?.Items?.length === 0) {
+        // No search results
+        const emptySearchWriteParams = {
+          TableName: "NaadanChordsEmptySearch",
+          Item: {
+            timestamp: Date.now(),
+            searchQuery: event.search,
+            ipAddress: event.sourceIP,
+            type: "SEARCH",
+          },
+        };
+
+        await dynamoDbLib.call("put", emptySearchWriteParams);
+      }
     } else {
       result = await dynamoDbLib.call("query", params);
     }

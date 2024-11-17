@@ -92,6 +92,12 @@ functions:
       - schedule:
           rate: rate(1 day)
           enabled: true
+  empty-search-report:
+    handler: empty-search-report.main
+    events:
+      - schedule:
+          rate: rate(1 day)
+          enabled: true
 
 # Create our resources with separate CloudFormation templates
 resources:
