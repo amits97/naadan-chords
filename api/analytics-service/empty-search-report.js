@@ -3,8 +3,19 @@ import * as usernameLib from "../libs/username-lib";
 import * as emailLib from "../libs/email-lib";
 import { success, failure } from "../libs/response-lib";
 
+async function deleteItems(deleteRequestArray) {
+  const deleteParams = {
+    RequestItems: {
+      NaadanChordsEmptySearch: deleteRequestArray,
+    },
+    ReturnItemCollectionMetrics: "SIZE",
+    ConsumedCapacity: "INDEXES",
+  };
+
+  await dynamoDbLib.batchCall(deleteParams);
+}
+
 async function clearTable() {
-  const previousPositions = [];
   let params = {
     TableName: "NaadanChordsEmptySearch",
     ScanIndexForward: false,
@@ -15,7 +26,6 @@ async function clearTable() {
 
   let deleteRequestArray = [];
   for (let i = 0; i < resultArray.length; i++) {
-    previousPositions.push(resultArray[i].timestamp);
     let deleteItem = {
       DeleteRequest: {
         Key: {
@@ -27,17 +37,10 @@ async function clearTable() {
   }
 
   if (deleteRequestArray.length > 0) {
-    const deleteParams = {
-      RequestItems: {
-        NaadanChordsEmptySearch: deleteRequestArray,
-      },
-      ReturnItemCollectionMetrics: "SIZE",
-      ConsumedCapacity: "INDEXES",
-    };
-
-    await dynamoDbLib.batchCall(deleteParams);
+    while (deleteRequestArray.length) {
+      await deleteItems(deleteRequestArray.splice(0, 25));
+    }
   }
-  return previousPositions;
 }
 
 function removeDuplicates(result) {
