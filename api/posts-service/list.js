@@ -3,6 +3,7 @@ import * as userNameLib from "../libs/username-lib";
 import * as searchFilterLib from "../libs/searchfilter-lib";
 import { appendRatings } from "../common/post-ratings";
 import { appendCommentsCount } from "../common/post-comments";
+import { fuzzySearch } from "../common/post-fuzzy-search";
 
 export async function main(event, context, callback) {
   var lastEvaluatedKey;
@@ -120,18 +121,23 @@ export async function main(event, context, callback) {
       result = await dynamoDbLib.call("scan", params);
 
       if (result?.Items?.length === 0) {
-        // No search results
-        const emptySearchWriteParams = {
-          TableName: "NaadanChordsEmptySearch",
-          Item: {
-            timestamp: Date.now(),
-            searchQuery: event.search,
-            ipAddress: event.sourceIP,
-            type: "SEARCH",
-          },
-        };
+        // Try fuzzy search over post ids
+        result = await fuzzySearch(event.search);
 
-        await dynamoDbLib.call("put", emptySearchWriteParams);
+        if (result?.Items?.length === 0) {
+          // No search results
+          const emptySearchWriteParams = {
+            TableName: "NaadanChordsEmptySearch",
+            Item: {
+              timestamp: Date.now(),
+              searchQuery: event.search,
+              ipAddress: event.sourceIP,
+              type: "SEARCH",
+            },
+          };
+
+          await dynamoDbLib.call("put", emptySearchWriteParams);
+        }
       }
     } else {
       result = await dynamoDbLib.call("query", params);
