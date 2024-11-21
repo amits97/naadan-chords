@@ -1,6 +1,10 @@
 import Fuse from "fuse.js";
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 
+var lastScanDate = 0;
+// scanResult is the object that FuseJS creates for the search
+var scanResult;
+
 async function getPostDetails(postId) {
   const params = {
     TableName: "NaadanChords",
@@ -16,33 +20,45 @@ async function getPostDetails(postId) {
 
 export async function fuzzySearch(query) {
   let allPostIds = [];
-  let params = {
-    TableName: "NaadanChords",
-    IndexName: "postType-updatedAt-index",
-    KeyConditionExpression: "postType = :postType",
-    ExpressionAttributeValues: {
-      ":postType": "POST",
-    },
-    ScanIndexForward: false,
-    ProjectionExpression: "postId",
-  };
+  let responseFromCache = true;
 
-  let lek = "init";
-  while (lek) {
-    const data = await dynamoDbLib.call("query", params);
-    allPostIds.push(...data.Items);
-    lek = data.LastEvaluatedKey;
-    if (lek) params.ExclusiveStartKey = lek;
+  if (
+    lastScanDate === 0 ||
+    scanResult === undefined ||
+    lastScanDate + 3600000 < new Date().getTime()
+  ) {
+    responseFromCache = false;
+    lastScanDate = new Date().getTime();
+
+    let params = {
+      TableName: "NaadanChords",
+      IndexName: "postType-updatedAt-index",
+      KeyConditionExpression: "postType = :postType",
+      ExpressionAttributeValues: {
+        ":postType": "POST",
+      },
+      ScanIndexForward: false,
+      ProjectionExpression: "postId",
+    };
+
+    let lek = "init";
+    while (lek) {
+      const data = await dynamoDbLib.call("query", params);
+      allPostIds.push(...data.Items);
+      lek = data.LastEvaluatedKey;
+      if (lek) params.ExclusiveStartKey = lek;
+    }
+
+    const options = {
+      includeScore: true,
+      threshold: 0.4,
+      isCaseSensitive: false,
+      keys: ["postId"],
+    };
+
+    scanResult = new Fuse(allPostIds, options);
   }
 
-  const options = {
-    includeScore: true,
-    threshold: 0.4,
-    isCaseSensitive: false,
-    keys: ["postId"],
-  };
-
-  const scanResult = new Fuse(allPostIds, options);
   let result = scanResult.search(query, { limit: 15 });
 
   if (result.length > 0) {
@@ -58,5 +74,5 @@ export async function fuzzySearch(query) {
     result.Items.push(res);
   }
 
-  return result;
+  return { ...result, responseFromCache };
 }
