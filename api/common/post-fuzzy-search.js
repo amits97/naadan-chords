@@ -1,9 +1,11 @@
 import Fuse from "fuse.js";
+import NodeCache from "node-cache";
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 
-var lastScanDate = 0;
-// scanResult is the object that FuseJS creates for the search
-var scanResult;
+const cacheTTL = 3600; // 1 hour
+const myCache = new NodeCache();
+
+myCache.set("scanResult", undefined, cacheTTL);
 
 async function getPostDetails(postId) {
   const params = {
@@ -22,13 +24,8 @@ export async function fuzzySearch(query) {
   let allPostIds = [];
   let responseFromCache = true;
 
-  if (
-    lastScanDate === 0 ||
-    scanResult === undefined ||
-    lastScanDate + 3600000 < new Date().getTime()
-  ) {
+  if (!myCache.get("scanResult")) {
     responseFromCache = false;
-    lastScanDate = new Date().getTime();
 
     let params = {
       TableName: "NaadanChords",
@@ -56,10 +53,11 @@ export async function fuzzySearch(query) {
       keys: ["postId"],
     };
 
-    scanResult = new Fuse(allPostIds, options);
+    const scanResult = new Fuse(allPostIds, options);
+    myCache.set("scanResult", scanResult, cacheTTL);
   }
 
-  let result = scanResult.search(query, { limit: 15 });
+  let result = myCache.get("scanResult").search(query, { limit: 15 });
 
   if (result.length > 0) {
     allPostIds = result.map((item) => item.item.postId);

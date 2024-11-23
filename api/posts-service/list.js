@@ -1,3 +1,4 @@
+import NodeCache from "node-cache";
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
 import * as searchFilterLib from "../libs/searchfilter-lib";
@@ -5,21 +6,19 @@ import { appendRatings } from "../common/post-ratings";
 import { appendCommentsCount } from "../common/post-comments";
 import { fuzzySearch } from "../common/post-fuzzy-search";
 
-var cache = {};
-var lastUpdatedTimestamp = 0;
+const cacheTTL = 300; // 5 mins
+const myCache = new NodeCache();
 
-export async function main(event, context, callback) {
+myCache.set("listCache", {}, cacheTTL);
+
+export async function main(event) {
   let responseFromCache = true;
   let { sourceIP, ...cacheKey } = event;
+  let cache = myCache.get("listCache") || {};
   cacheKey = JSON.stringify(cacheKey);
 
-  if (
-    lastUpdatedTimestamp === 0 ||
-    cache[cacheKey] === undefined ||
-    lastUpdatedTimestamp + 300000 < new Date().getTime()
-  ) {
+  if (!cache[cacheKey]) {
     responseFromCache = false;
-    lastUpdatedTimestamp = new Date().getTime();
 
     var lastEvaluatedKey;
     if (event.page) {
@@ -209,10 +208,12 @@ export async function main(event, context, callback) {
       finalResult = await appendCommentsCount(result);
 
       cache[cacheKey] = finalResult;
+      myCache.set("listCache", cache, cacheTTL);
     } catch (e) {
       return { status: false, error: e };
     }
   }
 
+  cache = myCache.get("listCache") || {};
   return { ...cache[cacheKey], responseFromCache };
 }

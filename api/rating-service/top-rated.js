@@ -1,19 +1,16 @@
+import NodeCache from "node-cache";
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
 import { success, failure } from "../libs/response-lib";
 import { appendRatings } from "../common/post-ratings";
 
-var lastScanDate = 0;
-var result;
+const cacheTTL = 3600; // 1 hour
+const myCache = new NodeCache();
+
+myCache.set("topRatedPosts", undefined, cacheTTL);
 
 export async function main() {
-  if (
-    lastScanDate === 0 ||
-    result === undefined ||
-    lastScanDate + 3600000 < new Date().getTime()
-  ) {
-    lastScanDate = new Date().getTime();
-
+  if (!myCache.get("topRatedPosts")) {
     let params = {
       TableName: "NaadanChordsRatings",
       IndexName: "postType-weightedRating-index",
@@ -26,7 +23,7 @@ export async function main() {
     };
 
     try {
-      result = await dynamoDbLib.call("query", params);
+      let result = await dynamoDbLib.call("query", params);
 
       let users = {};
 
@@ -52,10 +49,11 @@ export async function main() {
 
       //append ratings
       result = await appendRatings(result);
+      myCache.set("topRatedPosts", result.Items, cacheTTL);
     } catch (e) {
       return failure({ status: false, error: e });
     }
   }
 
-  return success(result.Items);
+  return success(myCache.get("topRatedPosts"));
 }

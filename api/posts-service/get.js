@@ -1,21 +1,27 @@
+import NodeCache from "node-cache";
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
 import { success, failure } from "../libs/response-lib";
 import { appendRatings } from "../common/post-ratings";
 import { appendCommentsCount } from "../common/post-comments";
 
-function retryLoop(postId) {
+const cacheTTL = 300; // 5 mins
+const myCache = new NodeCache();
+
+myCache.set("getCache", {}, cacheTTL);
+
+function retryLoop(postId, cache = {}, cacheKey = "") {
   let keywords = postId.split("-");
 
   if (keywords.length > 1) {
     keywords.pop();
-    return retryGet(keywords.join("-"));
+    return retryGet(keywords.join("-"), cache, cacheKey);
   } else {
     return failure({ status: false, error: "Item not found." });
   }
 }
 
-async function retryGet(postId) {
+async function retryGet(postId, cache = {}, cacheKey = "") {
   let params = {
     TableName: "NaadanChords",
     ScanFilter: {
@@ -45,9 +51,11 @@ async function retryGet(postId) {
 
         finalResult = await appendRatings({ Items: [finalResult] });
         finalResult = await appendCommentsCount(finalResult);
-        return success(finalResult.Items[0]);
+        cache[cacheKey] = finalResult.Items[0];
+        myCache.set("getCache", cache, cacheTTL);
+        return success({ ...finalResult.Items[0], responseFromCache: false });
       } else {
-        return retryLoop(postId);
+        return retryLoop(postId, cache, cacheKey);
       }
     } catch (e) {
       return failure({ status: false, error: e });
@@ -57,36 +65,47 @@ async function retryGet(postId) {
   }
 }
 
-export async function main(event, context) {
-  const params = {
-    TableName: "NaadanChords",
-    Key: {
-      postId: event.pathParameters.id,
-    },
-  };
+export async function main(event) {
+  let responseFromCache = true;
+  let cacheKey = event.pathParameters.id;
+  let cache = myCache.get("getCache") || {};
 
-  try {
-    const result = await dynamoDbLib.call("get", params);
-    if (result.Item) {
-      let userId = result.Item.userId;
+  if (!cache[cacheKey]) {
+    responseFromCache = false;
+    const params = {
+      TableName: "NaadanChords",
+      Key: {
+        postId: event.pathParameters.id,
+      },
+    };
 
-      //Get full attributes of author
-      let authorAttributes = await userNameLib.getAuthorAttributes(userId);
-      result.Item.authorName = authorAttributes.authorName;
-      result.Item.userName =
-        authorAttributes.preferredUsername ?? authorAttributes.userName;
-      result.Item.authorPicture = authorAttributes.picture;
+    try {
+      const result = await dynamoDbLib.call("get", params);
+      if (result.Item) {
+        let userId = result.Item.userId;
 
-      //Do not expose userId
-      delete result.Item.userId;
+        //Get full attributes of author
+        let authorAttributes = await userNameLib.getAuthorAttributes(userId);
+        result.Item.authorName = authorAttributes.authorName;
+        result.Item.userName =
+          authorAttributes.preferredUsername ?? authorAttributes.userName;
+        result.Item.authorPicture = authorAttributes.picture;
 
-      let finalResult = await appendRatings({ Items: [result.Item] });
-      finalResult = await appendCommentsCount(finalResult);
-      return success(finalResult.Items[0]);
-    } else {
-      return retryGet(event.pathParameters.id);
+        //Do not expose userId
+        delete result.Item.userId;
+
+        let finalResult = await appendRatings({ Items: [result.Item] });
+        finalResult = await appendCommentsCount(finalResult);
+        cache[cacheKey] = finalResult.Items[0];
+        myCache.set("getCache", cache, cacheTTL);
+      } else {
+        return retryGet(event.pathParameters.id, cache, cacheKey);
+      }
+    } catch (e) {
+      return failure({ status: false, error: e });
     }
-  } catch (e) {
-    return failure({ status: false, error: e });
   }
+
+  cache = myCache.get("getCache") || {};
+  return success({ ...cache[cacheKey], responseFromCache });
 }
