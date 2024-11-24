@@ -140,6 +140,8 @@ async function generateSitemap() {
   let pageMap = await generatePagination();
   let malayalamPageMap = await generatePagination("MALAYALAM");
   let tamilPageMap = await generatePagination("TAMIL");
+  let teluguPageMap = await generatePagination("TELUGU");
+  let hindiPageMap = await generatePagination("HINDI");
 
   let authorMap = [];
   let authorPageMap = [];
@@ -164,6 +166,8 @@ async function generateSitemap() {
     "/page/:number": pageMap,
     "/category/malayalam/page/:number": malayalamPageMap,
     "/category/tamil/page/:number": tamilPageMap,
+    "/category/telugu/page/:number": teluguPageMap,
+    "/category/hindi/page/:number": hindiPageMap,
     "/album/:album": albumMap,
     "/author/:userName": authorMap,
     "/author/:userName/page/:number": authorPageMap,

@@ -9,7 +9,10 @@ export default (
     <Route path="/category/malayalam/page/:number" />
     <Route path="/category/tamil" />
     <Route path="/category/tamil/page/:number" />
+    <Route path="/category/telugu" />
+    <Route path="/category/telugu/page/:number" />
     <Route path="/category/hindi" />
+    <Route path="/category/hindi/page/:number" />
     <Route path="/author/:userName" />
     <Route path="/author/:userName/page/:number" />
     <Route path="/album/:album" />
