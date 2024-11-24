@@ -684,6 +684,7 @@ export default class Editor extends Component {
                 >
                   <option value="MALAYALAM">Malayalam</option>
                   <option value="TAMIL">Tamil</option>
+                  <option value="TELUGU">Telugu</option>
                   <option value="HINDI">Hindi</option>
                 </Form.Control>
               </Form.Group>

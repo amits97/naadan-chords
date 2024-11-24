@@ -101,6 +101,11 @@ export default class Footer extends Component {
                       </LinkContainer>
                     </li>
                     <li>
+                      <LinkContainer exact to="/category/telugu">
+                        <a href="#/">Telugu</a>
+                      </LinkContainer>
+                    </li>
+                    <li>
                       <LinkContainer exact to="/category/hindi">
                         <a href="#/">Hindi</a>
                       </LinkContainer>
