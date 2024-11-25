@@ -118,6 +118,7 @@
 
 .Header .navbar button {
   width: 50px;
+  border-radius: 8px;
 }
 
 .Header .navbar .navbar-toggler {

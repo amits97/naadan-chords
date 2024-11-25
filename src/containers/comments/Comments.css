@@ -57,6 +57,10 @@
   font-size: 14px;
 }
 
+.Comments .comment .content-col button {
+  margin-top: 0;
+}
+
 .Comments .comment .content-col button.comment-submit {
   font-size: 14px;
 }
@@ -79,6 +83,7 @@
   padding: 0;
   color: inherit;
   text-decoration: none;
+  margin-top: 0;
 }
 
 .Comments

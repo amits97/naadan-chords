@@ -131,6 +131,22 @@ export default class Footer extends Component {
                       </LinkContainer>
                     </li>
                   </ul>
+                  <h6>Mobile Apps</h6>
+                  <ul className="list-unstyled">
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords"
+                      >
+                        Android{" "}
+                        <FontAwesomeIcon
+                          className="external-icon"
+                          icon={faExternalLinkAlt}
+                        />
+                      </a>
+                    </li>
+                  </ul>
                 </Col>
                 <Col>
                   <h6>Social Media</h6>
@@ -188,24 +204,6 @@ export default class Footer extends Component {
                       </a>
                     </li>
                   </ul>
-                  <h6>Mobile Apps</h6>
-                  <ul className="list-unstyled">
-                    <li>
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords"
-                      >
-                        Android{" "}
-                        <FontAwesomeIcon
-                          className="external-icon"
-                          icon={faExternalLinkAlt}
-                        />
-                      </a>
-                    </li>
-                  </ul>
-                </Col>
-                <Col>
                   <h6>Contribute</h6>
                   <ul className="list-unstyled">
                     <li>

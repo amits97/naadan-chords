@@ -76,7 +76,6 @@
 }
 
 .ChordControls .btn-group .btn {
-  border-radius: 0;
   padding-top: 5px;
   height: 31px;
   width: 35px;
@@ -84,11 +83,15 @@
   padding-left: 10px;
   padding-right: 10px;
   touch-action: manipulation;
+  margin-top: 0;
+  min-height: auto;
 }
 
 .ChordControls .tray-control {
   font-size: 25px;
   padding-top: 3px;
+  min-height: auto;
+  margin-top: 0;
 }
 
 /* Small devices (landscape phones, less than 768px) */

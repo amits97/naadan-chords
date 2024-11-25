@@ -17,6 +17,8 @@
   position: sticky;
   top: 75px;
   transition: top 0.3s ease-out;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .Account .nav-pills .nav-link {

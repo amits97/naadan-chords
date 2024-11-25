@@ -166,6 +166,8 @@ export const GlobalStyles = createGlobalStyle`
 
   .btn {
     border-radius: 8px;
+    min-height: 40px;
+    margin-top: 20px;
   }
 
   .border {

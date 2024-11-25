@@ -879,7 +879,7 @@ export default class Account extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav variant="pills" className="flex-column border rounded">
+              <Nav variant="pills" className="flex-column border">
                 <Nav.Item className="border-bottom">
                   <Nav.Link
                     eventKey="profile"

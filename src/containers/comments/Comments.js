@@ -360,13 +360,14 @@ export default class Comments extends Component {
           />
           {shouldShowActions && (
             <div className="cancel-input mb-2 text-right">
-              <a
-                href="#/"
-                className="text-primary pt-1 mr-3"
+              <Button
+                type="button"
+                variant="link"
+                className="text-primary"
                 onClick={onCancel}
               >
                 Cancel
-              </a>
+              </Button>
               <LoaderButton
                 variant="primary"
                 className="comment-submit"
@@ -545,9 +546,10 @@ export default class Comments extends Component {
                 </small>
                 {commentBeingEdited.commentId === comment.commentId && (
                   <div className="float-right">
-                    <a
-                      href="#/"
-                      className="text-primary pt-1 mr-3"
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="text-primary"
                       onClick={(e) => {
                         e.preventDefault();
                         this.setState({
@@ -556,7 +558,7 @@ export default class Comments extends Component {
                       }}
                     >
                       Cancel
-                    </a>
+                    </Button>
                     <LoaderButton
                       variant="primary"
                       className="comment-submit"
