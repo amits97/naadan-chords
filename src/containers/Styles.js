@@ -27,6 +27,7 @@ export const PostItemContainer = styled.div`
   padding: 12.5px 15px;
   background: ${({ alternate, theme }) =>
     alternate ? theme.backgroundLight : "none"};
+  border-radius: 15px;
 
   &:hover {
     background: ${({ theme }) => theme.backgroundHighlight};
@@ -41,9 +42,24 @@ export const PostItemContainer = styled.div`
     background: inherit !important;
   }
 
+  a:hover {
+    text-decoration: none;
+  }
+
   h5 {
     margin-bottom: 0.25rem;
     margin-top: 0;
+    width: fit-content;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.loading {
+    h5 {
+      width: auto;
+    }
   }
 
   small {
@@ -112,11 +128,16 @@ export const ContentContainer = styled.div`
   h6 {
     color: ${({ theme }) => theme.secondaryHeading};
   }
+
+  .post small {
+    color: ${({ theme }) => theme.secondaryText};
+  }
 `;
 
 export const ScaleInfoContainer = styled.div`
-  border-left: 3px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme }) => theme.border};
   background: ${({ theme }) => theme.backgroundLight};
+  border-radius: 15px;
 
   p {
     font-size: 16px;
@@ -128,6 +149,15 @@ export const ChordControlsContainer = styled.div`
     background: ${({ theme }) => theme.backgroundLight};
     border: 1px solid ${({ theme }) => theme.border};
     border-bottom: 0;
+  }
+
+  .btn-outline-light {
+    border: 1px solid ${({ theme }) => theme.border};
+    border-radius: 8px;
+  }
+
+  .btn.disabled {
+    opacity: 0.4;
   }
 
   .controls-tray {
@@ -149,6 +179,10 @@ export const CommentAuthorName = styled.small`
     color: ${({ theme }) => theme.link};
     padding-right: 4px;
   }
+`;
+
+export const SignupCard = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
 `;
 
 export const LoginDividerText = styled.span`

@@ -17,7 +17,11 @@
   height: 26px;
   z-index: 2;
   right: -1rem;
-  border-radius: 5px 5px 0 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.ChordControls.minimized .controls-tray {
+  border-radius: 8px 0 0 0;
 }
 
 .ChordControls .tray-saver button {
@@ -36,6 +40,7 @@
   height: 55px;
   margin-left: -1rem;
   margin-right: -1rem;
+  border-radius: 8px;
 }
 
 .ChordControls .controls-container-holder {
@@ -83,7 +88,7 @@
 
 .ChordControls .tray-control {
   font-size: 25px;
-  padding-top: 5px;
+  padding-top: 3px;
 }
 
 /* Small devices (landscape phones, less than 768px) */

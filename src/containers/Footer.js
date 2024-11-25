@@ -74,7 +74,7 @@ export default class Footer extends Component {
           <Row>
             <Col sm={8}>
               <Row>
-                <Col>
+                <Col className="meta-col">
                   <span className="footer-logo">
                     <Link to="/">
                       <img src={logo} alt="logo" />
@@ -83,12 +83,12 @@ export default class Footer extends Component {
                   <small>Guitar chords and tabs</small>
                   <br />
                   <small>
-                    <a href="/sitemap.xml">sitemap</a> | v
+                    <a href="/sitemap.xml">Sitemap</a> | v
                     {this.packageDetails.version}
                   </small>
                 </Col>
                 <Col>
-                  <h6>CATEGORIES</h6>
+                  <h6>Categories</h6>
                   <ul className="list-unstyled">
                     <li>
                       <LinkContainer exact to="/category/malayalam">
@@ -111,7 +111,7 @@ export default class Footer extends Component {
                       </LinkContainer>
                     </li>
                   </ul>
-                  <h6>PAGES</h6>
+                  <h6>Pages</h6>
                   <ul className="list-unstyled">
                     <li>
                       <LinkContainer exact to="/about">
@@ -131,59 +131,9 @@ export default class Footer extends Component {
                       </LinkContainer>
                     </li>
                   </ul>
-                  <h6>MOBILE APPS</h6>
-                  <ul className="list-unstyled">
-                    <li>
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords"
-                      >
-                        Android{" "}
-                        <FontAwesomeIcon
-                          className="external-icon"
-                          icon={faExternalLinkAlt}
-                        />
-                      </a>
-                    </li>
-                  </ul>
                 </Col>
                 <Col>
-                  <h6>CONTRIBUTE</h6>
-                  <ul className="list-unstyled">
-                    <li>
-                      <LinkContainer exact to="/contributions/submit-song">
-                        <a href="#/">Submit Song</a>
-                      </LinkContainer>
-                    </li>
-                    <li>
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://github.com/amits97/naadan-chords/issues"
-                      >
-                        Report bug{" "}
-                        <FontAwesomeIcon
-                          className="external-icon"
-                          icon={faExternalLinkAlt}
-                        />
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://github.com/amits97/naadan-chords/"
-                      >
-                        GitHub{" "}
-                        <FontAwesomeIcon
-                          className="external-icon"
-                          icon={faExternalLinkAlt}
-                        />
-                      </a>
-                    </li>
-                  </ul>
-                  <h6>SOCIAL MEDIA</h6>
+                  <h6>Social Media</h6>
                   <ul className="list-unstyled">
                     <li>
                       <a
@@ -231,6 +181,58 @@ export default class Footer extends Component {
                         href="https://www.soundcloud.com/asn"
                       >
                         SoundCloud{" "}
+                        <FontAwesomeIcon
+                          className="external-icon"
+                          icon={faExternalLinkAlt}
+                        />
+                      </a>
+                    </li>
+                  </ul>
+                  <h6>Mobile Apps</h6>
+                  <ul className="list-unstyled">
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords"
+                      >
+                        Android{" "}
+                        <FontAwesomeIcon
+                          className="external-icon"
+                          icon={faExternalLinkAlt}
+                        />
+                      </a>
+                    </li>
+                  </ul>
+                </Col>
+                <Col>
+                  <h6>Contribute</h6>
+                  <ul className="list-unstyled">
+                    <li>
+                      <LinkContainer exact to="/contributions/submit-song">
+                        <a href="#/">Submit Song</a>
+                      </LinkContainer>
+                    </li>
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/amits97/naadan-chords/issues"
+                      >
+                        Report bug{" "}
+                        <FontAwesomeIcon
+                          className="external-icon"
+                          icon={faExternalLinkAlt}
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/amits97/naadan-chords/"
+                      >
+                        GitHub{" "}
                         <FontAwesomeIcon
                           className="external-icon"
                           icon={faExternalLinkAlt}

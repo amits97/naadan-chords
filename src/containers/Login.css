@@ -21,8 +21,8 @@
 }
 
 .Login .signup-card {
-  border-left: 3px solid #ff9700;
   padding-left: 15px;
+  border-radius: 8px;
 }
 
 .Login .login-divider-container {

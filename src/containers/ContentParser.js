@@ -476,7 +476,7 @@ export default class ContentParser extends Component {
           </ul>
 
           {showScaleInfo ? (
-            <Styles.ScaleInfoContainer className="px-3 py-2 rounded mb-4">
+            <Styles.ScaleInfoContainer className="px-3 py-2 mb-4">
               <p className="mb-0">
                 {scale ? (
                   <React.Fragment>

@@ -99,6 +99,7 @@
   border-radius: 0px;
   font-weight: bold;
   color: #ffffff;
+  border-radius: 15px;
 }
 
 .Content .post h2 {
@@ -110,7 +111,6 @@
 }
 
 .Content .post small {
-  color: #999999;
   font-size: 90%;
   display: inline-block;
 }

@@ -12,6 +12,7 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 0.95rem;
     background: ${({ theme }) => theme.body};
     border: 1px solid ${({ theme }) => theme.border};
+    border-radius: 8px;
   }
 
   /* Needed to have the triangle match the background of the popover */
@@ -63,6 +64,10 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
+  .modal-content {
+    border-radius: 15px;
+  }
+
   .modal-content, .dropdown-menu {
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
@@ -70,6 +75,7 @@ export const GlobalStyles = createGlobalStyle`
 
   .dropdown-menu {
     border: 1px solid ${({ theme }) => theme.border};
+    border-radius: 8px;
   }
 
   .App .navbar .navbar-nav .dropdown-item {
@@ -156,6 +162,10 @@ export const GlobalStyles = createGlobalStyle`
 
   hr {
     border-top: 1px solid ${({ theme }) => theme.border};
+  }
+
+  .btn {
+    border-radius: 8px;
   }
 
   .border {

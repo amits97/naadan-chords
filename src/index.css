@@ -54,7 +54,7 @@ textarea.form-control,
 input.form-control {
   font-size: 14px;
   padding-top: 0.5rem;
-  border-radius: 5px;
+  border-radius: 8px;
   height: calc(2.5rem + 2px);
 }
 

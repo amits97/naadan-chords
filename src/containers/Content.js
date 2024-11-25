@@ -180,7 +180,7 @@ export default class Content extends Component {
   };
 
   renderTitle = (title, isUserPosts, isCategory, posts, authorCreateDate) => {
-    let displayTitle = title ? title : "LATEST";
+    let displayTitle = title ? title : "Latest";
     if (isUserPosts) {
       displayTitle = posts[0].authorName;
 
@@ -250,7 +250,7 @@ export default class Content extends Component {
             color={theme.backgroundHighlight}
             highlightColor={theme.body}
           >
-            <Styles.PostItemContainer className="pt-1 pb-1 no-hover">
+            <Styles.PostItemContainer className="pt-1 pb-1 no-hover loading">
               <h5>
                 <Skeleton />
               </h5>
@@ -453,8 +453,9 @@ export default class Content extends Component {
         >
           <span>
             <StarRatings
-              starRatedColor="#FFD700"
-              starHoverColor="#FFD700"
+              starEmptyColor="#999999"
+              starRatedColor="#E8C406"
+              starHoverColor="#E8C406"
               starDimension={`${isPostList ? "15px" : "18px"}`}
               starSpacing="0.5px"
               numberOfStars={5}
@@ -627,8 +628,9 @@ export default class Content extends Component {
         <h6 className="rate-heading">RATE THIS POST</h6>
         <div className="rate-inner-container">
           <StarRatings
-            starRatedColor="#FFD700"
-            starHoverColor="#FFD700"
+            starEmptyColor="#999999"
+            starRatedColor="#E8C406"
+            starHoverColor="#E8C406"
             starDimension="25px"
             starSpacing="1px"
             numberOfStars={5}

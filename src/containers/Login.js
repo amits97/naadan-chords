@@ -215,7 +215,7 @@ export default class Login extends SearchComponent {
         <form
           onSubmit={isOTPFlow ? this.handleLoginWithOTP : this.handleSubmit}
         >
-          <div className="signup-card bg-light p-2 pl-3 mt-4 mb-4">
+          <Styles.SignupCard className="signup-card bg-light p-2 pl-3 mt-4 mb-4">
             New to Naadan Chords?
             <br />
             {isDialog ? (
@@ -233,7 +233,7 @@ export default class Login extends SearchComponent {
                 </a>
               </LinkContainer>
             )}
-          </div>
+          </Styles.SignupCard>
           <FormGroup controlId="email">
             <FormLabel>Username or Email</FormLabel>
             <FormControl
