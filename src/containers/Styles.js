@@ -92,8 +92,13 @@ export const PostItemContainer = styled.div`
 
 export const SidebarWidgetContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.border};
+  background: ${({ theme }) => theme.backgroundLight};
   padding: 0 15px;
   border-radius: 15px;
+
+  .nav-tabs .nav-link.active {
+    background: ${({ theme }) => theme.backgroundLight};
+  }
 `;
 
 export const SidebarContainer = styled.div`

@@ -17,7 +17,7 @@ export const lightTheme = {
   secondaryHeading: "#777",
   secondaryAltHeading: "#555",
   border: "#D0D5D9",
-  backgroundLight: "#E8EAEC",
+  backgroundLight: "#F6F8FA",
   backgroundHighlight: "#EFEFEF",
   disabledInput: "#E9ECEF",
   searchFocus: "#FFF",
