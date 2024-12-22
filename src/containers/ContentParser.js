@@ -480,7 +480,7 @@ export default class ContentParser extends Component {
               <p className="mb-0">
                 {scale ? (
                   <React.Fragment>
-                    <span className="text-muted">Scale - </span>
+                    <span className="text-muted">Key - </span>
                     {scale}
                     <br />
                   </React.Fragment>

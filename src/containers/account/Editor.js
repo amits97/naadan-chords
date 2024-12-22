@@ -733,7 +733,7 @@ export default class Editor extends Component {
                 Additional Details{" "}
                 <small className="text-muted">
                   {" "}
-                  - Scale, Tempo and Time Signature
+                  - Key, Tempo and Time Signature
                 </small>
               </React.Fragment>
             </a>
@@ -746,7 +746,7 @@ export default class Editor extends Component {
                     <Form.Control
                       autoComplete="off"
                       type="text"
-                      placeholder="Scale"
+                      placeholder="Key"
                       onChange={this.handleChange}
                       value={this.state.scale ? this.state.scale : ""}
                       readOnly={isViewMode}
@@ -1047,7 +1047,7 @@ export default class Editor extends Component {
                 Cancel
               </a>
 
-              <div className="auto-save float-right pt-2">
+              <div className="auto-save float-right">
                 <span
                   className={`float-right ${
                     this.state.isAutoSaving ||

@@ -36,6 +36,10 @@
   font-size: 14px;
 }
 
+.Editor button.post-submit {
+  margin-top: 0;
+}
+
 .Editor form textarea#content {
   border-top: 0;
   padding-top: 50px;
@@ -190,6 +194,7 @@
   position: relative;
   overflow: auto;
   width: 200px;
+  padding-top: 10px;
 }
 
 .Editor .auto-save .auto-saving {

@@ -15,6 +15,7 @@
 
 .EditorPanel .btn-group .btn {
   border-radius: 0;
+  margin-top: 0;
 }
 
 .EditorPanel .btn-group .btn:hover {
