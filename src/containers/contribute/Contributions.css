@@ -13,7 +13,7 @@
 
 .Contributions .header .btn {
   margin-top: 25px;
-  padding-top: 6px;
+  padding-top: 9px;
 }
 
 .Contributions .header .btn span {
@@ -26,6 +26,8 @@
   position: sticky;
   top: 75px;
   transition: top 0.3s ease-out;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .Contributions .nav-pills .nav-link {
@@ -104,7 +106,7 @@
   font-weight: bold;
   text-align: center;
   width: 100%;
-  border-radius: 0;
+  border-radius: 15px;
 }
 
 .Contributions .draft-count {

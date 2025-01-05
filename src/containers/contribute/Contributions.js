@@ -19,6 +19,7 @@ import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
 import { API } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
+import * as Styles from "../Styles";
 import "./Contributions.css";
 
 export default class Contributions extends SearchComponent {
@@ -360,37 +361,39 @@ export default class Contributions extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav variant="pills" className="flex-column border rounded">
-                <Nav.Item className="border-bottom">
-                  <Nav.Link
-                    eventKey="posts"
-                    onClick={() => {
-                      this.clearCheckboxes();
-                      this.setActiveTab("posts");
-                    }}
-                  >
-                    Posts
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link
-                    eventKey="drafts"
-                    onClick={() => {
-                      this.clearCheckboxes();
-                      this.setActiveTab("drafts");
-                    }}
-                  >
-                    Drafts{" "}
-                    <span
-                      className={`${draftCount > 0 ? "d-inline" : "d-none"}`}
+              <Styles.SidebarPillContainer>
+                <Nav variant="pills" className="flex-column border">
+                  <Nav.Item className="border-bottom">
+                    <Nav.Link
+                      eventKey="posts"
+                      onClick={() => {
+                        this.clearCheckboxes();
+                        this.setActiveTab("posts");
+                      }}
                     >
-                      <Badge className="draft-count" variant="primary">
-                        {draftCount}
-                      </Badge>
-                    </span>
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
+                      Posts
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link
+                      eventKey="drafts"
+                      onClick={() => {
+                        this.clearCheckboxes();
+                        this.setActiveTab("drafts");
+                      }}
+                    >
+                      Drafts{" "}
+                      <span
+                        className={`${draftCount > 0 ? "d-inline" : "d-none"}`}
+                      >
+                        <Badge className="draft-count" variant="primary">
+                          {draftCount}
+                        </Badge>
+                      </span>
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Styles.SidebarPillContainer>
             </Col>
             <Col lg={10}>
               <Form onSubmit={this.handleSubmit}>

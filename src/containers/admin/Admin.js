@@ -10,6 +10,7 @@ import {
   Nav,
   Form,
   FormControl,
+  Table,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Helmet } from "react-helmet";
@@ -20,6 +21,7 @@ import LoaderButton from "../../components/LoaderButton";
 import SearchComponent from "../../components/SearchComponent";
 import { API } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
+import * as Styles from "../Styles";
 import "./Admin.css";
 
 export default class Admin extends SearchComponent {
@@ -32,6 +34,7 @@ export default class Admin extends SearchComponent {
     this.state = {
       posts: [],
       pages: [],
+      emptySearches: [],
       drafts: [],
       review: [],
       isLoading: true,
@@ -47,6 +50,7 @@ export default class Admin extends SearchComponent {
       isLoading: true,
       posts: [],
       pages: [],
+      emptySearches: [],
       drafts: [],
       review: [],
     });
@@ -65,6 +69,13 @@ export default class Admin extends SearchComponent {
 
       this.setState({
         pages: activeTab === "pages" ? activeTabData : await this.pages(),
+      });
+
+      this.setState({
+        emptySearches:
+          activeTab === "emptySearches"
+            ? activeTabData
+            : await this.emptySearches(),
       });
 
       this.setState({
@@ -116,6 +127,10 @@ export default class Admin extends SearchComponent {
       "posts",
       `/posts?postType=PAGE${search ? "&s=" + search : ""}`
     );
+  }
+
+  emptySearches() {
+    return API.get("posts", `/analytics/empty-search-summary`);
   }
 
   drafts() {
@@ -347,6 +362,45 @@ export default class Admin extends SearchComponent {
     }
   }
 
+  renderEmptySearches = () => {
+    const { isLoading, emptySearches } = this.state;
+    const { theme } = this.props;
+
+    if (isLoading) {
+      return (
+        <SkeletonTheme
+          color={theme.backgroundHighlight}
+          highlightColor={theme.body}
+        >
+          <Skeleton count={10}></Skeleton>
+        </SkeletonTheme>
+      );
+    }
+
+    return (
+      <Styles.AdminTableContainer>
+        <Table striped hover responsive>
+          <thead>
+            <tr>
+              <th>Search Query</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {emptySearches.map((item) => {
+              return (
+                <tr>
+                  <td>{item.searchQuery}</td>
+                  <td>{item.count}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </Styles.AdminTableContainer>
+    );
+  };
+
   handleSearchChange = (event) => {
     this.setState({
       search: event.target.value,
@@ -398,100 +452,118 @@ export default class Admin extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav variant="pills" className="flex-column border rounded">
-                <Nav.Item className="border-bottom">
-                  <Nav.Link
-                    eventKey="posts"
-                    onClick={() => {
-                      this.clearCheckboxes();
-                      this.setActiveTab("posts");
-                    }}
-                  >
-                    Posts
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item className="border-bottom">
-                  <Nav.Link
-                    eventKey="pages"
-                    onClick={() => {
-                      this.clearCheckboxes();
-                      this.setActiveTab("pages");
-                    }}
-                  >
-                    Pages
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item className="border-bottom">
-                  <Nav.Link
-                    eventKey="drafts"
-                    onClick={() => {
-                      this.clearCheckboxes();
-                      this.setActiveTab("drafts");
-                    }}
-                  >
-                    Drafts{" "}
-                    <span
-                      className={`${draftCount > 0 ? "d-inline" : "d-none"}`}
+              <Styles.SidebarPillContainer>
+                <Nav variant="pills" className="flex-column border">
+                  <Nav.Item className="border-bottom">
+                    <Nav.Link
+                      eventKey="posts"
+                      onClick={() => {
+                        this.clearCheckboxes();
+                        this.setActiveTab("posts");
+                      }}
                     >
-                      <Badge className="draft-count" variant="primary">
-                        {draftCount}
-                      </Badge>
-                    </span>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link
-                    eventKey="review"
-                    onClick={() => {
-                      this.clearCheckboxes();
-                      this.setActiveTab("review");
-                    }}
-                  >
-                    Review{" "}
-                    <span
-                      className={`${reviewCount > 0 ? "d-inline" : "d-none"}`}
+                      Posts
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item className="border-bottom">
+                    <Nav.Link
+                      eventKey="pages"
+                      onClick={() => {
+                        this.clearCheckboxes();
+                        this.setActiveTab("pages");
+                      }}
                     >
-                      <Badge className="draft-count" variant="primary">
-                        {reviewCount}
-                      </Badge>
-                    </span>
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
+                      Pages
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item className="border-bottom">
+                    <Nav.Link
+                      eventKey="emptySearches"
+                      onClick={() => {
+                        this.clearCheckboxes();
+                        this.setActiveTab("emptySearches");
+                      }}
+                    >
+                      Empty Searches
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item className="border-bottom">
+                    <Nav.Link
+                      eventKey="drafts"
+                      onClick={() => {
+                        this.clearCheckboxes();
+                        this.setActiveTab("drafts");
+                      }}
+                    >
+                      Drafts{" "}
+                      <span
+                        className={`${draftCount > 0 ? "d-inline" : "d-none"}`}
+                      >
+                        <Badge className="draft-count" variant="primary">
+                          {draftCount}
+                        </Badge>
+                      </span>
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link
+                      eventKey="review"
+                      onClick={() => {
+                        this.clearCheckboxes();
+                        this.setActiveTab("review");
+                      }}
+                    >
+                      Review{" "}
+                      <span
+                        className={`${reviewCount > 0 ? "d-inline" : "d-none"}`}
+                      >
+                        <Badge className="draft-count" variant="primary">
+                          {reviewCount}
+                        </Badge>
+                      </span>
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Styles.SidebarPillContainer>
             </Col>
             <Col lg={10}>
               <Form onSubmit={this.handleSubmit}>
-                <div className="delete-container border-bottom">
-                  <Form.Check
-                    type="checkbox"
-                    className="checkbox pt-2 pl-4 form-check"
-                    onChange={this.toggleCheckboxes}
-                    checked={this.validateDeletes()}
-                  />
-                  <FormControl
-                    type="text"
-                    placeholder="Search"
-                    className="admin-search"
-                    value={this.state.search}
-                    onChange={this.handleSearchChange}
-                  />
-                  <LoaderButton
-                    variant="danger"
-                    className="mt-1"
-                    size="sm"
-                    disabled={!this.validateDeletes()}
-                    type="submit"
-                    isLoading={this.validateDeletes() && this.state.isLoading}
-                    text="Delete"
-                    loadingText="Deleting..."
-                  />
-                </div>
+                {activeTab !== "emptySearches" && (
+                  <div className="delete-container border-bottom">
+                    <Form.Check
+                      type="checkbox"
+                      className="checkbox pt-2 pl-4 form-check"
+                      onChange={this.toggleCheckboxes}
+                      checked={this.validateDeletes()}
+                    />
+                    <FormControl
+                      type="text"
+                      placeholder="Search"
+                      className="admin-search"
+                      value={this.state.search}
+                      onChange={this.handleSearchChange}
+                    />
+                    <LoaderButton
+                      variant="danger"
+                      className="mt-1"
+                      size="sm"
+                      disabled={!this.validateDeletes()}
+                      type="submit"
+                      isLoading={this.validateDeletes() && this.state.isLoading}
+                      text="Delete"
+                      loadingText="Deleting..."
+                    />
+                  </div>
+                )}
                 <Tab.Content>
                   <Tab.Pane eventKey="posts">
                     {this.renderPosts(posts)}
                   </Tab.Pane>
                   <Tab.Pane eventKey="pages">
                     {this.renderPosts(pages)}
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="emptySearches">
+                    {this.renderEmptySearches()}
                   </Tab.Pane>
                   <Tab.Pane eventKey="drafts">
                     {this.renderPosts(drafts, true)}

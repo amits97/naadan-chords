@@ -129,6 +129,35 @@ export const SidebarContainer = styled.div`
   }
 `;
 
+export const SidebarPillContainer = styled.div`
+  height: 100%;
+
+  .nav-pills {
+    background: ${({ theme }) => theme.backgroundLight};
+  }
+`;
+
+export const AdminTableContainer = styled.div`
+  max-height: 500px;
+  overflow: scroll;
+
+  table {
+    border: 1px solid ${({ theme }) => theme.border};
+    border-radius: 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead th {
+      border-bottom: 0;
+      border-top: 0;
+    }
+
+    td {
+      border-top: 1px solid ${({ theme }) => theme.border};
+    }
+  }
+`;
+
 export const ContentContainer = styled.div`
   h6 {
     color: ${({ theme }) => theme.secondaryHeading};

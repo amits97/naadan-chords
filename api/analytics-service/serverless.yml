@@ -92,12 +92,22 @@ functions:
       - schedule:
           rate: rate(1 day)
           enabled: true
-  empty-search-report:
-    handler: empty-search-report.main
+  empty-search-clear:
+    handler: admin/empty-search-clear.main
     events:
-      - schedule:
-          rate: rate(1 day)
-          enabled: true
+      - http:
+          path: /empty-search-clear
+          method: delete
+          cors: true
+          authorizer: aws_iam
+  empty-search-summary:
+    handler: admin/empty-search-summary.main
+    events:
+      - http:
+          path: /empty-search-summary
+          method: get
+          cors: true
+          authorizer: aws_iam
 
 # Create our resources with separate CloudFormation templates
 resources:
