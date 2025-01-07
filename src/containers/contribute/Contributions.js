@@ -362,7 +362,10 @@ export default class Contributions extends SearchComponent {
           <Row>
             <Col lg={2}>
               <Styles.SidebarPillContainer>
-                <Nav variant="pills" className="flex-column border">
+                <Nav
+                  variant="pills"
+                  className="nav-pills-container flex-column border"
+                >
                   <Nav.Item className="border-bottom">
                     <Nav.Link
                       eventKey="posts"

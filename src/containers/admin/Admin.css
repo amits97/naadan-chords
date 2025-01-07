@@ -138,14 +138,25 @@
     margin-top: -15px;
   }
 
+  .Admin .nav-pills-container.nav-pills {
+    display: inline-block;
+    margin-left: 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: scroll;
+  }
+
   .Admin .nav-pills {
     display: inline;
     position: initial;
-    border: 0 !important;
+  }
+
+  .Admin .nav-pills .d-inline {
+    position: relative;
   }
 
   .Admin .nav-item {
-    float: left;
+    display: inline-block;
     border-bottom: 0 !important;
   }
 

@@ -28,7 +28,7 @@ class App extends Component {
 
     this.state = {
       navExpanded: false,
-      isAuthenticated: false,
+      isAuthenticated: true,
       isAuthenticating: true,
       search: "",
       userName: "",
@@ -152,8 +152,8 @@ class App extends Component {
     try {
       this.setWebsiteTheme();
       let session = await fetchAuthSession();
-      if (session.tokens) {
-        this.userHasAuthenticated(true);
+      if (!session.tokens) {
+        this.userHasAuthenticated(false);
       }
       this.getUserDetails(session);
     } catch (e) {

@@ -129,14 +129,21 @@
     margin-top: -15px;
   }
 
+  .Contributions .nav-pills-container.nav-pills {
+    display: inline-block;
+    margin-left: 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: scroll;
+  }
+
   .Contributions .nav-pills {
     display: inline;
     position: initial;
-    border: 0 !important;
   }
 
   .Contributions .nav-item {
-    float: left;
+    display: inline-block;
     border-bottom: 0 !important;
   }
 
