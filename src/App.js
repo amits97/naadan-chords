@@ -151,14 +151,13 @@ class App extends Component {
 
     try {
       this.setWebsiteTheme();
+      await getCurrentUser();
+      this.userHasAuthenticated(true);
       let session = await fetchAuthSession();
-      if (session.tokens) {
-        this.userHasAuthenticated(true);
-      }
       this.getUserDetails(session);
     } catch (e) {
       this.setWebsiteTheme();
-      if (e !== "No current user") {
+      if (e?.name !== "UserUnAuthenticatedException") {
         console.log(e);
       }
     }

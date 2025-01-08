@@ -387,9 +387,9 @@ export default class Admin extends SearchComponent {
             </tr>
           </thead>
           <tbody>
-            {emptySearches.map((item) => {
+            {emptySearches.map((item, index) => {
               return (
-                <tr>
+                <tr key={`${item.searchQuery}-${index}`}>
                   <td>{item.searchQuery}</td>
                   <td>{item.count}</td>
                 </tr>
