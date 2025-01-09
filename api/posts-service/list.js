@@ -17,6 +17,10 @@ export async function main(event) {
   let cache = myCache.get("listCache") || {};
   cacheKey = JSON.stringify(cacheKey);
 
+  if (event.clearCache) {
+    cache = {};
+  }
+
   if (!cache[cacheKey]) {
     responseFromCache = false;
 

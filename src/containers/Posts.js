@@ -49,10 +49,21 @@ export default class Posts extends Component {
   }
 
   post(postId) {
-    return API.get("posts", `/posts/${postId}`);
+    const queryParams = new URLSearchParams(this.props.location.search).get(
+      "clearCache"
+    )
+      ? "?clearCache=true"
+      : "";
+    return API.get("posts", `/posts/${postId}${queryParams}`);
   }
 
   posts(category, search, user, album) {
+    let queryParams = new URLSearchParams(this.props.location.search).get(
+      "clearCache"
+    )
+      ? "?clearCache=true"
+      : "";
+
     if (category) {
       category = this.getCategoryFromLegacy(category).toUpperCase();
       return API.get("posts", `/posts?category=${category}`);
@@ -64,7 +75,7 @@ export default class Posts extends Component {
       album = capitalizeFirstLetter(this.makeTitle(album));
       return API.get("posts", `/posts?album=${album}`);
     } else {
-      return API.get("posts", "/posts");
+      return API.get("posts", `/posts${queryParams}`);
     }
   }
 

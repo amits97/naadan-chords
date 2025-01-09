@@ -70,6 +70,10 @@ export async function main(event) {
   let cacheKey = event.pathParameters.id;
   let cache = myCache.get("getCache") || {};
 
+  if (event.queryStringParameters && event.queryStringParameters.clearCache) {
+    delete cache[cacheKey];
+  }
+
   if (!cache[cacheKey]) {
     responseFromCache = false;
     const params = {

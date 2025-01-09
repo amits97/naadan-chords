@@ -67,9 +67,9 @@ export default class NewPost extends SearchComponent {
       },
       reviewCommentRedirectUrl: "/admin",
       reviewRedirectUrl: "/admin",
-      editRedirectUrl: `/${this.props.match.params.id}`,
+      editRedirectUrl: `/${this.props.match.params.id}?clearCache=true`,
       pageSubmitRedirectUrl: "/admin",
-      postSubmitRedirectUrl: "/",
+      postSubmitRedirectUrl: "/?clearCache=true",
       submitButton: {
         text: isEditMode ? (isDraft ? "Publish" : "Update") : "Create",
         loadingText: isEditMode
