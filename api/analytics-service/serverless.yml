@@ -96,7 +96,7 @@ functions:
     handler: admin/empty-search-summary-generator.main
     events:
       - schedule:
-          rate: rate(1 day)
+          rate: rate(3 days)
           enabled: true
   empty-search-summary:
     handler: admin/empty-search-summary.main

@@ -122,12 +122,24 @@ function countSearchOccurances(result) {
 
 async function writeToTable(tableName, result) {
   let itemsArray = [];
+  const dedupe = {};
+
+  // Final dedupe
   for (let i = 0; i < result.length; i++) {
+    if (!dedupe[result[i].searchQuery]) {
+      dedupe[result[i].searchQuery] = result[i];
+    } else {
+      dedupe[result[i].searchQuery].count =
+        dedupe[result[i].searchQuery].count + result[i].count;
+    }
+  }
+
+  for (let key in dedupe) {
     let item = {
       PutRequest: {
         Item: {
-          searchQuery: result[i].searchQuery,
-          count: result[i].count,
+          searchQuery: dedupe[key].searchQuery,
+          count: dedupe[key].count,
           type: "SEARCH",
         },
       },
