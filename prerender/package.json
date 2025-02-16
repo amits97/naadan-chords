@@ -27,7 +27,7 @@
     "aws-sdk": "^2.1359.0",
     "fast-xml-parser": "^4.4.1",
     "puppeteer-core": "^21.6.1",
-    "serialize-javascript": "^4.0.0",
+    "serialize-javascript": "^6.0.2",
     "serverless": "^4.4.10",
     "source-map-support": "^0.5.19"
   },
