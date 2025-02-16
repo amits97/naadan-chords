@@ -138,9 +138,6 @@ export const SidebarPillContainer = styled.div`
 `;
 
 export const AdminTableContainer = styled.div`
-  max-height: 500px;
-  overflow: scroll;
-
   table {
     border: 1px solid ${({ theme }) => theme.border};
     border-radius: 8px;

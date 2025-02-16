@@ -210,6 +210,10 @@
   font-size: 16px;
 }
 
+.Editor .review-submit-container button {
+  margin-top: 0;
+}
+
 @keyframes spin {
   from {
     transform: scale(1) rotate(0deg);
