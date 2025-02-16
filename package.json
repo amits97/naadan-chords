@@ -35,13 +35,13 @@
     "react-scripts": "5.0.0",
     "react-star-ratings": "^2.3.0",
     "remove-markdown": "^0.3.0",
-    "serialize-javascript": ">=6.0.2",
     "styled-components": "^5.2.3",
     "vexchords": "^1.2.0"
   },
   "overrides": {
     "json5": ">=2.2.2",
-    "semver": ">=7.5.2"
+    "semver": ">=7.5.2",
+    "serialize-javascript": ">=6.0.2"
   },
   "scripts": {
     "start": "react-app-rewired start",
