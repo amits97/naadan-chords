@@ -22,7 +22,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.0.0",
+    "@babel/runtime-corejs2": "^7.26.10",
     "@sparticuz/chromium": "^119.0.2",
     "aws-sdk": "^2.1359.0",
     "fast-xml-parser": "^4.4.1",
