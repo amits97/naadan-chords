@@ -43,7 +43,7 @@ export const GlobalStyles = createGlobalStyle`
 
     &:before {
       border-bottom-color: ${({ theme }) => theme.border};
-    }   
+    }
   }
 
   .popover.bs-popover-left .arrow {
@@ -68,7 +68,8 @@ export const GlobalStyles = createGlobalStyle`
     border-radius: 15px;
   }
 
-  .modal-content, .dropdown-menu {
+  .modal-content,
+  .dropdown-menu {
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
   }
@@ -94,7 +95,9 @@ export const GlobalStyles = createGlobalStyle`
     background: ${({ theme }) => theme.body};
   }
 
-  .dropdown-item:focus, .dropdown-item:hover, .dropdown-item.active:hover {
+  .dropdown-item:focus,
+  .dropdown-item:hover,
+  .dropdown-item.active:hover {
     background: ${({ theme }) => theme.backgroundLight};
   }
 
@@ -128,7 +131,8 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  p, ul li {
+  p,
+  ul li {
     color: ${({ theme }) => theme.text};
   }
 
@@ -136,7 +140,8 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.textMuted} !important;
   }
 
-  a.text-primary, button.text-primary {
+  a.text-primary,
+  button.text-primary {
     color: ${({ theme }) => theme.linkPrimary} !important;
 
     &:hover {
@@ -147,7 +152,8 @@ export const GlobalStyles = createGlobalStyle`
   a.text-dark {
     color: ${({ theme }) => theme.link} !important;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       color: ${({ theme }) => theme.linkHover} !important;
     }
   }
@@ -178,7 +184,8 @@ export const GlobalStyles = createGlobalStyle`
     border-bottom: 1px solid ${({ theme }) => theme.border} !important;
   }
 
-  .form-control, textarea {
+  .form-control,
+  textarea {
     background: ${({ theme }) => theme.body};
     border: 1px solid ${({ theme }) => theme.border};
     color: ${({ theme }) => theme.text};
@@ -189,7 +196,8 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  .form-control:disabled, .form-control[readonly] {
+  .form-control:disabled,
+  .form-control[readonly] {
     background: ${({ theme }) => theme.disabledInput};
   }
 
@@ -247,7 +255,8 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  .ChordsPopup .carousel-control-next, .ChordsPopup .carousel-control-prev {
+  .ChordsPopup .carousel-control-next,
+  .ChordsPopup .carousel-control-prev {
     filter: ${({ theme }) =>
       theme.name === "light" ? "invert(100%)" : "none"};
   }

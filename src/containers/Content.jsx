@@ -14,7 +14,7 @@ import { Helmet } from "react-helmet";
 import ReactGA from "react-ga4";
 import Moment from "react-moment";
 import ReactMarkdown from "react-markdown";
-import config from "../config";
+import RemoveMarkdown from "remove-markdown";
 import StarRatings from "react-star-ratings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -37,7 +37,6 @@ export default class Content extends Component {
   constructor(props) {
     super(props);
     this.ratingEl = React.createRef();
-    this.removeMd = require("remove-markdown");
     this.inArticleAdInitialized = false;
 
     this.state = {
@@ -912,7 +911,7 @@ export default class Content extends Component {
             0,
             Math.min(description.length, description.lastIndexOf(" "))
           ) + "..";
-        description = this.removeMd(description);
+        description = RemoveMarkdown(description);
       } else {
         description = `Guitar chords and tabs of ${posts.song} - ${posts.album} with lyrics`;
         description += `. Music by ${posts.music} and Sung by ${posts.singers}.`;

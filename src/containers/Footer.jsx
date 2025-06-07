@@ -4,14 +4,13 @@ import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import packageDetails from "../../package.json";
 import logo from "../logo.svg";
-import config from "../config";
 import "./Footer.css";
 
 export default class Footer extends Component {
   constructor(props) {
     super(props);
-    this.packageDetails = require("../../package.json");
     this.state = {
       adKey: props.pageKey,
     };
@@ -84,7 +83,7 @@ export default class Footer extends Component {
                   <br />
                   <small>
                     <a href="/sitemap.xml">Sitemap</a> | v
-                    {this.packageDetails.version}
+                    {packageDetails?.version}
                   </small>
                 </Col>
                 <Col>
