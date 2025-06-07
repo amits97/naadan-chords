@@ -31,7 +31,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import PromptWrapper from "../../components/PromptWrapper";
 import * as inputSelectionLib from "../../libs/input-selection-lib";
 import { API, safeStringNullOrEmpty, slugify } from "../../libs/utils";
-import EditorPanel from "../account/EditorPanel";
+import EditorPanel from "./EditorPanel";
 import ContentParser from "../ContentParser";
 import "./Editor.css";
 

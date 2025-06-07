@@ -20,7 +20,7 @@ export default class Footer extends Component {
   componentDidMount() {
     if (
       !this.props.isLocalhost &&
-      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
+      !noAds?.includes(window.location.pathname.replace(/\//, ""))
     ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
@@ -36,7 +36,7 @@ export default class Footer extends Component {
     if (
       this.props.adKey !== prevState.adKey &&
       !this.props.isLocalhost &&
-      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
+      !noAds?.includes(window.location.pathname.replace(/\//, ""))
     ) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -48,7 +48,7 @@ export default class Footer extends Component {
 
   renderFooterAd = () => {
     if (
-      config.noAds.includes(window.location.pathname.replace(/\//, "")) ||
+      noAds?.includes(window.location.pathname.replace(/\//, "")) ||
       this.props.isLocalhost
     ) {
       return <br />;

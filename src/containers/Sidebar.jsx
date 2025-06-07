@@ -33,7 +33,7 @@ export default class Sidebar extends Component {
   async componentDidMount() {
     if (
       !this.props.isLocalhost &&
-      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
+      !noAds?.includes(window.location.pathname.replace(/\//, ""))
     ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -184,7 +184,7 @@ export default class Sidebar extends Component {
     if (
       this.state.adKey !== prevState.adKey &&
       !this.props.isLocalhost &&
-      !config.noAds.includes(window.location.pathname.replace(/\//, ""))
+      !noAds?.includes(window.location.pathname.replace(/\//, ""))
     ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -195,7 +195,7 @@ export default class Sidebar extends Component {
     if (
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
-        config.noAds.includes(window.location.pathname.replace(/\//, ""))) ||
+        noAds?.includes(window.location.pathname.replace(/\//, ""))) ||
       this.props.isLocalhost
     ) {
       return <br />;
@@ -218,7 +218,7 @@ export default class Sidebar extends Component {
     if (
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
-        config.noAds.includes(window.location.pathname.replace(/\//, ""))) ||
+        noAds?.includes(window.location.pathname.replace(/\//, ""))) ||
       this.props.isLocalhost
     ) {
       return;

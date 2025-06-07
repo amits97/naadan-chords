@@ -22,11 +22,6 @@ const config = {
     REDIRECT_SIGN_IN: AUTH_REDIRECT_URL,
     REDIRECT_SIGN_OUT: AUTH_REDIRECT_URL,
   },
-  noAds: ["innum-konjam-neram-maryan"],
 };
 
-if (typeof window !== "undefined") {
-  window.noAds = config.noAds;
-}
-
-module.exports = config;
+export default config;

@@ -24,7 +24,9 @@ async function loadPosts(exclusiveStartKey) {
       queryRequest = `/posts?includeContentDetails=true&exclusiveStartKey=${exclusiveStartKey}`;
     }
 
-    let postsResult = await axios.get(config.apiGateway.URL + queryRequest);
+    let postsResult = await axios.get(
+      config.default.apiGateway.URL + queryRequest
+    );
     return postsResult.data;
   } catch (e) {
     console.log(e);
@@ -40,7 +42,9 @@ async function loadPages(page, category, author) {
     if (author) {
       queryRequest = `/posts/user-posts?userName=${author}&page=${page}`;
     }
-    let pageResult = await axios.get(config.apiGateway.URL + queryRequest);
+    let pageResult = await axios.get(
+      config.default.apiGateway.URL + queryRequest
+    );
     return pageResult.data;
   } catch (e) {
     console.log(e);
