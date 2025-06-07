@@ -40,6 +40,7 @@ import LoaderButton from "../../components/LoaderButton";
 import { API, base64toBlob } from "../../libs/utils";
 import * as urlLib from "../../libs/url-lib";
 import VerifyEmail from "./VerifyEmail";
+import * as Styles from "../Styles";
 
 import "./Account.css";
 
@@ -879,60 +880,65 @@ export default class Account extends SearchComponent {
         <Tab.Container activeKey={activeTab}>
           <Row>
             <Col lg={2}>
-              <Nav variant="pills" className="flex-column border">
-                <Nav.Item className="border-bottom">
-                  <Nav.Link
-                    eventKey="profile"
-                    onClick={() => {
-                      this.setActiveTab("profile");
-                    }}
-                  >
-                    Profile
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item className="border-bottom">
-                  <Nav.Link
-                    eventKey="appearance"
-                    onClick={() => {
-                      this.setActiveTab("appearance");
-                    }}
-                  >
-                    Appearance
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item className="border-bottom">
-                  <Nav.Link
-                    eventKey="account"
-                    onClick={() => {
-                      this.setActiveTab("account");
-                    }}
-                  >
-                    Account
-                  </Nav.Link>
-                </Nav.Item>
-                {emailVerified ? (
+              <Styles.SidebarPillContainer>
+                <Nav
+                  variant="pills"
+                  className="nav-pills-container flex-column border"
+                >
                   <Nav.Item className="border-bottom">
                     <Nav.Link
-                      eventKey="password"
+                      eventKey="profile"
                       onClick={() => {
-                        this.setActiveTab("password");
+                        this.setActiveTab("profile");
                       }}
                     >
-                      Password
+                      Profile
                     </Nav.Link>
                   </Nav.Item>
-                ) : null}
-                <Nav.Item>
-                  <Nav.Link
-                    eventKey="facebook"
-                    onClick={() => {
-                      this.setActiveTab("facebook");
-                    }}
-                  >
-                    Facebook
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
+                  <Nav.Item className="border-bottom">
+                    <Nav.Link
+                      eventKey="appearance"
+                      onClick={() => {
+                        this.setActiveTab("appearance");
+                      }}
+                    >
+                      Appearance
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item className="border-bottom">
+                    <Nav.Link
+                      eventKey="account"
+                      onClick={() => {
+                        this.setActiveTab("account");
+                      }}
+                    >
+                      Account
+                    </Nav.Link>
+                  </Nav.Item>
+                  {emailVerified ? (
+                    <Nav.Item className="border-bottom">
+                      <Nav.Link
+                        eventKey="password"
+                        onClick={() => {
+                          this.setActiveTab("password");
+                        }}
+                      >
+                        Password
+                      </Nav.Link>
+                    </Nav.Item>
+                  ) : null}
+                  <Nav.Item>
+                    <Nav.Link
+                      eventKey="facebook"
+                      onClick={() => {
+                        this.setActiveTab("facebook");
+                      }}
+                    >
+                      Facebook
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Styles.SidebarPillContainer>
             </Col>
             <Col lg={10}>
               <Tab.Content>

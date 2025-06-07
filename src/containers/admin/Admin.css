@@ -111,7 +111,6 @@
 
 .Admin .draft-count {
   margin: 2px 0 0 6px;
-  position: absolute;
   padding: 4px 5px 2px 6px;
 }
 
@@ -162,7 +161,18 @@
 
   .Admin .nav-pills .nav-link.active {
     border-left: 0;
-    border-bottom: 4px solid #ff9700;
+    position: relative;
+  }
+
+  .Admin .nav-pills .nav-link.active:after {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: #ff9700;
+    bottom: -1px;
+    left: 0;
+    content: "";
+    border-radius: 5px 5px 0 0;
   }
 
   .Admin .delete-container {
