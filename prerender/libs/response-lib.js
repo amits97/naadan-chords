@@ -11,8 +11,8 @@ export function redirect(headers) {
   return {
     statusCode: 301,
     headers: {
-      "Location": location
-    }
+      Location: location,
+    },
   };
 }
 
@@ -26,8 +26,8 @@ function buildResponse(statusCode, body) {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials": true,
-      "Content-Type": "text/html"
+      "Content-Type": "text/html; charset=UTF-8",
     },
-    body: body
+    body: body,
   };
 }
