@@ -20,5 +20,8 @@
   },
   "overrides": {
     "semver": ">=7.5.2"
+  },
+  "devDependencies": {
+    "babel-loader": "^10.0.0"
   }
 }

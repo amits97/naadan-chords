@@ -18,7 +18,8 @@
     "webpack-node-externals": "^2.5.2"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.1"
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.1",
+    "babel-loader": "^10.0.0"
   },
   "overrides": {
     "semver": ">=7.5.2"
