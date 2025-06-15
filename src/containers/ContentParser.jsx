@@ -60,7 +60,11 @@ export default class ContentParser extends Component {
 
     if (scrollAmount !== 0) {
       this.autoScrollTimer = setInterval(() => {
-        window.scrollBy(0, scrollAmount);
+        window.scrollBy({
+          top: scrollAmount,
+          left: 0,
+          behavior: "smooth",
+        });
       }, 100);
     }
   };
