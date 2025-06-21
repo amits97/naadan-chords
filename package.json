@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.88.3",
+  "version": "0.88.7",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -68,7 +68,9 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.25.9",
+    "@vitejs/plugin-legacy": "^6.1.1",
     "@vitejs/plugin-react": "^4.5.1",
+    "terser": "^5.43.1",
     "vite": "^6.3.5",
     "vite-plugin-node-polyfills": "^0.23.0"
   }
