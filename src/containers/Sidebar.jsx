@@ -59,12 +59,17 @@ export default class Sidebar extends Component {
   constructTopPosts = (topRated) => {
     let topPosts = topRated ? this.state.topRatedPosts : this.state.topPosts;
     let topPostsList = [];
+    let trendIconShown = false;
 
     for (let i = 0; i < topPosts.length; i++) {
+      const showTrendIcon =
+        !trendIconShown && topPosts[i].popularityTrend === "UP";
+      if (showTrendIcon) trendIconShown = true;
+
       topPostsList.push(
         <li key={`${i}`}>
           <span className="post-row">
-            {topPosts[i].popularityTrend === "UP" && (
+            {showTrendIcon && (
               <OverlayTrigger
                 overlay={
                   <Popover id="popover-basic" className="p-2">
