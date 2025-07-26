@@ -423,7 +423,7 @@ export default class ContentParser extends Component {
       );
     } else {
       return (
-        <div>
+        <div className="tab-contents no-tabs">
           <div
             className="chord-sheet"
             dangerouslySetInnerHTML={this.parseContent()}
@@ -604,7 +604,9 @@ export default class ContentParser extends Component {
     return (
       <div className="ContentParser">
         {this.renderSongMeta()}
-        {this.renderTabs(leadTabs, youtubeId)}
+        <Styles.ContentParserContainer>
+          {this.renderTabs(leadTabs, youtubeId)}
+        </Styles.ContentParserContainer>
       </div>
     );
   }

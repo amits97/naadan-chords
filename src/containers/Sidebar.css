@@ -51,6 +51,10 @@
   margin-bottom: 5px;
 }
 
+.Sidebar .sidebar-widget {
+  justify-content: initial;
+}
+
 .Sidebar .sidebar-widget .popular-icon,
 .Sidebar .sidebar-widget .top-rated-icon {
   margin-right: 5px;

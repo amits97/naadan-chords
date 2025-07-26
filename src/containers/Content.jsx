@@ -622,47 +622,51 @@ export default class Content extends Component {
     }
 
     return (
-      <div className="rate-container">
-        <div ref={this.ratingEl} className="dummy-anchor"></div>
-        <h6 className="rate-heading">RATE THIS POST</h6>
-        <div className="rate-inner-container">
-          <StarRatings
-            starEmptyColor="#999999"
-            starRatedColor="#E8C406"
-            starHoverColor="#E8C406"
-            starDimension="25px"
-            starSpacing="1px"
-            numberOfStars={5}
-            name="rating"
-            rating={isAuthenticated ? this.state.rating : undefined}
-            changeRating={
-              loggedInUser !== post.userName ? this.changeRating : undefined
-            }
-          />
-          <Button
-            variant={theme.name}
-            onClick={() => this.changeRating(0)}
-            className={`border ${
+      <Styles.RatePostContainer>
+        <div className="rate-container">
+          <div ref={this.ratingEl} className="dummy-anchor"></div>
+          <h6 className="rate-heading">RATE THIS POST</h6>
+          <div className="rate-inner-container">
+            <StarRatings
+              starEmptyColor="#999999"
+              starRatedColor="#E8C406"
+              starHoverColor="#E8C406"
+              starDimension="25px"
+              starSpacing="1px"
+              numberOfStars={5}
+              name="rating"
+              rating={isAuthenticated ? this.state.rating : undefined}
+              changeRating={
+                loggedInUser !== post.userName ? this.changeRating : undefined
+              }
+            />
+            <Button
+              variant={theme.name}
+              onClick={() => this.changeRating(0)}
+              className={`border ${
+                this.state.rating && isAuthenticated ? "d-block" : "d-none"
+              }`}
+              size="sm"
+            >
+              Clear
+            </Button>
+          </div>
+          <small
+            className={`pt-2 ${
               this.state.rating && isAuthenticated ? "d-block" : "d-none"
             }`}
-            size="sm"
           >
-            Clear
-          </Button>
-        </div>
-        <small
-          className={`pt-2 ${
-            this.state.rating && isAuthenticated ? "d-block" : "d-none"
-          }`}
-        >
-          <i>You've rated this post. You can change your rating at any time.</i>
-        </small>
-        {!this.state.rating && loggedInUser === post.userName && (
-          <small className="pt-2">
-            <i>You cannot rate your own post.</i>
+            <i>
+              You've rated this post. You can change your rating at any time.
+            </i>
           </small>
-        )}
-      </div>
+          {!this.state.rating && loggedInUser === post.userName && (
+            <small className="pt-2">
+              <i>You cannot rate your own post.</i>
+            </small>
+          )}
+        </div>
+      </Styles.RatePostContainer>
     );
   };
 

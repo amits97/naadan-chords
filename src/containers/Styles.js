@@ -165,6 +165,29 @@ export const ContentContainer = styled.div`
   }
 `;
 
+export const ContentParserContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 3px 15px 15px;
+  border-radius: 15px;
+
+  @media (max-width: 767.98px) {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+`;
+
+export const RatePostContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 30px;
+  background: ${({ theme }) => theme.backgroundLight};
+
+  h6 {
+    margin-top: 5px;
+  }
+`;
+
 export const ScaleInfoContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.border};
   background: ${({ theme }) => theme.backgroundLight};
@@ -202,6 +225,17 @@ export const ChordControlsContainer = styled.div`
     :hover {
       color: ${({ theme }) => theme.linkHover};
     }
+  }
+`;
+
+export const CommentsContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 15px;
+
+  h6 {
+    margin-top: 5px;
   }
 `;
 

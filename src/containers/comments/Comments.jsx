@@ -649,61 +649,65 @@ export default class Comments extends Component {
 
     if (post.song) {
       return (
-        <div className="Comments">
-          <h6 className="comment-heading">
-            {`COMMENTS${
-              commentsLoading ? "" : " (" + this.commentsCount(comments) + ")"
-            }`}
-          </h6>
-          {commentsLoading ? (
-            <SkeletonTheme
-              color={theme.backgroundHighlight}
-              highlightColor={theme.body}
-            >
-              <Skeleton count={5} />
-            </SkeletonTheme>
-          ) : (
-            <Container>
-              <Row className="comment no-hover px-2 py-2">
-                {this.userPicColFragment({
-                  picture: isAuthenticated && picture,
-                  name,
-                })}
-                {this.commentContentColFragment({
-                  formOnClick: () => {
-                    if (!isAuthenticated) {
-                      setShowLoginModalState(true);
-                      setPreventRatingSubmitState(true);
-                    }
-                  },
-                  formOnFocus: () => {
-                    if (isAuthenticated) {
+        <Styles.CommentsContainer>
+          <div className="Comments">
+            <h6 className="comment-heading">
+              {`COMMENTS${
+                commentsLoading ? "" : " (" + this.commentsCount(comments) + ")"
+              }`}
+            </h6>
+            {commentsLoading ? (
+              <SkeletonTheme
+                color={theme.backgroundHighlight}
+                highlightColor={theme.body}
+              >
+                <Skeleton count={5} />
+              </SkeletonTheme>
+            ) : (
+              <Container>
+                <Row className="comment no-hover px-2 py-2">
+                  {this.userPicColFragment({
+                    picture: isAuthenticated && picture,
+                    name,
+                  })}
+                  {this.commentContentColFragment({
+                    formOnClick: () => {
+                      if (!isAuthenticated) {
+                        setShowLoginModalState(true);
+                        setPreventRatingSubmitState(true);
+                      }
+                    },
+                    formOnFocus: () => {
+                      if (isAuthenticated) {
+                        this.setState({
+                          isCommentFormInFocus: true,
+                          commentBeingEdited: {},
+                        });
+                      }
+                    },
+                    formOnSubmit: this.onCommentSubmit,
+                    placeholder: "Join the discussion...",
+                    id: "comment",
+                    onCommentChange: this.handleCommentChange,
+                    commentValue: comment,
+                    textAreaAdditionalClass: isCommentFormInFocus
+                      ? "focus"
+                      : "",
+                    shouldShowActions: isCommentFormInFocus && isAuthenticated,
+                    onCancel: (e) => {
+                      e.preventDefault();
                       this.setState({
-                        isCommentFormInFocus: true,
-                        commentBeingEdited: {},
+                        isCommentFormInFocus: false,
                       });
-                    }
-                  },
-                  formOnSubmit: this.onCommentSubmit,
-                  placeholder: "Join the discussion...",
-                  id: "comment",
-                  onCommentChange: this.handleCommentChange,
-                  commentValue: comment,
-                  textAreaAdditionalClass: isCommentFormInFocus ? "focus" : "",
-                  shouldShowActions: isCommentFormInFocus && isAuthenticated,
-                  onCancel: (e) => {
-                    e.preventDefault();
-                    this.setState({
-                      isCommentFormInFocus: false,
-                    });
-                  },
-                  isAddingComment: addingComment,
-                })}
-              </Row>
-              {this.renderComments(comments)}
-            </Container>
-          )}
-        </div>
+                    },
+                    isAddingComment: addingComment,
+                  })}
+                </Row>
+                {this.renderComments(comments)}
+              </Container>
+            )}
+          </div>
+        </Styles.CommentsContainer>
       );
     } else {
       return null;

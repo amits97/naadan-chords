@@ -31,7 +31,6 @@
 
 .ContentParser nav {
   font-family: "Poppins", "Helvetica Neue", sans-serif;
-  margin-top: 20px;
   margin-bottom: 20px;
 }
 
@@ -61,9 +60,14 @@
   font-size: 15px;
 }
 
+.ContentParser .tab-contents.no-tabs {
+  padding-top: 12px;
+}
+
 .ContentParser .chord-sheet {
   font-size: 15px;
   overflow: hidden;
+  padding: 0 4px;
 }
 
 .ContentParser hr {
@@ -82,10 +86,26 @@
 
 .ContentParser span.chord {
   font-weight: bold;
+  font-size: 0.98rem;
+  position: relative;
+}
+
+.ContentParser span.chord .popup-trigger::before {
+  border-radius: 2px;
+  bottom: -2px;
+  content: " ";
+  display: block;
+  left: -4px;
+  opacity: 0.1;
+  position: absolute;
+  right: -4px;
+  top: -2px;
+  background: #bbb;
 }
 
 .ContentParser .ignore-chords span.chord {
   font-weight: normal;
+  font-size: initial;
 }
 
 .ContentParser .visible {
