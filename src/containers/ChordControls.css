@@ -105,6 +105,9 @@
 
   .ChordControls .controls-container-holder {
     width: calc(100% - 32px);
+    overflow: scroll;
+    white-space: nowrap;
+    height: 55px;
   }
 
   .ChordControls .amount {
