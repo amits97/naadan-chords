@@ -1,4 +1,28 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+// Helper for adding scroll shadow gradient background
+const scrollShadowBackground = (mainColor, percent = "20%") => css`
+  background: linear-gradient(
+      to right,
+      ${mainColor} ${percent},
+      rgba(46, 46, 46, 0)
+    ),
+    linear-gradient(to left, ${mainColor} ${percent}, rgba(46, 46, 46, 0)),
+    radial-gradient(
+      farthest-side at left center,
+      rgba(0, 0, 0, 0.35),
+      transparent
+    ),
+    radial-gradient(
+      farthest-side at right center,
+      rgba(0, 0, 0, 0.35),
+      transparent
+    );
+  background-repeat: no-repeat;
+  background-size: 30px 100%, 30px 100%, 10px 100%, 10px 100%;
+  background-position: left center, right center, left center, right center;
+  background-attachment: local, local, scroll, scroll;
+`;
 
 export const TitleContainer = styled.div`
   overflow: auto;
@@ -170,6 +194,10 @@ export const ContentParserContainer = styled.div`
   padding: 3px 15px 15px;
   border-radius: 15px;
 
+  .tabs {
+    ${({ theme }) => scrollShadowBackground(theme.body, "20%")}
+  }
+
   @media (max-width: 767.98px) {
     padding-bottom: 0;
     border-bottom: 0;
@@ -224,6 +252,12 @@ export const ChordControlsContainer = styled.div`
 
     :hover {
       color: ${({ theme }) => theme.linkHover};
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .controls-container-holder {
+      ${({ theme }) => scrollShadowBackground(theme.backgroundLight, "0%")}
     }
   }
 `;
