@@ -24,6 +24,13 @@ export default defineConfig({
     commonjsOptions: { transformMixedEsModules: true },
     assetsInlineLimit: 0,
     target: "es2015",
+    rollupOptions: {
+      output: {
+        entryFileNames: `static/js/[name].js`,
+        chunkFileNames: `static/js/[name].js`,
+        assetFileNames: `static/css/[name].[ext]`,
+      },
+    },
   },
   server: {
     port: 3000,
