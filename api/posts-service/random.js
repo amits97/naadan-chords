@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
 import { success, failure } from "../libs/response-lib";
@@ -21,9 +22,12 @@ async function getItemCount() {
 }
 
 function getRandomInt(min, max) {
-  //Will return a number inside the given range, inclusive of both minimum and maximum
-  //i.e. if min=0, max=20, returns a number from 0-20
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  // Ensure min and max are integers
+  const intMin = Math.ceil(min);
+  const intMax = Math.floor(max);
+
+  // crypto.randomInt's upper bound is exclusive, so add 1 to make it inclusive.
+  return randomInt(intMin, intMax + 1);
 }
 
 export async function main(event, context) {
