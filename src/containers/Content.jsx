@@ -277,7 +277,11 @@ export default class Content extends Component {
                 authorCreateDate
               )}
               <LinkContainer to="/random">
-                <a href="#/" className={`${title ? "d-none" : ""} random-post`}>
+                <a
+                  href="#/"
+                  rel="nofollow"
+                  className={`${title ? "d-none" : ""} random-post`}
+                >
                   <FontAwesomeIcon className="mr-2" icon={faRandom} />
                   Random
                 </a>
