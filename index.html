@@ -78,7 +78,9 @@
       const noAds = JSON.parse(`%VITE_NO_ADS%` || "[]");
       if (
         window.location.hostname !== "localhost" &&
-        !(noAds || []).includes(window.location.pathname.replace(/\//, ""))
+        !(noAds || []).includes(
+          window.location.pathname.replace(/\//, "") + window.location.search
+        )
       ) {
         (adsbygoogle = window.adsbygoogle || []).push({
           google_ad_client: "ca-pub-1783579460797635",
