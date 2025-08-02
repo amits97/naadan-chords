@@ -19,7 +19,13 @@ export default class NotFound extends SearchComponent {
 
   componentDidUpdate() {
     SearchComponent.prototype.componentDidUpdate.call(this);
-    if (!this.adLoaded && !this.props.isLocalhost) {
+    if (
+      !this.adLoaded &&
+      !this.props.isLocalhost &&
+      !noAds?.includes(
+        window.location.pathname.replace(/\//, "") + window.location.search
+      )
+    ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     }
   }

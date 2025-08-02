@@ -56,7 +56,9 @@ export default class Content extends Component {
       if (
         document.querySelectorAll("div.inArticle").length > 0 &&
         !this.inArticleAdInitialized &&
-        !noAds?.includes(window.location.pathname.replace(/\//, ""))
+        !noAds?.includes(
+          window.location.pathname.replace(/\//, "") + window.location.search
+        )
       ) {
         this.inArticleAdInitialized = true;
         try {
@@ -705,7 +707,9 @@ export default class Content extends Component {
     if (!isLocalhost) {
       if (
         post.postType === "POST" &&
-        !noAds?.includes(window.location.pathname.replace(/\//, ""))
+        !noAds?.includes(
+          window.location.pathname.replace(/\//, "") + window.location.search
+        )
       ) {
         return (
           <div className="ad inArticle">
@@ -970,6 +974,9 @@ export default class Content extends Component {
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
         noAds?.includes(window.location.pathname.replace(/\//, ""))) ||
+      noAds?.includes(
+        window.location.pathname.replace(/\//, "") + window.location.search
+      ) ||
       this.props.isLocalhost
     ) {
       return <br className="spacer" />;
