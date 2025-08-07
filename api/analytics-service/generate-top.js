@@ -62,7 +62,8 @@ async function appendPostDetails(topPosts, previousTopPositions) {
     TableName: "NaadanChords",
     FilterExpression: filterExpression,
     ExpressionAttributeValues: expressionAttributeValues,
-    ProjectionExpression: "postId, title, userId, createdAt, updatedAt",
+    ProjectionExpression:
+      "postId, title, category, userId, createdAt, updatedAt",
   };
 
   try {
@@ -74,6 +75,7 @@ async function appendPostDetails(topPosts, previousTopPositions) {
       resultArray.push({
         postId: post.postId,
         title: post.title,
+        category: post.category,
         userId: post.userId,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,

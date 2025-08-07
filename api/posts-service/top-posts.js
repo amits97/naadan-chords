@@ -19,7 +19,7 @@ export async function main() {
         ":postType": "POST",
       },
       ProjectionExpression:
-        "postId, title, userId, createdAt, updatedAt, popularityTrend, #views",
+        "postId, category, title, userId, createdAt, updatedAt, popularityTrend, #views",
       ExpressionAttributeNames: {
         "#views": "views",
       },

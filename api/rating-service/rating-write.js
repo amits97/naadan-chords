@@ -58,7 +58,8 @@ async function appendPostDetails(ratingMap) {
     TableName: "NaadanChords",
     FilterExpression: filterExpression,
     ExpressionAttributeValues: expressionAttributeValues,
-    ProjectionExpression: "postId, title, userId, createdAt, updatedAt",
+    ProjectionExpression:
+      "postId, title, category, userId, createdAt, updatedAt",
   };
 
   try {
@@ -67,6 +68,7 @@ async function appendPostDetails(ratingMap) {
 
     for (let i = 0; i < items.length; i++) {
       ratingMap[items[i].postId].title = items[i].title;
+      ratingMap[items[i].postId].category = items[i].category;
       ratingMap[items[i].postId].userId = items[i].userId;
       ratingMap[items[i].postId].createdAt = items[i].createdAt;
       ratingMap[items[i].postId].updatedAt = items[i].updatedAt;
