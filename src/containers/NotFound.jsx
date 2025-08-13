@@ -23,7 +23,8 @@ export default class NotFound extends SearchComponent {
       !this.adLoaded &&
       !this.props.isLocalhost &&
       !noAds?.includes(
-        window.location.pathname.replace(/\//, "") + window.location.search
+        window.location.pathname.replace(/^\/|\/$/g, "") +
+          window.location.search
       )
     ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});

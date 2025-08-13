@@ -275,7 +275,8 @@ export default class Posts extends Component {
     if (
       !this.props.isLocalhost &&
       !noAds?.includes(
-        window.location.pathname.replace(/\//, "") + window.location.search
+        window.location.pathname.replace(/^\/|\/$/g, "") +
+          window.location.search
       )
     ) {
       try {
@@ -465,7 +466,8 @@ export default class Posts extends Component {
       prevState.adKey !== this.state.adKey &&
       !this.props.isLocalhost &&
       !noAds?.includes(
-        window.location.pathname.replace(/\//, "") + window.location.search
+        window.location.pathname.replace(/^\/|\/$/g, "") +
+          window.location.search
       )
     ) {
       try {

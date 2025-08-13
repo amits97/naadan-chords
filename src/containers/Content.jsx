@@ -57,7 +57,8 @@ export default class Content extends Component {
         document.querySelectorAll("div.inArticle").length > 0 &&
         !this.inArticleAdInitialized &&
         !noAds?.includes(
-          window.location.pathname.replace(/\//, "") + window.location.search
+          window.location.pathname.replace(/^\/|\/$/g, "") +
+            window.location.search
         )
       ) {
         this.inArticleAdInitialized = true;
@@ -708,7 +709,8 @@ export default class Content extends Component {
       if (
         post.postType === "POST" &&
         !noAds?.includes(
-          window.location.pathname.replace(/\//, "") + window.location.search
+          window.location.pathname.replace(/^\/|\/$/g, "") +
+            window.location.search
         )
       ) {
         return (
@@ -973,9 +975,10 @@ export default class Content extends Component {
     if (
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
-        noAds?.includes(window.location.pathname.replace(/\//, ""))) ||
+        noAds?.includes(window.location.pathname.replace(/^\/|\/$/g, ""))) ||
       noAds?.includes(
-        window.location.pathname.replace(/\//, "") + window.location.search
+        window.location.pathname.replace(/^\/|\/$/g, "") +
+          window.location.search
       ) ||
       this.props.isLocalhost
     ) {
