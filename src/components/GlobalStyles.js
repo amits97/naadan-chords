@@ -243,7 +243,7 @@ export const GlobalStyles = createGlobalStyle`
         width: 100%;
         height: 3px;
         background: #ff9700;
-        bottom: -1px;
+        bottom: 0;
         left: 0;
         content: "";
         border-radius: 5px 5px 0 0;

@@ -36,6 +36,13 @@
 
 .ContentParser .nav-tabs {
   justify-content: initial;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.ContentParser .nav-tabs .nav-item {
+  white-space: nowrap;
 }
 
 .ContentParser nav a {

@@ -198,6 +198,10 @@ export const ContentParserContainer = styled.div`
     ${({ theme }) => scrollShadowBackground(theme.body, "20%")}
   }
 
+  .nav-tabs {
+    ${({ theme }) => scrollShadowBackground(theme.body, "20%")}
+  }
+
   @media (max-width: 767.98px) {
     padding-bottom: 0;
     border-bottom: 0;
