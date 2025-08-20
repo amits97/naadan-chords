@@ -37,8 +37,14 @@
 .ContentParser .nav-tabs {
   justify-content: initial;
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.ContentParser .nav-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .ContentParser .nav-tabs .nav-item {
