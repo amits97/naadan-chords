@@ -5,6 +5,7 @@
 .Admin .header {
   overflow: auto;
   margin-bottom: 30px;
+  padding-bottom: 5px;
 }
 
 .Admin .header h3 {
@@ -21,26 +22,37 @@
   font-size: 14px;
 }
 
-.Admin .nav-pills {
-  margin-left: 5px;
-  position: sticky;
-  top: 75px;
-  transition: top 0.3s ease-out;
-  border-radius: 15px;
-  overflow: hidden;
+.Admin .nav-tabs {
+  justify-content: initial;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.Admin .nav-pills .nav-link {
-  padding: 0.75rem 1rem;
+.Admin .nav-tabs::-webkit-scrollbar {
+  display: none;
 }
 
-.Admin .nav-pills .nav-link.active {
-  background-color: inherit;
-  color: inherit;
+.Admin .nav-tabs .nav-item {
+  white-space: nowrap;
+}
+
+.Admin nav a {
+  font-size: 14px;
+  transition: none;
+  padding: 1.1rem 1rem;
+  color: #888888;
   font-weight: bold;
-  border-left: 3px solid #ff9700;
-  border-radius: 0;
-  padding-left: 0.9rem;
+}
+
+.Admin nav a:hover {
+  color: inherit;
+}
+
+.Admin nav .nav-link.active {
+  color: inherit;
 }
 
 .Admin .list-group-item {
@@ -51,6 +63,11 @@
 .Admin table td {
   border: none;
   padding: 12.5px 15px;
+  white-space: nowrap;
+}
+
+.Admin table tr td:nth-child(2) {
+  white-space: inherit;
 }
 
 .Admin td:first-child,
@@ -105,7 +122,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
   padding: 0 10px 15px 10px;
   height: 50px;
 }
@@ -154,48 +170,6 @@
 
   .Admin .header .btn {
     display: none;
-  }
-
-  .Admin .col-sm-2 {
-    margin-top: -15px;
-  }
-
-  .Admin .nav-pills-container.nav-pills {
-    display: inline-block;
-    margin-left: 0;
-    width: 100%;
-    white-space: nowrap;
-    overflow: scroll;
-  }
-
-  .Admin .nav-pills {
-    display: inline;
-    position: initial;
-  }
-
-  .Admin .nav-pills .d-inline {
-    position: relative;
-  }
-
-  .Admin .nav-item {
-    display: inline-block;
-    border-bottom: 0 !important;
-  }
-
-  .Admin .nav-pills .nav-link.active {
-    border-left: 0;
-    position: relative;
-  }
-
-  .Admin .nav-pills .nav-link.active:after {
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    background: #ff9700;
-    bottom: -1px;
-    left: 0;
-    content: "";
-    border-radius: 5px 5px 0 0;
   }
 
   .Admin .delete-container {

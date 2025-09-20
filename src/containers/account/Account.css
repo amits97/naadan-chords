@@ -12,26 +12,41 @@
   margin-bottom: 20px;
 }
 
-.Account .nav-pills {
-  margin-left: 5px;
-  position: sticky;
-  top: 75px;
-  transition: top 0.3s ease-out;
-  border-radius: 8px;
-  overflow: hidden;
+.Account .nav-tabs {
+  justify-content: initial;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.Account .nav-pills .nav-link {
-  padding: 0.75rem 1rem;
+.Account .nav-tabs::-webkit-scrollbar {
+  display: none;
 }
 
-.Account .nav-pills .nav-link.active {
-  background-color: inherit;
-  color: inherit;
+.Account .nav-tabs .nav-item {
+  white-space: nowrap;
+}
+
+.Account nav a {
+  font-size: 14px;
+  transition: none;
+  padding: 1.1rem 1rem;
+  color: #888888;
   font-weight: bold;
-  border-left: 2px solid #ff9700;
-  border-radius: 0;
-  padding-left: 0.9rem;
+}
+
+.Account nav a:hover {
+  color: inherit;
+}
+
+.Account nav .nav-link.active {
+  color: inherit;
+}
+
+.Account .tab-content {
+  padding: 5px 15px 15px 15px;
 }
 
 .Account .list-group-item {
@@ -153,40 +168,6 @@
 
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
-  .Account .col-sm-2 {
-    margin-top: -15px;
-  }
-
-  .Account .nav-pills {
-    display: inline-block;
-    position: initial;
-    margin-left: 0;
-    white-space: nowrap;
-    width: 100%;
-    overflow: scroll;
-  }
-
-  .Account .nav-item {
-    display: inline-block;
-    border-bottom: 0 !important;
-  }
-
-  .Account .nav-pills .nav-link.active {
-    border-left: 0;
-    position: relative;
-  }
-
-  .Account .nav-pills .nav-link.active:after {
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    background: #ff9700;
-    bottom: -1px;
-    left: 0;
-    content: "";
-    border-radius: 5px 5px 0 0;
-  }
-
   .Account .tab-content {
     margin-top: 20px;
   }

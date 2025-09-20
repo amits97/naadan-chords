@@ -877,90 +877,45 @@ export default class Account extends SearchComponent {
         <div className="header border-bottom">
           <h1>Account</h1>
         </div>
-        <Tab.Container activeKey={activeTab}>
-          <Row>
-            <Col lg={2}>
-              <Styles.SidebarPillContainer>
-                <Nav
-                  variant="pills"
-                  className="nav-pills-container flex-column border"
-                >
-                  <Nav.Item className="border-bottom">
-                    <Nav.Link
-                      eventKey="profile"
-                      onClick={() => {
-                        this.setActiveTab("profile");
-                      }}
-                    >
-                      Profile
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item className="border-bottom">
-                    <Nav.Link
-                      eventKey="appearance"
-                      onClick={() => {
-                        this.setActiveTab("appearance");
-                      }}
-                    >
-                      Appearance
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item className="border-bottom">
-                    <Nav.Link
-                      eventKey="account"
-                      onClick={() => {
-                        this.setActiveTab("account");
-                      }}
-                    >
-                      Account
-                    </Nav.Link>
-                  </Nav.Item>
-                  {emailVerified ? (
-                    <Nav.Item className="border-bottom">
-                      <Nav.Link
-                        eventKey="password"
-                        onClick={() => {
-                          this.setActiveTab("password");
-                        }}
-                      >
-                        Password
-                      </Nav.Link>
-                    </Nav.Item>
-                  ) : null}
-                  <Nav.Item>
-                    <Nav.Link
-                      eventKey="facebook"
-                      onClick={() => {
-                        this.setActiveTab("facebook");
-                      }}
-                    >
-                      Facebook
-                    </Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Styles.SidebarPillContainer>
-            </Col>
-            <Col lg={10}>
-              <Tab.Content>
-                <Tab.Pane eventKey="profile">
-                  {this.renderProfileForm()}
-                </Tab.Pane>
-                <Tab.Pane eventKey="appearance">
-                  {this.renderAppearanceForm()}
-                </Tab.Pane>
-                <Tab.Pane eventKey="account">
-                  {this.renderAccountForm()}
-                </Tab.Pane>
-                <Tab.Pane eventKey="password">
-                  {this.renderPasswordForm()}
-                </Tab.Pane>
-                <Tab.Pane eventKey="facebook">
-                  {this.renderFacebookForm()}
-                </Tab.Pane>
-              </Tab.Content>
-            </Col>
-          </Row>
-        </Tab.Container>
+        <Styles.AuthenticatedContentContainer>
+          <Tab.Container
+            activeKey={activeTab}
+            onSelect={(key) => this.setActiveTab(key)}
+          >
+            <Nav as="nav" className="nav-tabs">
+              <Nav.Item>
+                <Nav.Link eventKey="profile">PROFILE</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="appearance">APPEARANCE</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="account">ACCOUNT</Nav.Link>
+              </Nav.Item>
+              {emailVerified ? (
+                <Nav.Item>
+                  <Nav.Link eventKey="password">PASSWORD</Nav.Link>
+                </Nav.Item>
+              ) : null}
+              <Nav.Item>
+                <Nav.Link eventKey="facebook">FACEBOOK</Nav.Link>
+              </Nav.Item>
+            </Nav>
+            <Tab.Content>
+              <Tab.Pane eventKey="profile">{this.renderProfileForm()}</Tab.Pane>
+              <Tab.Pane eventKey="appearance">
+                {this.renderAppearanceForm()}
+              </Tab.Pane>
+              <Tab.Pane eventKey="account">{this.renderAccountForm()}</Tab.Pane>
+              <Tab.Pane eventKey="password">
+                {this.renderPasswordForm()}
+              </Tab.Pane>
+              <Tab.Pane eventKey="facebook">
+                {this.renderFacebookForm()}
+              </Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
+        </Styles.AuthenticatedContentContainer>
       </div>
     );
   }

@@ -308,64 +308,69 @@ export default class Admin extends SearchComponent {
     if (posts.Items && posts.Items.length > 0) {
       return (
         <div>
-          <Table responsive>
-            <tbody>
-              {posts.Items.map((post, i) => (
-                <tr key={post.postId} className={i % 2 === 0 ? "" : "bg-light"}>
-                  <td>
-                    <Form.Check
-                      type="checkbox"
-                      onChange={(event) =>
-                        this.addPostToDelete(event, post.postId)
-                      }
-                      checked={this.state.postsToBeDeleted.includes(
-                        post.postId
+          <Styles.AuthenticatedTableContainer>
+            <Table>
+              <tbody>
+                {posts.Items.map((post, i) => (
+                  <tr
+                    key={post.postId}
+                    className={i % 2 === 0 ? "" : "bg-light"}
+                  >
+                    <td>
+                      <Form.Check
+                        type="checkbox"
+                        onChange={(event) =>
+                          this.addPostToDelete(event, post.postId)
+                        }
+                        checked={this.state.postsToBeDeleted.includes(
+                          post.postId
+                        )}
+                      />
+                    </td>
+                    <td>
+                      <LinkContainer
+                        exact
+                        to={`/admin/${
+                          isDraft
+                            ? "edit-draft"
+                            : isContribution
+                            ? "review-post"
+                            : "edit-post"
+                        }/${post.postId}`}
+                      >
+                        <a href="#/" className="text-primary">
+                          {post.title}
+                        </a>
+                      </LinkContainer>
+                    </td>
+                    <td>{post.authorName}</td>
+                    <td>{capitalizeFirstLetter(post.category || "")}</td>
+                    <td>
+                      {formatDate(post.createdAt)}
+                      {post.updatedAt > post.createdAt && (
+                        <>
+                          <OverlayTrigger
+                            trigger="click"
+                            placement="bottom"
+                            overlay={
+                              <Popover id="popover-basic" className="p-2">
+                                Updated on {formatDate(post.updatedAt)}
+                              </Popover>
+                            }
+                            rootClose
+                          >
+                            <span className="post-updated-badge">
+                              <FontAwesomeIcon icon={faHistory} />
+                            </span>
+                          </OverlayTrigger>
+                        </>
                       )}
-                    />
-                  </td>
-                  <td>
-                    <LinkContainer
-                      exact
-                      to={`/admin/${
-                        isDraft
-                          ? "edit-draft"
-                          : isContribution
-                          ? "review-post"
-                          : "edit-post"
-                      }/${post.postId}`}
-                    >
-                      <a href="#/" className="text-primary">
-                        {post.title}
-                      </a>
-                    </LinkContainer>
-                  </td>
-                  <td>{post.authorName}</td>
-                  <td>{capitalizeFirstLetter(post.category || "")}</td>
-                  <td>
-                    {formatDate(post.createdAt)}
-                    {post.updatedAt > post.createdAt && (
-                      <>
-                        <OverlayTrigger
-                          trigger="click"
-                          placement="bottom"
-                          overlay={
-                            <Popover id="popover-basic" className="p-2">
-                              Updated on {formatDate(post.updatedAt)}
-                            </Popover>
-                          }
-                          rootClose
-                        >
-                          <span className="post-updated-badge">
-                            <FontAwesomeIcon icon={faHistory} />
-                          </span>
-                        </OverlayTrigger>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Styles.AuthenticatedTableContainer>
           {this.loadPagination(posts.LastEvaluatedKey)}
         </div>
       );
@@ -390,31 +395,33 @@ export default class Admin extends SearchComponent {
     }
 
     return (
-      <Table responsive>
-        <tbody>
-          {emptySearches.map((item, index) => {
-            const isChecked = postsToBeDeleted.includes(item.searchQuery);
-            return (
-              <tr
-                className={index % 2 === 0 ? "" : "bg-light"}
-                key={`${item.searchQuery}-${index}`}
-              >
-                <td>
-                  <Form.Check
-                    type="checkbox"
-                    onChange={(event) =>
-                      this.addPostToDelete(event, item.searchQuery)
-                    }
-                    checked={isChecked}
-                  />
-                </td>
-                <td>{item.searchQuery}</td>
-                <td>{item.count}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      <Styles.AuthenticatedTableContainer>
+        <Table>
+          <tbody>
+            {emptySearches.map((item, index) => {
+              const isChecked = postsToBeDeleted.includes(item.searchQuery);
+              return (
+                <tr
+                  className={index % 2 === 0 ? "" : "bg-light"}
+                  key={`${item.searchQuery}-${index}`}
+                >
+                  <td>
+                    <Form.Check
+                      type="checkbox"
+                      onChange={(event) =>
+                        this.addPostToDelete(event, item.searchQuery)
+                      }
+                      checked={isChecked}
+                    />
+                  </td>
+                  <td>{item.searchQuery}</td>
+                  <td>{item.count}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </Styles.AuthenticatedTableContainer>
     );
   };
 
@@ -466,134 +473,90 @@ export default class Admin extends SearchComponent {
           </LinkContainer>
         </div>
 
-        <Tab.Container activeKey={activeTab}>
-          <Row>
-            <Col lg={2}>
-              <Styles.SidebarPillContainer>
-                <Nav
-                  variant="pills"
-                  className="nav-pills-container flex-column border"
-                >
-                  <Nav.Item className="border-bottom">
-                    <Nav.Link
-                      eventKey="posts"
-                      onClick={() => {
-                        this.clearCheckboxes();
-                        this.setActiveTab("posts");
-                      }}
-                    >
-                      Posts
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item className="border-bottom">
-                    <Nav.Link
-                      eventKey="pages"
-                      onClick={() => {
-                        this.clearCheckboxes();
-                        this.setActiveTab("pages");
-                      }}
-                    >
-                      Pages
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item className="border-bottom">
-                    <Nav.Link
-                      eventKey="emptySearches"
-                      onClick={() => {
-                        this.clearCheckboxes();
-                        this.setActiveTab("emptySearches");
-                      }}
-                    >
-                      Empty Searches
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item className="border-bottom">
-                    <Nav.Link
-                      eventKey="drafts"
-                      onClick={() => {
-                        this.clearCheckboxes();
-                        this.setActiveTab("drafts");
-                      }}
-                    >
-                      Drafts{" "}
-                      <span
-                        className={`${draftCount > 0 ? "d-inline" : "d-none"}`}
-                      >
-                        <Badge className="draft-count" variant="primary">
-                          {draftCount}
-                        </Badge>
-                      </span>
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link
-                      eventKey="review"
-                      onClick={() => {
-                        this.clearCheckboxes();
-                        this.setActiveTab("review");
-                      }}
-                    >
-                      Review{" "}
-                      <span
-                        className={`${reviewCount > 0 ? "d-inline" : "d-none"}`}
-                      >
-                        <Badge className="draft-count" variant="primary">
-                          {reviewCount}
-                        </Badge>
-                      </span>
-                    </Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Styles.SidebarPillContainer>
-            </Col>
-            <Col lg={10}>
-              <Form onSubmit={this.handleSubmit}>
-                <div className="delete-container border-bottom">
-                  <Form.Check
-                    type="checkbox"
-                    className="checkbox pt-2 pl-4 form-check"
-                    onChange={this.toggleCheckboxes}
-                    checked={this.validateDeletes()}
-                  />
-                  <FormControl
-                    type="text"
-                    placeholder="Search"
-                    className="admin-search"
-                    value={this.state.search}
-                    onChange={this.handleSearchChange}
-                  />
-                  <LoaderButton
-                    variant="danger"
-                    className="mt-0"
-                    size="sm"
-                    disabled={!this.validateDeletes()}
-                    type="submit"
-                    isLoading={this.validateDeletes() && this.state.isLoading}
-                    text="Delete"
-                    loadingText="Deleting..."
-                  />
-                </div>
-                <Tab.Content>
-                  <Tab.Pane eventKey="posts">
-                    {this.renderPosts(posts)}
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="pages">
-                    {this.renderPosts(pages)}
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="emptySearches">
-                    {this.renderEmptySearches()}
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="drafts">
-                    {this.renderPosts(drafts, true)}
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="review">
-                    {this.renderPosts(review, null, true)}
-                  </Tab.Pane>
-                </Tab.Content>
-              </Form>
-            </Col>
-          </Row>
-        </Tab.Container>
+        <Styles.AuthenticatedContentContainer>
+          <Tab.Container
+            activeKey={activeTab}
+            onSelect={(key) => {
+              this.clearCheckboxes();
+              this.setActiveTab(key);
+            }}
+          >
+            <Nav as="nav" className="nav-tabs">
+              <Nav.Item>
+                <Nav.Link eventKey="posts">POSTS</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="pages">PAGES</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="emptySearches">EMPTY SEARCHES</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="drafts">
+                  DRAFTS{" "}
+                  <span className={`${draftCount > 0 ? "d-inline" : "d-none"}`}>
+                    <Badge className="draft-count" variant="primary">
+                      {draftCount}
+                    </Badge>
+                  </span>
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="review">
+                  REVIEW{" "}
+                  <span
+                    className={`${reviewCount > 0 ? "d-inline" : "d-none"}`}
+                  >
+                    <Badge className="draft-count" variant="primary">
+                      {reviewCount}
+                    </Badge>
+                  </span>
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+            <Form onSubmit={this.handleSubmit}>
+              <div className="delete-container border-bottom">
+                <Form.Check
+                  type="checkbox"
+                  className="checkbox pt-2 pl-4 form-check"
+                  onChange={this.toggleCheckboxes}
+                  checked={this.validateDeletes()}
+                />
+                <FormControl
+                  type="text"
+                  placeholder="Search"
+                  className="admin-search bg-light"
+                  name="admin-search"
+                  value={this.state.search}
+                  onChange={this.handleSearchChange}
+                />
+                <LoaderButton
+                  variant="danger"
+                  className="mt-0"
+                  size="sm"
+                  disabled={!this.validateDeletes()}
+                  type="submit"
+                  isLoading={this.validateDeletes() && this.state.isLoading}
+                  text="Delete"
+                  loadingText="Deleting..."
+                />
+              </div>
+              <Tab.Content>
+                <Tab.Pane eventKey="posts">{this.renderPosts(posts)}</Tab.Pane>
+                <Tab.Pane eventKey="pages">{this.renderPosts(pages)}</Tab.Pane>
+                <Tab.Pane eventKey="emptySearches">
+                  {this.renderEmptySearches()}
+                </Tab.Pane>
+                <Tab.Pane eventKey="drafts">
+                  {this.renderPosts(drafts, true)}
+                </Tab.Pane>
+                <Tab.Pane eventKey="review">
+                  {this.renderPosts(review, null, true)}
+                </Tab.Pane>
+              </Tab.Content>
+            </Form>
+          </Tab.Container>
+        </Styles.AuthenticatedContentContainer>
 
         <div
           className="new-post-button btn btn-primary"

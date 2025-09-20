@@ -1,3 +1,4 @@
+import { Table } from "react-bootstrap";
 import styled, { css } from "styled-components";
 
 // Helper for adding scroll shadow gradient background
@@ -205,6 +206,34 @@ export const ContentParserContainer = styled.div`
   @media (max-width: 767.98px) {
     padding-bottom: 0;
     border-bottom: 0;
+  }
+`;
+
+export const AuthenticatedContentContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 3px 15px 15px;
+  border-radius: 15px;
+
+  nav {
+    font-family: "Poppins", "Helvetica Neue", sans-serif;
+    margin-bottom: 20px;
+  }
+
+  .tabs {
+    ${({ theme }) => scrollShadowBackground(theme.body, "20%")}
+  }
+
+  .nav-tabs {
+    ${({ theme }) => scrollShadowBackground(theme.body, "20%")}
+  }
+`;
+
+export const AuthenticatedTableContainer = styled.div`
+  ${({ theme }) => scrollShadowBackground(theme.body, "20%")}
+  overflow: scroll;
+
+  table {
+    margin-bottom: 0;
   }
 `;
 

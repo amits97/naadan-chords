@@ -5,6 +5,7 @@
 .Contributions .header {
   overflow: auto;
   margin-bottom: 30px;
+  padding-bottom: 5px;
 }
 
 .Contributions .header h3 {
@@ -21,31 +22,67 @@
   font-size: 14px;
 }
 
-.Contributions .nav-pills {
-  margin-left: 5px;
-  position: sticky;
-  top: 75px;
-  transition: top 0.3s ease-out;
-  border-radius: 8px;
-  overflow: hidden;
+.Contributions .nav-tabs {
+  justify-content: initial;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.Contributions .nav-pills .nav-link {
-  padding: 0.75rem 1rem;
+.Contributions .nav-tabs::-webkit-scrollbar {
+  display: none;
 }
 
-.Contributions .nav-pills .nav-link.active {
-  background-color: inherit;
-  color: inherit;
+.Contributions .nav-tabs .nav-item {
+  white-space: nowrap;
+}
+
+.Contributions nav a {
+  font-size: 14px;
+  transition: none;
+  padding: 1.1rem 1rem;
+  color: #888888;
   font-weight: bold;
-  border-left: 2px solid #ff9700;
-  border-radius: 0;
-  padding-left: 0.9rem;
+}
+
+.Contributions nav a:hover {
+  color: inherit;
+}
+
+.Contributions nav .nav-link.active {
+  color: inherit;
 }
 
 .Contributions .list-group-item {
   padding: 10px;
   border: 0;
+}
+
+.Contributions table td {
+  border: none;
+  padding: 12.5px 15px;
+  white-space: nowrap;
+}
+
+.Contributions table tr td:nth-child(2) {
+  white-space: inherit;
+}
+
+.Contributions td:first-child,
+.Contributions th:first-child {
+  border-radius: 15px 0 0 15px;
+}
+
+.Contributions td:last-child,
+.Contributions th:last-child {
+  border-radius: 0 15px 15px 0;
+}
+
+.Contributions table .post-updated-badge {
+  margin-left: 8px;
+  cursor: pointer;
 }
 
 .Contributions .list-group-item span.badge {
@@ -78,11 +115,13 @@
 }
 
 .Contributions .admin-search {
-  width: 50%;
-  float: left;
+  margin: 0 10px;
 }
 
 .Contributions .delete-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
   padding: 0 10px 15px 10px;
   height: 50px;
@@ -90,6 +129,7 @@
 
 .Contributions .delete-container .btn {
   height: 30px;
+  min-height: 30px;
   padding-top: 4px;
   float: right;
 }
@@ -123,33 +163,6 @@
 
   .Contributions .header .btn {
     display: none;
-  }
-
-  .Contributions .col-sm-2 {
-    margin-top: -15px;
-  }
-
-  .Contributions .nav-pills-container.nav-pills {
-    display: inline-block;
-    margin-left: 0;
-    width: 100%;
-    white-space: nowrap;
-    overflow: scroll;
-  }
-
-  .Contributions .nav-pills {
-    display: inline;
-    position: initial;
-  }
-
-  .Contributions .nav-item {
-    display: inline-block;
-    border-bottom: 0 !important;
-  }
-
-  .Contributions .nav-pills .nav-link.active {
-    border-left: 0;
-    border-bottom: 4px solid #ff9700;
   }
 
   .Contributions .delete-container {
