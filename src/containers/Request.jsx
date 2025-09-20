@@ -77,12 +77,14 @@ export default class Request extends SearchComponent {
   async componentDidMount() {
     try {
       let session = await fetchAuthSession();
-      this.props.userHasAuthenticated(true);
       await this.props.getUserAttributes(session);
-      this.setState({
-        name: this.props.name,
-        email: this.props.email,
-      });
+      if (this.props.isAuthenticated) {
+        this.props.userHasAuthenticated(true);
+        this.setState({
+          name: this.props.name,
+          email: this.props.email,
+        });
+      }
     } catch (e) {
       if (e !== "No current user") {
         console.log(e);
