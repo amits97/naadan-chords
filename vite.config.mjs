@@ -23,9 +23,22 @@ export default defineConfig({
     outDir: "dist",
     commonjsOptions: { transformMixedEsModules: true },
     assetsInlineLimit: 0,
-    target: "es2015",
     rollupOptions: {
       output: {
+        manualChunks: {
+          "vendor-amplify": ["aws-amplify"],
+          "vendor-react-bootstrap": [
+            "react-bootstrap",
+            "react-bootstrap-typeahead",
+          ],
+          "vendor-fontawesome": [
+            "@fortawesome/fontawesome-svg-core",
+            "@fortawesome/free-brands-svg-icons",
+            "@fortawesome/free-regular-svg-icons",
+            "@fortawesome/free-solid-svg-icons",
+            "@fortawesome/react-fontawesome",
+          ],
+        },
         entryFileNames: `static/js/[name].js`,
         chunkFileNames: `static/js/[name].js`,
         assetFileNames: `static/css/[name].[ext]`,
