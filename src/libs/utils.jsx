@@ -3,6 +3,7 @@
  **/
 
 import { del, get, post, put } from "aws-amplify/api";
+import Moment from "react-moment";
 
 // Wrapper around v6 Amplify API functions to preserve v5 calling style.
 export const API = {
@@ -109,4 +110,8 @@ export function generateDelayPromise(timeout, callback) {
 
 export function getNthOccurenceIndex(str, char, n) {
   return str.split(char).slice(0, n).join(char).length;
+}
+
+export function formatDate(date) {
+  return <Moment format="MMM D, YYYY">{date}</Moment>;
 }

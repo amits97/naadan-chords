@@ -26,7 +26,7 @@
   position: sticky;
   top: 75px;
   transition: top 0.3s ease-out;
-  border-radius: 8px;
+  border-radius: 15px;
   overflow: hidden;
 }
 
@@ -38,7 +38,7 @@
   background-color: inherit;
   color: inherit;
   font-weight: bold;
-  border-left: 2px solid #ff9700;
+  border-left: 3px solid #ff9700;
   border-radius: 0;
   padding-left: 0.9rem;
 }
@@ -46,6 +46,26 @@
 .Admin .list-group-item {
   padding: 10px;
   border: 0;
+}
+
+.Admin table td {
+  border: none;
+  padding: 12.5px 15px;
+}
+
+.Admin td:first-child,
+.Admin th:first-child {
+  border-radius: 15px 0 0 15px;
+}
+
+.Admin td:last-child,
+.Admin th:last-child {
+  border-radius: 0 15px 15px 0;
+}
+
+.Admin table .post-updated-badge {
+  margin-left: 8px;
+  cursor: pointer;
 }
 
 .Admin .list-group-item span.badge {
@@ -78,11 +98,13 @@
 }
 
 .Admin .admin-search {
-  width: 50%;
-  float: left;
+  margin: 0 10px;
 }
 
 .Admin .delete-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
   padding: 0 10px 15px 10px;
   height: 50px;
@@ -90,6 +112,7 @@
 
 .Admin .delete-container .btn {
   height: 30px;
+  min-height: 30px;
   padding-top: 4px;
   float: right;
 }
