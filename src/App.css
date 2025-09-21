@@ -2,8 +2,16 @@
   outline: none;
 }
 
-.App .contents {
+.App .contents,
+.loader {
   min-height: calc(100vh - 356px);
+}
+
+.loader {
+  min-height: calc(100vh - 356px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .App .contents h2 {
