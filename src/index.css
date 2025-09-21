@@ -67,7 +67,3 @@ input.form-control::placeholder {
 input[type="file"] {
   width: 100%;
 }
-
-ins.adsbygoogle[data-ad-status="unfilled"] {
-  display: none !important;
-}
