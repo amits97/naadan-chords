@@ -18,6 +18,7 @@ const Contributions = lazy(() =>
   import("./containers/contribute/Contributions")
 );
 const SubmitSong = lazy(() => import("./containers/contribute/SubmitSong"));
+const AdBlocker = lazy(() => import("./containers/AdBlocker"));
 const NotFound = lazy(() => import("./containers/NotFound"));
 
 const Routes = ({ childProps }) => (
@@ -223,6 +224,12 @@ const Routes = ({ childProps }) => (
         exact
         component={SubmitSong}
         props={{ isEditMode: true, isDraft: true, ...childProps }}
+      />
+      <AppliedRoute
+        path="/ad-blocker-detected"
+        exact
+        component={AdBlocker}
+        props={childProps}
       />
       <AppliedRoute
         path="/:id"
