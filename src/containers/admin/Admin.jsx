@@ -226,7 +226,9 @@ export default class Admin extends SearchComponent {
   };
 
   deletePost(postId) {
-    if (this.state.activeTab === "drafts") {
+    if (this.state.activeTab === "emptySearches") {
+      return API.del("posts", `/analytics/empty-search-summary/${postId}`);
+    } else if (this.state.activeTab === "drafts") {
       return API.del("posts", `/drafts/${postId}`);
     } else {
       return API.del("posts", `/posts/${postId}`);
