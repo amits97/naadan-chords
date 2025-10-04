@@ -142,6 +142,13 @@ export async function handler(event) {
       url.searchParams.append("isPrerendered", true);
       await page.goto(url.href);
 
+      // Set a window variable to indicate prerendering
+      await page.evaluate(() => {
+        const script = document.createElement("script");
+        script.innerHTML = "window.isPrerendered = true;";
+        document.head.appendChild(script);
+      });
+
       // Remove google ads script tags
       await page.evaluate(() => {
         var elements = document.querySelectorAll("script");

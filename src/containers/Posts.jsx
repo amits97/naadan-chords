@@ -28,6 +28,7 @@ export default class Posts extends Component {
       redirectUrl: "",
       authorCreateDate: null,
       isChordControlsTrayMaximized: true,
+      isPrerendered: window.isPrerendered,
     };
   }
 
@@ -47,6 +48,9 @@ export default class Posts extends Component {
 
   detectAdBlocker = async () => {
     setTimeout(() => {
+      if (this.state.isPrerendered) {
+        return;
+      }
       // Check 1: Bait element
       if (this.adBait.current && this.adBait.current.offsetHeight === 0) {
         this.props.history.push("/ad-blocker-detected");
