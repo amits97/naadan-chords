@@ -86,7 +86,7 @@ export default class Footer extends Component {
                 <Col className="meta-col">
                   <span className="footer-logo">
                     <Link to="/">
-                      <img src={logo} alt="logo" />
+                      <img src={logo} alt="logo" width="80" height="80" />
                     </Link>
                   </span>
                   <small>Guitar chords and tabs</small>

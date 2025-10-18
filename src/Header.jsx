@@ -184,7 +184,7 @@ export default function Header({
         <div className="container">
           <Navbar.Brand>
             <Link to="/">
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo" width="50" height="50" />
               <h1>Naadan Chords</h1>
             </Link>
           </Navbar.Brand>
