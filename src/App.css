@@ -4,11 +4,11 @@
 
 .App .contents,
 .loader {
-  min-height: calc(100vh - 356px);
+  min-height: 85vh;
 }
 
 .loader {
-  min-height: calc(100vh - 356px);
+  min-height: 85vh;
   display: flex;
   align-items: center;
   justify-content: center;

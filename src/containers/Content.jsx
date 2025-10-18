@@ -537,7 +537,7 @@ export default class Content extends Component {
           <h2>{post.title}</h2>
           <small>
             <LinkContainer to={`/author/${post.userName}`}>
-              <a className="author-picture" href="#/">
+              <a className="author-picture" href="#/" width="16" height="16">
                 {post.authorPicture ? (
                   <img src={post.authorPicture} alt={post.authorName} />
                 ) : (
