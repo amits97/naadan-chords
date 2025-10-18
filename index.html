@@ -89,8 +89,7 @@
         });
       }
 
-      let url = new URL(window.location.href);
-      if (url.searchParams.get("isPrerendered")) {
+      if (window.isPrerendered) {
         // Disable styled-components speedy mode if prerendered
         window.SC_DISABLE_SPEEDY = true;
       }

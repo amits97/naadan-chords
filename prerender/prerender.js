@@ -139,14 +139,13 @@ export async function handler(event) {
       }
 
       // Set flag to disable speedy mode
-      url.searchParams.append("isPrerendered", true);
       await page.goto(url.href);
 
       // Set a window variable to indicate prerendering
       await page.evaluate(() => {
         const script = document.createElement("script");
         script.innerHTML = "window.isPrerendered = true;";
-        document.head.appendChild(script);
+        document.head.prepend(script);
       });
 
       // Remove google ads script tags
@@ -202,7 +201,6 @@ export async function handler(event) {
         }
       }
       browser.close();
-      url.searchParams.delete("isPrerendered");
       await writeDynamoDbCache(url.href, result);
       return success(result);
     } catch (e) {

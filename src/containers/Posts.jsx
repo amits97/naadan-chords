@@ -9,8 +9,6 @@ export default class Posts extends Component {
   constructor(props) {
     super(props);
 
-    this.adBait = React.createRef();
-
     //timeout variable to throttle search results
     this.searchTimeout = null;
 
@@ -28,7 +26,6 @@ export default class Posts extends Component {
       redirectUrl: "",
       authorCreateDate: null,
       isChordControlsTrayMaximized: true,
-      isPrerendered: window.isPrerendered,
     };
   }
 
@@ -44,24 +41,6 @@ export default class Posts extends Component {
     } else {
       this.props.history.goBack();
     }
-  };
-
-  detectAdBlocker = async () => {
-    setTimeout(() => {
-      if (this.state.isPrerendered) {
-        return;
-      }
-      // Check 1: Bait element
-      if (this.adBait.current && this.adBait.current.offsetHeight === 0) {
-        this.props.history.push("/ad-blocker-detected");
-        return;
-      }
-
-      // Check 2: Check if adsbygoogle.js is loaded
-      if (!(window.adsbygoogle && window.adsbygoogle.loaded)) {
-        this.props.history.push("/ad-blocker-detected");
-      }
-    }, 2000);
   };
 
   randomPost() {
@@ -203,7 +182,6 @@ export default class Posts extends Component {
 
         if (posts.postType === "POST") {
           this.logPostVisit();
-          this.detectAdBlocker();
         }
       } else if (isRandomPage) {
         this.setState({
@@ -565,18 +543,6 @@ export default class Posts extends Component {
 
     return (
       <div className="Posts">
-        <div
-          ref={this.adBait}
-          className="ad ads ad-banner ad-container ad-wrapper text-ad banner-ad ad-slot ad-box ad-placeholder advertisement google-ads google_ads adsbygoogle"
-          style={{
-            height: "1px",
-            width: "1px",
-            position: "fixed",
-            left: "-100px",
-            top: "-100px",
-            pointerEvents: "none",
-          }}
-        ></div>
         {this.renderRedirect()}
         <div className="container">
           <Content {...childProps} />
