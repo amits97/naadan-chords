@@ -4,12 +4,14 @@ import * as emailLib from "../libs/email-lib";
 import { success, failure } from "../libs/response-lib";
 
 function slugify(text) {
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // Replace spaces with -
-    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-    .replace(/^-+/, '')             // Trim - from start of text
-    .replace(/-+$/, '');            // Trim - from end of text
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+    .replace(/\-\-+/g, "-") // Replace multiple - with single -
+    .replace(/^-+/, "") // Trim - from start of text
+    .replace(/-+$/, ""); // Trim - from end of text
 }
 
 async function notifyAdmins(data) {
@@ -28,7 +30,7 @@ async function notifyAdmins(data) {
   adminUsers.forEach(async (user) => {
     let adminEmail;
     user.Attributes.forEach((attribute) => {
-      if(attribute.Name === "email") {
+      if (attribute.Name === "email") {
         adminEmail = attribute.Value;
       }
     });
@@ -42,7 +44,7 @@ export async function main(event) {
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
-  const sub = provider.split(':')[2];
+  const sub = provider.split(":")[2];
 
   const params = {
     TableName: "NaadanChordsContributions",
@@ -63,9 +65,10 @@ export async function main(event) {
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
       postType: "POST",
+      chordPreferences: data.chordPreferences || null,
       status: "PENDING",
-      createdAt: Date.now()
-    }
+      createdAt: Date.now(),
+    },
   };
 
   try {

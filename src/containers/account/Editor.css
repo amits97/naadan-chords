@@ -76,6 +76,14 @@
   padding: 9px 15px;
 }
 
+.Editor .editor-additional-details.chord-preferences {
+  margin-top: 12px;
+}
+
+.Editor .delete-voicing .btn {
+  margin-top: 0;
+}
+
 .Editor .preview {
   white-space: pre-wrap;
 }

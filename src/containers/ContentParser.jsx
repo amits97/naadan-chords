@@ -576,14 +576,21 @@ export default class ContentParser extends Component {
   renderChordHelpers = () => {
     let chordSpans = document.querySelectorAll("span.chord");
     const { theme } = this.props;
+    const chordPreferences = this.props.post.chordPreferences || {};
 
     if (chordSpans) {
       for (let i = 0; i < chordSpans.length; i++) {
         let chordName = chordSpans[i].innerText;
+        let preferredVoicing = chordPreferences[chordName] || null;
+
         let parentElement = chordSpans[i].parentElement;
         if (parentElement && !this.hasIgnoreChordsParent(5, parentElement)) {
           ReactDOM.render(
-            <ChordsPopup chordName={chordName} theme={theme} />,
+            <ChordsPopup
+              chordName={chordName}
+              theme={theme}
+              preferredVoicing={preferredVoicing}
+            />,
             chordSpans[i]
           );
         }

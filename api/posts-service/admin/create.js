@@ -88,6 +88,7 @@ export async function main(event, context, callback) {
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
       postType: data.postType || "POST",
+      chordPreferences: data.chordPreferences || null,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     },

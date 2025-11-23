@@ -55,9 +55,11 @@ export default class Editor extends Component {
       category: "MALAYALAM",
       image: null,
       scaleDetailsExpanded: false,
+      preferencesExpanded: false,
       scale: null,
       tempo: null,
       timeSignature: null,
+      chordPreferences: [],
       content: null,
       leadTabs: null,
       youtubeId: null,
@@ -180,8 +182,52 @@ export default class Editor extends Component {
     }
   };
 
+  handleAddPreferenceRow = () => {
+    this.setState((prevState) => ({
+      chordPreferences: [
+        ...prevState.chordPreferences,
+        { chord: "", voicing: "" },
+      ],
+      inputUpdated: true,
+    }));
+  };
+
+  handleRemovePreferenceRow = (index) => {
+    this.setState((prevState) => {
+      const newPrefs = [...prevState.chordPreferences];
+      newPrefs.splice(index, 1);
+      return { chordPreferences: newPrefs, inputUpdated: true };
+    });
+  };
+
+  handlePreferenceChange = (index, field, value) => {
+    this.setState((prevState) => {
+      const newPrefs = [...prevState.chordPreferences];
+      newPrefs[index][field] = value;
+      return { chordPreferences: newPrefs, inputUpdated: true };
+    });
+  };
+
+  handlePreferencesClick = (e) => {
+    e.preventDefault();
+    this.setState((prevState) => ({
+      preferencesExpanded: !prevState.preferencesExpanded,
+    }));
+  };
+
   preparePostObject = (addUserId) => {
     let { isAdmin, isEditMode } = this.props;
+
+    let chordPreferencesMap = {};
+    if (this.state.chordPreferences && this.state.chordPreferences.length > 0) {
+      this.state.chordPreferences.forEach((pref) => {
+        if (pref.chord && pref.chord.trim() !== "") {
+          chordPreferencesMap[pref.chord.trim()] = pref.voicing
+            ? pref.voicing.trim()
+            : "";
+        }
+      });
+    }
 
     let postObject = {
       title: this.state.title,
@@ -196,6 +242,7 @@ export default class Editor extends Component {
       scale: this.state.scale,
       tempo: this.state.tempo,
       timeSignature: this.state.timeSignature,
+      chordPreferences: chordPreferencesMap,
       content: this.state.content,
       leadTabs: this.state.leadTabs,
       youtubeId: this.state.youtubeId,
@@ -375,6 +422,16 @@ export default class Editor extends Component {
           post = await this.post();
         }
 
+        let chordPreferencesArray = [];
+        if (post.chordPreferences) {
+          chordPreferencesArray = Object.keys(post.chordPreferences).map(
+            (key) => ({
+              chord: key,
+              voicing: post.chordPreferences[key],
+            })
+          );
+        }
+
         this.setState({
           postId: post.postId,
           title: post.title,
@@ -388,6 +445,7 @@ export default class Editor extends Component {
           scale: post.scale,
           tempo: post.tempo,
           timeSignature: post.timeSignature,
+          chordPreferences: chordPreferencesArray, // Load into state
           content: post.content,
           leadTabs: post.leadTabs,
           youtubeId: post.youtubeId,
@@ -403,6 +461,12 @@ export default class Editor extends Component {
         if (post.scale || post.tempo || post.timeSignature) {
           this.setState({
             scaleDetailsExpanded: true,
+          });
+        }
+
+        if (chordPreferencesArray.length > 0) {
+          this.setState({
+            preferencesExpanded: true,
           });
         }
 
@@ -469,7 +533,7 @@ export default class Editor extends Component {
     } else {
       const childProps = {
         ...this.props,
-        post: this.state,
+        post: this.preparePostObject(),
         isChordControlsTrayMaximized: this.state.isChordControlsTrayMaximized,
         setIsChordControlsTrayMaximized: this.setIsChordControlsTrayMaximized,
       };
@@ -789,6 +853,108 @@ export default class Editor extends Component {
     );
   };
 
+  renderChordPreferencesInputs = () => {
+    let { preferencesExpanded, chordPreferences } = this.state;
+    let { isViewMode } = this.props;
+
+    return (
+      <Row className="mt-2">
+        <Col>
+          <div
+            className={`editor-additional-details chord-preferences bg-light border ${
+              preferencesExpanded ? "rounded-top" : "rounded"
+            }`}
+            style={{ cursor: "pointer" }}
+            onClick={this.handlePreferencesClick}
+          >
+            <a
+              href="!#"
+              className="text-dark"
+              style={{ textDecoration: "none" }}
+            >
+              <React.Fragment>
+                <small>
+                  <FontAwesomeIcon
+                    className="mr-2 text-primary"
+                    icon={preferencesExpanded ? faMinus : faPlus}
+                  />
+                </small>
+                Chord Preferences
+                <small className="text-muted">
+                  {" "}
+                  - Prioritize specific chord voicings
+                </small>
+              </React.Fragment>
+            </a>
+          </div>
+          <Collapse in={preferencesExpanded}>
+            <div className="py-3 px-3 border border-top-0 rounded-bottom">
+              {chordPreferences.map((pref, index) => (
+                <Row key={index} className="mb-3">
+                  <Col>
+                    <Form.Control
+                      type="text"
+                      placeholder="Chord (e.g. E5)"
+                      value={pref.chord}
+                      onChange={(e) =>
+                        this.handlePreferenceChange(
+                          index,
+                          "chord",
+                          e.target.value
+                        )
+                      }
+                      readOnly={isViewMode}
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Control
+                      type="text"
+                      placeholder="Voicing (e.g. 079900)"
+                      value={pref.voicing}
+                      onChange={(e) =>
+                        this.handlePreferenceChange(
+                          index,
+                          "voicing",
+                          e.target.value
+                        )
+                      }
+                      readOnly={isViewMode}
+                    />
+                  </Col>
+                  <Col
+                    xs={2}
+                    className="d-flex align-items-center delete-voicing"
+                  >
+                    {!isViewMode && (
+                      <Button
+                        variant="link"
+                        className="text-danger p-0"
+                        onClick={() => this.handleRemovePreferenceRow(index)}
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt} />
+                      </Button>
+                    )}
+                  </Col>
+                </Row>
+              ))}
+              {!isViewMode && (
+                <Button
+                  variant="secondary"
+                  className="mt-0"
+                  size="sm"
+                  onClick={this.handleAddPreferenceRow}
+                >
+                  <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                  Add Preference
+                </Button>
+              )}
+            </div>
+          </Collapse>
+        </Col>
+      </Row>
+    );
+  };
+
   renderContentInputs = () => {
     if (this.state.postType === "PAGE") {
       return (
@@ -986,7 +1152,12 @@ export default class Editor extends Component {
               )}
 
               {this.renderTitleInputs()}
-              {this.state.postType === "POST" ? this.renderScaleInputs() : null}
+              {this.state.postType === "POST" ? (
+                <React.Fragment>
+                  {this.renderScaleInputs()}
+                  {this.renderChordPreferencesInputs()}
+                </React.Fragment>
+              ) : null}
               {this.renderContentInputs()}
 
               {isAdmin && isEditMode ? (

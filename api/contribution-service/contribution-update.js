@@ -7,27 +7,28 @@ export async function main(event) {
 
   try {
     provider = event.requestContext.identity.cognitoAuthenticationProvider;
-    sub = provider.split(':')[2];
-  } catch(e) {
+    sub = provider.split(":")[2];
+  } catch (e) {
     return failure({ status: "Not authorized", error: e });
   }
 
-  if(!sub) {
+  if (!sub) {
     return failure({ status: "Not authorized" });
   }
 
   let params = {
     TableName: "NaadanChordsContributions",
     Key: {
-      postId: event.pathParameters.id
-    }
+      postId: event.pathParameters.id,
+    },
   };
 
   try {
     let result = await dynamoDbLib.call("get", params);
-    
-    if(result.Item.userId === sub) {
-      params.UpdateExpression = "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, #status = :status";
+
+    if (result.Item.userId === sub) {
+      params.UpdateExpression =
+        "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, #status = :status, chordPreferences = :chordPreferences";
       params.ExpressionAttributeValues = {
         ":title": data.title || null,
         ":song": data.song || null,
@@ -42,17 +43,18 @@ export async function main(event) {
         ":content": data.content || null,
         ":leadTabs": data.leadTabs || null,
         ":youtubeId": data.youtubeId || null,
-        ":status": "PENDING"
+        ":chordPreferences": data.chordPreferences || null,
+        ":status": "PENDING",
       };
       params.ExpressionAttributeNames = {
-        "#status": "status"
+        "#status": "status",
       };
       params.ReturnValues = "ALL_NEW";
 
       await dynamoDbLib.call("update", params);
       return success({ status: true });
     } else {
-      return failure({ status: "Not authorized" })
+      return failure({ status: "Not authorized" });
     }
   } catch (e) {
     return failure({ status: false, error: e });

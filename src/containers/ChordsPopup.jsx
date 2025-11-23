@@ -49,12 +49,23 @@ export default class ChordsPopup extends Component {
       const { instrument } = this.state;
       let chord = findGuitarChord(chordName, TUNINGS[instrument]);
       let chordElements = [];
-      let chordPositions = [];
-      let lowestPositions = [];
-      let barres = [];
       let validFingeringFound = false;
 
       if (chord) {
+        // If this chord has a specific preferred voicing passed from parent, bubble it to the top.
+        if (this.props.preferredVoicing) {
+          chord.fingerings.sort((a, b) => {
+            const clean = (s) => s.replace(/-/g, "");
+            const target = clean(this.props.preferredVoicing);
+            const aMatch = clean(a.positionString) === target;
+            const bMatch = clean(b.positionString) === target;
+
+            if (aMatch && !bMatch) return -1;
+            if (!aMatch && bMatch) return 1;
+            return 0;
+          });
+        }
+
         chord.fingerings.forEach((fingering) => {
           let chordPosition = [];
           let lowestPosition = 12;
@@ -68,30 +79,43 @@ export default class ChordsPopup extends Component {
             validFingeringFound = true;
           }
 
+          let hasFrettedNotes = false;
           for (let i = 0; i < positionString.length; i++) {
             let position = positionString[i];
+            if (position === "x") continue;
 
-            if (position !== "x" && parseInt(position) > highestPosition) {
-              highestPosition = parseInt(position);
-            }
+            let fret = parseInt(position);
+            if (fret === 0) continue;
 
-            if (position !== "x" && parseInt(position) < lowestPosition) {
-              lowestPosition = parseInt(position) - 1;
-            }
+            hasFrettedNotes = true;
+            if (fret > highestPosition) highestPosition = fret;
+            if (fret < lowestPosition) lowestPosition = fret;
           }
+
+          if (!hasFrettedNotes) {
+            lowestPosition = 1;
+            highestPosition = 1;
+          }
+
+          lowestPosition = lowestPosition - 1;
+          lowestPosition = lowestPosition < 0 ? 0 : lowestPosition;
 
           if (highestPosition - lowestPosition > 5) {
             return;
           }
-
-          lowestPosition = lowestPosition < 0 ? 0 : lowestPosition;
 
           for (let i = 1; i <= positionString.length; i++) {
             let reverseIndex = positionString.length - i;
             let fretPosition = positionString[reverseIndex];
 
             if (fretPosition !== "x") {
-              fretPosition = parseInt(fretPosition) - lowestPosition;
+              let fretVal = parseInt(fretPosition);
+              // Keep 0 as 0
+              if (fretVal === 0) {
+                fretPosition = 0;
+              } else {
+                fretPosition = fretVal - lowestPosition;
+              }
             }
 
             chordPosition.push([i, fretPosition]);
@@ -123,37 +147,31 @@ export default class ChordsPopup extends Component {
             }
           }
 
-          chordPositions.push(chordPosition);
-          lowestPositions.push(lowestPosition);
-          barres.push(barre);
+          let chordElement = document.createElement("div");
+
+          vexchords.draw(
+            chordElement,
+            {
+              chord: chordPosition,
+              position: lowestPosition + 1,
+              barres: barre,
+              tuning: TUNINGS[instrument].split("-").map((note) => note[0]),
+            },
+            {
+              width: 120,
+              height: 140,
+              fontFamily: "Minlo, Menlo, monospace",
+              defaultColor: theme.text,
+              numStrings: STRINGS_COUNT[instrument],
+            }
+          );
+
+          chordElements.push(chordElement);
         });
 
         if (!validFingeringFound) return;
       } else {
         return;
-      }
-
-      for (let i = 0; i < chordPositions.length; i++) {
-        let chordElement = document.createElement("div");
-
-        vexchords.draw(
-          chordElement,
-          {
-            chord: chordPositions[i],
-            position: lowestPositions[i] + 1,
-            barres: barres[i],
-            tuning: TUNINGS[instrument].split("-").map((note) => note[0]),
-          },
-          {
-            width: 120,
-            height: 140,
-            fontFamily: "Minlo, Menlo, monospace",
-            defaultColor: theme.text,
-            numStrings: STRINGS_COUNT[instrument],
-          }
-        );
-
-        chordElements.push(chordElement);
       }
 
       this.renderedChordElements = chordElements;
