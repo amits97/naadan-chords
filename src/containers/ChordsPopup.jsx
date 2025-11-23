@@ -92,6 +92,10 @@ export default class ChordsPopup extends Component {
             if (fret < lowestPosition) lowestPosition = fret;
           }
 
+          if (highestPosition <= 5) {
+            lowestPosition = 1;
+          }
+
           if (!hasFrettedNotes) {
             lowestPosition = 1;
             highestPosition = 1;
