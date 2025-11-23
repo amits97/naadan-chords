@@ -20,7 +20,7 @@ export async function main(event, context) {
   };
 
   let updateExpression =
-    "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType";
+    "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType, chordPreferences = :chordPreferences";
   let expressionAttributeValues = {
     ":title": data.title || null,
     ":song": data.song || null,
