@@ -106,6 +106,7 @@ export default class Posts extends Component {
   }
 
   setPagination = (postsResult) => {
+    if (!this._isMounted) return;
     if (postsResult.hasOwnProperty("LastEvaluatedKey")) {
       this.setState({
         lastEvaluatedPost: postsResult.LastEvaluatedKey,
@@ -207,15 +208,19 @@ export default class Posts extends Component {
         this.setPagination(postsResult);
       }
 
-      this.setState({
-        posts: posts,
-        authorCreateDate: this.props.isUserPosts ? authorCreateDate : null,
-        isLoading: false,
-      });
+      if (this._isMounted) {
+        this.setState({
+          posts: posts,
+          authorCreateDate: this.props.isUserPosts ? authorCreateDate : null,
+          isLoading: false,
+        });
+      }
     } catch (e) {
-      this.setState({
-        isLoading: false,
-      });
+      if (this._isMounted) {
+        this.setState({
+          isLoading: false,
+        });
+      }
 
       console.log(e);
     }
@@ -257,20 +262,25 @@ export default class Posts extends Component {
       } else {
         postsResult = await API.get("posts", queryRequest);
       }
-      this.setState({
-        posts: this.state.posts.concat(postsResult.Items),
-        lastEvaluatedPost: postsResult.LastEvaluatedKey,
-        isPaginationLoading: false,
-      });
+      if (this._isMounted) {
+        this.setState({
+          posts: this.state.posts.concat(postsResult.Items),
+          lastEvaluatedPost: postsResult.LastEvaluatedKey,
+          isPaginationLoading: false,
+        });
+      }
     } catch (e) {
-      this.setState({
-        isPaginationLoading: false,
-      });
+      if (this._isMounted) {
+        this.setState({
+          isPaginationLoading: false,
+        });
+      }
       console.log(e);
     }
   };
 
   async componentDidMount() {
+    this._isMounted = true;
     if (
       !this.props.isLocalhost &&
       !noAds?.includes(
@@ -478,6 +488,7 @@ export default class Posts extends Component {
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
     if (this.props.search) {
       clearTimeout(this.searchTimeout);
       this.props.setSearch("");

@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
-import { insertUrlParam } from "../libs/url-lib";
+import { insertUrlParam, getUrlParameter } from "../libs/url-lib";
 import * as Styles from "./Styles";
 import "./Login.css";
 
@@ -99,7 +99,13 @@ export default class Login extends SearchComponent {
   };
 
   handleSocialLogin = (provider) => {
-    signInWithRedirect({ provider });
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirect = searchParams.get("redirect") || "/";
+
+    signInWithRedirect({
+      provider,
+      customState: redirect,
+    });
   };
 
   renderError = () => {
@@ -237,7 +243,7 @@ export default class Login extends SearchComponent {
           <FormGroup controlId="email">
             <FormLabel>Username or Email</FormLabel>
             <FormControl
-              autoFocus
+              autoFocus={!getUrlParameter("code")}
               type="text"
               tabIndex={1}
               value={this.state.email}

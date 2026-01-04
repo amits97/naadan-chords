@@ -14,7 +14,7 @@ import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { lightTheme, darkTheme } from "./components/Themes";
-import * as urlLib from "./libs/url-lib";
+import { getUrlParameter } from "./libs/url-lib";
 import Routes from "./Routes";
 import Footer from "./containers/Footer";
 import Header from "./Header";
@@ -43,6 +43,8 @@ class App extends Component {
       theme: "light",
       loginError: "",
     };
+
+    this.subscribeAuthEvents();
   }
 
   getUserPrevileges = (session) => {
@@ -134,7 +136,7 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const loginError = urlLib.getUrlParameter("error_description");
+    const loginError = getUrlParameter("error_description");
     const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
 
     if (loginError.indexOf("Already found an entry for username") !== -1) {
@@ -174,21 +176,33 @@ class App extends Component {
 
     this.setState({
       isAuthenticating: false,
-      search: urlLib.getUrlParameter("s"),
+      search: getUrlParameter("s"),
     });
-
-    this.subscribeAuthEvents();
   }
 
+  finalizeRedirect = () => {
+    if (this.pendingRedirect && this.state.isAuthenticated) {
+      this.props.history.push(this.pendingRedirect);
+      this.pendingRedirect = null;
+    }
+  };
+
   subscribeAuthEvents = async () => {
-    const listener = async (data) => {
-      switch (data.payload.event) {
-        case "signIn":
+    const listener = async ({ payload }) => {
+      switch (payload.event) {
+        case "customOAuthState":
+          this.pendingRedirect = payload.data;
+          if (this.state.isAuthenticated) {
+            this.finalizeRedirect();
+          }
+          break;
+        case "signedIn":
           let session = await fetchAuthSession();
           if (session.tokens) {
             this.userHasAuthenticated(true);
           }
           this.getUserDetails(session);
+          this.finalizeRedirect();
           break;
         default:
           break;
@@ -296,7 +310,7 @@ class App extends Component {
               <React.Fragment>
                 <Modal
                   style={{ top: "20px" }}
-                  show={!!urlLib.getUrlParameter("code") || false}
+                  show={!!getUrlParameter("code") || false}
                 >
                   <Modal.Body>
                     <span className="loading-modal-contents">

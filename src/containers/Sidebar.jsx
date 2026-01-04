@@ -31,6 +31,7 @@ export default class Sidebar extends Component {
   }
 
   async componentDidMount() {
+    this._isMounted = true;
     if (
       !this.props.isLocalhost &&
       !noAds?.includes(
@@ -44,13 +45,19 @@ export default class Sidebar extends Component {
 
     try {
       let topPosts = await this.topPosts();
-      this.setState({
-        isLoading: false,
-        topPosts: topPosts,
-      });
+      if (this._isMounted) {
+        this.setState({
+          isLoading: false,
+          topPosts: topPosts,
+        });
+      }
     } catch (e) {
       console.log(e);
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleMobileSidebarClick = () => {
@@ -128,10 +135,12 @@ export default class Sidebar extends Component {
     if (this.state.topRatedPosts.length === 0) {
       try {
         let topRatedPosts = await API.get("posts", "/rating/top-rated-posts");
-        this.setState({
-          isLoading: false,
-          topRatedPosts: topRatedPosts,
-        });
+        if (this._isMounted) {
+          this.setState({
+            isLoading: false,
+            topRatedPosts: topRatedPosts,
+          });
+        }
       } catch (e) {
         //Do nothing
       }
