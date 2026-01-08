@@ -24,7 +24,7 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.26.10",
     "@sparticuz/chromium": "^119.0.2",
-    "aws-sdk": "^2.1359.0",
+    "aws-sdk": "^2.1693.0",
     "fast-xml-parser": "^4.4.1",
     "puppeteer-core": "^24.4.0",
     "serialize-javascript": "^6.0.2",
