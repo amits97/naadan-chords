@@ -5,6 +5,9 @@ import {
   PutCommand,
   ScanCommand,
   BatchWriteCommand,
+  GetCommand,
+  DeleteCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -19,6 +22,9 @@ const commandMap = {
   put: PutCommand,
   scan: ScanCommand,
   batchWrite: BatchWriteCommand,
+  get: GetCommand,
+  delete: DeleteCommand,
+  update: UpdateCommand,
 };
 
 export async function call(action, params) {
