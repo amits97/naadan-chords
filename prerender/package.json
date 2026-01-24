@@ -22,9 +22,10 @@
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.600.0",
+    "@aws-sdk/lib-dynamodb": "^3.600.0",
     "@babel/runtime-corejs2": "^7.26.10",
     "@sparticuz/chromium": "^119.0.2",
-    "aws-sdk": "^2.1693.0",
     "fast-xml-parser": "^4.4.1",
     "puppeteer-core": "^24.4.0",
     "serialize-javascript": "^6.0.2",
@@ -34,6 +35,7 @@
   "overrides": {
     "json5": ">=2.2.2",
     "axios": ">=1.6.0",
-    "ws": ">=8.17.1"
+    "ws": ">=8.17.1",
+    "@smithy/config-resolver": ">=4.4.0"
   }
 }
