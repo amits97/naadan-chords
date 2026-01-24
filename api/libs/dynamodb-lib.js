@@ -1,26 +1,37 @@
-const AWS = require("aws-sdk");
-const https = require("https");
-const sslAgent = new https.Agent({
-  keepAlive: true,
-  maxSockets: 50,
-  rejectUnauthorized: true
-});
-sslAgent.setMaxListeners(0);
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  QueryCommand,
+  PutCommand,
+  ScanCommand,
+  BatchWriteCommand,
+} from "@aws-sdk/lib-dynamodb";
 
-AWS.config.update({
-  httpOptions: {
-    agent: sslAgent
+const client = new DynamoDBClient({ region: process.env.AWS_REGION });
+const dynamoDb = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+  },
+});
+
+const commandMap = {
+  query: QueryCommand,
+  put: PutCommand,
+  scan: ScanCommand,
+  batchWrite: BatchWriteCommand,
+};
+
+export async function call(action, params) {
+  const CommandClass = commandMap[action];
+  if (!CommandClass) {
+    throw new Error(`Unknown action: ${action}`);
   }
-});
 
-export function call(action, params) {
-  const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-  return dynamoDb[action](params).promise();
+  const command = new CommandClass(params);
+  return dynamoDb.send(command);
 }
 
-export function batchCall(params) {
-  const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-  return dynamoDb.batchWrite(params).promise();
+export async function batchCall(params) {
+  const command = new BatchWriteCommand(params);
+  return dynamoDb.send(command);
 }

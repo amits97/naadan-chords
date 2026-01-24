@@ -1,7 +1,28 @@
-import AWS from "aws-sdk";
+import {
+  S3Client,
+  ListBucketsCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  CopyObjectCommand,
+} from "@aws-sdk/client-s3";
 
-export function call(action, params) {
-  const s3 = new AWS.S3({apiVersion: "2016-04-19", region: "ap-south-1"});
+const client = new S3Client({ region: "ap-south-1" });
 
-  return s3[action](params).promise();
+// Map action names to command classes
+const commandMap = {
+  listBuckets: ListBucketsCommand,
+  getObject: GetObjectCommand,
+  putObject: PutObjectCommand,
+  deleteObject: DeleteObjectCommand,
+  copyObject: CopyObjectCommand,
+};
+
+export async function call(action, params) {
+  const CommandClass = commandMap[action];
+  if (!CommandClass) {
+    throw new Error(`Unknown S3 action: ${action}`);
+  }
+  const command = new CommandClass(params);
+  return await client.send(command);
 }

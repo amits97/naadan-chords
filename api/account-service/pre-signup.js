@@ -1,8 +1,15 @@
-import AWS from "aws-sdk";
+import {
+  CognitoIdentityProviderClient,
+  AdminCreateUserCommand,
+  AdminSetUserPasswordCommand,
+  AdminConfirmSignUpCommand,
+  AdminLinkProviderForUserCommand,
+  ListUsersCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 import config from "../config";
 import { generatePassword } from "../libs/utils";
 
-function createNativeAccountAndLink(cognito, context, event) {
+async function createNativeAccountAndLink(cognito, context, event) {
   if (event.request.userAttributes.hasOwnProperty("email")) {
     const generatedUsername = event.request.userAttributes.email.split("@")[0];
 
@@ -23,43 +30,42 @@ function createNativeAccountAndLink(cognito, context, event) {
       ],
     };
 
-    cognito.adminCreateUser(params, (err, data) => {
-      if (err) {
-        context.done(null, event);
-        return;
-      } else {
-        let confirmParams = {
-          UserPoolId: config.cognito.USER_POOL_ID,
-          Password: generatePassword(),
-          Username: generatedUsername,
-          Permanent: true,
-        };
-        cognito.adminSetUserPassword(confirmParams, function () {
-          let emailConfirmParams = {
-            UserPoolId: config.cognito.USER_POOL_ID,
-            Username: generatedUsername,
-          };
-          cognito.adminConfirmSignUp(emailConfirmParams, function () {
-            let mergeParams = {
-              DestinationUser: {
-                ProviderAttributeValue: generatedUsername,
-                ProviderName: "Cognito",
-              },
-              SourceUser: {
-                ProviderAttributeName: "Cognito_Subject",
-                ProviderAttributeValue: event.userName.split("_")[1],
-                ProviderName: "Facebook",
-              },
-              UserPoolId: config.cognito.USER_POOL_ID,
-            };
-            cognito.adminLinkProviderForUser(mergeParams, function () {
-              event.response.autoConfirmUser = true;
-              context.done(null, event);
-            });
-          });
-        });
-      }
-    });
+    try {
+      await cognito.send(new AdminCreateUserCommand(params));
+
+      let confirmParams = {
+        UserPoolId: config.cognito.USER_POOL_ID,
+        Password: generatePassword(),
+        Username: generatedUsername,
+        Permanent: true,
+      };
+      await cognito.send(new AdminSetUserPasswordCommand(confirmParams));
+
+      let emailConfirmParams = {
+        UserPoolId: config.cognito.USER_POOL_ID,
+        Username: generatedUsername,
+      };
+      await cognito.send(new AdminConfirmSignUpCommand(emailConfirmParams));
+
+      let mergeParams = {
+        DestinationUser: {
+          ProviderAttributeValue: generatedUsername,
+          ProviderName: "Cognito",
+        },
+        SourceUser: {
+          ProviderAttributeName: "Cognito_Subject",
+          ProviderAttributeValue: event.userName.split("_")[1],
+          ProviderName: "Facebook",
+        },
+        UserPoolId: config.cognito.USER_POOL_ID,
+      };
+      await cognito.send(new AdminLinkProviderForUserCommand(mergeParams));
+
+      event.response.autoConfirmUser = true;
+      context.done(null, event);
+    } catch (err) {
+      context.done(null, event);
+    }
   } else {
     context.done(null, event);
   }
@@ -67,8 +73,7 @@ function createNativeAccountAndLink(cognito, context, event) {
 
 exports.handler = (event, context) => {
   try {
-    const cognito = new AWS.CognitoIdentityServiceProvider({
-      apiVersion: "2016-04-19",
+    const cognito = new CognitoIdentityProviderClient({
       region: config.cognito.REGION,
     });
 
@@ -79,34 +84,36 @@ exports.handler = (event, context) => {
         AttributesToGet: ["sub", "email"],
         Filter: 'email = "' + event.request.userAttributes.email + '"',
       };
-      cognito.listUsers(params, (err, data) => {
-        if (err) {
+
+      cognito
+        .send(new ListUsersCommand(params))
+        .then((data) => {
+          if (data != null && data.Users != null && data.Users[0] != null) {
+            let mergeParams = {
+              DestinationUser: {
+                ProviderAttributeValue: data.Users[0].Username,
+                ProviderName: "Cognito",
+              },
+              SourceUser: {
+                ProviderAttributeName: "Cognito_Subject",
+                ProviderAttributeValue: event.userName.split("_")[1],
+                ProviderName: "Facebook",
+              },
+              UserPoolId: config.cognito.USER_POOL_ID,
+            };
+            return cognito
+              .send(new AdminLinkProviderForUserCommand(mergeParams))
+              .then(() => {
+                context.done(null, event);
+              });
+          } else {
+            return createNativeAccountAndLink(cognito, context, event);
+          }
+        })
+        .catch((err) => {
           event.listUsersError = err;
           context.done(null, event);
-        } else if (
-          data != null &&
-          data.Users != null &&
-          data.Users[0] != null
-        ) {
-          let mergeParams = {
-            DestinationUser: {
-              ProviderAttributeValue: data.Users[0].Username,
-              ProviderName: "Cognito",
-            },
-            SourceUser: {
-              ProviderAttributeName: "Cognito_Subject",
-              ProviderAttributeValue: event.userName.split("_")[1],
-              ProviderName: "Facebook",
-            },
-            UserPoolId: config.cognito.USER_POOL_ID,
-          };
-          cognito.adminLinkProviderForUser(mergeParams, function () {
-            context.done(null, event);
-          });
-        } else {
-          createNativeAccountAndLink(cognito, context, event);
-        }
-      });
+        });
     } else {
       // Normal native account signup. No need to do anything
       context.done(null, event);
