@@ -6,6 +6,7 @@ import {
   SignUpCommand,
   AdminDeleteUserCommand,
   AdminDisableProviderForUserCommand,
+  AdminListGroupsForUserCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 
 const client = new CognitoIdentityProviderClient({ region: "ap-south-1" });
@@ -18,6 +19,7 @@ const commandMap = {
   signUp: SignUpCommand,
   adminDeleteUser: AdminDeleteUserCommand,
   adminDisableProviderForUser: AdminDisableProviderForUserCommand,
+  adminListGroupsForUser: AdminListGroupsForUserCommand,
 };
 
 export async function call(action, params) {
