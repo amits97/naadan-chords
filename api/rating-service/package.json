@@ -12,7 +12,7 @@
     "url": "https://github.com/amits97/naadan-chords.git"
   },
   "dependencies": {
-    "aws-sdk": "^2.1359.0",
+    "aws-sdk": "^2.1693.0",
     "node-cache": "^5.1.2",
     "serverless-domain-manager": "^5.1.0",
     "serverless-webpack": "^5.5.4",
