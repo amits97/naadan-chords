@@ -1,7 +1,24 @@
-import AWS from "aws-sdk";
+import {
+  CognitoIdentityProviderClient,
+  ListUsersCommand,
+  ListUsersInGroupCommand,
+  AdminUpdateUserAttributesCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 
-export function call(action, params) {
-  const cognito = new AWS.CognitoIdentityServiceProvider({apiVersion: "2016-04-19", region: "ap-south-1"});
+const client = new CognitoIdentityProviderClient({ region: "ap-south-1" });
 
-  return cognito[action](params).promise();
+// Map action names to command classes
+const commandMap = {
+  listUsers: ListUsersCommand,
+  listUsersInGroup: ListUsersInGroupCommand,
+  adminUpdateUserAttributes: AdminUpdateUserAttributesCommand,
+};
+
+export async function call(action, params) {
+  const CommandClass = commandMap[action];
+  if (!CommandClass) {
+    throw new Error(`Unknown action: ${action}`);
+  }
+  const command = new CommandClass(params);
+  return await client.send(command);
 }

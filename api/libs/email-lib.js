@@ -357,12 +357,18 @@ function getEmailBody(title, message) {
   return emailBody;
 }
 
-export async function sendEmail(title, message, textMessage, emailId, replyToAddresses) {
+export async function sendEmail(
+  title,
+  message,
+  textMessage,
+  emailId,
+  replyToAddresses
+) {
   const emailBody = getEmailBody(title, message);
 
   const emailParams = {
-    Source: 'Naadan Chords <admin@naadanchords.com>', // SES SENDING EMAIL
-    ReplyToAddresses: replyToAddresses ?? ['naadanchords@gmail.com'],
+    Source: "Naadan Chords <admin@naadanchords.com>", // SES SENDING EMAIL
+    ReplyToAddresses: replyToAddresses ?? ["naadanchords@gmail.com"],
     Destination: {
       ToAddresses: Array.isArray(emailId) ? emailId : [emailId], // SES RECEIVING EMAIL
     },
@@ -370,15 +376,15 @@ export async function sendEmail(title, message, textMessage, emailId, replyToAdd
       Body: {
         Html: {
           Charset: "UTF-8",
-          Data: emailBody
+          Data: emailBody,
         },
         Text: {
-          Charset: 'UTF-8',
+          Charset: "UTF-8",
           Data: textMessage,
         },
       },
       Subject: {
-        Charset: 'UTF-8',
+        Charset: "UTF-8",
         Data: title,
       },
     },
@@ -389,16 +395,14 @@ export async function sendEmail(title, message, textMessage, emailId, replyToAdd
 }
 
 export function syncSendEmail(title, message, textMessage, emailId, callback) {
-  const AWS = require('aws-sdk');
-  const SES = new AWS.SES({
-    region: 'us-east-1'
-  });
+  const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
+  const client = new SESClient({ region: "us-east-1" });
 
   const emailBody = getEmailBody(title, message);
 
   const emailParams = {
-    Source: 'Naadan Chords <admin@naadanchords.com>', // SES SENDING EMAIL
-    ReplyToAddresses: ['naadanchords@gmail.com'],
+    Source: "Naadan Chords <admin@naadanchords.com>", // SES SENDING EMAIL
+    ReplyToAddresses: ["naadanchords@gmail.com"],
     Destination: {
       ToAddresses: Array.isArray(emailId) ? emailId : [emailId], // SES RECEIVING EMAIL
     },
@@ -406,23 +410,22 @@ export function syncSendEmail(title, message, textMessage, emailId, callback) {
       Body: {
         Html: {
           Charset: "UTF-8",
-          Data: emailBody
+          Data: emailBody,
         },
         Text: {
-          Charset: 'UTF-8',
+          Charset: "UTF-8",
           Data: textMessage,
         },
       },
       Subject: {
-        Charset: 'UTF-8',
+        Charset: "UTF-8",
         Data: title,
       },
     },
   };
 
-  let result = SES.sendEmail(emailParams, function(err, data) {
-    callback('Email sent');
-  });
+  const command = new SendEmailCommand(emailParams);
+  const result = client.send(command).then(() => callback("Email sent"));
 
   return result;
 }

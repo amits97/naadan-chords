@@ -12,8 +12,9 @@
     "url": "https://github.com/amits97/naadan-chords.git"
   },
   "dependencies": {
-    "aws-sdk": "^2.1693.0",
-    "serverless-domain-manager": "^5.1.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.600.0",
+    "@aws-sdk/client-ses": "^3.600.0",
+    "serverless-domain-manager": "^8.0.0",
     "serverless-webpack": "^5.5.4",
     "webpack-node-externals": "^2.5.2"
   },
@@ -22,6 +23,7 @@
     "babel-loader": "^10.0.0"
   },
   "overrides": {
-    "semver": ">=7.5.2"
+    "semver": ">=7.5.2",
+    "@smithy/config-resolver": ">=4.4.0"
   }
 }
