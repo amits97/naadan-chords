@@ -219,6 +219,7 @@ export default class Posts extends Component {
       if (this._isMounted) {
         this.setState({
           isLoading: false,
+          posts: Array.isArray(posts) ? [] : {},
         });
       }
 
