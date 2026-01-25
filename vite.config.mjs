@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import legacy from "@vitejs/plugin-legacy";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
 import path from "path";
 
 export default defineConfig({
@@ -10,9 +9,7 @@ export default defineConfig({
       targets: ["defaults", "not IE 11"],
     }),
     react(),
-    nodePolyfills(),
   ],
-  esbuild: false,
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
