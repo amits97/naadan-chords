@@ -25,9 +25,9 @@
     "@aws-sdk/client-dynamodb": "^3.600.0",
     "@aws-sdk/lib-dynamodb": "^3.600.0",
     "@babel/runtime-corejs2": "^7.26.10",
-    "@sparticuz/chromium": "^119.0.2",
+    "@sparticuz/chromium": "^131.0.1",
     "fast-xml-parser": "^4.4.1",
-    "puppeteer-core": "^24.4.0",
+    "puppeteer-core": "^24.10.0",
     "serialize-javascript": "^6.0.2",
     "serverless": "^4.4.10",
     "source-map-support": "^0.5.19"

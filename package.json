@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "0.96.5",
+  "version": "0.96.8",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -13,7 +13,7 @@
     "ajv-errors": "^2.0.1",
     "ajv-formats": "^2.1.1",
     "ajv-keywords": "^4.0.1",
-    "aws-amplify": "6.6.7",
+    "aws-amplify": "^6.6.7",
     "axios": "^1.8.2",
     "chord-fingering": "github:amits97/chord-fingering",
     "moment": "^2.29.4",

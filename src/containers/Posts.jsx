@@ -49,7 +49,7 @@ export default class Posts extends Component {
 
   post(postId) {
     const queryParams = new URLSearchParams(this.props.location.search).get(
-      "clearCache"
+      "clearCache",
     )
       ? "?clearCache=true"
       : "";
@@ -58,7 +58,7 @@ export default class Posts extends Component {
 
   posts(category, search, user, album) {
     let queryParams = new URLSearchParams(this.props.location.search).get(
-      "clearCache"
+      "clearCache",
     )
       ? "?clearCache=true"
       : "";
@@ -82,12 +82,12 @@ export default class Posts extends Component {
     if (category) {
       return API.get(
         "posts",
-        `/posts?category=${category.toUpperCase()}&page=${pageNumber}`
+        `/posts?category=${category.toUpperCase()}&page=${pageNumber}`,
       );
     } else if (userName) {
       return API.get(
         "posts",
-        `/posts/user-posts?userName=${userName}&page=${pageNumber}`
+        `/posts/user-posts?userName=${userName}&page=${pageNumber}`,
       );
     } else if (album) {
       album = capitalizeFirstLetter(this.makeTitle(album));
@@ -129,9 +129,8 @@ export default class Posts extends Component {
   };
 
   loadData = async () => {
-    let posts = {};
-
     try {
+      let posts = {};
       let { isRandomPage, isPageUrl } = this.props;
       let postId = this.props.match.params.id;
       let category = this.props.match.params.category;
@@ -202,7 +201,7 @@ export default class Posts extends Component {
           this.props.isCategory ? category.toUpperCase() : null,
           null,
           this.props.isUserPosts ? this.props.match.params.userName : null,
-          this.props.isAlbum ? this.props.match.params.album : null
+          this.props.isAlbum ? this.props.match.params.album : null,
         );
         posts = postsResult.Items;
         authorCreateDate = postsResult.authorCreateDate;
@@ -220,7 +219,6 @@ export default class Posts extends Component {
       if (this._isMounted) {
         this.setState({
           isLoading: false,
-          posts: Array.isArray(posts) ? [] : {},
         });
       }
 
@@ -246,12 +244,12 @@ export default class Posts extends Component {
       let queryRequest = `/posts?exclusiveStartKey=${exclusiveStartKey}`;
       if (this.props.isCategory) {
         let category = this.getCategoryFromLegacy(
-          this.props.match.params.category
+          this.props.match.params.category,
         );
         queryRequest += `&category=${category.toUpperCase()}`;
       } else if (this.props.isAlbum) {
         let album = capitalizeFirstLetter(
-          this.makeTitle(this.props.match.params.album)
+          this.makeTitle(this.props.match.params.album),
         );
         queryRequest += `&album=${album}`;
       }
@@ -259,7 +257,7 @@ export default class Posts extends Component {
       if (this.props.isUserPosts) {
         postsResult = await API.get(
           "posts",
-          `/posts/user-posts?userName=${this.props.match.params.userName}&exclusiveStartKey=${exclusiveStartKey}`
+          `/posts/user-posts?userName=${this.props.match.params.userName}&exclusiveStartKey=${exclusiveStartKey}`,
         );
       } else {
         postsResult = await API.get("posts", queryRequest);
@@ -287,7 +285,7 @@ export default class Posts extends Component {
       !this.props.isLocalhost &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
+          window.location.search,
       )
     ) {
       try {
@@ -306,7 +304,7 @@ export default class Posts extends Component {
       let category = this.props.match.params.category.toLowerCase();
       if (this.getCategoryFromLegacy(category) !== category) {
         this.props.history.push(
-          `/category/${this.getCategoryFromLegacy(category)}`
+          `/category/${this.getCategoryFromLegacy(category)}`,
         );
 
         this.setState({
@@ -330,7 +328,7 @@ export default class Posts extends Component {
 
     if (typeof Storage !== "undefined") {
       let localStorageItem = localStorage.getItem(
-        "isChordControlsTrayMaximized"
+        "isChordControlsTrayMaximized",
       );
 
       if (localStorageItem !== null) {
@@ -478,7 +476,7 @@ export default class Posts extends Component {
       !this.props.isLocalhost &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
+          window.location.search,
       )
     ) {
       try {
@@ -524,24 +522,24 @@ export default class Posts extends Component {
     } else if (this.props.isPageUrl) {
       if (this.props.isCategory) {
         title = `${this.getCategoryFromLegacy(
-          this.props.match.params.category
+          this.props.match.params.category,
         ).toUpperCase()} - GUITAR CHORDS AND TABS - PAGE ${
           this.props.match.params.number
         }`;
       } else if (this.props.isAlbum) {
         title = `${this.makeTitle(
-          this.props.match.params.album
+          this.props.match.params.album,
         )} - GUITAR CHORDS AND TABS - PAGE ${this.props.match.params.number}`;
       } else {
         title = `LATEST - PAGE ${this.props.match.params.number}`;
       }
     } else if (this.props.isCategory) {
       title = `${this.getCategoryFromLegacy(
-        this.props.match.params.category
+        this.props.match.params.category,
       ).toUpperCase()} - GUITAR CHORDS AND TABS`;
     } else if (this.props.isAlbum) {
       title = `${this.makeTitle(
-        this.props.match.params.album
+        this.props.match.params.album,
       )} - GUITAR CHORDS AND TABS`;
     }
 
