@@ -129,8 +129,9 @@ export default class Posts extends Component {
   };
 
   loadData = async () => {
+    let posts = {};
+
     try {
-      let posts = {};
       let { isRandomPage, isPageUrl } = this.props;
       let postId = this.props.match.params.id;
       let category = this.props.match.params.category;
