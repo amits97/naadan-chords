@@ -43,6 +43,7 @@
 .Editor form textarea#content {
   border-top: 0;
   padding-top: 50px;
+  scrollbar-width: none;
 }
 
 .Editor form textarea.review-comment {

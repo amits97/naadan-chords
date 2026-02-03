@@ -90,6 +90,7 @@
 .ContentParser .tabs {
   white-space: pre;
   overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .ContentParser h4 {

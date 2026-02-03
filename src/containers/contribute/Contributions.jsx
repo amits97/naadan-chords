@@ -82,7 +82,7 @@ export default class Contributions extends SearchComponent {
           urlLib.insertUrlParam("tab", activeTab);
         }
         this.loadData();
-      }
+      },
     );
   }
 
@@ -148,7 +148,7 @@ export default class Contributions extends SearchComponent {
 
     if (
       window.confirm(
-        `Are you sure you want to delete ${postsToBeDeleted.length} posts?`
+        `Are you sure you want to delete ${postsToBeDeleted.length} posts?`,
       )
     ) {
       this.setState({
@@ -198,7 +198,7 @@ export default class Contributions extends SearchComponent {
     try {
       let postsResult = await API.get(
         "posts",
-        `/contributions?exclusiveStartKey=${exclusiveStartKey}`
+        `/contributions?exclusiveStartKey=${exclusiveStartKey}`,
       );
       this.setState({
         posts: {
@@ -218,7 +218,7 @@ export default class Contributions extends SearchComponent {
 
   prepareLastEvaluatedPostRequest = (lastEvaluatedPost) => {
     return encodeURIComponent(
-      JSON.stringify(lastEvaluatedPost).replace(/"/g, "'")
+      JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"),
     );
   };
 
@@ -229,7 +229,7 @@ export default class Contributions extends SearchComponent {
           isLoading={this.state.isPaginationLoading}
           onClick={() => {
             this.loadMorePosts(
-              this.prepareLastEvaluatedPostRequest(lastEvaluatedPost)
+              this.prepareLastEvaluatedPostRequest(lastEvaluatedPost),
             );
           }}
           text="Load more"
@@ -274,7 +274,7 @@ export default class Contributions extends SearchComponent {
                             this.addPostToDelete(event, post.postId)
                           }
                           checked={this.state.postsToBeDeleted.includes(
-                            post.postId
+                            post.postId,
                           )}
                         />
                       </td>
@@ -288,11 +288,11 @@ export default class Contributions extends SearchComponent {
                             isDraft
                               ? "edit-draft"
                               : post.status
-                              ? "edit-song"
-                              : "view-song"
+                                ? "edit-song"
+                                : "view-song"
                           }/${post.postId}`}
                         >
-                          <a href="#/" className="text-primary ml-2">
+                          <a href="#/" className="text-primary">
                             {post.title}
                           </a>
                         </LinkContainer>

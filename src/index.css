@@ -61,7 +61,7 @@ input.form-control {
 select.form-control::placeholder,
 textarea.form-control::placeholder,
 input.form-control::placeholder {
-  font-size: 15px;
+  font-size: 14px;
 }
 
 input[type="file"] {

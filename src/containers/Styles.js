@@ -3,11 +3,8 @@ import styled, { css } from "styled-components";
 
 // Helper for adding scroll shadow gradient background
 const scrollShadowBackground = (mainColor, percent = "20%") => css`
-  background: linear-gradient(
-      to right,
-      ${mainColor} ${percent},
-      rgba(46, 46, 46, 0)
-    ),
+  background:
+    linear-gradient(to right, ${mainColor} ${percent}, rgba(46, 46, 46, 0)),
     linear-gradient(to left, ${mainColor} ${percent}, rgba(46, 46, 46, 0)),
     radial-gradient(
       farthest-side at left center,
@@ -20,8 +17,16 @@ const scrollShadowBackground = (mainColor, percent = "20%") => css`
       transparent
     );
   background-repeat: no-repeat;
-  background-size: 30px 100%, 30px 100%, 10px 100%, 10px 100%;
-  background-position: left center, right center, left center, right center;
+  background-size:
+    30px 100%,
+    30px 100%,
+    10px 100%,
+    10px 100%;
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
   background-attachment: local, local, scroll, scroll;
 `;
 
@@ -231,6 +236,7 @@ export const AuthenticatedContentContainer = styled.div`
 export const AuthenticatedTableContainer = styled.div`
   ${({ theme }) => scrollShadowBackground(theme.body, "20%")}
   overflow: scroll;
+  scrollbar-width: none;
 
   table {
     margin-bottom: 0;

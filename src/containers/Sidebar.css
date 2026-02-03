@@ -167,6 +167,7 @@
     height: 100vh;
     overflow-y: scroll;
     z-index: 2001;
+    scrollbar-width: none;
   }
 
   .Sidebar .sticky {

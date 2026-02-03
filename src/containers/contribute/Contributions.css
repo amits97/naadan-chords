@@ -73,6 +73,7 @@
 .Contributions td:first-child,
 .Contributions th:first-child {
   border-radius: 15px 0 0 15px;
+  width: 0;
 }
 
 .Contributions td:last-child,

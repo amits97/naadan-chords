@@ -73,6 +73,7 @@
 .Admin td:first-child,
 .Admin th:first-child {
   border-radius: 15px 0 0 15px;
+  width: 0;
 }
 
 .Admin td:last-child,

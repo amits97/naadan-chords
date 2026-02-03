@@ -6,6 +6,7 @@
   overflow: auto;
   z-index: 2;
   transition: top 0.3s ease-out;
+  scrollbar-width: none;
 }
 
 .EditorPanel .btn-group {

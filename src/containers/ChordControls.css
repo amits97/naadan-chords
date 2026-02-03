@@ -48,6 +48,7 @@
   float: left;
   overflow: hidden;
   height: 40px;
+  scrollbar-width: none;
 }
 
 .ChordControls .controls-container {
