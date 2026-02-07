@@ -1,4 +1,6 @@
 service: naadanchords-prerender
+build:
+  esbuild: false
 provider:
   name: aws
   versionFunctions: false
