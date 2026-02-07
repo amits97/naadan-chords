@@ -1,5 +1,8 @@
 service: naadan-chords-account-api
 
+build:
+  esbuild: false
+
 # Since resource configs are shared, set project directory one level above
 projectDir: ../
 
