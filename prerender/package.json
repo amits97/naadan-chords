@@ -18,7 +18,7 @@
     "jest": "^29.7.0",
     "serverless-domain-manager": "^7.4.0",
     "serverless-webpack": "^5.15.0",
-    "webpack": "^5.94.0",
+    "webpack": "^5.105.0",
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
