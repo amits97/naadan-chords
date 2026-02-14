@@ -178,10 +178,6 @@
 
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
-  .Admin .new-post-button {
-    display: block;
-  }
-
   .Admin .header .btn {
     display: none;
   }

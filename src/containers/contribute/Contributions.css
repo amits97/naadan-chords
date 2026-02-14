@@ -170,10 +170,6 @@
 
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
-  .Contributions .new-post-button {
-    display: block;
-  }
-
   .Contributions .header .btn {
     display: none;
   }
