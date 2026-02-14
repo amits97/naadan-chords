@@ -397,7 +397,7 @@ export default class Editor extends Component {
 
     if (typeof Storage !== "undefined") {
       let localStorageItem = localStorage.getItem(
-        "isChordControlsTrayMaximized"
+        "isChordControlsTrayMaximized",
       );
 
       if (localStorageItem !== null) {
@@ -428,7 +428,7 @@ export default class Editor extends Component {
             (key) => ({
               chord: key,
               voicing: post.chordPreferences[key],
-            })
+            }),
           );
         }
 
@@ -900,7 +900,7 @@ export default class Editor extends Component {
                         this.handlePreferenceChange(
                           index,
                           "chord",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       readOnly={isViewMode}
@@ -915,7 +915,7 @@ export default class Editor extends Component {
                         this.handlePreferenceChange(
                           index,
                           "voicing",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       readOnly={isViewMode}
@@ -1075,6 +1075,7 @@ export default class Editor extends Component {
       isEditMode,
       isReviewMode,
       isViewMode,
+      isDraft,
       theme,
     } = this.props;
 
@@ -1160,7 +1161,7 @@ export default class Editor extends Component {
               ) : null}
               {this.renderContentInputs()}
 
-              {isAdmin && isEditMode ? (
+              {isAdmin && isEditMode && !isDraft ? (
                 <div className="editor-additional-details bg-light border rounded mb-4">
                   <Form.Check
                     type="checkbox"

@@ -112,7 +112,7 @@ export default class Admin extends SearchComponent {
           urlLib.insertUrlParam("tab", activeTab);
         }
         this.loadData();
-      }
+      },
     );
   }
 
@@ -126,7 +126,7 @@ export default class Admin extends SearchComponent {
     let { search } = this.state;
     return API.get(
       "posts",
-      `/posts?postType=PAGE${search ? "&s=" + search : ""}`
+      `/posts?postType=PAGE${search ? "&s=" + search : ""}`,
     );
   }
 
@@ -143,7 +143,7 @@ export default class Admin extends SearchComponent {
     let { search } = this.state;
     return API.get(
       "posts",
-      `/contributions/list?${search ? "s=" + search : ""}`
+      `/contributions/list?${search ? "s=" + search : ""}`,
     );
   }
 
@@ -198,7 +198,7 @@ export default class Admin extends SearchComponent {
 
     if (
       window.confirm(
-        `Are you sure you want to delete ${postsToBeDeleted.length} posts?`
+        `Are you sure you want to delete ${postsToBeDeleted.length} posts?`,
       )
     ) {
       this.setState({
@@ -250,7 +250,7 @@ export default class Admin extends SearchComponent {
     try {
       let postsResult = await API.get(
         "posts",
-        `/posts?exclusiveStartKey=${exclusiveStartKey}`
+        `/posts?exclusiveStartKey=${exclusiveStartKey}`,
       );
       this.setState({
         posts: {
@@ -270,7 +270,7 @@ export default class Admin extends SearchComponent {
 
   prepareLastEvaluatedPostRequest = (lastEvaluatedPost) => {
     return encodeURIComponent(
-      JSON.stringify(lastEvaluatedPost).replace(/"/g, "'")
+      JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"),
     );
   };
 
@@ -281,7 +281,7 @@ export default class Admin extends SearchComponent {
           isLoading={this.state.isPaginationLoading}
           onClick={() => {
             this.loadMorePosts(
-              this.prepareLastEvaluatedPostRequest(lastEvaluatedPost)
+              this.prepareLastEvaluatedPostRequest(lastEvaluatedPost),
             );
           }}
           text="Load more"
@@ -325,7 +325,7 @@ export default class Admin extends SearchComponent {
                           this.addPostToDelete(event, post.postId)
                         }
                         checked={this.state.postsToBeDeleted.includes(
-                          post.postId
+                          post.postId,
                         )}
                       />
                     </td>
@@ -336,8 +336,8 @@ export default class Admin extends SearchComponent {
                           isDraft
                             ? "edit-draft"
                             : isContribution
-                            ? "review-post"
-                            : "edit-post"
+                              ? "review-post"
+                              : "edit-post"
                         }/${post.postId}`}
                       >
                         <a href="#/" className="text-primary">
@@ -496,23 +496,21 @@ export default class Admin extends SearchComponent {
               <Nav.Item>
                 <Nav.Link eventKey="drafts">
                   DRAFTS{" "}
-                  <span className={`${draftCount > 0 ? "d-inline" : "d-none"}`}>
+                  {draftCount > 0 && (
                     <Badge className="draft-count" variant="primary">
                       {draftCount}
                     </Badge>
-                  </span>
+                  )}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="review">
                   REVIEW{" "}
-                  <span
-                    className={`${reviewCount > 0 ? "d-inline" : "d-none"}`}
-                  >
+                  {reviewCount > 0 && (
                     <Badge className="draft-count" variant="primary">
                       {reviewCount}
                     </Badge>
-                  </span>
+                  )}
                 </Nav.Link>
               </Nav.Item>
             </Nav>

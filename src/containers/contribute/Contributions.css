@@ -14,11 +14,12 @@
 
 .Contributions .header .btn {
   margin-top: 25px;
-  padding-top: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .Contributions .header .btn span {
-  margin-right: 10px;
   font-size: 14px;
 }
 
@@ -45,6 +46,8 @@
   padding: 1.1rem 1rem;
   color: #888888;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .Contributions nav a:hover {
@@ -106,13 +109,15 @@
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  padding-top: 12px;
   position: fixed;
   right: 20px;
   bottom: 20px;
   z-index: 1020;
   display: none;
   font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .Contributions .admin-search {
@@ -131,8 +136,11 @@
 .Contributions .delete-container .btn {
   height: 30px;
   min-height: 30px;
-  padding-top: 4px;
   float: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
 }
 
 .Contributions .checkbox {
@@ -151,9 +159,13 @@
 }
 
 .Contributions .draft-count {
-  margin: 2px 0 0 6px;
-  position: absolute;
-  padding: 4px 5px 2px 6px;
+  margin: 0 0 0 6px;
+  padding: 4px 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: text-top;
+  line-height: 1;
 }
 
 /* Medium devices (tablets, less than 992px) */

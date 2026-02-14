@@ -405,11 +405,11 @@ export default class Contributions extends SearchComponent {
               <Nav.Item>
                 <Nav.Link eventKey="drafts">
                   DRAFTS{" "}
-                  <span className={`${draftCount > 0 ? "d-inline" : "d-none"}`}>
+                  {draftCount > 0 && (
                     <Badge className="draft-count" variant="primary">
                       {draftCount}
                     </Badge>
-                  </span>
+                  )}
                 </Nav.Link>
               </Nav.Item>
             </Nav>
