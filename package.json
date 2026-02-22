@@ -9,7 +9,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "ajv": "^7.2.3",
+    "ajv": "^8.18.0",
     "ajv-errors": "^2.0.1",
     "ajv-formats": "^2.1.1",
     "ajv-keywords": "^4.0.1",
