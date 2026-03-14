@@ -248,14 +248,24 @@ export default class Admin extends SearchComponent {
     });
 
     try {
-      let postsResult = await API.get(
-        "posts",
-        `/posts?exclusiveStartKey=${exclusiveStartKey}`,
-      );
+      const { activeTab, search } = this.state;
+      let endpoint = "";
+
+      if (activeTab === "posts") {
+        endpoint = `/posts/?${search ? "s=" + search + "&" : ""}exclusiveStartKey=${exclusiveStartKey}`;
+      } else if (activeTab === "pages") {
+        endpoint = `/posts?postType=PAGE${search ? "&s=" + search : ""}&exclusiveStartKey=${exclusiveStartKey}`;
+      } else if (activeTab === "drafts") {
+        endpoint = `/drafts/?${search ? "s=" + search + "&" : ""}exclusiveStartKey=${exclusiveStartKey}`;
+      } else if (activeTab === "review") {
+        endpoint = `/contributions/list?${search ? "s=" + search + "&" : ""}exclusiveStartKey=${exclusiveStartKey}`;
+      }
+
+      let postsResult = await API.get("posts", endpoint);
       this.setState({
-        posts: {
+        [activeTab]: {
           ...postsResult,
-          Items: this.state.posts.Items.concat(postsResult.Items),
+          Items: this.state[activeTab].Items.concat(postsResult.Items),
         },
         lastEvaluatedPost: postsResult.LastEvaluatedKey,
         isPaginationLoading: false,
