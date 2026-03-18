@@ -12,8 +12,8 @@
     "url": "https://github.com/amits97/naadan-chords.git"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.600.0",
-    "@aws-sdk/client-ses": "^3.600.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.1000.0",
+    "@aws-sdk/client-ses": "^3.1000.0",
     "serverless-domain-manager": "^8.0.0",
     "serverless-webpack": "^5.5.4",
     "webpack-node-externals": "^3.0.0"
