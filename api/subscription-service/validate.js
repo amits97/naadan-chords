@@ -183,15 +183,21 @@ async function validateSubscriptionWithGoogle(
   purchaseToken,
   accessToken,
 ) {
+  // Validate input to prevent SSRF or malformed URLs
+  if (!/^[a-zA-Z0-9._]+$/.test(packageName)) {
+    throw new Error("Invalid package name format");
+  }
+  if (!/^[a-zA-Z0-9._:-]+$/.test(purchaseToken)) {
+    throw new Error("Invalid purchase token format");
+  }
+
   try {
-    const response = await axios.get(
-      `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${packageName}/purchases/subscriptionsv2/tokens/${purchaseToken}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const url = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${encodeURIComponent(packageName)}/purchases/subscriptionsv2/tokens/${encodeURIComponent(purchaseToken)}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+    });
 
     return response.data;
   } catch (error) {
