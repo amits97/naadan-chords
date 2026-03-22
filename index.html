@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-US" class="notranslate" translate="no">
   <head>
     <meta charset="utf-8" />
@@ -76,11 +76,13 @@
     ></script>
     <script>
       const noAds = JSON.parse(`%VITE_NO_ADS%` || "[]");
+      const isPremium = localStorage.getItem("isPremium") === "true";
       if (
         window.location.hostname !== "localhost" &&
+        !isPremium &&
         !(noAds || []).includes(
           window.location.pathname.replace(/^\/|\/$/g, "") +
-            window.location.search
+            window.location.search,
         )
       ) {
         (adsbygoogle = window.adsbygoogle || []).push({

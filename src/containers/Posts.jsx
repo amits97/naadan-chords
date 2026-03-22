@@ -283,6 +283,8 @@ export default class Posts extends Component {
     this._isMounted = true;
     if (
       !this.props.isLocalhost &&
+      !this.props.isPremium &&
+      !this.props.isAuthenticating &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,
@@ -474,6 +476,8 @@ export default class Posts extends Component {
     if (
       prevState.adKey !== this.state.adKey &&
       !this.props.isLocalhost &&
+      !this.props.isPremium &&
+      !this.props.isAuthenticating &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,

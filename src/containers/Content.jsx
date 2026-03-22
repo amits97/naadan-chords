@@ -52,13 +52,17 @@ export default class Content extends Component {
       this.inArticleAdInitialized = false;
     }
 
-    if (!this.props.isLocalhost) {
+    if (
+      !this.props.isLocalhost &&
+      !this.props.isPremium &&
+      !this.props.isAuthenticating
+    ) {
       if (
         document.querySelectorAll("div.inArticle").length > 0 &&
         !this.inArticleAdInitialized &&
         !noAds?.includes(
           window.location.pathname.replace(/^\/|\/$/g, "") +
-            window.location.search
+            window.location.search,
         )
       ) {
         this.inArticleAdInitialized = true;
@@ -123,7 +127,7 @@ export default class Content extends Component {
 
   prepareLastEvaluatedPostRequest = (lastEvaluatedPost) => {
     return encodeURIComponent(
-      JSON.stringify(lastEvaluatedPost).replace(/"/g, "'")
+      JSON.stringify(lastEvaluatedPost).replace(/"/g, "'"),
     );
   };
 
@@ -169,7 +173,7 @@ export default class Content extends Component {
             onClick={(e) => {
               e.preventDefault();
               this.props.loadPosts(
-                this.prepareLastEvaluatedPostRequest(lastEvaluatedPost)
+                this.prepareLastEvaluatedPostRequest(lastEvaluatedPost),
               );
             }}
             text="Load more"
@@ -260,7 +264,7 @@ export default class Content extends Component {
                 <Skeleton />
               </small>
             </Styles.PostItemContainer>
-          </SkeletonTheme>
+          </SkeletonTheme>,
         );
       }
       return <div className="postList">{skeleton}</div>;
@@ -277,7 +281,7 @@ export default class Content extends Component {
                 isUserPosts,
                 isCategory,
                 posts,
-                authorCreateDate
+                authorCreateDate,
               )}
               <LinkContainer to="/random">
                 <a
@@ -703,33 +707,31 @@ export default class Content extends Component {
   };
 
   renderInArticleAd = (post) => {
-    const { theme, isLocalhost } = this.props;
+    const { theme, isLocalhost, isPremium, isAuthenticating } = this.props;
 
-    if (!isLocalhost) {
-      if (
-        post.postType === "POST" &&
-        !noAds?.includes(
-          window.location.pathname.replace(/^\/|\/$/g, "") +
-            window.location.search
-        )
-      ) {
-        return (
-          <div className="ad inArticle">
-            <ins
-              className="adsbygoogle"
-              style={{ display: "block", textAlign: "center" }}
-              data-ad-client="ca-pub-1783579460797635"
-              data-ad-slot={
-                theme.name === "light" ? "1204599400" : "1979513076"
-              }
-              data-ad-format="fluid"
-              data-ad-layout="in-article"
-            ></ins>
-          </div>
-        );
-      }
-    } else {
+    if (isAuthenticating || isLocalhost || isPremium) {
       return <br />;
+    }
+
+    if (
+      post.postType === "POST" &&
+      !noAds?.includes(
+        window.location.pathname.replace(/^\/|\/$/g, "") +
+          window.location.search,
+      )
+    ) {
+      return (
+        <div className="ad inArticle">
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block", textAlign: "center" }}
+            data-ad-client="ca-pub-1783579460797635"
+            data-ad-slot={theme.name === "light" ? "1204599400" : "1979513076"}
+            data-ad-format="fluid"
+            data-ad-layout="in-article"
+          ></ins>
+        </div>
+      );
     }
   };
 
@@ -798,7 +800,7 @@ export default class Content extends Component {
               }]
             }
           `}
-        </script>
+        </script>,
       );
 
       if (post.hasOwnProperty("rating")) {
@@ -833,7 +835,7 @@ export default class Content extends Component {
                   "reviewCount": "${post.ratingCount}"
                 }
               }`}
-          </script>
+          </script>,
         );
       }
 
@@ -923,7 +925,7 @@ export default class Content extends Component {
         description =
           description.substr(
             0,
-            Math.min(description.length, description.lastIndexOf(" "))
+            Math.min(description.length, description.lastIndexOf(" ")),
           ) + "..";
         description = RemoveMarkdown(description);
       } else {
@@ -973,14 +975,16 @@ export default class Content extends Component {
 
   renderTopAd = () => {
     if (
+      this.props.isAuthenticating ||
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
         noAds?.includes(window.location.pathname.replace(/^\/|\/$/g, ""))) ||
       noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
+          window.location.search,
       ) ||
-      this.props.isLocalhost
+      this.props.isLocalhost ||
+      this.props.isPremium
     ) {
       return <br className="spacer" />;
     }

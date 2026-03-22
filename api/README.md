@@ -14,6 +14,7 @@ The API is split into the following microservices which can be deployed independ
 - **posts-service** - The main set of APIs to list and manage posts.
 - **rating-service** - Contains APIs to manage post star ratings and to measure top rated posts.
 - **request-service** - Contains APIs to handle user song requests.
+- **subscription-service** - Contains APIs to manage user subscriptions.
 
 ## Deploying changes
 

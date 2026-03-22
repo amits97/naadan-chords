@@ -34,9 +34,11 @@ export default class Sidebar extends Component {
     this._isMounted = true;
     if (
       !this.props.isLocalhost &&
+      !this.props.isPremium &&
+      !this.props.isAuthenticating &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
+          window.location.search,
       )
     ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -99,7 +101,7 @@ export default class Sidebar extends Component {
               <a href="#/">{topPosts[i].title}</a>
             </LinkContainer>
           </span>
-        </li>
+        </li>,
       );
     }
 
@@ -201,9 +203,11 @@ export default class Sidebar extends Component {
     if (
       this.state.adKey !== prevState.adKey &&
       !this.props.isLocalhost &&
+      !this.props.isPremium &&
+      !this.props.isAuthenticating &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
+          window.location.search,
       )
     ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -213,14 +217,16 @@ export default class Sidebar extends Component {
 
   renderSidebarAd1 = () => {
     if (
+      this.props.isAuthenticating ||
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
         noAds?.includes(window.location.pathname.replace(/^\/|\/$/g, ""))) ||
       noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
+          window.location.search,
       ) ||
-      this.props.isLocalhost
+      this.props.isLocalhost ||
+      this.props.isPremium
     ) {
       return <br />;
     }
@@ -240,14 +246,16 @@ export default class Sidebar extends Component {
 
   renderSidebarAd2 = () => {
     if (
+      this.props.isAuthenticating ||
       (this.props.posts &&
         !Array.isArray(this.props.posts) &&
         noAds?.includes(window.location.pathname.replace(/^\/|\/$/g, ""))) ||
       noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
+          window.location.search,
       ) ||
-      this.props.isLocalhost
+      this.props.isLocalhost ||
+      this.props.isPremium
     ) {
       return;
     }

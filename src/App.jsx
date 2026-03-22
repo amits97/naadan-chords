@@ -14,7 +14,9 @@ import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { lightTheme, darkTheme } from "./components/Themes";
+import { PremiumProvider } from "./components/PremiumContext";
 import { getUrlParameter } from "./libs/url-lib";
+import * as subscriptionLib from "./libs/subscription-lib";
 import Routes from "./Routes";
 import Footer from "./containers/Footer";
 import Header from "./Header";
@@ -37,6 +39,7 @@ class App extends Component {
       name: "",
       email: "",
       isAdmin: false,
+      isPremium: false,
       identities: "[]",
       emailVerified: false,
       userTheme: "auto",
@@ -59,14 +62,14 @@ class App extends Component {
             {
               isAdmin: true,
             },
-            resolve
+            resolve,
           );
         } else {
           this.setState(
             {
               isAdmin: false,
             },
-            resolve
+            resolve,
           );
         }
       }
@@ -74,10 +77,38 @@ class App extends Component {
     });
   };
 
+  getSubscriptionInfo = async (userAttributes) => {
+    const isPremium = userAttributes["custom:isPremium"] === "true";
+    const purchaseToken =
+      userAttributes["custom:googlePlayPurchaseToken"] ||
+      userAttributes["custom:gPlayToken"];
+
+    if (!purchaseToken) {
+      return { isPremium };
+    }
+
+    try {
+      const validatedIsPremium =
+        await subscriptionLib.validateSubscription(purchaseToken);
+      if (validatedIsPremium && validatedIsPremium.isPremium !== undefined) {
+        return { isPremium: validatedIsPremium.isPremium };
+      }
+    } catch (error) {
+      console.warn(
+        "Subscription validation failed, using cached value:",
+        error,
+      );
+    }
+
+    return { isPremium };
+  };
+
   getUserAttributes = async (session) => {
     try {
       const { username } = await getCurrentUser();
       const userAttributes = await fetchUserAttributes();
+      const { isPremium } = await this.getSubscriptionInfo(userAttributes);
+
       this.setState(
         {
           userName: username,
@@ -88,11 +119,21 @@ class App extends Component {
           preferredUsername: userAttributes.preferred_username,
           picture: userAttributes.picture,
           userTheme: userAttributes["custom:theme"] ?? "auto",
+          isPremium,
         },
         () => {
           this.setWebsiteTheme();
-        }
+          if (typeof Storage !== "undefined") {
+            const wasPremium = localStorage.getItem("isPremium") === "true";
+            localStorage.setItem("isPremium", isPremium.toString());
+
+            if (isPremium && !wasPremium) {
+              window.location.reload();
+            }
+          }
+        },
       );
+
       await this.getUserPrevileges(session);
     } catch (e) {
       // Non logged in user. Do nothing
@@ -103,6 +144,8 @@ class App extends Component {
     try {
       const { username } = await getCurrentUser();
       const userAttributes = await fetchUserAttributes();
+      const { isPremium } = await this.getSubscriptionInfo(userAttributes);
+
       this.setState(
         {
           userName: username,
@@ -111,11 +154,21 @@ class App extends Component {
           name: userAttributes.name,
           email: userAttributes.email,
           userTheme: userAttributes["custom:theme"] ?? "auto",
+          isPremium,
         },
         () => {
           this.setWebsiteTheme();
-        }
+          if (typeof Storage !== "undefined") {
+            const wasPremium = localStorage.getItem("isPremium") === "true";
+            localStorage.setItem("isPremium", isPremium.toString());
+
+            if (isPremium && !wasPremium) {
+              window.location.reload();
+            }
+          }
+        },
       );
+
       await this.getUserPrevileges(session);
       return true;
     } catch (e) {
@@ -156,7 +209,7 @@ class App extends Component {
       await getCurrentUser();
       this.userHasAuthenticated(true);
       let session = await fetchAuthSession();
-      this.getUserDetails(session);
+      await this.getUserDetails(session);
     } catch (e) {
       this.setWebsiteTheme();
       if (e?.name !== "UserUnAuthenticatedException") {
@@ -227,10 +280,15 @@ class App extends Component {
       {
         userTheme: "auto",
         loginError: "",
+        isPremium: false,
       },
       () => {
         this.setWebsiteTheme();
-      }
+        if (typeof Storage !== "undefined") {
+          localStorage.removeItem("isPremium");
+        }
+        window.location.reload();
+      },
     );
     this.closeNav();
   };
@@ -282,6 +340,7 @@ class App extends Component {
       getUserPrevileges: this.getUserPrevileges,
       getUserAttributes: this.getUserAttributes,
       isAdmin: this.state.isAdmin,
+      isPremium: this.state.isPremium,
       search: this.state.search,
       setSearch: this.setSearch,
       navExpanded: this.state.navExpanded,
@@ -295,6 +354,7 @@ class App extends Component {
       identities: this.state.identities,
       emailVerified: this.state.emailVerified,
       userTheme: this.state.userTheme,
+      isAuthenticating: this.state.isAuthenticating,
       theme: theme === "light" ? lightTheme : darkTheme,
       isLocalhost: window.location.hostname === "localhost",
       loginError: this.state.loginError,
@@ -302,32 +362,38 @@ class App extends Component {
 
     return (
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
-        <>
-          <GlobalStyles />
-          <div className="App" onClick={this.onNavBlur}>
-            <Header {...this.props} {...childProps} />
-            <div className="contents" onTouchStart={this.onNavBlur}>
-              <React.Fragment>
-                <Modal
-                  style={{ top: "20px" }}
-                  show={!!getUrlParameter("code") || false}
-                >
-                  <Modal.Body>
-                    <span className="loading-modal-contents">
-                      <FontAwesomeIcon icon={faSyncAlt} className="spinning" />{" "}
-                      Loading...
-                    </span>
-                  </Modal.Body>
-                </Modal>
-                <Routes childProps={childProps} />
-              </React.Fragment>
+        <PremiumProvider isPremium={this.state.isPremium}>
+          <>
+            <GlobalStyles />
+            <div className="App" onClick={this.onNavBlur}>
+              <Header {...this.props} {...childProps} />
+              <div className="contents" onTouchStart={this.onNavBlur}>
+                <React.Fragment>
+                  <Modal
+                    style={{ top: "20px" }}
+                    show={!!getUrlParameter("code") || false}
+                  >
+                    <Modal.Body>
+                      <span className="loading-modal-contents">
+                        <FontAwesomeIcon
+                          icon={faSyncAlt}
+                          className="spinning"
+                        />{" "}
+                        Loading...
+                      </span>
+                    </Modal.Body>
+                  </Modal>
+                  <Routes childProps={childProps} />
+                </React.Fragment>
+              </div>
+              <Footer
+                {...this.props}
+                {...childProps}
+                pageKey={window.location.href}
+              />
             </div>
-            <Footer
-              pageKey={window.location.href}
-              isLocalhost={childProps.isLocalhost}
-            />
-          </div>
-        </>
+          </>
+        </PremiumProvider>
       </ThemeProvider>
     );
   }

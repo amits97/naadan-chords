@@ -1,0 +1,64 @@
+service: naadan-chords-subscription-api
+
+build:
+  esbuild: false
+
+# Since resource configs are shared, set project directory one level above
+projectDir: ../
+
+# Use the serverless-webpack plugin to transpile ES6
+plugins:
+  - serverless-webpack
+  - serverless-domain-manager
+
+# serverless-webpack configuration
+# Enable auto-packing of external modules
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  customDomain:
+    domainName: api.naadanchords.com
+    basePath: "subscription"
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: prod
+  region: ap-south-1
+
+  # Environment variables for Google Play API
+  environment:
+    GOOGLE_PLAY_PACKAGE_NAME: "com.amitsn.naadanchords"
+    GOOGLE_PLAY_SUBSCRIPTION_PRODUCT_ID: "nc_pro"
+    # Retrieve full JSON credentials from AWS SSM Parameter Store
+    GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${ssm:/naadan-chords/google-play-credentials}
+
+  # IAM Role Statements for Lambda permissions
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminUpdateUserAttributes
+        - cognito-idp:AdminGetUser
+        - cognito-idp:ListUsers
+      Resource: "arn:aws:cognito-idp:ap-south-1:*:userpool/*"
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource: "arn:aws:secretsmanager:ap-south-1:*:secret:*"
+
+functions:
+  validate:
+    handler: validate.main
+    events:
+      - http:
+          path: validate
+          method: POST
+          cors: true
+          authorizer: aws_iam
+    environment:
+      GOOGLE_PLAY_PACKAGE_NAME: ${self:provider.environment.GOOGLE_PLAY_PACKAGE_NAME}
+      GOOGLE_PLAY_SUBSCRIPTION_PRODUCT_ID: ${self:provider.environment.GOOGLE_PLAY_SUBSCRIPTION_PRODUCT_ID}
+      GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${self:provider.environment.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON}
