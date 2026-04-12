@@ -37,15 +37,20 @@ export default class Footer extends Component {
       });
     }
 
-    if (
-      this.props.adKey !== prevState.adKey &&
+    const shouldInitializeAds =
       !this.props.isLocalhost &&
       !this.props.isPremium &&
       !this.props.isAuthenticating &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,
-      )
+      );
+
+    // Reinitialize ads when adKey changes or when authentication completes
+    if (
+      (this.props.adKey !== prevState.adKey ||
+        (prevProps.isAuthenticating && !this.props.isAuthenticating)) &&
+      shouldInitializeAds
     ) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});

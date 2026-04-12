@@ -200,15 +200,20 @@ export default class Sidebar extends Component {
       }
     }
 
-    if (
-      this.state.adKey !== prevState.adKey &&
+    const shouldInitializeAds =
       !this.props.isLocalhost &&
       !this.props.isPremium &&
       !this.props.isAuthenticating &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,
-      )
+      );
+
+    // Reinitialize ads when adKey changes or when authentication completes
+    if (
+      (this.state.adKey !== prevState.adKey ||
+        (prevProps.isAuthenticating && !this.props.isAuthenticating)) &&
+      shouldInitializeAds
     ) {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       (window.adsbygoogle = window.adsbygoogle || []).push({});

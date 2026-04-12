@@ -52,6 +52,11 @@ export default class Content extends Component {
       this.inArticleAdInitialized = false;
     }
 
+    // Reset ad initialization flag when authentication completes
+    if (prevProps.isAuthenticating && !this.props.isAuthenticating) {
+      this.inArticleAdInitialized = false;
+    }
+
     if (
       !this.props.isLocalhost &&
       !this.props.isPremium &&

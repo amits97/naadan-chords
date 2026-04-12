@@ -489,6 +489,24 @@ export default class Posts extends Component {
         console.log(e);
       }
     }
+
+    // Also reinitialize ads when authentication completes
+    if (
+      prevProps.isAuthenticating &&
+      !this.props.isAuthenticating &&
+      !this.props.isLocalhost &&
+      !this.props.isPremium &&
+      !noAds?.includes(
+        window.location.pathname.replace(/^\/|\/$/g, "") +
+          window.location.search,
+      )
+    ) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 
   componentWillUnmount() {
