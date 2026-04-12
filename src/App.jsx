@@ -14,7 +14,6 @@ import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { lightTheme, darkTheme } from "./components/Themes";
-import { PremiumProvider } from "./components/PremiumContext";
 import { getUrlParameter } from "./libs/url-lib";
 import * as subscriptionLib from "./libs/subscription-lib";
 import Routes from "./Routes";
@@ -362,38 +361,33 @@ class App extends Component {
 
     return (
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
-        <PremiumProvider isPremium={this.state.isPremium}>
-          <>
-            <GlobalStyles />
-            <div className="App" onClick={this.onNavBlur}>
-              <Header {...this.props} {...childProps} />
-              <div className="contents" onTouchStart={this.onNavBlur}>
-                <React.Fragment>
-                  <Modal
-                    style={{ top: "20px" }}
-                    show={!!getUrlParameter("code") || false}
-                  >
-                    <Modal.Body>
-                      <span className="loading-modal-contents">
-                        <FontAwesomeIcon
-                          icon={faSyncAlt}
-                          className="spinning"
-                        />{" "}
-                        Loading...
-                      </span>
-                    </Modal.Body>
-                  </Modal>
-                  <Routes childProps={childProps} />
-                </React.Fragment>
-              </div>
-              <Footer
-                {...this.props}
-                {...childProps}
-                pageKey={window.location.href}
-              />
+        <>
+          <GlobalStyles />
+          <div className="App" onClick={this.onNavBlur}>
+            <Header {...this.props} {...childProps} />
+            <div className="contents" onTouchStart={this.onNavBlur}>
+              <React.Fragment>
+                <Modal
+                  style={{ top: "20px" }}
+                  show={!!getUrlParameter("code") || false}
+                >
+                  <Modal.Body>
+                    <span className="loading-modal-contents">
+                      <FontAwesomeIcon icon={faSyncAlt} className="spinning" />{" "}
+                      Loading...
+                    </span>
+                  </Modal.Body>
+                </Modal>
+                <Routes childProps={childProps} />
+              </React.Fragment>
             </div>
-          </>
-        </PremiumProvider>
+            <Footer
+              {...this.props}
+              {...childProps}
+              pageKey={window.location.href}
+            />
+          </div>
+        </>
       </ThemeProvider>
     );
   }

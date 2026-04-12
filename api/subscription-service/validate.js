@@ -94,7 +94,12 @@ export async function main(event) {
     const userParams = {
       UserPoolId: config.cognito.USER_POOL_ID,
       Username: usernameAttributes.userName,
-      UserAttributes: [
+      UserAttributes: [],
+    };
+
+    if (isStateValid) {
+      // Subscription is valid - keep the subscription data
+      userParams.UserAttributes = [
         {
           Name: "custom:isPremium",
           Value: isValid ? "true" : "false",
@@ -107,14 +112,38 @@ export async function main(event) {
           Name: "custom:subValidatedAt",
           Value: new Date().toISOString(),
         },
-      ],
-    };
+      ];
 
-    if (subscriptionData.expiryTime) {
-      userParams.UserAttributes.push({
-        Name: "custom:subExpiryTime",
-        Value: new Date(subscriptionData.expiryTime).getTime().toString(),
-      });
+      if (subscriptionData.expiryTime) {
+        userParams.UserAttributes.push({
+          Name: "custom:subExpiryTime",
+          Value: new Date(subscriptionData.expiryTime).getTime().toString(),
+        });
+      }
+    } else {
+      // Subscription is not valid - clear all subscription data
+      userParams.UserAttributes = [
+        {
+          Name: "custom:gPlayToken",
+          Value: "",
+        },
+        {
+          Name: "custom:isPremium",
+          Value: "",
+        },
+        {
+          Name: "custom:subscriptionState",
+          Value: "",
+        },
+        {
+          Name: "custom:subValidatedAt",
+          Value: "",
+        },
+        {
+          Name: "custom:subExpiryTime",
+          Value: "",
+        },
+      ];
     }
 
     await cognitoLib.call("adminUpdateUserAttributes", userParams);

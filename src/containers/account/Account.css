@@ -166,6 +166,45 @@
   max-width: 320px;
 }
 
+.Account .subscription-label {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.Account .subscription-value {
+  margin: 8px 0 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.Account .subscription-message {
+  padding: 15px 0;
+  line-height: 1.6;
+  border-radius: 8px;
+}
+
+.Account .subscription-message p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.Account .subscription-link {
+  text-decoration: none;
+  display: block;
+}
+
+.Account .subscription-link .btn {
+  width: 100%;
+  font-weight: 600;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+.Account .subscription-footer {
+  margin: 0;
+  line-height: 1.4;
+}
+
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
   .Account .tab-content {

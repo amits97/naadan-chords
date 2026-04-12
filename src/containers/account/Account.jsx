@@ -112,7 +112,7 @@ export default class Account extends SearchComponent {
           this.setState({
             userDeletable: userPostsResult.length === 0,
           });
-        }
+        },
       );
     } catch (e) {
       this.setState({
@@ -131,7 +131,7 @@ export default class Account extends SearchComponent {
         if (!activeTabInUrl) {
           urlLib.insertUrlParam("tab", activeTab);
         }
-      }
+      },
     );
   }
 
@@ -224,7 +224,7 @@ export default class Account extends SearchComponent {
 
         if (this.state.avatarPreview) {
           const blobData = base64toBlob(
-            this.state.avatarPreview.replace(/^data:image\/(png);base64,/, "")
+            this.state.avatarPreview.replace(/^data:image\/(png);base64,/, ""),
           );
           const fileName = `${
             this.props.preferredUsername ?? this.props.username
@@ -742,7 +742,7 @@ export default class Account extends SearchComponent {
     try {
       await API.get(
         "posts",
-        `/account/unlink-provider?providerName=${provider}&providerAttributeName=Cognito_Subject&providerAttributeValue=${providerAttributeValue}`
+        `/account/unlink-provider?providerName=${provider}&providerAttributeName=Cognito_Subject&providerAttributeValue=${providerAttributeValue}`,
       );
     } catch (e) {
       console.log(e);
@@ -754,6 +754,51 @@ export default class Account extends SearchComponent {
   handleSocialLogin = async (provider) => {
     await signOut({ global: true });
     signInWithRedirect({ provider });
+  };
+
+  renderSubscriptionForm = () => {
+    const { isPremium } = this.props;
+
+    return (
+      <div className="account-form-wrapper">
+        <div className="subscription-status">
+          <p className="subscription-label text-muted">No Ads Subscription</p>
+          <p className="subscription-value">
+            {isPremium ? "Active (Pro)" : "Inactive (Free)"}
+          </p>
+        </div>
+
+        {isPremium ? (
+          <Styles.SignupCard className="subscription-message bg-light p-2 pl-3 mt-4 mb-4">
+            <p className="mb-0">
+              Thank you for your purchase! You are enjoying the ad-free
+              experience.
+            </p>
+          </Styles.SignupCard>
+        ) : (
+          <Styles.SignupCard className="subscription-message bg-light p-2 pl-3 mt-4 mb-4">
+            <p className="mb-0">
+              Remove all ads and enjoy uninterrupted music chord browsing.
+            </p>
+          </Styles.SignupCard>
+        )}
+
+        <a
+          href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords&hl=en_US&pli=1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="subscription-link"
+        >
+          <Button variant="primary" block>
+            {isPremium ? "Manage Subscription" : "Subscribe Now"}
+          </Button>
+        </a>
+        <small className="text-muted subscription-footer">
+          Download the Naadan Chords app from Google Play Store to manage your
+          subscription.
+        </small>
+      </div>
+    );
   };
 
   renderFacebookForm = () => {
@@ -900,6 +945,9 @@ export default class Account extends SearchComponent {
               <Nav.Item>
                 <Nav.Link eventKey="facebook">FACEBOOK</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="subscription">SUBSCRIPTION</Nav.Link>
+              </Nav.Item>
             </Nav>
             <Tab.Content>
               <Tab.Pane eventKey="profile">{this.renderProfileForm()}</Tab.Pane>
@@ -912,6 +960,9 @@ export default class Account extends SearchComponent {
               </Tab.Pane>
               <Tab.Pane eventKey="facebook">
                 {this.renderFacebookForm()}
+              </Tab.Pane>
+              <Tab.Pane eventKey="subscription">
+                {this.renderSubscriptionForm()}
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
