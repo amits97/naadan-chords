@@ -131,7 +131,7 @@ export default class ContentParser extends Component {
     const notes = "[CDEFGAB]";
     const tabBeginning = "(?!\\|)";
     const chords =
-      "(maj7|maj|min7|min|sus2|sus4|m7|m6add9|m7sus2|6sus2|7sus2|7sus4|add9|add4|5add14|m|5|6|7|dim)?";
+      "(maj7|maj|min7|min|sus2|sus4|m7b5|m7|m6add9|m7sus2|6sus2|7sus2|7sus4|add9|add4|5add14|m|5|6|7|dim)?";
     const flat = "(b)?";
     const sharp = "(#)?";
     const tabNumbers = "([-/hps])([0-9]+)";
@@ -174,7 +174,7 @@ export default class ContentParser extends Component {
 
               newFretPosition = `${newFretPosition}`;
               return p1 + newFretPosition;
-            }
+            },
           );
           tabLine = tabLineStrings[i];
           let tabLineLength = getNthOccurenceIndex(tabLine, "|", 2) + 1;
@@ -262,14 +262,14 @@ export default class ContentParser extends Component {
             scale.length
           : null;
         p1 = p1 ? p1.replace("#", "").replace("b", "") : "";
-        p2 = p2 ? p2.replace("#", "").replace("b", "") : "";
+        p2 = p2 ? p2 : "";
         p3 = p3 ? p3.replace("#", "").replace("b", "") : "";
-        p4 = p4 ? p4.replace("#", "").replace("b", "") : "";
+        p4 = p4 ? p4 : "";
         p5 = p5 ? p5 : "";
         p6 = p6 ? p6.replace("#", "").replace("b", "") : "";
-        p7 = p7 ? p7.replace("#", "").replace("b", "") : "";
+        p7 = p7 ? p7 : "";
         p8 = p8 ? p8.replace("#", "").replace("b", "") : "";
-        p9 = p9 ? p9.replace("#", "").replace("b", "") : "";
+        p9 = p9 ? p9 : "";
         return `<span class="chord">${
           scale[i < 0 ? i + scale.length : i] +
           p1 +
@@ -283,7 +283,7 @@ export default class ContentParser extends Component {
           p8 +
           p9
         }</span>`;
-      }
+      },
     );
 
     //replace image
@@ -343,7 +343,7 @@ export default class ContentParser extends Component {
             <Nav.Link eventKey="chords" href={`/${this.props.post.postId}`}>
               CHORDS
             </Nav.Link>
-          </Nav.Item>
+          </Nav.Item>,
         );
       }
 
@@ -361,7 +361,7 @@ export default class ContentParser extends Component {
             <Nav.Link eventKey="tabs" href={tabHref}>
               LEAD TABS
             </Nav.Link>
-          </Nav.Item>
+          </Nav.Item>,
         );
       }
 
@@ -375,7 +375,7 @@ export default class ContentParser extends Component {
             >
               VIDEO
             </Nav.Link>
-          </Nav.Item>
+          </Nav.Item>,
         );
       }
 
@@ -591,7 +591,7 @@ export default class ContentParser extends Component {
               theme={theme}
               preferredVoicing={preferredVoicing}
             />,
-            chordSpans[i]
+            chordSpans[i],
           );
         }
       }
