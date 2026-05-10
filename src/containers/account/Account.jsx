@@ -73,6 +73,8 @@ export default class Account extends SearchComponent {
       userDeletable: false,
       showEmailVerifyModal: false,
     };
+
+    this.navContainerRef = React.createRef();
   }
 
   getUserPosts = () => {
@@ -136,6 +138,27 @@ export default class Account extends SearchComponent {
       },
     );
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Scroll active tab into view when tab changes
+    if (prevState.activeTab !== this.state.activeTab) {
+      this.scrollActiveTabIntoView();
+    }
+  }
+
+  scrollActiveTabIntoView = () => {
+    if (this.navContainerRef.current) {
+      const activeNav =
+        this.navContainerRef.current.querySelector(".nav-link.active");
+      if (activeNav) {
+        activeNav.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    }
+  };
 
   validateForm() {
     let { activeTab } = this.state;
@@ -956,7 +979,7 @@ export default class Account extends SearchComponent {
             activeKey={activeTab}
             onSelect={(key) => this.setActiveTab(key)}
           >
-            <Nav as="nav" className="nav-tabs">
+            <Nav as="nav" className="nav-tabs" ref={this.navContainerRef}>
               <Nav.Item>
                 <Nav.Link eventKey="profile">PROFILE</Nav.Link>
               </Nav.Item>
