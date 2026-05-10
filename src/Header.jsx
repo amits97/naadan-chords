@@ -16,6 +16,7 @@ import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { API, slugify } from "./libs/utils";
 import * as urlLib from "./libs/url-lib";
 import logo from "./logo.svg";
+import ncIcon from "/nc_icon.png";
 
 import "./Header.css";
 
@@ -140,6 +141,14 @@ export default function Header({
               <React.Fragment>
                 <FontAwesomeIcon className="account-icon" icon={faCog} />
                 Account
+              </React.Fragment>
+            </NavDropdown.Item>
+          </LinkContainer>
+          <LinkContainer to="/account?tab=subscription">
+            <NavDropdown.Item onClick={closeNav} role="button">
+              <React.Fragment>
+                <img src={ncIcon} alt="No Ads" className="nc-icon" />
+                No Ads
               </React.Fragment>
             </NavDropdown.Item>
           </LinkContainer>

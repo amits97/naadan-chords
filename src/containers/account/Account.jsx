@@ -31,6 +31,8 @@ import {
   faTimes,
   faTrashAlt,
   faUpload,
+  faCheck,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { Helmet } from "react-helmet";
 import Avatar from "react-avatar-edit";
@@ -761,42 +763,69 @@ export default class Account extends SearchComponent {
 
     return (
       <div className="account-form-wrapper">
-        <div className="subscription-status">
-          <p className="subscription-label text-muted">No Ads Subscription</p>
-          <p className="subscription-value">
-            {isPremium ? "Active (Pro)" : "Inactive (Free)"}
-          </p>
+        <div className="subscription-status-card">
+          <div className="subscription-header">
+            <h3 className="subscription-title">No Ads Subscription</h3>
+            <span className="subscription-badge">
+              {isPremium ? "PRO" : "FREE"}
+            </span>
+          </div>
+
+          <div className="subscription-benefits">
+            <div className="benefit-item">
+              <FontAwesomeIcon
+                icon={isPremium ? faCheck : faClock}
+                className={`benefit-icon ${isPremium ? "pro" : ""}`}
+              />
+              <span>Ad-free browsing</span>
+            </div>
+            <div className="benefit-item">
+              <FontAwesomeIcon
+                icon={isPremium ? faCheck : faClock}
+                className="benefit-icon"
+              />
+              <span>Uninterrupted chord viewing</span>
+            </div>
+            <div className="benefit-item">
+              <FontAwesomeIcon
+                icon={isPremium ? faCheck : faClock}
+                className="benefit-icon"
+              />
+              <span>Premium experience</span>
+            </div>
+          </div>
+
+          {isPremium ? (
+            <div className="subscription-message mt-4">
+              <p className="mb-0">
+                ✨ Thank you for supporting Naadan Chords! You're enjoying the
+                premium, ad-free experience.
+              </p>
+            </div>
+          ) : (
+            <div className="subscription-message mt-4">
+              <p className="mb-0">
+                Upgrade to Pro and enjoy an uninterrupted music chord browsing
+                experience without ads.
+              </p>
+            </div>
+          )}
+
+          <a
+            href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords&hl=en_US&pli=1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="subscription-link"
+          >
+            <Button variant="primary" block size="lg">
+              {isPremium ? "Manage Subscription" : "Upgrade to Pro"}
+            </Button>
+          </a>
+
+          <small className="text-muted subscription-footer d-block text-center mt-3">
+            Available on the Naadan Chords app for Android
+          </small>
         </div>
-
-        {isPremium ? (
-          <Styles.SignupCard className="subscription-message bg-light p-2 pl-3 mt-4 mb-4">
-            <p className="mb-0">
-              Thank you for your purchase! You are enjoying the ad-free
-              experience.
-            </p>
-          </Styles.SignupCard>
-        ) : (
-          <Styles.SignupCard className="subscription-message bg-light p-2 pl-3 mt-4 mb-4">
-            <p className="mb-0">
-              Remove all ads and enjoy uninterrupted music chord browsing.
-            </p>
-          </Styles.SignupCard>
-        )}
-
-        <a
-          href="https://play.google.com/store/apps/details?id=com.amitsn.naadanchords&hl=en_US&pli=1"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="subscription-link"
-        >
-          <Button variant="primary" block>
-            {isPremium ? "Manage Subscription" : "Subscribe Now"}
-          </Button>
-        </a>
-        <small className="text-muted subscription-footer">
-          Download the Naadan Chords app from Google Play Store to manage your
-          subscription.
-        </small>
       </div>
     );
   };

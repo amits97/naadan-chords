@@ -188,6 +188,79 @@
   font-size: 0.95rem;
 }
 
+.Account .subscription-container {
+  padding: 0;
+}
+
+.Account .subscription-status-card {
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 0;
+}
+
+.Account .subscription-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.Account .subscription-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: inherit;
+}
+
+.Account .subscription-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background-color: #ff9700;
+  color: #363537;
+}
+
+.Account .subscription-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.Account .benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: inherit;
+}
+
+.Account .benefit-icon {
+  font-size: 1.1rem;
+  color: #ff9700;
+  flex-shrink: 0;
+  min-width: 20px;
+}
+
+.Account .subscription-message {
+  padding: 16px 18px;
+  border-radius: 8px;
+  border-left: 4px solid;
+  line-height: 1.6;
+  background-color: rgba(255, 151, 0, 0.08);
+  border-left-color: #ff9700;
+  color: inherit;
+}
+
+.Account .subscription-message p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
 .Account .subscription-link {
   text-decoration: none;
   display: block;
@@ -196,13 +269,16 @@
 .Account .subscription-link .btn {
   width: 100%;
   font-weight: 600;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .Account .subscription-footer {
   margin: 0;
   line-height: 1.4;
+  color: #888888;
 }
 
 /* Medium devices (tablets, less than 992px) */

@@ -534,7 +534,7 @@ export default class ContentParser extends Component {
     let prevContent = prevProps.post.content ? prevProps.post.content : "";
     let content = this.props.post.content ? this.props.post.content : "";
 
-    if (prevContent.length !== content.length) {
+    if (prevContent !== content) {
       let content = this.props.post.content
         ? this.stripHtml(this.props.post.content)
         : "";

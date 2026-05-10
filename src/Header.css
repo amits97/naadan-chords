@@ -98,6 +98,7 @@
 .Header .navbar .navbar-nav .dropdown > .nav-link .user-icon {
   margin-top: 2px;
   float: left;
+  pointer-events: none;
 }
 
 .Header .navbar .navbar-nav .nav-link .user-dp {
@@ -105,6 +106,7 @@
   margin-top: 0;
   margin-right: 2px;
   float: left;
+  pointer-events: none;
 }
 
 .Header .navbar .navbar-nav .nav-link .user-name {
@@ -114,6 +116,7 @@
   white-space: nowrap;
   float: left;
   margin-left: 2px;
+  pointer-events: none;
 }
 
 .Header .navbar button {
@@ -169,7 +172,8 @@
   min-width: fit-content;
 }
 
-.Header .navbar .dropdown-menu .dropdown-item:hover {
+.Header .navbar .dropdown-menu .dropdown-item:hover,
+.Header .navbar .dropdown-menu .dropdown-item:focus {
   color: inherit;
 }
 
@@ -181,9 +185,24 @@
   font-size: 0.9rem;
 }
 
+.Header .navbar .nc-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: -5px;
+  margin-right: 7px;
+  float: left;
+  margin-top: 1px;
+}
+
 .Header .navbar .dropdown-toggle::after {
   margin-left: 0.55em;
   vertical-align: 0.15em;
+}
+
+@media (prefers-color-scheme: light) {
+  .Header .navbar .nc-icon {
+    filter: invert(1);
+  }
 }
 
 /* Tiny devices (mobiles, less than 350px) */
@@ -251,6 +270,10 @@
 
   .Header .navbar .dropdown-menu .dropdown-item:hover {
     color: #ff9700;
+  }
+
+  .Header .navbar .nc-icon {
+    filter: none;
   }
 }
 
