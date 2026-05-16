@@ -30,7 +30,12 @@ import TextareaAutosize from "react-autosize-textarea/lib";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import PromptWrapper from "../../components/PromptWrapper";
 import * as inputSelectionLib from "../../libs/input-selection-lib";
-import { API, safeStringNullOrEmpty, slugify } from "../../libs/utils";
+import {
+  API,
+  parseYoutubeId,
+  safeStringNullOrEmpty,
+  slugify,
+} from "../../libs/utils";
 import EditorPanel from "./EditorPanel";
 import ContentParser from "../ContentParser";
 import "./Editor.css";
@@ -159,8 +164,13 @@ export default class Editor extends Component {
   };
 
   handleChange = (event) => {
+    let value = event.target.value;
+    if (event.target.id === "youtubeId") {
+      value = parseYoutubeId(value);
+    }
+
     this.setState({
-      [event.target.id]: event.target.value,
+      [event.target.id]: value,
       inputUpdated: true,
     });
 
@@ -1018,7 +1028,7 @@ export default class Editor extends Component {
                 autoComplete="off"
                 type="text"
                 id="youtubeId"
-                placeholder="YouTube video ID  (Optional)"
+                placeholder="YouTube video ID or URL  (Optional)"
                 onChange={this.handleChange}
                 value={this.state.youtubeId ? this.state.youtubeId : ""}
                 readOnly={isViewMode}

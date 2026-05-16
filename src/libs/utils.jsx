@@ -67,6 +67,64 @@ export function querystring(name, url = window.location.href) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+export function parseYoutubeId(input) {
+  const trimmed = (input || "").trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  const looksLikeUrl =
+    /^https?:\/\//i.test(trimmed) ||
+    /youtube\.com|youtu\.be/i.test(trimmed);
+
+  if (!looksLikeUrl) {
+    return trimmed;
+  }
+
+  const urlString = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+
+  try {
+    const url = new URL(urlString);
+    const host = url.hostname.replace(/^www\./, "");
+
+    if (host === "youtu.be") {
+      const id = url.pathname.split("/").filter(Boolean)[0];
+      return id || trimmed;
+    }
+
+    if (host.endsWith("youtube.com")) {
+      const v = url.searchParams.get("v");
+      if (v) {
+        return v;
+      }
+
+      const pathMatch = url.pathname.match(
+        /^\/(?:embed|shorts|v|live)\/([^/?]+)/
+      );
+      if (pathMatch) {
+        return pathMatch[1];
+      }
+    }
+  } catch (e) {
+    // Fall through to regex matching.
+  }
+
+  const regexMatchers = [
+    /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/(?:embed|shorts|v|live)\/)([a-zA-Z0-9_-]{11})/,
+  ];
+
+  for (const pattern of regexMatchers) {
+    const match = trimmed.match(pattern);
+    if (match) {
+      return match[1];
+    }
+  }
+
+  return trimmed;
+}
+
 export function safeStringNullOrEmpty(string, prefix) {
   if (string === null || string === "") {
     return "";

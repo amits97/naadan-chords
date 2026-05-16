@@ -40,7 +40,8 @@
   margin-top: 0;
 }
 
-.Editor form textarea#content {
+.Editor form textarea#content,
+.Editor form textarea#leadTabs {
   border-top: 0;
   padding-top: 50px;
   scrollbar-width: none;
@@ -87,6 +88,10 @@
 
 .Editor .preview {
   white-space: pre-wrap;
+}
+
+.Editor .preview .nav-tabs {
+  margin-top: 0;
 }
 
 .Editor form textarea.form-control.page {
