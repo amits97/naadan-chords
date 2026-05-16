@@ -107,35 +107,60 @@ export default class Editor extends Component {
 
     let strumming = "D DU DUDU";
 
+    let replacementText = "";
+
     if (myValue === "separator") {
-      contentValue =
-        contentValue.substring(0, selection.start) +
-        `{${myValue}}` +
-        contentValue.substring(selection.end, contentValue.length);
+      replacementText = `{${myValue}}`;
     } else {
       if (selection.start === selection.end) {
-        contentValue =
-          contentValue.substring(0, selection.start) +
-          `{start_${myValue}}${
+        replacementText = `{start_${myValue}}${
             myValue === "tab" ? tabs : myValue === "strumming" ? strumming : ""
-          }` +
-          `{end_${myValue}}` +
-          contentValue.substring(selection.end, contentValue.length);
+          }{end_${myValue}}`;
       } else {
-        contentValue =
-          contentValue.substring(0, selection.start) +
-          `{start_${myValue}}` +
-          `${addNewLines ? "\n" : ""}` +
-          contentValue.substring(selection.start, selection.end) +
-          `${addNewLines ? "\n" : ""}` +
-          `{end_${myValue}}` +
-          contentValue.substring(selection.end, contentValue.length);
+        replacementText = `{start_${myValue}}${
+          addNewLines ? "\n" : ""
+        }${contentValue.substring(selection.start, selection.end)}${
+          addNewLines ? "\n" : ""
+        }{end_${myValue}}`;
       }
     }
 
-    this.setState({
-      [contentState]: contentValue,
-    });
+    myField.focus();
+    myField.setSelectionRange(selection.start, selection.end);
+    if (!document.execCommand("insertText", false, replacementText)) {
+      contentValue =
+        contentValue.substring(0, selection.start) +
+        replacementText +
+        contentValue.substring(selection.end, contentValue.length);
+
+      this.setState({
+        [contentState]: contentValue,
+      });
+    }
+  };
+
+  handleKeyDown = (event, insertRef) => {
+    if ((event.metaKey || event.ctrlKey) && !this.props.isViewMode) {
+      if (event.key === "b" || event.key === "B") {
+        event.preventDefault();
+        this.insertAtCursor("bold", false, insertRef);
+      } else if (event.key === "i" || event.key === "I") {
+        event.preventDefault();
+        this.insertAtCursor("italic", false, insertRef);
+      } else if (event.key === "h" || event.key === "H") {
+        event.preventDefault();
+        this.insertAtCursor("heading", false, insertRef);
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        this.insertAtCursor("separator", false, insertRef);
+      } else if (event.key === "k" || event.key === "K") {
+        event.preventDefault();
+        this.insertAtCursor("tab", true, insertRef);
+      } else if ((event.key === "s" || event.key === "S") && event.shiftKey) {
+        event.preventDefault();
+        this.insertAtCursor("strumming", false, insertRef);
+      }
+    }
   };
 
   validateForm() {
@@ -995,6 +1020,7 @@ export default class Editor extends Component {
                 ref={this.chordsEditor}
                 placeholder="Post content"
                 onChange={this.handleChange}
+                onKeyDown={(e) => this.handleKeyDown(e, this.chordsEditor)}
                 value={this.state.content ? this.state.content : ""}
                 id="content"
                 className={`content-textarea form-control post`}
@@ -1004,7 +1030,7 @@ export default class Editor extends Component {
             </div>
           </Tab>
           <Tab eventKey="tabs" title="LEAD TABS">
-            <div className="mt-3">
+            <div className="editor-panel-container mt-3">
               <EditorPanel
                 insertAtCursor={this.insertAtCursor}
                 insertRef={this.tabsEditor}
@@ -1014,6 +1040,7 @@ export default class Editor extends Component {
                 ref={this.tabsEditor}
                 placeholder="Lead tabs (Optional)"
                 onChange={this.handleChange}
+                onKeyDown={(e) => this.handleKeyDown(e, this.tabsEditor)}
                 value={this.state.leadTabs ? this.state.leadTabs : ""}
                 id="leadTabs"
                 className={`form-control post`}

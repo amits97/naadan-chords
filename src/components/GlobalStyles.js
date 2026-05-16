@@ -56,6 +56,85 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
+  .tooltip {
+    font-family: "Poppins", "Helvetica Neue", sans-serif;
+  }
+
+  .tooltip-inner {
+    background: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+    border: 1px solid ${({ theme }) => theme.border};
+    border-radius: 8px;
+  }
+
+  .tooltip.bs-tooltip-top .arrow {
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 1px;
+      left: 0;
+      border-width: 0.4rem 0.4rem 0;
+      border-style: solid;
+      border-color: transparent;
+      border-top-color: ${({ theme }) => theme.body};
+    }
+
+    &:before {
+      border-top-color: ${({ theme }) => theme.border};
+    }
+  }
+
+  .tooltip.bs-tooltip-right .arrow {
+    &:after {
+      content: "";
+      position: absolute;
+      left: 1px;
+      top: 0;
+      border-width: 0.4rem 0.4rem 0.4rem 0;
+      border-style: solid;
+      border-color: transparent;
+      border-right-color: ${({ theme }) => theme.body};
+    }
+
+    &:before {
+      border-right-color: ${({ theme }) => theme.border};
+    }
+  }
+
+  .tooltip.bs-tooltip-bottom .arrow {
+    &:after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 0;
+      border-width: 0 0.4rem 0.4rem;
+      border-style: solid;
+      border-color: transparent;
+      border-bottom-color: ${({ theme }) => theme.body};
+    }
+
+    &:before {
+      border-bottom-color: ${({ theme }) => theme.border};
+    }
+  }
+
+  .tooltip.bs-tooltip-left .arrow {
+    &:after {
+      content: "";
+      position: absolute;
+      right: 1px;
+      top: 0;
+      border-width: 0.4rem 0 0.4rem 0.4rem;
+      border-style: solid;
+      border-color: transparent;
+      border-left-color: ${({ theme }) => theme.body};
+    }
+
+    &:before {
+      border-left-color: ${({ theme }) => theme.border};
+    }
+  }
+
   .modal {
     z-index: 2010;
 

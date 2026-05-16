@@ -43,7 +43,7 @@
 .Editor form textarea#content,
 .Editor form textarea#leadTabs {
   border-top: 0;
-  padding-top: 50px;
+  padding-top: 57px;
   scrollbar-width: none;
 }
 
@@ -222,6 +222,7 @@
 
 .Editor .editor-panel-container {
   font-size: 16px;
+  border-radius: 0.25rem;
 }
 
 .Editor .review-submit-container button {
