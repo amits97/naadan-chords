@@ -61,6 +61,7 @@ export async function main(event) {
       scale: data.scale || null,
       tempo: data.tempo || null,
       timeSignature: data.timeSignature || null,
+      capo: data.capo || null,
       content: data.content,
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,

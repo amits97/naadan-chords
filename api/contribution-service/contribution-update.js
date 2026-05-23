@@ -28,7 +28,7 @@ export async function main(event) {
 
     if (result.Item.userId === sub) {
       params.UpdateExpression =
-        "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, #status = :status, chordPreferences = :chordPreferences";
+        "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, capo = :capo, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, #status = :status, chordPreferences = :chordPreferences";
       params.ExpressionAttributeValues = {
         ":title": data.title || null,
         ":song": data.song || null,
@@ -40,6 +40,7 @@ export async function main(event) {
         ":scale": data.scale || null,
         ":tempo": data.tempo || null,
         ":timeSignature": data.timeSignature || null,
+        ":capo": data.capo || null,
         ":content": data.content || null,
         ":leadTabs": data.leadTabs || null,
         ":youtubeId": data.youtubeId || null,

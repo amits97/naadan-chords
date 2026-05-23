@@ -280,7 +280,7 @@ export default class Contributions extends SearchComponent {
                       </td>
                       <td>
                         {post.status ? (
-                          <Badge variant="primary">{post.status}</Badge>
+                          <Badge className="mr-2" variant="primary">{post.status}</Badge>
                         ) : null}
                         <LinkContainer
                           exact

@@ -37,7 +37,7 @@ export default class EditorPanel extends Component {
         <ButtonGroup>
           <OverlayTrigger
             placement="auto"
-            trigger="hover"
+            trigger={["hover", "focus"]}
             popperConfig={this.popperConfig}
             overlay={this.renderTooltip("tooltip-bold", "Bold (Cmd/Ctrl + B)")}
           >
@@ -52,7 +52,7 @@ export default class EditorPanel extends Component {
           </OverlayTrigger>
           <OverlayTrigger
             placement="auto"
-            trigger="hover"
+            trigger={["hover", "focus"]}
             popperConfig={this.popperConfig}
             overlay={this.renderTooltip("tooltip-italic", "Italic (Cmd/Ctrl + I)")}
           >
@@ -67,7 +67,7 @@ export default class EditorPanel extends Component {
           </OverlayTrigger>
           <OverlayTrigger
             placement="auto"
-            trigger="hover"
+            trigger={["hover", "focus"]}
             popperConfig={this.popperConfig}
             overlay={this.renderTooltip(
               "tooltip-heading",
@@ -85,7 +85,7 @@ export default class EditorPanel extends Component {
           </OverlayTrigger>
           <OverlayTrigger
             placement="auto"
-            trigger="hover"
+            trigger={["hover", "focus"]}
             popperConfig={this.popperConfig}
             overlay={this.renderTooltip(
               "tooltip-separator",
@@ -103,7 +103,7 @@ export default class EditorPanel extends Component {
           </OverlayTrigger>
           <OverlayTrigger
             placement="auto"
-            trigger="hover"
+            trigger={["hover", "focus"]}
             popperConfig={this.popperConfig}
             overlay={this.renderTooltip("tooltip-tab", "Tabs (Cmd/Ctrl + K)")}
           >
@@ -118,7 +118,7 @@ export default class EditorPanel extends Component {
           </OverlayTrigger>
           <OverlayTrigger
             placement="auto"
-            trigger="hover"
+            trigger={["hover", "focus"]}
             popperConfig={this.popperConfig}
             overlay={this.renderTooltip(
               "tooltip-strumming",

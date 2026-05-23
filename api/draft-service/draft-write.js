@@ -34,6 +34,7 @@ export async function main(event, context, callback) {
       scale: data.scale || null,
       tempo: data.tempo || null,
       timeSignature: data.timeSignature || null,
+      capo: data.capo || null,
       content: data.content,
       leadTabs: data.leadTabs || null,
       youtubeId: data.youtubeId || null,
@@ -55,7 +56,7 @@ export async function main(event, context, callback) {
           postId: slugify(data.title),
         },
         UpdateExpression:
-          "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType, chordPreferences = :chordPreferences",
+          "SET title = :title, song = :song, album = :album, singers = :singers, lyrics = :lyrics, music = :music, category = :category, image = :image, scale = :scale, tempo = :tempo, timeSignature = :timeSignature, capo = :capo, content = :content, leadTabs = :leadTabs, youtubeId = :youtubeId, postType = :postType, chordPreferences = :chordPreferences",
         ExpressionAttributeValues: {
           ":title": data.title || null,
           ":song": data.song || null,
@@ -69,6 +70,7 @@ export async function main(event, context, callback) {
           ":scale": data.scale || null,
           ":tempo": data.tempo || null,
           ":timeSignature": data.timeSignature || null,
+          ":capo": data.capo || null,
           ":content": data.content || null,
           ":leadTabs": data.leadTabs || null,
           ":youtubeId": data.youtubeId || null,

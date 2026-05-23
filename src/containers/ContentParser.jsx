@@ -111,9 +111,96 @@ export default class ContentParser extends Component {
     }
   };
 
+  getCapoTextPrefix = (content, leadTabs) => {
+    const cleanContent = this.stripHtml(content || "");
+    const cleanLeadTabs = this.stripHtml(leadTabs || "");
+    return (cleanContent + " " + cleanLeadTabs).slice(0, 300).toLowerCase();
+  };
+
+  getCapoFret = () => {
+    if (this.props.post?.capo !== undefined && this.props.post?.capo !== null) {
+      return parseInt(this.props.post.capo, 10) || 0;
+    }
+    const prefix = this.getCapoTextPrefix(this.props.post?.content, this.props.post?.leadTabs);
+    const match = prefix.match(/capo(?:[^\d\n]*?)\b(\d+)(?:st|nd|rd|th)?\b/);
+    if (match) {
+      return parseInt(match[1], 10);
+    }
+    return 0;
+  };
+
+  getTargetScale = (p1) => {
+    const sharpScale = [
+      "C",
+      "C#",
+      "D",
+      "D#",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "G#",
+      "A",
+      "A#",
+      "B",
+    ];
+    const flatScale = [
+      "C",
+      "Db",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "Gb",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B",
+    ];
+
+    const scaleKey = this.props.post?.scale;
+    if (!scaleKey) return (p1 && p1.indexOf("b") !== -1) ? flatScale : sharpScale;
+
+    // Parse root note index
+    const rootNote = scaleKey.match(/^[CDEFGAB][#b]?/i)?.[0];
+    if (!rootNote) return sharpScale;
+
+    const capitalizedRoot = rootNote.charAt(0).toUpperCase() + rootNote.slice(1);
+    let rootIndex = sharpScale.indexOf(capitalizedRoot);
+    if (rootIndex === -1) rootIndex = flatScale.indexOf(capitalizedRoot);
+    if (rootIndex === -1) return sharpScale;
+
+    // Adjust starting root key index by Capo Fret
+    // (since chords on sheet are written relative to the capo, e.g. actual Ab with Capo 3 is played in F)
+    const capoFret = this.getCapoFret();
+    const relativeRootIndex = (rootIndex - capoFret + 12) % 12;
+
+    // Calculate the target transposed key index relative to the capo
+    const targetIndex = (relativeRootIndex + this.state.transposeAmount + 12) % 12;
+    const isMinor = scaleKey.toLowerCase().includes("m") && !scaleKey.toLowerCase().includes("maj");
+
+    // Standard major/minor flat keys by chromatic index
+    const useFlat = isMinor
+      ? [0, 2, 3, 5, 7, 10].includes(targetIndex) // Cm, Dm, Ebm, Fm, Gm, Bbm
+      : [1, 3, 5, 8, 10].includes(targetIndex);    // Db, Eb, F, Ab, Bb
+
+    return useFlat ? flatScale : sharpScale;
+  };
+
   parseContent = (content) => {
     if (!content) {
       content = this.state.content;
+    }
+
+    if (content) {
+      const capo = this.props.post?.capo ? parseInt(this.props.post.capo, 10) : 0;
+      if (capo > 0) {
+        const prefix = this.getCapoTextPrefix(content);
+        if (!/capo/i.test(prefix)) {
+          content = `{start_heading}Capo Fret ${capo}{end_heading}\n\n` + content;
+        }
+      }
     }
 
     const tabRegExp = /{start_tab}\n([\s\S]*?)\n{end_tab}/gim;
@@ -251,15 +338,16 @@ export default class ContentParser extends Component {
     content = content.replace(
       chordsRegex,
       (match, p1, p2, p3, p4, p5, p6, p7, p8, p9) => {
-        let scale = this.getScale(p1);
+        let originalScale = this.getScale(p1);
+        let targetScale = this.getTargetScale(p1);
         let i =
-          (scale.indexOf(match.split("/")[0].replace(chordsOnlyRegex, "")) +
+          (originalScale.indexOf(match.split("/")[0].replace(chordsOnlyRegex, "")) +
             this.state.transposeAmount) %
-          scale.length;
+          originalScale.length;
         let j = match.split("/")[1]
-          ? (scale.indexOf(match.split("/")[1].replace(chordsOnlyRegex, "")) +
+          ? (this.getScale(match.split("/")[1]).indexOf(match.split("/")[1].replace(chordsOnlyRegex, "")) +
               this.state.transposeAmount) %
-            scale.length
+            originalScale.length
           : null;
         p1 = p1 ? p1.replace("#", "").replace("b", "") : "";
         p2 = p2 ? p2 : "";
@@ -271,13 +359,13 @@ export default class ContentParser extends Component {
         p8 = p8 ? p8.replace("#", "").replace("b", "") : "";
         p9 = p9 ? p9 : "";
         return `<span class="chord">${
-          scale[i < 0 ? i + scale.length : i] +
+          targetScale[i < 0 ? i + targetScale.length : i] +
           p1 +
           p2 +
           p3 +
           p4 +
           p5 +
-          (j ? `${scale[j < 0 ? j + scale.length : j]}` : "") +
+          (j !== null ? `${targetScale[j < 0 ? j + targetScale.length : j]}` : "") +
           p6 +
           p7 +
           p8 +

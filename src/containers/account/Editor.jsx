@@ -64,6 +64,7 @@ export default class Editor extends Component {
       scale: null,
       tempo: null,
       timeSignature: null,
+      capo: null,
       chordPreferences: [],
       content: null,
       leadTabs: null,
@@ -277,6 +278,7 @@ export default class Editor extends Component {
       scale: this.state.scale,
       tempo: this.state.tempo,
       timeSignature: this.state.timeSignature,
+      capo: this.state.capo !== null && this.state.capo !== undefined && this.state.capo !== "" ? parseInt(this.state.capo, 10) : null,
       chordPreferences: chordPreferencesMap,
       content: this.state.content,
       leadTabs: this.state.leadTabs,
@@ -480,6 +482,7 @@ export default class Editor extends Component {
           scale: post.scale,
           tempo: post.tempo,
           timeSignature: post.timeSignature,
+          capo: post.capo,
           chordPreferences: chordPreferencesArray, // Load into state
           content: post.content,
           leadTabs: post.leadTabs,
@@ -493,7 +496,7 @@ export default class Editor extends Component {
           isLoading: false,
         });
 
-        if (post.scale || post.tempo || post.timeSignature) {
+        if (post.scale || post.tempo || post.timeSignature || post.capo) {
           this.setState({
             scaleDetailsExpanded: true,
           });
@@ -852,6 +855,22 @@ export default class Editor extends Component {
                     />
                   </Form.Group>
                 </Col>
+                <Col>
+                  <Form.Group controlId="capo">
+                    <Form.Control
+                      autoComplete="off"
+                      type="number"
+                      min="0"
+                      max="12"
+                      placeholder="Capo Fret (e.g. 3)"
+                      onChange={this.handleChange}
+                      value={
+                        this.state.capo !== null && this.state.capo !== undefined ? this.state.capo : ""
+                      }
+                      readOnly={isViewMode}
+                    />
+                  </Form.Group>
+                </Col>
               </Row>
               <Row>
                 <Col>
@@ -1198,7 +1217,7 @@ export default class Editor extends Component {
               ) : null}
               {this.renderContentInputs()}
 
-              {isAdmin && isEditMode && !isDraft ? (
+              {isAdmin && isEditMode && !isDraft && !isContribution ? (
                 <div className="editor-additional-details bg-light border rounded mb-4">
                   <Form.Check
                     type="checkbox"
