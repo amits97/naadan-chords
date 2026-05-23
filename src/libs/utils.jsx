@@ -92,7 +92,7 @@ export function parseYoutubeId(input) {
       return id || trimmed;
     }
 
-    if (host.endsWith("youtube.com")) {
+    if (host === "youtube.com" || host.endsWith(".youtube.com")) {
       const v = url.searchParams.get("v");
       if (v) {
         return v;
