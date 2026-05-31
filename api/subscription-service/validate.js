@@ -79,10 +79,11 @@ export async function main(event) {
     );
 
     // Determine if subscription is valid and active
-    // Active states: SUBSCRIPTION_STATE_ACTIVE or SUBSCRIPTION_STATE_CANCELED (if not expired)
+    // Active states: SUBSCRIPTION_STATE_ACTIVE, SUBSCRIPTION_STATE_IN_GRACE_PERIOD, or SUBSCRIPTION_STATE_CANCELED (if not expired)
     const isStateValid =
       subscriptionData.subscriptionState === "SUBSCRIPTION_STATE_ACTIVE" ||
-      subscriptionData.subscriptionState === "SUBSCRIPTION_STATE_CANCELED";
+      subscriptionData.subscriptionState === "SUBSCRIPTION_STATE_CANCELED" ||
+      subscriptionData.subscriptionState === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD";
 
     const isNotExpired =
       !subscriptionData.expiryTime ||
