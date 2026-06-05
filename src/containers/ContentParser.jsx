@@ -699,7 +699,7 @@ export default class ContentParser extends Component {
     return (
       <div className="ContentParser">
         {this.renderSongMeta()}
-        <Styles.ContentParserContainer>
+        <Styles.ContentParserContainer activeTab={this.state.activeTab}>
           {this.renderTabs(leadTabs, youtubeId)}
         </Styles.ContentParserContainer>
       </div>

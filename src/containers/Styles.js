@@ -209,8 +209,12 @@ export const ContentParserContainer = styled.div`
   }
 
   @media (max-width: 767.98px) {
-    padding-bottom: 0;
-    border-bottom: 0;
+    ${({ activeTab }) =>
+      activeTab === "chords" &&
+      `
+      padding-bottom: 0;
+      border-bottom: 0;
+    `}
   }
 `;
 

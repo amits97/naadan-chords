@@ -3,6 +3,17 @@
   width: 100%;
 }
 
+.YouTubeEmbed.is-vertical {
+  max-width: 360px;
+  margin: 0;
+}
+
+.YouTubeEmbed.is-vertical iframe {
+  aspect-ratio: 9 / 16;
+  width: 100%;
+  border-radius: 12px;
+}
+
 @supports not (aspect-ratio: 1) {
   .YouTubeEmbed {
     position: relative;
@@ -16,4 +27,20 @@
     width: 100%;
     height: 100%;
   }
+
+  .YouTubeEmbed.is-vertical {
+    position: relative;
+    padding-bottom: 177.77%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .YouTubeEmbed.is-vertical iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 }
+
