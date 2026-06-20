@@ -131,6 +131,23 @@ export const SidebarWidgetContainer = styled.div`
   }
 `;
 
+export const SidebarAdContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 15px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:not(:has(iframe)),
+  &:has(ins[data-ad-status="unfilled"]),
+  &:has(ins[style*="display: none"]),
+  &:has(ins[style*="display:none"]) {
+    display: none !important;
+  }
+`;
+
+
 export const SidebarContainer = styled.div`
   z-index: 2;
   margin-top: -30px;

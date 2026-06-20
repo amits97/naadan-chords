@@ -237,7 +237,7 @@ export default class Sidebar extends Component {
     }
 
     return (
-      <div className="ad1">
+      <Styles.SidebarAdContainer className="ad1">
         <ins
           className="adsbygoogle"
           style={{ display: "inline-block", width: "300px", height: "250px" }}
@@ -245,7 +245,7 @@ export default class Sidebar extends Component {
           data-ad-slot="4869884700"
           key={this.state.adKey}
         ></ins>
-      </div>
+      </Styles.SidebarAdContainer>
     );
   };
 
@@ -266,7 +266,7 @@ export default class Sidebar extends Component {
     }
 
     return (
-      <div className="ad2">
+      <Styles.SidebarAdContainer className="ad2">
         <ins
           className="adsbygoogle"
           style={{ display: "inline-block", width: "300px", height: "250px" }}
@@ -274,7 +274,7 @@ export default class Sidebar extends Component {
           data-ad-slot="9918861903"
           key={this.state.adKey}
         ></ins>
-      </div>
+      </Styles.SidebarAdContainer>
     );
   };
 

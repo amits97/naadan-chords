@@ -75,13 +75,6 @@
   text-decoration: none;
 }
 
-.Sidebar .ad1,
-.Sidebar .ad2 {
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
-}
-
 .Sidebar .top-posts ol {
   margin-bottom: 20px;
   counter-reset: item;
@@ -122,11 +115,12 @@
 }
 
 .Sidebar .ad1 {
-  margin: 5px 0 15px 0;
+  margin: 0 0 20px 0;
 }
 
 .Sidebar .ad2 {
-  margin-bottom: 50px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .Sidebar .sticky {
@@ -149,10 +143,6 @@
     z-index: 3;
     top: 130vh;
     margin: auto;
-  }
-
-  .Sidebar .ad1 {
-    display: none;
   }
 
   .Sidebar .sidebar-content {
