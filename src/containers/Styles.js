@@ -139,7 +139,6 @@ export const SidebarAdContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  &:not(:has(iframe)),
   &:has(ins[data-ad-status="unfilled"]),
   &:has(ins[style*="display: none"]),
   &:has(ins[style*="display:none"]) {
