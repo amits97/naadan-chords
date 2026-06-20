@@ -20,11 +20,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "overrides": {
-    "semver": ">=7.5.2",
-    "@smithy/config-resolver": ">=4.4.0",
-    "fast-xml-parser": "^5.4.1",
-    "minimize": "^2.0.0",
-    "serialize-javascript": "7.0.3"
+    "@smithy/config-resolver": ">=4.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
@@ -33,5 +29,8 @@
     "babel-loader": "^10.1.1",
     "webpack": "^5.105.4",
     "webpack-cli": "^5.1.4"
+  },
+  "allowScripts": {
+    "serverless@4.33.0": true
   }
 }

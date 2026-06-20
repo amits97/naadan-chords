@@ -35,11 +35,12 @@
     "source-map-support": "^0.5.19"
   },
   "overrides": {
-    "json5": ">=2.2.2",
-    "axios": "^1.6.0",
-    "ws": ">=8.17.1",
     "@smithy/config-resolver": ">=4.4.0",
-    "fast-xml-parser": "^5.3.8",
-    "serialize-javascript": "7.0.3"
+    "js-yaml": "^4.2.0"
+  },
+  "allowScripts": {
+    "core-js@2.6.12": true,
+    "fsevents@2.3.3": true,
+    "serverless@4.33.0": true
   }
 }

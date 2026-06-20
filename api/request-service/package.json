@@ -26,10 +26,9 @@
     "webpack-cli": "^5.1.4"
   },
   "overrides": {
-    "semver": ">=7.5.2",
-    "@smithy/config-resolver": ">=4.4.0",
-    "fast-xml-parser": "^5.4.1",
-    "minimize": "^2.0.0",
-    "serialize-javascript": "7.0.3"
+    "@smithy/config-resolver": ">=4.4.0"
+  },
+  "allowScripts": {
+    "serverless@4.33.0": true
   }
 }
