@@ -22,19 +22,21 @@ export default defineConfig({
     assetsInlineLimit: 0,
     rollupOptions: {
       output: {
-        manualChunks: {
-          "vendor-amplify": ["aws-amplify"],
-          "vendor-react-bootstrap": [
-            "react-bootstrap",
-            "react-bootstrap-typeahead",
-          ],
-          "vendor-fontawesome": [
-            "@fortawesome/fontawesome-svg-core",
-            "@fortawesome/free-brands-svg-icons",
-            "@fortawesome/free-regular-svg-icons",
-            "@fortawesome/free-solid-svg-icons",
-            "@fortawesome/react-fontawesome",
-          ],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("aws-amplify")) {
+              return "vendor-amplify";
+            }
+            if (
+              id.includes("react-bootstrap") ||
+              id.includes("react-bootstrap-typeahead")
+            ) {
+              return "vendor-react-bootstrap";
+            }
+            if (id.includes("@fortawesome")) {
+              return "vendor-fontawesome";
+            }
+          }
         },
         entryFileNames: `static/js/[name].js`,
         chunkFileNames: `static/js/[name].js`,
