@@ -15,6 +15,7 @@ import { API } from "../libs/utils";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
 import Sidebar from "./Sidebar";
+import * as Styles from "./Styles";
 import "./Request.css";
 
 export default class Request extends SearchComponent {
@@ -110,6 +111,21 @@ export default class Request extends SearchComponent {
   };
 
   renderTopAd = () => {
+    if (
+      this.props.isAuthenticating ||
+      this.props.isPremium
+    ) {
+      return <br className="spacer" />;
+    }
+
+    if (this.props.isLocalhost) {
+      return (
+        <div className="ad" style={{ maxHeight: "120px" }}>
+          <Styles.TopMockAd>[Test Top Ad (728x90)]</Styles.TopMockAd>
+        </div>
+      );
+    }
+
     return (
       <div className="ad" style={{ maxHeight: "120px" }}>
         <ins

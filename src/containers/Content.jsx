@@ -714,7 +714,7 @@ export default class Content extends Component {
   renderInArticleAd = (post) => {
     const { theme, isLocalhost, isPremium, isAuthenticating } = this.props;
 
-    if (isAuthenticating || isLocalhost || isPremium) {
+    if (isAuthenticating || isPremium) {
       return <br />;
     }
 
@@ -725,6 +725,16 @@ export default class Content extends Component {
           window.location.search,
       )
     ) {
+      if (isLocalhost) {
+        return (
+          <div className="ad inArticle">
+            <Styles.InArticleMockAd>
+              [Test In-Article Ad (Fluid / Responsive)]
+            </Styles.InArticleMockAd>
+          </div>
+        );
+      }
+
       return (
         <div className="ad inArticle">
           <ins
@@ -988,10 +998,17 @@ export default class Content extends Component {
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,
       ) ||
-      this.props.isLocalhost ||
       this.props.isPremium
     ) {
       return <br className="spacer" />;
+    }
+
+    if (this.props.isLocalhost) {
+      return (
+        <div className="ad" style={{ maxHeight: "120px" }}>
+          <Styles.TopMockAd>[Test Top Ad (728x90)]</Styles.TopMockAd>
+        </div>
+      );
     }
 
     return (

@@ -230,10 +230,17 @@ export default class Sidebar extends Component {
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,
       ) ||
-      this.props.isLocalhost ||
       this.props.isPremium
     ) {
       return <br />;
+    }
+
+    if (this.props.isLocalhost) {
+      return (
+        <Styles.SidebarAdContainer className="ad1">
+          <Styles.SidebarMockAd>[Test Ad 1 (300x250)]</Styles.SidebarMockAd>
+        </Styles.SidebarAdContainer>
+      );
     }
 
     return (
@@ -259,10 +266,17 @@ export default class Sidebar extends Component {
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,
       ) ||
-      this.props.isLocalhost ||
       this.props.isPremium
     ) {
       return;
+    }
+
+    if (this.props.isLocalhost) {
+      return (
+        <Styles.SidebarAdContainer className="ad2">
+          <Styles.SidebarMockAd>[Test Ad 2 (300x250)]</Styles.SidebarMockAd>
+        </Styles.SidebarAdContainer>
+      );
     }
 
     return (

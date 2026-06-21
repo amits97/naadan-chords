@@ -138,12 +138,74 @@ export const SidebarAdContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 300px;
 
   &:has(ins[data-ad-status="unfilled"]),
   &:has(ins[style*="display: none"]),
   &:has(ins[style*="display:none"]) {
     display: none !important;
   }
+
+  /* Large devices (desktops, 992px and up) */
+  @media (min-width: 992px) {
+    border: none;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  /* Extra large devices (large desktops, 1200px and up) */
+  @media (min-width: 1200px) {
+    border: 1px solid ${({ theme }) => theme.border};
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  /* Tiny devices (mobiles, less than 475px) */
+  @media (max-width: 475px) {
+    border: none;
+    padding: 0;
+    border-radius: 0;
+  }
+`;
+
+export const SidebarMockAd = styled.div`
+  width: 300px;
+  min-width: 300px;
+  height: 250px;
+  background: ${({ theme }) => theme.backgroundHighlight};
+  color: ${({ theme }) => theme.secondaryText};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const TopMockAd = styled.div`
+  height: 90px;
+  background: ${({ theme }) => theme.backgroundHighlight};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${({ theme }) => theme.secondaryText};
+`;
+
+export const InArticleMockAd = styled.div`
+  height: 238px;
+  background: ${({ theme }) => theme.backgroundHighlight};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${({ theme }) => theme.secondaryText};
+`;
+
+export const FooterMockAd = styled.div`
+  width: 300px;
+  min-width: 300px;
+  height: 250px;
+  background: ${({ theme }) => theme.backgroundLight};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${({ theme }) => theme.secondaryText};
 `;
 
 

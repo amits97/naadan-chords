@@ -22,6 +22,8 @@ export default class NotFound extends SearchComponent {
     if (
       !this.adLoaded &&
       !this.props.isLocalhost &&
+      !this.props.isPremium &&
+      !this.props.isAuthenticating &&
       !noAds?.includes(
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search
@@ -32,8 +34,23 @@ export default class NotFound extends SearchComponent {
   }
 
   renderTopAd = () => {
+    if (
+      this.props.isAuthenticating ||
+      noAds?.includes(
+        window.location.pathname.replace(/^\/|\/$/g, "") +
+          window.location.search
+      ) ||
+      this.props.isPremium
+    ) {
+      return <br className="spacer" />;
+    }
+
     if (this.props.isLocalhost) {
-      return <br />;
+      return (
+        <div className="ad" style={{ maxHeight: "120px" }}>
+          <Styles.TopMockAd>[Test Top Ad (728x90)]</Styles.TopMockAd>
+        </div>
+      );
     }
 
     return (

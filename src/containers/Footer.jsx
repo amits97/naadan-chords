@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import packageDetails from "../../package.json";
 import logo from "../logo.svg";
+import * as Styles from "./Styles";
 import "./Footer.css";
 
 export default class Footer extends Component {
@@ -68,10 +69,17 @@ export default class Footer extends Component {
         window.location.pathname.replace(/^\/|\/$/g, "") +
           window.location.search,
       ) ||
-      this.props.isLocalhost ||
       this.props.isPremium
     ) {
       return <br />;
+    }
+
+    if (this.props.isLocalhost) {
+      return (
+        <div className="footer-ad">
+          <Styles.FooterMockAd>[Test Footer Ad (300x250)]</Styles.FooterMockAd>
+        </div>
+      );
     }
 
     return (
@@ -92,7 +100,7 @@ export default class Footer extends Component {
       <footer className="Footer">
         <Container>
           <Row>
-            <Col sm={8}>
+            <Col lg={8}>
               <Row>
                 <Col className="meta-col">
                   <span className="footer-logo">
@@ -261,7 +269,7 @@ export default class Footer extends Component {
                 </Col>
               </Row>
             </Col>
-            <Col sm={4}>{this.renderFooterAd()}</Col>
+            <Col lg={4}>{this.renderFooterAd()}</Col>
           </Row>
         </Container>
       </footer>
