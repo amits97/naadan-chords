@@ -112,7 +112,7 @@ exports.handler = (event, context) => {
       context.done(null, event);
     }
   } catch (e) {
-        event.error = e;
+    event.error = e;
     context.done(null, event);
   }
 };
