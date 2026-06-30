@@ -2,7 +2,6 @@ import {
   CognitoIdentityProviderClient,
   AdminCreateUserCommand,
   AdminSetUserPasswordCommand,
-  AdminConfirmSignUpCommand,
   AdminLinkProviderForUserCommand,
   ListUsersCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
@@ -40,12 +39,6 @@ async function createNativeAccountAndLink(cognito, context, event) {
         Permanent: true,
       };
       await cognito.send(new AdminSetUserPasswordCommand(confirmParams));
-
-      let emailConfirmParams = {
-        UserPoolId: config.cognito.USER_POOL_ID,
-        Username: generatedUsername,
-      };
-      await cognito.send(new AdminConfirmSignUpCommand(emailConfirmParams));
 
       let mergeParams = {
         DestinationUser: {
@@ -119,7 +112,7 @@ exports.handler = (event, context) => {
       context.done(null, event);
     }
   } catch (e) {
-    event.error = e;
+        event.error = e;
     context.done(null, event);
   }
 };

@@ -249,12 +249,46 @@ class App extends Component {
           }
           break;
         case "signedIn":
+          if (typeof sessionStorage !== "undefined") {
+            sessionStorage.removeItem("oauth_retry");
+          }
           let session = await fetchAuthSession();
           if (session.tokens) {
             this.userHasAuthenticated(true);
           }
           this.getUserDetails(session);
           this.finalizeRedirect();
+          break;
+        case "signInWithRedirect_failure":
+          const code = getUrlParameter("code");
+          if (
+            code &&
+            typeof sessionStorage !== "undefined" &&
+            !sessionStorage.getItem("oauth_retry")
+          ) {
+            sessionStorage.setItem("oauth_retry", "true");
+            signInWithRedirect({ provider: "Facebook" });
+          } else {
+            if (typeof sessionStorage !== "undefined") {
+              sessionStorage.removeItem("oauth_retry");
+            }
+            // Clear code/state query parameters so the modal closes
+            if (
+              typeof window !== "undefined" &&
+              window.history &&
+              window.history.replaceState
+            ) {
+              const url = new URL(window.location.href);
+              url.searchParams.delete("code");
+              url.searchParams.delete("state");
+              window.history.replaceState(
+                {},
+                document.title,
+                url.pathname + url.search,
+              );
+            }
+            this.setState({ isAuthenticating: false });
+          }
           break;
         default:
           break;
