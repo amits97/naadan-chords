@@ -32,5 +32,15 @@
   },
   "allowScripts": {
     "serverless@4.33.0": true
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": [
+        "babel-jest",
+        {
+          "rootMode": "upward"
+        }
+      ]
+    }
   }
 }

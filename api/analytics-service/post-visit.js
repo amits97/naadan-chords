@@ -51,12 +51,14 @@ export async function main(event) {
     return failure({ status: false, error: e });
   }
 
+  const THREE_WEEKS_IN_MS = 21 * 24 * 60 * 60 * 1000;
   const params = {
     TableName: "NaadanChordsAnalytics",
     Item: {
       timestamp: Date.now(),
       postId: data.postId,
-      ipAddress
+      ipAddress,
+      ttl: Math.floor((Date.now() + THREE_WEEKS_IN_MS) / 1000)
     }
   };
 
