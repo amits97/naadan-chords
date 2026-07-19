@@ -3,14 +3,12 @@ import * as dynamoDbLib from "../libs/dynamodb-lib";
 export async function countReplyComments(commentId) {
   const params = {
     TableName: "NaadanChordsComments",
-    ScanFilter: {
-      commentId: {
-        ComparisonOperator: "EQ",
-        AttributeValueList: [commentId],
-      },
+    KeyConditionExpression: "commentId = :commentId",
+    ExpressionAttributeValues: {
+      ":commentId": commentId,
     },
   };
-  const comment = await dynamoDbLib.call("scan", params);
+  const comment = await dynamoDbLib.call("query", params);
   if (comment.Items && comment.Items.length === 1) {
     let count = 1;
     let commentItem = comment.Items[0];
@@ -26,38 +24,39 @@ export async function countReplyComments(commentId) {
 
 export async function appendCommentsCount(result) {
   let items = result.Items;
-  let filterExpression = "";
-  let expressionAttributeValues = {};
-
-  for (let i = 0; i < items.length; i++) {
-    let postId = items[i].postId;
-    if (filterExpression) {
-      filterExpression += ` OR contains(postId, :postId${i})`;
-    } else {
-      filterExpression = `contains(postId, :postId${i})`;
-    }
-    expressionAttributeValues[`:postId${i}`] = postId;
+  if (!items || items.length === 0) {
+    return result;
   }
 
-  let params = {
-    TableName: "NaadanChordsComments",
-    FilterExpression: filterExpression,
-    ExpressionAttributeValues: expressionAttributeValues,
-  };
-
   try {
-    let commentsResult = await dynamoDbLib.call("scan", params);
-    let comments = commentsResult.Items;
+    const commentsQueries = items.map(async (item) => {
+      const params = {
+        TableName: "NaadanChordsComments",
+        IndexName: "postId-createdAt-index",
+        KeyConditionExpression: "postId = :postId",
+        ExpressionAttributeValues: {
+          ":postId": item.postId,
+        },
+      };
+      const queryResult = await dynamoDbLib.call("query", params);
+      return { postId: item.postId, items: queryResult.Items || [] };
+    });
+
+    const queryResults = await Promise.all(commentsQueries);
     let commentsObject = {};
 
-    for (let i = 0; i < comments.length; i++) {
-      let commentItem = comments[i];
-      let replies = commentItem.replies || [];
-      commentsObject[commentItem.postId] =
-        (commentsObject[commentItem.postId] || 0) + 1;
-      for (let j = 0; j < replies.length; j++) {
-        const replyCommentsCount = await countReplyComments(replies[j]);
-        commentsObject[commentItem.postId] += replyCommentsCount;
+    for (let i = 0; i < queryResults.length; i++) {
+      const { postId, items: commentsList } = queryResults[i];
+      if (commentsList.length > 0) {
+        commentsObject[postId] = commentsList.length;
+        for (let j = 0; j < commentsList.length; j++) {
+          let commentItem = commentsList[j];
+          let replies = commentItem.replies || [];
+          for (let k = 0; k < replies.length; k++) {
+            const replyCommentsCount = await countReplyComments(replies[k]);
+            commentsObject[postId] += replyCommentsCount;
+          }
+        }
       }
     }
 

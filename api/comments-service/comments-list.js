@@ -7,14 +7,12 @@ let users = {};
 async function fetchReplyComment(commentId) {
   const params = {
     TableName: "NaadanChordsComments",
-    ScanFilter: {
-      commentId: {
-        ComparisonOperator: "EQ",
-        AttributeValueList: [commentId],
-      },
+    KeyConditionExpression: "commentId = :commentId",
+    ExpressionAttributeValues: {
+      ":commentId": commentId,
     },
   };
-  const comment = await dynamoDbLib.call("scan", params);
+  const comment = await dynamoDbLib.call("query", params);
   return comment;
 }
 

@@ -16,16 +16,14 @@ export async function main(event) {
   }
   const params = {
     TableName: "NaadanChordsComments",
-    ScanFilter: {
-      "commentId": {
-        ComparisonOperator: "EQ",
-        AttributeValueList: [commentId]
-      }
-    }
+    KeyConditionExpression: "commentId = :commentId",
+    ExpressionAttributeValues: {
+      ":commentId": commentId,
+    },
   };
 
   try {
-    comment = await dynamoDbLib.call("scan", params);
+    comment = await dynamoDbLib.call("query", params);
   } catch (e) {
     return failure({ status: false, error: e });
   }
