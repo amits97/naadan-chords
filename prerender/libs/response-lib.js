@@ -27,6 +27,7 @@ function buildResponse(statusCode, body) {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials": true,
       "Content-Type": "text/html; charset=UTF-8",
+      "Cache-Control": "public, max-age=86400, s-maxage=86400",
     },
     body: body,
   };
