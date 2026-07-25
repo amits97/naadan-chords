@@ -20,7 +20,8 @@
     "webpack-node-externals": "^3.0.0"
   },
   "overrides": {
-    "@smithy/config-resolver": ">=4.4.0"
+    "@smithy/config-resolver": ">=4.4.0",
+    "brace-expansion": "^5.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
