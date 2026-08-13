@@ -183,7 +183,7 @@ export default class ContentParser extends Component {
     // Standard major/minor flat keys by chromatic index
     const useFlat = isMinor
       ? [0, 2, 3, 5, 7, 10].includes(targetIndex) // Cm, Dm, Ebm, Fm, Gm, Bbm
-      : [1, 3, 5, 8, 10].includes(targetIndex);    // Db, Eb, F, Ab, Bb
+      : [0, 1, 3, 5, 8, 10].includes(targetIndex);  // C, Db, Eb, F, Ab, Bb
 
     return useFlat ? flatScale : sharpScale;
   };
