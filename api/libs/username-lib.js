@@ -2,64 +2,91 @@ import config from "../config";
 import * as cognitoLib from "./cognito-lib";
 
 export async function getAuthorAttributes(userId) {
-  const userParams = {
-    UserPoolId: config.cognito.USER_POOL_ID,
-    AttributesToGet: ["name"],
-    Filter: 'sub="' + userId + '"',
-  };
-
-  let userResults = await cognitoLib.call("listUsers", userParams);
-  let authorName = userResults.Users[0].Attributes[0].Value;
-  let picture;
-  let identities;
-  let userName = userResults.Users[0].Username;
-  let preferredUsername;
-  let userCreateDate = userResults.Users[0].UserCreateDate;
-
   try {
-    userParams.AttributesToGet = ["preferred_username"];
-    userResults = await cognitoLib.call("listUsers", userParams);
-    preferredUsername = userResults.Users[0].Attributes[0].Value;
-  } catch (e) {
-    // Ignore, preferred_username does not exist.
-  }
+    const userParams = {
+      UserPoolId: config.cognito.USER_POOL_ID,
+      AttributesToGet: ["name"],
+      Filter: 'sub="' + userId + '"',
+    };
 
-  try {
-    userParams.AttributesToGet = ["picture"];
-    userResults = await cognitoLib.call("listUsers", userParams);
-    picture = userResults.Users[0].Attributes[0].Value;
-  } catch (e) {
-    // Ignore, picture does not exist.
-  }
+    let userResults = await cognitoLib.call("listUsers", userParams);
+    let user = userResults?.Users?.[0];
+    if (!user) {
+      return {
+        authorName: "",
+        userName: "",
+        preferredUsername: "",
+        picture: "",
+        userCreateDate: "",
+        identities: "",
+      };
+    }
 
-  try {
-    userParams.AttributesToGet = ["identities"];
-    userResults = await cognitoLib.call("listUsers", userParams);
-    identities = userResults.Users[0].Attributes[0].Value;
-  } catch (e) {
-    // Ignore, identities does not exist.
-  }
+    let authorName = user.Attributes?.[0]?.Value ?? user.Username;
+    let picture;
+    let identities;
+    let userName = user.Username;
+    let preferredUsername;
+    let userCreateDate = user.UserCreateDate;
 
-  return {
-    authorName,
-    userName,
-    preferredUsername,
-    picture,
-    userCreateDate,
-    identities,
-  };
+    try {
+      userParams.AttributesToGet = ["preferred_username"];
+      userResults = await cognitoLib.call("listUsers", userParams);
+      preferredUsername = userResults.Users?.[0]?.Attributes?.[0]?.Value;
+    } catch (e) {
+      // Ignore, preferred_username does not exist.
+    }
+
+    try {
+      userParams.AttributesToGet = ["picture"];
+      userResults = await cognitoLib.call("listUsers", userParams);
+      picture = userResults.Users?.[0]?.Attributes?.[0]?.Value;
+    } catch (e) {
+      // Ignore, picture does not exist.
+    }
+
+    try {
+      userParams.AttributesToGet = ["identities"];
+      userResults = await cognitoLib.call("listUsers", userParams);
+      identities = userResults.Users?.[0]?.Attributes?.[0]?.Value;
+    } catch (e) {
+      // Ignore, identities does not exist.
+    }
+
+    return {
+      authorName,
+      userName,
+      preferredUsername,
+      picture,
+      userCreateDate,
+      identities,
+    };
+  } catch (e) {
+    return {
+      authorName: "",
+      userName: "",
+      preferredUsername: "",
+      picture: "",
+      userCreateDate: "",
+      identities: "",
+    };
+  }
 }
 
 export async function getAuthorEmail(userId) {
-  const userParams = {
-    UserPoolId: config.cognito.USER_POOL_ID,
-    AttributesToGet: ["email"],
-    Filter: 'sub="' + userId + '"',
-  };
+  try {
+    const userParams = {
+      UserPoolId: config.cognito.USER_POOL_ID,
+      AttributesToGet: ["email"],
+      Filter: 'sub="' + userId + '"',
+    };
 
-  let userResults = await cognitoLib.call("listUsers", userParams);
-  let email = userResults.Users[0].Attributes[0].Value;
-  return email;
+    let userResults = await cognitoLib.call("listUsers", userParams);
+    let email = userResults.Users?.[0]?.Attributes?.[0]?.Value;
+    return email;
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function getUserId(userName) {

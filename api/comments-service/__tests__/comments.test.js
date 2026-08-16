@@ -6,8 +6,8 @@ import * as dynamoDbLib from "../../libs/dynamodb-lib";
 import * as userNameLib from "../../libs/username-lib";
 import * as emailLib from "../../libs/email-lib";
 
-jest.mock("uuid", () => ({
-  v4: () => "mocked-uuid-123"
+jest.mock("crypto", () => ({
+  randomUUID: () => "mocked-uuid-123",
 }));
 jest.mock("../../libs/dynamodb-lib");
 jest.mock("../../libs/username-lib");

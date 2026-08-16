@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 
 import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
@@ -38,41 +38,64 @@ async function fetchParentComment(commentId) {
 
 async function sendEmailToParentCommentAuthor(parentComment, comment, sub) {
   if (sub !== parentComment.userId) {
-    let originalComment = parentComment;
-    while (!originalComment.postId) {
-      const grandParentCommentId = originalComment.parentCommentId;
-      const grandParentComment = await fetchParentComment(grandParentCommentId);
-      originalComment = grandParentComment.Items[0];
+    try {
+      let originalComment = parentComment;
+      while (!originalComment.postId) {
+        const grandParentCommentId = originalComment.parentCommentId;
+        if (!grandParentCommentId) break;
+        const grandParentComment = await fetchParentComment(grandParentCommentId);
+        if (!grandParentComment.Items || grandParentComment.Items.length === 0) {
+          break;
+        }
+        originalComment = grandParentComment.Items[0];
+      }
+
+      if (originalComment.postId) {
+        let post = await fetchPostDetails(originalComment.postId);
+        if (post && post.userId) {
+          let emailId = await userNameLib.getAuthorEmail(parentComment.userId);
+          if (emailId) {
+            const title = `Naadan Chords - New reply on ${post.title}`;
+            const message = `
+              <p>Hey,</p>
+              <p>Someone just replied to your comment on the post <a href="https://www.naadanchords.com/${post.postId}">${post.title}</a>.</p>
+              <p>The reply: <b>${comment.content}</b></p>
+            `;
+            const textMessage = `New reply on your comment on ${post.title}\n\nReply: ${comment.content}`;
+
+            await emailLib.sendEmail(title, message, textMessage, emailId);
+          }
+        }
+      }
+    } catch (e) {
+      // Ignore email failure
     }
-
-    let post = await fetchPostDetails(originalComment.postId);
-    let emailId = await userNameLib.getAuthorEmail(parentComment.userId);
-
-    const title = `Naadan Chords - New reply on ${post.title}`;
-    const message = `
-      <p>Hey,</p>
-      <p>Someone just replied to your comment on the post <a href="https://www.naadanchords.com/${post.postId}">${post.title}</a>.</p>
-      <p>The reply: <b>${comment.content}</b></p>
-    `;
-    const textMessage = `New reply on your comment on ${post.title}\n\nReply: ${comment.content}`;
-
-    await emailLib.sendEmail(title, message, textMessage, emailId);
   }
 }
 
 async function sendEmailToAuthor(postId, comment) {
-  let post = await fetchPostDetails(postId);
-  let emailId = await userNameLib.getAuthorEmail(post.userId);
+  try {
+    let post = await fetchPostDetails(postId);
+    if (!post || !post.userId) {
+      return;
+    }
+    let emailId = await userNameLib.getAuthorEmail(post.userId);
+    if (!emailId) {
+      return;
+    }
 
-  const title = `Naadan Chords - New comment on ${post.title}`;
-  const message = `
-    <p>Hey,</p>
-    <p>Someone just commented on your post <a href="https://www.naadanchords.com/${post.postId}">${post.title}</a>.</p>
-    <p>The comment: <b>${comment}</b></p>
-  `;
-  const textMessage = `New comment on your post ${post.title}\n\nComment: ${comment}`;
+    const title = `Naadan Chords - New comment on ${post.title}`;
+    const message = `
+      <p>Hey,</p>
+      <p>Someone just commented on your post <a href="https://www.naadanchords.com/${post.postId}">${post.title}</a>.</p>
+      <p>The comment: <b>${comment}</b></p>
+    `;
+    const textMessage = `New comment on your post ${post.title}\n\nComment: ${comment}`;
 
-  await emailLib.sendEmail(title, message, textMessage, emailId);
+    await emailLib.sendEmail(title, message, textMessage, emailId);
+  } catch (e) {
+    // Ignore email failure
+  }
 }
 
 export async function main(event) {
@@ -80,7 +103,7 @@ export async function main(event) {
   const data = JSON.parse(event.body);
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
   const sub = provider.split(":")[2];
-  const commentId = data.commentId ?? uuidv4();
+  const commentId = data.commentId ?? randomUUID();
   const createdAt = data.createdAt ?? Date.now();
   const parentCommentId = data.parentCommentId;
 
@@ -117,17 +140,18 @@ export async function main(event) {
         },
       });
 
-      if (existingCommentResult.Item.userId === sub) {
+      if (existingCommentResult?.Item?.userId === sub) {
         // Comment exists, update
         await dynamoDbLib.call("update", {
-          ...params,
+          TableName: "NaadanChordsComments",
           Key: {
             commentId: data.commentId,
             userId: existingCommentResult.Item.userId,
           },
-          UpdateExpression: "SET content = :content",
+          UpdateExpression: "SET content = :content, modifiedAt = :modifiedAt",
           ExpressionAttributeValues: {
             ":content": content,
+            ":modifiedAt": Date.now(),
           },
         });
       } else {
@@ -144,7 +168,7 @@ export async function main(event) {
         const parentComment = await fetchParentComment(parentCommentId);
         let replies;
 
-        if (parentComment.Items.length === 1) {
+        if (parentComment?.Items?.length === 1) {
           replies = parentComment.Items[0].replies || [];
           replies.push(commentId);
 
@@ -186,11 +210,17 @@ export async function main(event) {
 
   const response = params.Item;
   // Get full attributes of author
-  let authorAttributes = await userNameLib.getAuthorAttributes(sub);
-  response.authorName = authorAttributes.authorName;
-  response.userName =
-    authorAttributes.preferredUsername ?? authorAttributes.userName;
-  response.authorPicture = authorAttributes.picture;
+  try {
+    let authorAttributes = await userNameLib.getAuthorAttributes(sub);
+    if (authorAttributes) {
+      response.authorName = authorAttributes.authorName;
+      response.userName =
+        authorAttributes.preferredUsername ?? authorAttributes.userName;
+      response.authorPicture = authorAttributes.picture;
+    }
+  } catch (e) {
+    // Ignore author attribute errors
+  }
   delete response.userId;
   return success(response);
 }
