@@ -15,15 +15,21 @@ describe("Rating Service - top-rated", () => {
   });
 
   it("should query top rated posts, enrich author, ratings, and comments count", async () => {
-    dynamoDbLib.call.mockResolvedValueOnce({
-      Items: [
-        {
+    dynamoDbLib.call
+      .mockResolvedValueOnce({
+        Items: [
+          {
+            postId: "rated-post",
+          },
+        ],
+      })
+      .mockResolvedValueOnce({
+        Item: {
           postId: "rated-post",
           title: "Top Rated Post",
           userId: "user-456",
         },
-      ],
-    });
+      });
 
     userNameLib.getAuthorAttributes.mockResolvedValueOnce({
       authorName: "Author 2",

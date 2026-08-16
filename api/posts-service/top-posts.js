@@ -10,7 +10,11 @@ const myCache = new NodeCache();
 
 myCache.set("topPosts", undefined, cacheTTL);
 
-export async function main() {
+export async function main(event) {
+  if (event?.queryStringParameters?.clearCache || event?.clearCache) {
+    myCache.set("topPosts", undefined);
+  }
+
   if (!myCache.get("topPosts")) {
     let params = {
       TableName: "NaadanChordsTop",
@@ -35,7 +39,7 @@ export async function main() {
       for (let i = 0; i < result.Items.length; i++) {
         let userId = result.Items[i].userId;
 
-        if (!users.hasOwnProperty(userId)) {
+        if (userId && !users.hasOwnProperty(userId)) {
           users[userId] = {};
 
           //Get full attributes of author
@@ -47,9 +51,9 @@ export async function main() {
         }
 
         delete result.Items[i].userId;
-        result.Items[i].authorName = users[userId].authorName;
-        result.Items[i].userName = users[userId].userName;
-        result.Items[i].authorPicture = users[userId].authorPicture;
+        result.Items[i].authorName = users[userId]?.authorName || "";
+        result.Items[i].userName = users[userId]?.userName || "";
+        result.Items[i].authorPicture = users[userId]?.authorPicture || "";
       }
 
       //append ratings
@@ -59,7 +63,7 @@ export async function main() {
       result = await appendCommentsCount(result);
       myCache.set("topPosts", result.Items, cacheTTL);
     } catch (e) {
-      return failure({ status: false, error: e });
+      return failure({ status: false, error: e?.message || e });
     }
   }
 

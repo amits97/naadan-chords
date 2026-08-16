@@ -10,7 +10,24 @@ const myCache = new NodeCache();
 
 myCache.set("topRatedPosts", undefined, cacheTTL);
 
-export async function main() {
+async function getPostDetails(postId) {
+  const params = {
+    TableName: "NaadanChords",
+    ProjectionExpression:
+      "postId, category, createdAt, updatedAt, postType, title, userId",
+    Key: {
+      postId,
+    },
+  };
+  let result = await dynamoDbLib.call("get", params);
+  return result.Item;
+}
+
+export async function main(event) {
+  if (event?.queryStringParameters?.clearCache || event?.clearCache) {
+    myCache.set("topRatedPosts", undefined);
+  }
+
   if (!myCache.get("topRatedPosts")) {
     let params = {
       TableName: "NaadanChordsRatings",
@@ -26,12 +43,23 @@ export async function main() {
     try {
       let result = await dynamoDbLib.call("query", params);
 
+      // Fetch post details (title, userId, category, etc.) from NaadanChords
+      for (let i = 0; i < result.Items.length; i++) {
+        const postDetails = await getPostDetails(result.Items[i].postId);
+        if (postDetails) {
+          result.Items[i] = {
+            ...result.Items[i],
+            ...postDetails,
+          };
+        }
+      }
+
       let users = {};
 
       for (let i = 0; i < result.Items.length; i++) {
         let userId = result.Items[i].userId;
 
-        if (!users.hasOwnProperty(userId)) {
+        if (userId && !users.hasOwnProperty(userId)) {
           users[userId] = {};
 
           //Get full attributes of author
@@ -43,9 +71,9 @@ export async function main() {
         }
 
         delete result.Items[i].userId;
-        result.Items[i].authorName = users[userId].authorName;
-        result.Items[i].userName = users[userId].userName;
-        result.Items[i].authorPicture = users[userId].authorPicture;
+        result.Items[i].authorName = users[userId]?.authorName || "";
+        result.Items[i].userName = users[userId]?.userName || "";
+        result.Items[i].authorPicture = users[userId]?.authorPicture || "";
       }
 
       //append ratings
@@ -55,7 +83,7 @@ export async function main() {
       result = await appendCommentsCount(result);
       myCache.set("topRatedPosts", result.Items, cacheTTL);
     } catch (e) {
-      return failure({ status: false, error: e });
+      return failure({ status: false, error: e?.message || e });
     }
   }
 
