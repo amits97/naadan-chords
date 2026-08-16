@@ -3,6 +3,7 @@ import * as dynamoDbLib from "../libs/dynamodb-lib";
 import * as userNameLib from "../libs/username-lib";
 import { success, failure } from "../libs/response-lib";
 import { appendRatings } from "../common/post-ratings";
+import { appendCommentsCount } from "../common/post-comments";
 
 const cacheTTL = 3600; // 1 hour
 const myCache = new NodeCache();
@@ -53,6 +54,9 @@ export async function main() {
 
       //append ratings
       result = await appendRatings(result);
+
+      //append comments count
+      result = await appendCommentsCount(result);
       myCache.set("topPosts", result.Items, cacheTTL);
     } catch (e) {
       return failure({ status: false, error: e });
