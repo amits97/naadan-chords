@@ -3,6 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import Sidebar from "./Sidebar";
 import SearchComponent from "../components/SearchComponent";
+import FlexChordsBanner from "../components/FlexChordsBanner";
 import * as Styles from "./Styles";
 import "./NotFound.css";
 
@@ -17,19 +18,21 @@ export default class NotFound extends SearchComponent {
     this.adLoaded = true;
   }
 
-  componentDidUpdate() {
-    SearchComponent.prototype.componentDidUpdate.call(this);
-    if (
-      !this.adLoaded &&
-      !this.props.isLocalhost &&
-      !this.props.isPremium &&
-      !this.props.isAuthenticating &&
-      !noAds?.includes(
-        window.location.pathname.replace(/^\/|\/$/g, "") +
-          window.location.search
-      )
-    ) {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+  componentDidUpdate(prevProps) {
+    if (!this.props.isEmbed) {
+      SearchComponent.prototype.componentDidUpdate.call(this, prevProps);
+      if (
+        !this.adLoaded &&
+        !this.props.isLocalhost &&
+        !this.props.isPremium &&
+        !this.props.isAuthenticating &&
+        !noAds?.includes(
+          window.location.pathname.replace(/^\/|\/$/g, "") +
+            window.location.search
+        )
+      ) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
     }
   }
 
@@ -68,10 +71,14 @@ export default class NotFound extends SearchComponent {
   };
 
   renderNotFound = () => {
+    const trimmedQuery = (this.props.search || "").trim();
+    const showFlexChordsBanner = this.props.isEmbed && Boolean(trimmedQuery);
+
     if (this.props.isEmbed) {
       return (
         <div>
           <h3>No posts found!</h3>
+          {showFlexChordsBanner && <FlexChordsBanner query={trimmedQuery} />}
           <ul>
             <li>
               <a href="/request">Click here</a> to submit a request for the song

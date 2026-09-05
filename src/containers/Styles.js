@@ -414,3 +414,149 @@ export const LoginDividerText = styled.span`
   width: 40px;
   text-align: center;
 `;
+
+export const FlexChordsCard = styled.div`
+  border: 1px solid ${({ theme }) => theme.border};
+  background: ${({ theme }) => theme.backgroundLight};
+  border-radius: 15px;
+  padding: 20px 22px;
+  margin: 1.25rem 0 1.75rem 0;
+
+  .flex-chords-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .flex-chords-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .flex-chords-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .flex-chords-brand-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .flex-chords-brand-name {
+    font-weight: 600;
+    color: ${({ theme }) => theme.text};
+  }
+
+  .flex-chords-separator {
+    color: ${({ theme }) => theme.textMuted};
+  }
+
+  .flex-chords-brand-tagline {
+    color: ${({ theme }) => theme.secondaryText};
+    font-size: 0.85rem;
+  }
+
+  .flex-chords-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.secondaryText};
+    border: 1px solid ${({ theme }) => theme.border};
+  }
+
+  .flex-chords-content {
+    margin-bottom: 16px;
+  }
+
+  .flex-chords-headline {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: ${({ theme }) => theme.text};
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+  }
+
+  .flex-chords-query {
+    color: #ea580c;
+    word-break: break-word;
+  }
+
+  .flex-chords-body {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: ${({ theme }) => theme.secondaryText};
+    margin: 0;
+    max-width: 600px;
+  }
+
+  .flex-chords-footer {
+    display: flex;
+    align-items: center;
+  }
+
+  .flex-chords-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ea580c;
+    color: #ffffff !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none !important;
+    transition: background-color 0.15s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: #c2410c;
+      color: #ffffff !important;
+      text-decoration: none !important;
+
+      .flex-chords-arrow {
+        transform: translateX(3px);
+      }
+    }
+  }
+
+  .flex-chords-arrow {
+    display: inline-block;
+    font-weight: 600;
+    transition: transform 0.15s ease;
+  }
+
+  @media (max-width: 576px) {
+    padding: 16px 14px;
+
+    .flex-chords-headline {
+      font-size: 1.05rem;
+    }
+
+    .flex-chords-body {
+      font-size: 0.88rem;
+    }
+
+    .flex-chords-cta-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 9px 16px;
+    }
+  }
+`;

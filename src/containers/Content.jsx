@@ -760,7 +760,7 @@ export default class Content extends Component {
       });
     }
 
-    return <NotFound isEmbed={true} />;
+    return <NotFound isEmbed={true} search={this.props.search} />;
   };
 
   closeLoginModal = (retryRatingSubmit) => {
