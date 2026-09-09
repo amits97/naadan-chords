@@ -2,26 +2,52 @@ import React from "react";
 import ReactGA from "react-ga4";
 import * as Styles from "../containers/Styles";
 
-const FlexChordsBanner = ({ query }) => {
+const FlexChordsBanner = ({
+  query,
+  headline,
+  body,
+  buttonText,
+  utmMedium,
+}) => {
   const trimmedQuery = (query || "").trim();
-  if (!trimmedQuery) {
-    return null;
-  }
+  const effectiveUtmMedium =
+    utmMedium || (trimmedQuery ? "empty_search_banner" : "request_page");
 
-  const targetUrl = `https://flexchords.com/search?q=${encodeURIComponent(
-    trimmedQuery,
-  )}&utm_source=naadanchords&utm_medium=empty_search_banner&utm_campaign=soft_launch`;
+  const targetUrl = trimmedQuery
+    ? `https://flexchords.com/search?q=${encodeURIComponent(
+        trimmedQuery,
+      )}&utm_source=naadanchords&utm_medium=${effectiveUtmMedium}&utm_campaign=soft_launch`
+    : `https://flexchords.com/?utm_source=naadanchords&utm_medium=${effectiveUtmMedium}&utm_campaign=soft_launch`;
+
+  const effectiveHeadline = headline || (
+    trimmedQuery ? (
+      <>
+        Can't find chords for{" "}
+        <span className="flex-chords-query">"{trimmedQuery}"</span>?
+      </>
+    ) : (
+      "Want chords right away?"
+    )
+  );
+
+  const effectiveBody =
+    body ||
+    "Automatically transcribe and synchronize chords for any YouTube song using our companion AI tool.";
+
+  const effectiveButtonText =
+    buttonText ||
+    (trimmedQuery ? "Find Chords on Flex Chords" : "Try Flex Chords");
 
   const handleClick = () => {
     // 1. Google tag (gtag.js) tracking
     if (typeof window !== "undefined" && typeof window.gtag === "function") {
       window.gtag("event", "click_flexchords_banner", {
-        search_query: trimmedQuery,
+        search_query: trimmedQuery || effectiveUtmMedium,
         destination_url: targetUrl,
       });
     } else if (typeof gtag === "function") {
       gtag("event", "click_flexchords_banner", {
-        search_query: trimmedQuery,
+        search_query: trimmedQuery || effectiveUtmMedium,
         destination_url: targetUrl,
       });
     }
@@ -31,7 +57,7 @@ const FlexChordsBanner = ({ query }) => {
       ReactGA.event({
         category: "Flex Chords Banner",
         action: "click_flexchords_banner",
-        label: trimmedQuery,
+        label: trimmedQuery || effectiveUtmMedium,
       });
     } catch (e) {
       console.warn("ReactGA event tracking failed:", e);
@@ -61,14 +87,8 @@ const FlexChordsBanner = ({ query }) => {
       </div>
 
       <div className="flex-chords-content">
-        <h4 className="flex-chords-headline">
-          Can't find chords for{" "}
-          <span className="flex-chords-query">"{trimmedQuery}"</span>?
-        </h4>
-        <p className="flex-chords-body">
-          Automatically transcribe and synchronize chords for any YouTube song
-          using our companion AI tool.
-        </p>
+        <h4 className="flex-chords-headline">{effectiveHeadline}</h4>
+        <p className="flex-chords-body">{effectiveBody}</p>
       </div>
 
       <div className="flex-chords-footer">
@@ -79,7 +99,7 @@ const FlexChordsBanner = ({ query }) => {
           onClick={handleClick}
           className="flex-chords-cta-btn"
         >
-          <span>Find Chords on Flex Chords</span>
+          <span>{effectiveButtonText}</span>
           <span className="flex-chords-arrow">→</span>
         </a>
       </div>

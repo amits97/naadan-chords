@@ -14,6 +14,7 @@ import { fetchAuthSession } from "aws-amplify/auth";
 import { API } from "../libs/utils";
 import LoaderButton from "../components/LoaderButton";
 import SearchComponent from "../components/SearchComponent";
+import FlexChordsBanner from "../components/FlexChordsBanner";
 import Sidebar from "./Sidebar";
 import * as Styles from "./Styles";
 import "./Request.css";
@@ -148,6 +149,14 @@ export default class Request extends SearchComponent {
           <Row className="contentRow">
             <Col lg={8} className="contentColumn">
               {this.renderTopAd()}
+              {!this.state.submitted && (
+                <FlexChordsBanner
+                  headline="Want chords right away?"
+                  body="Automatically transcribe and synchronize chords for any YouTube song instantly using our companion AI tool."
+                  buttonText="Try Flex Chords"
+                  utmMedium="request_page"
+                />
+              )}
               <div>
                 <h2>Request</h2>
                 <hr />
@@ -162,12 +171,20 @@ export default class Request extends SearchComponent {
                       {this.state.errorMessage}
                     </p>
                   ) : (
-                    <p>
-                      Thank you! Your request has been submitted.
-                      <br />
-                      We will try our best to publish your request as soon as
-                      possible.
-                    </p>
+                    <React.Fragment>
+                      <p>
+                        Thank you! Your request has been submitted.
+                        <br />
+                        We will try our best to publish your request as soon as
+                        possible.
+                      </p>
+                      <FlexChordsBanner
+                        headline="Need chords in the meantime?"
+                        body="While we work on your request, you can transcribe and play along with any YouTube song right now on Flex Chords."
+                        buttonText="Transcribe on Flex Chords"
+                        utmMedium="request_submitted"
+                      />
+                    </React.Fragment>
                   )}
                   <Button
                     variant="secondary"
