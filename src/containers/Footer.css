@@ -58,6 +58,21 @@
   justify-content: center;
 }
 
+.Footer .footer-tag {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #ff9700;
+  color: #111;
+  padding: 1.5px 4.5px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: middle;
+  line-height: 1;
+  display: inline-block;
+}
+
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 768px) {
   .Footer .external-icon {

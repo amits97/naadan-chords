@@ -139,14 +139,16 @@ export default class Posts extends Component {
       let userName = this.props.match.params.userName;
       let authorCreateDate;
 
-      if (this.props.search) {
+      const searchParam = this.props.search || urlLib.getUrlParameter("s");
+
+      if (searchParam) {
         this.setState({
           isPostList: true,
           isRandomPost: false,
         });
 
         this.props.closeNav();
-        let postsResult = await this.posts(null, this.props.search);
+        let postsResult = await this.posts(null, searchParam);
 
         posts = postsResult.Items ? postsResult.Items : [];
 
@@ -297,7 +299,15 @@ export default class Posts extends Component {
       }
     }
 
-    if (!urlLib.getUrlParameter("s")) {
+    const searchParam = urlLib.getUrlParameter("s");
+    if (searchParam) {
+      if (this.props.search !== searchParam) {
+        this.props.setSearch(searchParam);
+      } else {
+        this.loadData();
+        window.scrollTo(0, 0);
+      }
+    } else {
       this.loadData();
       window.scrollTo(0, 0);
     }
@@ -366,6 +376,12 @@ export default class Posts extends Component {
         this.props.isAlbum)
     ) {
       this.setLoadingAndLoadData();
+      return;
+    }
+
+    const currentUrlSearch = urlLib.getUrlParameter("s");
+    if (currentUrlSearch && currentUrlSearch !== this.props.search) {
+      this.props.setSearch(currentUrlSearch);
       return;
     }
 
@@ -533,7 +549,7 @@ export default class Posts extends Component {
 
   render() {
     let title = "";
-    let searchQuery = this.props.search;
+    let searchQuery = this.props.search || urlLib.getUrlParameter("s");
 
     if (searchQuery) {
       title = `SEARCH RESULTS - ${searchQuery.toUpperCase()}`;
@@ -568,6 +584,7 @@ export default class Posts extends Component {
     let childProps = {
       ...this.state,
       ...this.props,
+      search: searchQuery,
       title: title,
       loadPosts: this.loadMorePosts,
       goBack: this.goBack,

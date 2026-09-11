@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Navbar, Nav, Form, NavDropdown } from "react-bootstrap";
+import ReactGA from "react-ga4";
 import {
   faTimes,
   faSearch,
@@ -259,6 +260,27 @@ export default function Header({
                   Request
                 </a>
               </LinkContainer>
+              <a
+                href="https://www.flexchords.com?utm_source=naadanchords&utm_medium=header_nav&utm_campaign=promotion"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-link flex-chords-nav-link"
+                onClick={() => {
+                  closeNav();
+                  if (window.gtag) {
+                    window.gtag("event", "flex_chords_click", {
+                      location: "header_nav",
+                    });
+                  }
+                  ReactGA.event({
+                    category: "Outbound",
+                    action: "Click",
+                    label: "Flex Chords Header",
+                  });
+                }}
+              >
+                Flex Chords <span className="flex-chords-badge">AI</span>
+              </a>
               {unauthenticatedOptions()}
               {authenticatedOptions()}
             </Nav>

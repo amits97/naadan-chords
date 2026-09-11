@@ -503,7 +503,7 @@ export const FlexChordsCard = styled.div`
     line-height: 1.5;
     color: ${({ theme }) => theme.secondaryText};
     margin: 0;
-    max-width: 600px;
+    text-wrap: pretty;
   }
 
   .flex-chords-footer {

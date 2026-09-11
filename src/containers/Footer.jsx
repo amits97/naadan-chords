@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import ReactGA from "react-ga4";
 import packageDetails from "../../package.json";
 import logo from "../logo.svg";
 import * as Styles from "./Styles";
@@ -157,6 +158,34 @@ export default class Footer extends Component {
                           Privacy<span className="trim"> Policy</span>
                         </a>
                       </LinkContainer>
+                    </li>
+                  </ul>
+                  <h6>Tools</h6>
+                  <ul className="list-unstyled">
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://www.flexchords.com?utm_source=naadanchords&utm_medium=footer&utm_campaign=promotion"
+                        onClick={() => {
+                          if (window.gtag) {
+                            window.gtag("event", "flex_chords_click", {
+                              location: "footer",
+                            });
+                          }
+                          ReactGA.event({
+                            category: "Outbound",
+                            action: "Click",
+                            label: "Flex Chords Footer",
+                          });
+                        }}
+                      >
+                        Flex Chords <span className="footer-tag">AI</span>{" "}
+                        <FontAwesomeIcon
+                          className="external-icon"
+                          icon={faExternalLinkAlt}
+                        />
+                      </a>
                     </li>
                   </ul>
                   <h6>Mobile Apps</h6>

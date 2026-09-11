@@ -14,10 +14,10 @@ const FlexChordsBanner = ({
     utmMedium || (trimmedQuery ? "empty_search_banner" : "request_page");
 
   const targetUrl = trimmedQuery
-    ? `https://flexchords.com/search?q=${encodeURIComponent(
+    ? `https://www.flexchords.com/search?q=${encodeURIComponent(
         trimmedQuery,
       )}&utm_source=naadanchords&utm_medium=${effectiveUtmMedium}&utm_campaign=soft_launch`
-    : `https://flexchords.com/?utm_source=naadanchords&utm_medium=${effectiveUtmMedium}&utm_campaign=soft_launch`;
+    : `https://www.flexchords.com/?utm_source=naadanchords&utm_medium=${effectiveUtmMedium}&utm_campaign=soft_launch`;
 
   const effectiveHeadline = headline || (
     trimmedQuery ? (
@@ -32,7 +32,7 @@ const FlexChordsBanner = ({
 
   const effectiveBody =
     body ||
-    "Automatically transcribe and synchronize chords for any YouTube song using our companion AI tool.";
+    "Generate chords for any YouTube song and play along in real-time.";
 
   const effectiveButtonText =
     buttonText ||
@@ -69,7 +69,7 @@ const FlexChordsBanner = ({
       <div className="flex-chords-header">
         <div className="flex-chords-brand">
           <img
-            src="https://flexchords.com/logo.svg"
+            src="https://www.flexchords.com/logo.svg"
             alt="Flex Chords"
             className="flex-chords-logo"
             width="32"

@@ -152,7 +152,7 @@ export default class Request extends SearchComponent {
               {!this.state.submitted && (
                 <FlexChordsBanner
                   headline="Want chords right away?"
-                  body="Automatically transcribe and synchronize chords for any YouTube song instantly using our companion AI tool."
+                  body="Generate chords for any YouTube song and play along in real-time."
                   buttonText="Try Flex Chords"
                   utmMedium="request_page"
                 />

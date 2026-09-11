@@ -140,6 +140,9 @@ export default class Account extends SearchComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (super.componentDidUpdate) {
+      super.componentDidUpdate(prevProps, prevState);
+    }
     // Scroll active tab into view when tab changes
     if (prevState.activeTab !== this.state.activeTab) {
       this.scrollActiveTabIntoView();
