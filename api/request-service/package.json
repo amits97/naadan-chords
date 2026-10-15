@@ -27,7 +27,8 @@
   },
   "overrides": {
     "@smithy/config-resolver": ">=4.4.0",
-    "brace-expansion": "^5.0.8"
+    "brace-expansion": "^5.0.8",
+    "basic-ftp": "^6.2.3"
   },
   "allowScripts": {
     "serverless@4.33.0": true

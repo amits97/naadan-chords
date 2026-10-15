@@ -4,7 +4,7 @@ build:
 provider:
   name: aws
   versionFunctions: false
-  runtime: nodejs20.x
+  runtime: nodejs22.x
   stage: ${opt:stage,'prod'}
   region: ap-south-1
   memorySize: 2048

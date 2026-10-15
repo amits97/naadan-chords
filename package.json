@@ -1,6 +1,6 @@
 {
   "name": "naadan-chords",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "homepage": "https://www.naadanchords.com/",
   "private": true,
   "dependencies": {
@@ -70,8 +70,8 @@
     "@babel/register": "^7.25.9",
     "@vitejs/plugin-legacy": "^8.0.2",
     "@vitejs/plugin-react": "^6.0.2",
-    "babel-jest": "^29.7.0",
-    "jest": "^29.7.0",
+    "babel-jest": "^30.5.2",
+    "jest": "^30.5.2",
     "terser": "^5.43.1",
     "uuid": "^14.0.1",
     "vite": "^8.0.16"
@@ -79,9 +79,12 @@
   "allowScripts": {
     "esbuild@0.25.12": true,
     "fsevents@2.3.3": true,
-    "core-js@3.49.0": true
+    "core-js@3.49.0": true,
+    "@parcel/watcher@2.6.0": true,
+    "unrs-resolver@1.12.2": true
   },
   "overrides": {
-    "brace-expansion": "^5.0.8"
+    "brace-expansion": "^5.0.8",
+    "argparse": "^2.0.1"
   }
 }
