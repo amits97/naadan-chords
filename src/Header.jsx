@@ -275,11 +275,11 @@ export default function Header({
                   ReactGA.event({
                     category: "Outbound",
                     action: "Click",
-                    label: "Flex Chords Header",
+                    label: "FlexChords Header",
                   });
                 }}
               >
-                Flex Chords <span className="flex-chords-badge">AI</span>
+                FlexChords <span className="flex-chords-badge">AI</span>
               </a>
               {unauthenticatedOptions()}
               {authenticatedOptions()}

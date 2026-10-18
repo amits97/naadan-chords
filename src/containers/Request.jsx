@@ -153,7 +153,7 @@ export default class Request extends SearchComponent {
                 <FlexChordsBanner
                   headline="Want chords right away?"
                   body="Generate chords for any YouTube song and play along in real-time."
-                  buttonText="Try Flex Chords"
+                  buttonText="Try FlexChords"
                   utmMedium="request_page"
                 />
               )}
@@ -180,8 +180,8 @@ export default class Request extends SearchComponent {
                       </p>
                       <FlexChordsBanner
                         headline="Need chords in the meantime?"
-                        body="While we work on your request, you can transcribe and play along with any YouTube song right now on Flex Chords."
-                        buttonText="Transcribe on Flex Chords"
+                        body="While we work on your request, you can transcribe and play along with any YouTube song right now on FlexChords."
+                        buttonText="Transcribe on FlexChords"
                         utmMedium="request_submitted"
                       />
                     </React.Fragment>

@@ -36,7 +36,7 @@ const FlexChordsBanner = ({
 
   const effectiveButtonText =
     buttonText ||
-    (trimmedQuery ? "Find Chords on Flex Chords" : "Try Flex Chords");
+    (trimmedQuery ? "Find Chords on FlexChords" : "Try FlexChords");
 
   const handleClick = () => {
     // 1. Google tag (gtag.js) tracking
@@ -55,7 +55,7 @@ const FlexChordsBanner = ({
     // 2. ReactGA tracking (GA4)
     try {
       ReactGA.event({
-        category: "Flex Chords Banner",
+        category: "FlexChords Banner",
         action: "click_flexchords_banner",
         label: trimmedQuery || effectiveUtmMedium,
       });
@@ -70,13 +70,13 @@ const FlexChordsBanner = ({
         <div className="flex-chords-brand">
           <img
             src="https://www.flexchords.com/logo.svg"
-            alt="Flex Chords"
+            alt="FlexChords"
             className="flex-chords-logo"
             width="32"
             height="32"
           />
           <div className="flex-chords-brand-info">
-            <span className="flex-chords-brand-name">Flex Chords</span>
+            <span className="flex-chords-brand-name">FlexChords</span>
             <span className="flex-chords-separator">·</span>
             <span className="flex-chords-brand-tagline">
               AI Chord Generator

@@ -176,11 +176,11 @@ export default class Footer extends Component {
                           ReactGA.event({
                             category: "Outbound",
                             action: "Click",
-                            label: "Flex Chords Footer",
+                            label: "FlexChords Footer",
                           });
                         }}
                       >
-                        Flex Chords <span className="footer-tag">AI</span>{" "}
+                        FlexChords <span className="footer-tag">AI</span>{" "}
                         <FontAwesomeIcon
                           className="external-icon"
                           icon={faExternalLinkAlt}
