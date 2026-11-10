@@ -27,24 +27,23 @@
     "@aws-sdk/client-dynamodb": "^3.975.0",
     "@aws-sdk/lib-dynamodb": "^3.975.0",
     "@babel/runtime-corejs2": "^7.26.10",
-    "@sparticuz/chromium": "^131.0.1",
+    "@sparticuz/chromium": "^153.0.0",
     "axios": "^1.13.5",
     "fast-xml-parser": "^5.3.8",
-    "puppeteer-core": "^24.10.0",
-    "serverless": "^4.4.10",
+    "puppeteer-core": "~25.15.0",
+    "serverless": "^4.46.0",
     "source-map-support": "^0.5.19"
   },
   "overrides": {
     "@smithy/config-resolver": ">=4.4.0",
-    "js-yaml": "^4.2.0",
-    "brace-expansion": "^5.0.8",
     "basic-ftp": "^6.2.3",
-    "argparse": "^2.0.1"
+    "glob": "^14.0.4",
+    "minimatch": "^11.0.5"
   },
   "allowScripts": {
     "core-js@2.6.12": true,
     "fsevents@2.3.3": true,
-    "serverless@4.33.0": true,
+    "serverless@4.46.0": true,
     "@parcel/watcher@2.6.0": true,
     "unrs-resolver@1.12.2": true
   }
