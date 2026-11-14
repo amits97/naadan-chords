@@ -2,6 +2,7 @@ import config from "../config";
 import { success, failure } from "../libs/response-lib";
 import * as cognitoLib from "../libs/cognito-lib";
 import * as userNameLib from "../libs/username-lib";
+import * as dynamoDbLib from "../libs/dynamodb-lib";
 import axios from "axios";
 
 /**
@@ -16,10 +17,22 @@ import axios from "axios";
  * {
  *   "isValid": true/false,
  *   "isPremium": true/false,
+ *   "linkedToAnotherAccount": true/false,
  *   "subscriptionState": "ACTIVE|EXPIRED|CANCELED|PENDING",
  *   "message": "string"
  * }
+ *
+ * A purchase token can unlock only one account: the first account to validate
+ * it owns it (SUBSCRIPTIONS_TABLE), and any other account is refused.
  */
+const SUBSCRIPTIONS_TABLE = "NaadanChordsSubscriptions";
+const SUBSCRIPTION_ATTRIBUTES = [
+  "custom:gPlayToken",
+  "custom:isPremium",
+  "custom:subscriptionState",
+  "custom:subValidatedAt",
+  "custom:subExpiryTime",
+];
 export async function main(event) {
   // Get the authenticated user from the request context
   const provider = event.requestContext.identity.cognitoAuthenticationProvider;
@@ -83,7 +96,8 @@ export async function main(event) {
     const isStateValid =
       subscriptionData.subscriptionState === "SUBSCRIPTION_STATE_ACTIVE" ||
       subscriptionData.subscriptionState === "SUBSCRIPTION_STATE_CANCELED" ||
-      subscriptionData.subscriptionState === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD";
+      subscriptionData.subscriptionState ===
+        "SUBSCRIPTION_STATE_IN_GRACE_PERIOD";
 
     const isNotExpired =
       !subscriptionData.expiryTime ||
@@ -91,63 +105,73 @@ export async function main(event) {
 
     const isValid = isStateValid && isNotExpired;
 
-    // Update Cognito with the validation result
-    const userParams = {
-      UserPoolId: config.cognito.USER_POOL_ID,
-      Username: usernameAttributes.userName,
-      UserAttributes: [],
-    };
-
     if (isStateValid) {
-      // Subscription is valid - keep the subscription data
-      userParams.UserAttributes = [
-        {
-          Name: "custom:isPremium",
-          Value: isValid ? "true" : "false",
-        },
-        {
-          Name: "custom:subscriptionState",
-          Value: subscriptionData.subscriptionState || "UNKNOWN",
-        },
-        {
-          Name: "custom:subValidatedAt",
-          Value: new Date().toISOString(),
-        },
-      ];
-
-      if (subscriptionData.expiryTime) {
-        userParams.UserAttributes.push({
-          Name: "custom:subExpiryTime",
-          Value: new Date(subscriptionData.expiryTime).getTime().toString(),
+      const linked = await linkPurchaseToUser(
+        purchaseToken,
+        sub,
+        usernameAttributes.userName,
+      );
+      if (!linked) {
+        await clearSubscriptionAttributesIfTokenMatches(
+          usernameAttributes.userName,
+          purchaseToken,
+        );
+        return success({
+          isValid: false,
+          isPremium: false,
+          linkedToAnotherAccount: true,
+          subscriptionState: subscriptionData.subscriptionState,
+          message: "This subscription is already linked to another account",
         });
       }
     } else {
-      // Subscription is not valid - clear all subscription data
-      userParams.UserAttributes = [
-        {
-          Name: "custom:gPlayToken",
-          Value: "",
-        },
-        {
-          Name: "custom:isPremium",
-          Value: "",
-        },
-        {
-          Name: "custom:subscriptionState",
-          Value: "",
-        },
-        {
-          Name: "custom:subValidatedAt",
-          Value: "",
-        },
-        {
-          Name: "custom:subExpiryTime",
-          Value: "",
-        },
-      ];
+      await clearSubscriptionAttributesIfTokenMatches(
+        usernameAttributes.userName,
+        purchaseToken,
+      );
+      return success({
+        isValid: false,
+        isPremium: false,
+        subscriptionState: subscriptionData.subscriptionState,
+        message: "Subscription is not active or has expired",
+        expiryTime: subscriptionData.expiryTime
+          ? new Date(subscriptionData.expiryTime).getTime().toString()
+          : null,
+      });
     }
 
-    await cognitoLib.call("adminUpdateUserAttributes", userParams);
+    // Subscription is linked to this account - store the subscription data
+    const userAttributes = [
+      {
+        Name: "custom:gPlayToken",
+        Value: purchaseToken,
+      },
+      {
+        Name: "custom:isPremium",
+        Value: isValid ? "true" : "false",
+      },
+      {
+        Name: "custom:subscriptionState",
+        Value: subscriptionData.subscriptionState || "UNKNOWN",
+      },
+      {
+        Name: "custom:subValidatedAt",
+        Value: new Date().toISOString(),
+      },
+    ];
+
+    if (subscriptionData.expiryTime) {
+      userAttributes.push({
+        Name: "custom:subExpiryTime",
+        Value: new Date(subscriptionData.expiryTime).getTime().toString(),
+      });
+    }
+
+    await cognitoLib.call("adminUpdateUserAttributes", {
+      UserPoolId: config.cognito.USER_POOL_ID,
+      Username: usernameAttributes.userName,
+      UserAttributes: userAttributes,
+    });
 
     return success({
       isValid,
@@ -168,6 +192,65 @@ export async function main(event) {
         error.message || "Failed to validate subscription with Google Play",
     });
   }
+}
+
+/**
+ * Link a purchase token to a user. Returns false if the token is already
+ * linked to a different user.
+ */
+async function linkPurchaseToUser(purchaseToken, userId, userName) {
+  const now = new Date().toISOString();
+  try {
+    await dynamoDbLib.call("update", {
+      TableName: SUBSCRIPTIONS_TABLE,
+      Key: { purchaseToken },
+      UpdateExpression:
+        "SET userId = :userId, userName = :userName, lastValidatedAt = :now, linkedAt = if_not_exists(linkedAt, :now)",
+      ConditionExpression:
+        "attribute_not_exists(purchaseToken) OR userId = :userId",
+      ExpressionAttributeValues: {
+        ":userId": userId,
+        ":userName": userName,
+        ":now": now,
+      },
+    });
+    return true;
+  } catch (error) {
+    if (error.name === "ConditionalCheckFailedException") {
+      return false;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Clear the user's subscription attributes, but only if they hold this token,
+ * so a token from another device can't wipe the user's own subscription.
+ */
+async function clearSubscriptionAttributesIfTokenMatches(
+  userName,
+  purchaseToken,
+) {
+  const user = await cognitoLib.call("adminGetUser", {
+    UserPoolId: config.cognito.USER_POOL_ID,
+    Username: userName,
+  });
+  const storedToken = (user.UserAttributes || []).find(
+    (attribute) => attribute.Name === "custom:gPlayToken",
+  )?.Value;
+
+  if (storedToken !== purchaseToken) {
+    return;
+  }
+
+  await cognitoLib.call("adminUpdateUserAttributes", {
+    UserPoolId: config.cognito.USER_POOL_ID,
+    Username: userName,
+    UserAttributes: SUBSCRIPTION_ATTRIBUTES.map((Name) => ({
+      Name,
+      Value: "",
+    })),
+  });
 }
 
 /**

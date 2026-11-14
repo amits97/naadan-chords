@@ -46,6 +46,10 @@ provider:
       Resource: "arn:aws:cognito-idp:ap-south-1:*:userpool/*"
     - Effect: Allow
       Action:
+        - dynamodb:UpdateItem
+      Resource: "arn:aws:dynamodb:ap-south-1:*:table/NaadanChordsSubscriptions"
+    - Effect: Allow
+      Action:
         - secretsmanager:GetSecretValue
       Resource: "arn:aws:secretsmanager:ap-south-1:*:secret:*"
 
